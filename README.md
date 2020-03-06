@@ -7,6 +7,11 @@ No software engineer can possibly memorise all the APIs that we are required to 
 Cheat sheets provide a handy quick reference to the terms, commands and symbols that we need to understand but not necessarily memorise. These are my personal cheat sheets for the languages and tools, and recurring manual processes, that I use again and again.
 
 
+## Contents
+
+- [Visual Studio Code](src/vscode.md)
+
+
 ## Acknowledgements
 
 - Julien Le Coupanec's [Awesome Cheatsheets](https://github.com/LeCoupa/awesome-cheatsheets)
