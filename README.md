@@ -9,6 +9,7 @@ Cheat sheets provide a handy quick reference to the terms, commands and symbols 
 
 ## Contents
 
+- [CLIs](src/cli.md)
 - [Visual Studio Code](src/vscode.md)
 
 
