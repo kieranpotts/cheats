@@ -1,4 +1,4 @@
-# Visual Studio Code Cheats
+# Visual Studio Code cheats
 
 ## Remote connections
 
