@@ -1,9 +1,7 @@
-# Command Line Interfaces
+# Command line interfaces cheats
 
 
 ## Box-drawing characters
-
-Reference: https://en.wikipedia.org/wiki/Box-drawing_character
 
 #### Filesystem representation
 
@@ -37,135 +35,7 @@ Reference: https://en.wikipedia.org/wiki/Box-drawing_character
 └──────────────────────────────────────┘
 ```
 
-#### Complete list of box-drawing characters
+#### See also
 
-```
-─
-━
-│
-┃
-┄
-┅
-┆
-┇
-┈
-┉
-┊
-┋
-┌
-┍
-┎
-┏
-┐
-┑
-┒
-┓
-└
-┕
-┖
-┗
-┘
-┙
-┚
-┛
-├
-┝
-┞
-┟
-┠
-┡
-┢
-┣
-┤
-┥
-┦
-┧
-┨
-┩
-┪
-┫
-┬
-┭
-┮
-┯
-┰
-┱
-┲
-┳
-┴
-┵
-┶
-┷
-┸
-┹
-┺
-┻
-┼
-┽
-┾
-┿
-╀
-╁
-╂
-╃
-╄
-╅
-╆
-╇
-╈
-╉
-╊
-╋
-╌
-╍
-╎
-╏
-═
-║
-╒
-╓
-╔
-╕
-╖
-╗
-╘
-╙
-╚
-╛
-╜
-╝
-╞
-╟
-╠
-╡
-╢
-╣
-╤
-╥
-╦
-╧
-╨
-╩
-╪
-╫
-╬
-╭
-╮
-╯
-╰
-╱
-╲
-╳
-╴
-╵
-╶
-╷
-╸
-╹
-╺
-╻
-╼
-╽
-╾
-╿
-```
+- [A complete list of box-drawing characters](https://unicode-table.com/en/blocks/box-drawing/)
+- [Wikipedia: Box-drawing characters](https://en.wikipedia.org/wiki/Box-drawing_character)
