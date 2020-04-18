@@ -11,6 +11,9 @@ Cheat sheets provide a handy quick reference to the terms, commands and symbols 
 
 - [CLIs](src/cli.md)
 - [MySQL](src/mysql.md)
+- OpenAPI
+  - [v2](src/openapi/v2.md)
+  - [v3](src/openapi/v3.md)
 - [Visual Studio Code](src/vscode.md)
 
 
