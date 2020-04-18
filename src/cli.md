@@ -6,6 +6,7 @@
 #### Filesystem representation
 
 ```
+.
 ├─ @name/pkg@0.0.0
 │  ├─ pkg@^0.0.0
 │  ├─ pkg@^0.0.0
