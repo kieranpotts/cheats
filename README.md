@@ -10,6 +10,7 @@ Cheat sheets provide a handy quick reference to the terms, commands and symbols 
 ## Contents
 
 - [CLIs](src/cli.md)
+- [LaTeX](src/latex.md)
 - [MySQL](src/mysql.md)
 - OpenAPI
   - [v2](src/openapi/v2.md)

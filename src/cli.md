@@ -1,4 +1,4 @@
-# Command line interfaces cheats
+# CLI cheats
 
 
 ## Box-drawing characters
