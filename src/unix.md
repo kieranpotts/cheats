@@ -89,3 +89,17 @@ $ su -c 'command options'
 Again, the `whoami` command can be used to check user you are working as.
 
 
+## Disk space
+
+Use the following actions to check and clean up disk space (requires Ubuntu or the APT package manager):
+
+```
+### check the overall disk usage.
+df -h
+
+### check the cache folder size.
+sudo du -sh /var/cache/apt/archives
+
+### clean the cache.
+sudo apt-get clean
+```
