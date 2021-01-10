@@ -1,5 +1,15 @@
 # Visual Studio Code cheats
 
+## Settings sync
+
+1. Install the extension `shan.code-settings-sync`.
+2. On successful install, a "Welcome to Settings Sync" tab will be opened.
+3. Click the "Login with GitHub".
+4. Give the local extension one-time access to your GitHub account.
+5. If you have previously created a GitHub Gist to use as storage for your synced VSCode settings, select it from the list, otherwise choose "Skip" to create a new Gist.
+
+Restart VSCode for the changes to take effect. All your extensions and VSCode settings will be downloaded on restart.
+
 ## Remote connections
 
 VSCode can connect to remote filesystems over SSH using Microsoft's own [Remote - SSH](https://code.visualstudio.com/docs/remote/ssh) extension.
