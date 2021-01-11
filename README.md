@@ -15,7 +15,7 @@ Cheat sheets provide a handy quick reference to the terms, commands and symbols 
 - OpenAPI
   - [v2](src/openapi/v2.md)
   - [v3](src/openapi/v3.md)
-- [Pageant](src/pageant.md)
+- [SSH](src/ssh.md)
 - [Unix](src/unix.md)
 - [Visual Studio Code](src/vscode.md)
 
