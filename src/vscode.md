@@ -7,8 +7,20 @@
 3. Click the "Login with GitHub".
 4. Give the local extension one-time access to your GitHub account.
 5. If you have previously created a GitHub Gist to use as storage for your synced VSCode settings, select it from the list, otherwise choose "Skip" to create a new Gist.
+6. Open the extension's config. You will see the `sync.gist` setting has been filled in with your Gist ID. Add the following settings:
 
-Restart VSCode for the changes to take effect. All your extensions and VSCode settings will be downloaded on restart.
+```
+{
+    "sync.gist": "123...",
+    "sync.autoDownload": true,
+    "sync.autoUpload": true,
+    "sync.forceDownload": true,
+    "sync.forceUpload": true,
+    "sync.quietSync": true
+}
+```
+
+7. Restart VSCode for the changes to take effect. All your extensions and VSCode settings will be downloaded on restart.
 
 ## Remote connections
 
