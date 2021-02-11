@@ -21,6 +21,7 @@ Cheat sheets provide a handy quick reference to the terms, commands and symbols 
 - [Visual Studio Code](./src/vscode.md)
 - Windows
   - [Virtualization](./src/windows/virtualization.md)
+- [Yarn](./src/yarn.md)
 
 
 ## Acknowledgements
