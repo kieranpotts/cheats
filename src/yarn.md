@@ -55,7 +55,8 @@ yarn add file:/path/to/local/tarball.tgz
 yarn add https://my-project.org/pkg.tgz
 
 # Install a symlink to a local package. This is useful in developing 
-# related packages in monorepo environments.
+# related packages in monorepo environments. See `yarn link` for another 
+# methodology to implement this.
 yarn add link:/path/to/local/folder
 
 # Install a package directly from a Git repository.
@@ -252,6 +253,10 @@ yarn link pkg-name
 ```
 
 To reverse the process, use `yarn unlink` or `yarn unlink pkg-name`.
+
+Alternatively, you can use `yarn add link:/path/to/local/folder` from the consuming package, with the path pointing to the root directory of the dependency to import. The end result is the same.
+
+Note, symlinking packages creates symlinks in the `node_modules` directory but does not modify `package.json`. So, you will be able to consume local packages, existing elsewhere on your filesystem, for the purpose of development and testing, without needing to explicitly declare the import has a hard dependency.
 
 #### `yarn list`
 
