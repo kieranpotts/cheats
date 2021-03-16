@@ -351,6 +351,7 @@ The first time you connect to a server over SSH with a new key, you will be aske
 
 ```
 PS C:\Users\Username> & 'C:\Program Files\PuTTY\plink.exe' git@github.com
+PS C:\Users\Username> & 'C:\Program Files\PuTTY\plink.exe' git@gitlab.com
 PS C:\Users\Username> & 'C:\Program Files\PuTTY\plink.exe' git@bitbucket.org
 ```
 
