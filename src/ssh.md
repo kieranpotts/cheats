@@ -293,7 +293,7 @@ Host *
  IdentityFile ~/.ssh/id_rsa
 ```
 
-Next, add your SSH private key to the SSH agent:
+Next, add your SSH private key to the SSH agent. Windows users: first copy your `id_rsa` file to `C:\Users\<username>\.ssh\id_rsa`.
 
 ```
 # Mac:
@@ -350,8 +350,8 @@ Run Pageant and load the PuTTY-compatible `*.ppk` version of your private key. E
 The first time you connect to a server over SSH with a new key, you will be asked to verify that the server's fingerprint is correct. The fingerprint is a short cryptographic string that identifies the server, protecting against man-in-the-middle attacks. This can cause some Git GUI clients (including Git Bash) to fail silently, so it is important to make an initial connection to your remote servers via the command line. Open PowerShell and type commands similar to the following, depending on which remote servers you want to subscribe to:
 
 ```
-PS > & 'C:\Program Files\PuTTY\plink.exe' git@github.com
-PS > & 'C:\Program Files\PuTTY\plink.exe' git@bitbucket.org
+PS C:\Users\Username> & 'C:\Program Files\PuTTY\plink.exe' git@github.com
+PS C:\Users\Username> & 'C:\Program Files\PuTTY\plink.exe' git@bitbucket.org
 ```
 
 You'll be prompted to add the remote server's fingerprint to the Windows registry. If you're confident that your network traffic is not being intercepted, go ahead and type "y" at the prompt. You might get an error if the remote service does not allow logins over SSH, but that's OK because the purpose of this step is only to cache the remote server's fingerprint. Run the above command again, and you should _not_ be prompted to cache the remote's fingerprint a second time.
