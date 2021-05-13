@@ -226,6 +226,33 @@ Enter same passphrase again: <press Enter>
 
 To convert the key from OpenSSH to PuTTY's proprietary key format, go to File > Save Private Key and export a copy as `id_rsa.ppk`. Remember to add the passphrase, if you removed it in the previous step (`id_rsa_putty` can now be deleted).
 
+#### Windows: Putty to OpenSSH transformation of public keys
+
+If you ask a work colleague to provide you with their public key, so you can grant them access to a server, you might be given a public key in the following format:
+
+```txt
+---- BEGIN SSH2 PUBLIC KEY ----
+Comment: "rsa-key-20210513"
+AAAAB3NzaC1yc2EAAAABJQAAAQEAkXNEXT164ne5wcNnrl227uCAh0RfB9qYpeqt
+Ekdu4qj3fL0d0VxWUjLWvqnUGRG8VemJzBp00WgEzfbr4HLmhKsnFNkI3OMC/bvJ
+vESQGEqM9Ilymv7Ulxakhz1MwEbbw4Lb7LpE0qSKmTuVHuuz9qcs5K0D6r0UOEOs
+StDI5xLhZPrwFl3A3WWobX05qhFU90GzP/2G83QV8ZbbFfjXhKxai5axiPwqpNQ1
+L10VwET7fy2/LqdyhJn13QafHH4JAAPwI9Phm5rbKFgMfBa14SZzk1t6dEnrvgfb
+y1W4kRM1L4g7KDuYQr3gPWalp4q4jgAU2b0T/4Ftlp+XPFVkgQ==
+---- END SSH2 PUBLIC KEY ----
+```
+
+This public key format is what PuTTYgen creates when you export a newly-generated public key using PuTTYgen's "Save public key" option, which exports the public key string in PuTTY's proprietary key format instead of the standard PEM form.
+
+To transform this to a single-line OpenSSH-compatible public key, run the following command:
+
+```sh
+$ ssh-keygen -i -f ssh2.pub > openssh.pub
+```
+
+Where `ssh2.pub` is the original public key. The contents of `openssh.pub` can now be appended to the `authorized_keys` file on Unix systems.
+
+
 ## Changing the passphrase for private keys
 
 Passphrases that unlock private keys can be changed or removed from the private key at any time (as long as you know the original passphrase). The public key is unaffected, because passphrases are linked only to the private key.
