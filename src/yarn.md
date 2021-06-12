@@ -1,6 +1,6 @@
 # Yarn cheats
 
-[Yarn](https://yarnpkg.com/) is a fast, intuitive dependency management tool that runs on Node.js. It is a popular alternative to NPM, the default package manager for the Node.js runtime environment.
+[Yarn](https://yarnpkg.com/) is a fast, intuitive dependency management tool that runs on Node. It is a popular alternative to NPM, the default package manager for the Node runtime environment.
 
 The primary purpose of NPM, Yarn and other such package managers is to be able to check-in vendor packages to source control without actually committing all their files. However, both NPM and Yarn provide other useful development utilities, such as shortcuts to custom development scripts.
 
@@ -67,7 +67,7 @@ yarn add <git-remote-url>
 yarn add <git-remote-url>#<branch/commit/tag>
 ```
 
-`yarn global add pkg` installs a package globally, so it is available throughout your local Node.js environment. This should be used only for installing system tools (like Yarn itself) rather than application dependencies, because globally-installed packages will not be explicitly defined in `package.json` files.
+`yarn global add pkg` installs a package globally, so it is available throughout your local Node environment. This should be used only for installing system tools (like Yarn itself) rather than application dependencies, because globally-installed packages will not be explicitly defined in `package.json` files.
 
 #### `yarn audit`
 
@@ -537,7 +537,7 @@ The scripts will be passed some variables holding version information. The `prev
 }
 ```
 
-The `yarn versions` command is not related to the current package, but rather displays the version information for the currently-installed version of Yarn, Node.js and its dependencies.
+The `yarn versions` command is not related to the current package, but rather displays the version information for the currently-installed version of Yarn, Node and its dependencies.
 
 #### `yarn why`
 
