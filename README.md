@@ -33,4 +33,4 @@ Cheat sheets provide a handy quick reference to the terms, commands and symbols 
 ## License
 
 Copyright © 2010-2019 Kieran Potts. \
-Distributed under the [Creative Commons Zero (CC0)](LICENSE.txt) public domain license.
+Distributed under the [Creative Commons Zero (CC0)](./LICENSE.txt) public domain license.
