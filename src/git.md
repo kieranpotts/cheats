@@ -17,7 +17,6 @@
 - [Deleting](#deleting)
 - [Submodules](#submodules)
 
-
 ## Staging
 
 Stage specific files:
@@ -42,13 +41,11 @@ The behaviour of `git add .` changed between Git v1.x and Git v2.x. It Git v1, `
 
 Git v2 also introduced `git add --ignore-removal .`, which provided the behaviour of `git add .` from v1, staging new and modified files but ignored deleted ones.
 
-
 ## Committing
 
 ```sh
 $ git commit -m "Comment"
 ```
-
 
 ## Branching
 
@@ -108,7 +105,6 @@ $ git checkout --orphan <branch_name>
 $ git rm --cached -r .
 ```
 
-
 ## Remotes
 
 The `git fetch`, `git pull` and `git push` commands are used to sync locally-cloned repositories with the original remotely-hosted ("upstream") repositories.
@@ -130,7 +126,6 @@ Rebasing is an alternative strategy to resolve divergence between tracked branch
 ```sh
 $ git config --global branch.autosetuprebase always
 ```
-
 
 #### Push
 
@@ -156,7 +151,6 @@ git push dev -u origin dev
 
 You can use `git push --all -u` to push all local branches to the default remote, and to setup tracking for all of the new branches automatically.
 
-
 ## Merging
 
 The `git merge` command joins two or more development histories together.
@@ -168,7 +162,6 @@ The `git merge` command joins two or more development histories together.
 - `--ff-only`: All merges must be fast-forwardable or a `MergeException` will be thrown. This option never creates an explicit merge commit.
 - `--squash`: Collapses all the incoming commits into a single new commit directly to the target branch. Does not record an explicit merge.
 - `--squash --ff-only`: Collapses all the incoming commits into a single commit directly to the target branch, never creating a merge, but does so only if the source branch can be fast-forwarded. If not, a `MergeException` is thrown.
-
 
 ## Undoing
 
@@ -200,6 +193,8 @@ The following command will destroy any local modifications that are not yet stag
 $ git reset --hard HEAD
 ```
 
+(`HEAD` is the last commit in your current branch.)
+
 Alternatively, if there's current work that you want to keep, stash it first...
 
 ```sh
@@ -213,6 +208,8 @@ $ git stash pop
 ```sh
 $ git reset (--soft) HEAD
 ```
+
+If `--soft` does not work, try `--mixed` or `--keep`.
 
 To reset the last commit, plus recent changes since that commit:
 
@@ -228,7 +225,7 @@ $ git reset (--soft|--hard) 0d1d7fc32
 
 You may need to resolve conflicts if you've modified things that were changed since the commit you reset to.
 
-Resetting changes history. To push the new history to a remote repository, use the `--force` flag.
+Resetting changes history. To push the new history to a remote repository, use the `--force` flag. (It still may not be possible to push the changes into the upstream repository if your Git hosting services adds an authentication layer to protect certain branches from mutations.)
 
 You can also reset your local branch to match what's on a remote server, in this case the "origin" server:
 
@@ -265,18 +262,35 @@ To revert a merge commit:
 $ git revert -m 1 <merge_commit_sha>
 ```
 
-To remove any unstaged changes, reverting everything back to the last commit:
+A slightly harder revertion strategy is to use the `--no-commit` flag. The behaviour is more like a hard `reset`.
 
 ```sh
-$ git reset --hard HEAD
+$ git revert --no-commit <commit>
 ```
 
-(`HEAD` is the last commit in your current branch.)
+Use the `--strategy` option to use a certain [merge strategy](https://git-scm.com/docs/git-merge#_merge_strategies). The **resolve** strategy is generally considered safe and fast.
+
+```sh
+$ git revert --strategy resolve <commit>
+```
+
+#### Rebasing
+
+Alternatively, you can use the `rebase` command to move the `HEAD` of the current branch back to an earlier commit.
+
+```sh
+$ git rebase -i HEAD~x
+```
+
+(Note: `x` is the number of commits to revert.)
+
+This will open a test file. Type `d` or `drop` next to the commits that you want to remove.
+
+If the commits you dropped were already pushed to the remote repository, you will need to use `git push --force` or `git push --force-with-lease`.
 
 #### Restoring
 
 Git v2.23 introduces `git restore` as an easier way of specifying which files to change. See the [official documentation for examples](https://git-scm.com/docs/git-restore/2.23.0). This is an experimental feature and may change or be dropped entirely in future versions of Git.
-
 
 ## Deleting
 
@@ -307,7 +321,6 @@ Your local repository will still have tracking references to the remote branches
 $ git prune remote <remote_name>
 ```
 
-
 ## Stashing
 
 Create a new stash:
@@ -334,6 +347,25 @@ To apply a stash but keep in on the stack, too:
 $ git stash apply stash@{n}
 ```
 
+## Tags
+
+To list all tags:
+
+```sh
+$ git tag -l
+```
+
+To delete a local tag:
+
+```sh
+$ git tag -d <tag_name>
+```
+
+To delete a remote tag:
+
+```sh
+$ git push --delete origin <tag_name>
+```
 
 ## Submodules
 
@@ -346,7 +378,6 @@ Removing a submodule takes some effort. Follow these steps:
 5. Run `rm -rf .git/modules/path_to_submodule` (no trailing slash)
 6. Commit: `git commit -m "Removed submodule"`
 7. Delete the now untracked submodule files: `rm -rf path_to_submodule`
-
 
 ## Fixing a corrupted Git repository
 
