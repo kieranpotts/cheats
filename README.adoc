@@ -1,5 +1,6 @@
 = Cheats
 
+Cheat sheets for various tools and technologies.
 
 ''''
 
