@@ -1,0 +1,6 @@
+= whois
+
+[source,sh]
+----
+whois <domain>  # Gets whois information for domain.
+----
