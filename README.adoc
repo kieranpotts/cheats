@@ -4,12 +4,22 @@ Cheat sheets for various tools and technologies.
 
 == Contents
 
-== Utility software
+== Unix
 
-I'm defining utility software as any simple program with only a
-command line interface and which specializes in a single discrete
-task.
+== Linux
 
+== Shells
+
+== Protocols
+
+== Utilities
+
+****
+I'm defining utility software as any simple computer program with only a
+command line interface and which specializes in a single discrete task.
+****
+
+* link:./src/utils/bindfs.adoc[bindfs]
 * link:./src/utils/dig.adoc[dig]
 * link:./src/utils/ping.adoc[ping]
 * link:./src/utils/rsync.adoc[rsync]
@@ -17,6 +27,15 @@ task.
 * link:./src/utils/sudo.adoc[sudo]
 * link:./src/utils/wget.adoc[wget]
 * link:./src/utils/whois.adoc[whois]
+
+
+== Applications
+
+****
+Application software is defined here any any computer program that is
+more complex than utility software!
+****
+
 
 ''''
 
