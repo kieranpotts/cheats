@@ -10,6 +10,7 @@ I'm defining utility software as any simple program with only a
 command line interface and which specializes in a single discrete
 task.
 
+* link:./src/utils/dig.adoc[dig]
 * link:./src/utils/ping.adoc[ping]
 * link:./src/utils/rsync.adoc[rsync]
 * link:./src/utils/su.adoc[su]
