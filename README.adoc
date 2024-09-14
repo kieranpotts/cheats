@@ -8,6 +8,7 @@ Cheat sheets for various tools and technologies.
 
 * link:./src/unix/filesystem.adoc[Unix filesystem]
 * link:./src/unix/commands/README.adoc[Unix commands]
+  ** link:./src/unix/commands/rm.adoc[rm]
 
 == Linux
 
