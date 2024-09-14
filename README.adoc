@@ -2,6 +2,16 @@
 
 Cheat sheets for various tools and technologies.
 
+== Contents
+
+== Utility software
+
+I'm defining utility software as any simple program with only a
+command line interface and which specializes in a single discrete
+task.
+
+* link:./src/utils/whois.adoc[whois]
+
 ''''
 
 Copyright © 2020-present Kieran Potts, link:./LICENSE.txt[CC0 license]
