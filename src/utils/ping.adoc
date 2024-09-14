@@ -1,0 +1,6 @@
+= ping
+
+[source,sh]
+----
+ping <host>     # Pings host and outputs results.
+----
