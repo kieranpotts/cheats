@@ -1,0 +1,6 @@
+= wget
+
+[source,sh]
+----
+wget <file>     # Downloads file.
+----
