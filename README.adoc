@@ -6,6 +6,8 @@ Cheat sheets for various tools and technologies.
 
 == Unix
 
+* link:./src/unix/filesystem.adoc[Unix filesystem]
+
 == Linux
 
 == Shells
