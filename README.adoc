@@ -30,6 +30,7 @@ Cheat sheets for various tools and technologies.
 * link:./src/linux/distros.adoc[Linux distributions]
 * link:./src/linux/kernel.adoc[Linux kernel]
 * link:./src/linux/systemd.adoc[systemd]
+* link:./src/linux/users.adoc[User management in Linux]
 
 == Shells
 
