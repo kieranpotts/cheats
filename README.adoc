@@ -27,6 +27,7 @@ Cheat sheets for various tools and technologies.
 == Linux
 
 * link:./src/linux/apt.adoc[APT package manager]
+* link:./src/linux/distros.adoc[Linux distributions]
 
 == Shells
 
