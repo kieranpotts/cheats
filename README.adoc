@@ -63,6 +63,7 @@ more complex than utility software!
 ****
 
 * link:./src/apps/htop.adoc[htop]
+* link:./src/apps/iptables.adoc[iptables]
 * link:./src/apps/redis.adoc[Redis]
 * link:./src/apps/tmux.adoc[tmux]
 * link:./src/apps/xdebug.adoc[Xdebug]
