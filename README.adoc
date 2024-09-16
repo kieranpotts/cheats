@@ -8,6 +8,7 @@ Cheat sheets for various tools and technologies.
 
 * link:./src/unix/filesystem.adoc[Unix filesystem]
 * link:./src/unix/commands/README.adoc[Unix commands]
+  ** link:./src/unix/commands/cat.adoc[cat]
   ** link:./src/unix/commands/rm.adoc[rm]
 
 == Linux
@@ -31,7 +32,6 @@ command line interface and which specializes in a single discrete task.
 * link:./src/utils/sudo.adoc[sudo]
 * link:./src/utils/wget.adoc[wget]
 * link:./src/utils/whois.adoc[whois]
-
 
 == Applications
 
