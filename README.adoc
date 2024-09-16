@@ -62,6 +62,7 @@ Application software is defined here any any computer program that is
 more complex than utility software!
 ****
 
+* link:./src/apps/xdebug.adoc[Xdebug]
 
 ''''
 
