@@ -28,6 +28,8 @@ Cheat sheets for various tools and technologies.
 
 == Shells
 
+* link:./src/shells/posix.adoc[POSIX]
+
 == Protocols
 
 == Utilities
