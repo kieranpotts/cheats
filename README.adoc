@@ -26,6 +26,8 @@ Cheat sheets for various tools and technologies.
 
 == Linux
 
+* link:./src/linux/apt.adoc[APT package manager]
+
 == Shells
 
 * link:./src/shells/posix.adoc[POSIX]
