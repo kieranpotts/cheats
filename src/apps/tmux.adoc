@@ -110,7 +110,7 @@ type `tmux list-sessions` or `tmux ls`.
 The easiest was to kill whole running sessions is to use
 `tmux kill-session -t <session-name>` from outside a tmux session. From
 inside a tmux session, you can kill the current session – closing all its
-windows and panes –by pressing the prefix `Ctrl-b` then typing `:kill-session`
+windows and panes – by pressing the prefix `Ctrl-b` then typing `:kill-session`
 and press `Enter`. Alternatively, just `exit` from each pane individually
 until there are non left.
 
