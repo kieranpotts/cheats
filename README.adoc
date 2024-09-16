@@ -65,6 +65,7 @@ more complex than utility software!
 * link:./src/apps/docker.adoc[Docker]
 * link:./src/apps/fail2ban.adoc[Fail2Ban]
 * link:./src/apps/htop.adoc[htop]
+* link:./src/apps/intellij-idea.adoc[InteliJ IDEA]
 * link:./src/apps/iptables.adoc[iptables]
 * link:./src/apps/monit.adoc[Monit]
 * link:./src/apps/munin.adoc[Munin]
