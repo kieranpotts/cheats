@@ -14,6 +14,7 @@ Cheat sheets for various tools and technologies.
   ** link:./src/unix/commands/chmod.adoc[chmod]
   ** link:./src/unix/commands/chown.adoc[chown]
   ** link:./src/unix/commands/cp.adoc[cp]
+  ** link:./src/unix/commands/ls.adoc[ls]
   ** link:./src/unix/commands/mkdir.adoc[mkdir]
   ** link:./src/unix/commands/mv.adoc[mv]
   ** link:./src/unix/commands/rm.adoc[rm]
