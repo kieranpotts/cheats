@@ -96,7 +96,7 @@ crontab -e
 Example configuration:
 
 ----
-@weekly rsync -r -a -e "ssh -l <your username on backup server> -p <ssh port number of backup server>" –delete /home/<your username> <hostname or ip address of backup server>:/path/to/some/directory/on/backup/server
+@weekly rsync -r -a -e "ssh -l <your username on backup server> -p <ssh port number of backup server>" --delete /home/<your username> <hostname or ip address of backup server>:/path/to/some/directory/on/backup/server
 ----
 
 == Flags
