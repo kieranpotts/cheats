@@ -39,6 +39,7 @@ Cheat sheets for various tools and technologies.
 
 == Protocols
 
+* link:./src/protocols/ssh.adoc[SSH]
 * link:./src/protocols/ssl-tls.adoc[SSL/TLS]
 
 == Utilities
