@@ -1,0 +1,339 @@
+= POSIX
+
+See also Dylan Araps's https://github.com/dylanaraps/pure-sh-bible[Pure SH Bible].
+
+== Conditional expressions
+
+For use in `[ ]`, `if [ ]; then` and `test`.
+
+NOTE: When writing a Bash or Zsh script, use `[[` instead of POSIX `[`.
+
+=== Variable conditionals
+
+Use these to check if a variable is empty or non-empty.
+
+[Attributes]
+|===
+|Expression |Value |Description
+
+|`-n`
+| `var`
+|If the length of a string is non-zero.
+
+|`-z`
+| `var`
+|If the length of a string is zero.
+|===
+
+=== Variable comparisons
+
+.String comparisons
+[Attributes]
+|===
+|Expression |Description
+
+|`var1 = var2`
+|Equal to
+
+|`var1 != var2`
+|Not equal to
+|===
+
+NOTE: Use `==` instead of `=` inside of `[[` for Bash and Zsh.
+
+.Numeric comparisons
+[Attributes]
+|===
+|Expression |Description
+
+|`var1 -eq var2`
+|Equal to
+
+|`var1 -ne var2`
+|Not equal to
+
+|`var1 -gt var2`
+|Greater than
+
+|`var1 -ge var2`
+|Greater than or equal to
+
+|`var1 -lt var2`
+|Less than
+
+|`var1 -le var2`
+|Less than or equal to
+|===
+
+=== File conditionals
+
+[Attributes]
+|===
+|Expression |Value |Description
+
+|`-e`
+|`file`
+|If the file exists and is any type
+
+|`-f`
+|`file`
+|If the file exists and is a regular file
+
+|`-d`
+|`file`
+|If the file exists and is a directory.
+
+|`-h`/`-L`
+|`file`
+|If the file exists and is a symbolic link
+
+|`-r`
+|`file`
+|If the file exists and is readable
+
+|`-w`
+|`file`
+|If the file exists and is writeable
+
+|`-x`
+|`file`
+|If the file exists and is executable
+
+|`-s`
+|`file`
+|If the file exists and has a non-zero size (ie. is not empty)
+
+|`-b`
+|`file`
+|If the file exists and is a block special file
+
+|`-c`
+|`file`
+|If the file exists and is a character special file
+
+|`-g`
+|`file`
+|If the file exists and its `set-group-id` bit is set
+
+|`-p`
+|`file`
+|If the file exists and is a named pipe (FIFO)
+
+|`-t`
+|`fd`
+|If the file descriptor is open and refers to a terminal
+
+|`-u`
+|`file`
+|If the file exists and its `set-user-id` bit is set
+
+|`-S`
+|`file`
+|If the file exists and is a socket
+|===
+
+== Operators
+
+=== Assignment
+
+[Attributes]
+|===
+|Operator |Description
+
+|`=`
+|Initialize or change the value of a variable
+|===
+
+=== Logical
+
+[Attributes]
+|===
+|Operator |Description
+
+|`!`
+|NOT
+
+|`&&`
+|AND
+
+|`||`
+|OR
+|===
+
+=== Arithmetic
+
+[Attributes]
+|===
+|Operator |Description
+
+|`+`
+|Addition
+
+|`-`
+|Subtraction
+
+|`*`
+|Multiplication
+
+|`/`
+|Division
+
+|`%`
+|Modulo
+
+|`+=`
+|Addition assignment
+
+|`-=`
+|Subtraction assignment
+
+|`*=`
+|Multiplication assignment
+
+|`/=`
+|Division assignment
+
+|`%=`
+|Modulo assignment
+|===
+
+== Parameter expansion
+
+Use these in place of `awk` or `sed` calls when possible.
+
+=== Replacement
+
+[Attributes]
+|===
+|Parameter |Description
+
+|`${VAR//PATTERN/REPLACE}`
+|Substitute pattern with replacement
+
+|`${VAR#PATTERN}`
+|Remove shortest match of pattern from start
+
+|`${VAR##PATTERN}`
+|Remove longest match of pattern from start
+
+|`${VAR%PATTERN} `
+|Remove shortest match of pattern from end
+
+|`${VAR%%PATTERN}`
+|Remove longest match of pattern from end
+|===
+
+=== Length
+
+[Attributes]
+|===
+|Parameter |Description
+
+|`${#VAR}`
+|Length of `var` in characters
+|===
+
+=== Default value
+
+[Attributes]
+|===
+|Parameter |Description
+
+|`${VAR:-STRING}`
+|If `VAR` is empty or unset, use `STRING` as its value
+
+|`${VAR-STRING}`
+|If `VAR` is unset, use `STRING` as its value
+
+|`${VAR:=STRING}`
+|If `VAR` is empty or unset, set the value of `VAR` to `STRING`
+
+|`${VAR=STRING}`
+|If `VAR` is unset, set the value of `VAR` to `STRING`
+
+|`${VAR:+STRING}`
+|If `VAR` is not empty, use `STRING` as its value
+
+|`${VAR+STRING}`
+|If `VAR` is set, use `STRING` as its value
+
+|`${VAR:?STRING}`
+|Display an error if empty or unset
+
+|`${VAR?STRING}`
+|Display an error if unset
+|===
+
+== Escape sequences
+
+=== Text colors
+
+NOTE: Sequences using RGB values only work in 24-bit true-color mode.
+
+[Attributes]
+|===
+|Sequence |Description |Value
+
+|`\033[38;5;<NUM>m`
+|Set text foreground color
+|`0-255`
+
+|`\033[48;5;<NUM>m`
+|Set text background color
+|`0-255`
+
+|`\033[38;2;<R>;<G>;<B>m`
+|Set text foreground color to RGB color
+|`R`, `G`, `B`
+
+|`\033[48;2;<R>;<G>;<B>m`
+|Set text background color to RGB color
+|`R`, `G`, `B`
+|===
+
+=== Text attributes
+
+[Attributes]
+|===
+|Sequence |Description
+
+|`\033[m`
+|Reset text formatting and colors
+
+|`\033[1m`
+|Bold text
+
+|`\033[2m`
+|Faint text
+
+|`\033[3m`
+|Italic text
+
+|`\033[4m`
+|Underline text
+
+|`\033[5m`
+|Slow blink
+
+|`\033[7m`
+|Swap foreground and background colors
+
+|`\033[8m`
+|Hidden text
+
+|`\033[9m`
+|Strikethrough text
+|===
+
+== Internal and environment variables
+
+[Attributes]
+|===
+|Variable |Description
+
+|`$-`
+|Shell options
+
+|`$$`
+|Current shell PID
+|===
