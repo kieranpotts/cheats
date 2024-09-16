@@ -11,6 +11,7 @@ Cheat sheets for various tools and technologies.
 * link:./src/unix/commands/README.adoc[Unix commands]
   ** link:./src/unix/commands/cat.adoc[cat]
   ** link:./src/unix/commands/chgrp.adoc[chgrp]
+  ** link:./src/unix/commands/chmod.adoc[chmod]
   ** link:./src/unix/commands/rm.adoc[rm]
 
 == Linux
