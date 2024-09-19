@@ -1,5 +1,7 @@
 = Docker
 
+== Commands
+
 There are two base Docker commands, which are used on a regular basis:
 `docker` and `docker-compose`. Running either command without any arguments
 will display a list of available commands and options.
@@ -7,7 +9,7 @@ will display a list of available commands and options.
 Generally, `docker-compose` is used to control more than one Docker container,
 whereas `docker` is used to control a single container.
 
-== Image commands
+=== Image commands
 
 * `docker image ls`: Display all Docker images (intermediate images are hidden).
 
@@ -17,7 +19,7 @@ whereas `docker` is used to control a single container.
 
 * `docker image rm <image-id>`: Remove an image.
 
-== Container commands
+=== Container commands
 
 * `docker ps`: Display details of all containers.
 
@@ -35,7 +37,7 @@ whereas `docker` is used to control a single container.
 
 * `docker restart <container-id>`: Restart a specific container.
 
-== `docker-compose` commands
+=== `docker-compose` commands
 
 * `docker-compose up`: Start (or create, then run) all containers defined in
   the `docker-compose.yml` file in the current working directory.
@@ -53,7 +55,79 @@ whereas `docker` is used to control a single container.
   and volumes as defined in the `docker-compose.yml` file in the current
   working directory.
 
-== Other useful commands
+=== Other useful commands
 
 * `docker exec -it <container-id> <command>`: Execute a command in a
   running container.
+
+== Shortcut scripts
+
+The following are handy scripts to make it easier to work with Docker
+containers.
+
+=== `install`
+
+Install this script in the root directory of your project:
+
+```bash
+#!/usr/bin/env bash
+
+set -e
+
+docker composer down
+docker compose build --pull
+docker compose up -d
+```
+
+You can then run `./install` to build and start the containers defined in
+`docker-compose.yml`.
+
+Extend the script to declare environment variables that are required by
+`docker-compose.yml`, eg:
+
+```bash
+#!/usr/bin/env bash
+
+set -e
+
+export HOST_UID=$UID
+export HOST_GID=$GID
+export HOST_NAME=${hostname}
+
+docker composer down
+docker compose build --pull
+docker compose up -d
+```
+
+=== `run`
+
+Install the following script in the root directory of your project, replacing
+`<username>` and `<name>` with the appropriate values:
+
+```bash
+#!/usr/bin/env bash
+
+set -e
+
+docker composer exec -u <username> <name> "${@:1}"
+```
+
+You can then run `./run <command> <args...>` to execute a command in the
+named container.
+
+Additional scripts can be created as shortcuts for running specific commands.
+For example, to run PHP's `composer`:
+
+```bash
+#!/usr/bin/env bash
+
+./run composer "${@:1}"
+```
+
+And a further shortcut to install dependencies using Composer:
+
+```bash
+#!/usr/bin/env bash
+
+./composer install
+```
