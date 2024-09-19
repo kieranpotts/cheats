@@ -78,6 +78,10 @@ more complex than utility software!
 * link:./src/apps/tmux.adoc[tmux]
 * link:./src/apps/xdebug.adoc[Xdebug]
 
+== Application libraries and frameworks
+
+* link:./src/lib/laravel.adoc[Laravel]
+
 ''''
 
 Copyright © 2020-present Kieran Potts, link:./LICENSE.txt[CC0 license]
