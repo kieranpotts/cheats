@@ -69,7 +69,8 @@ containers.
 
 Install this script in the root directory of your project:
 
-```bash
+[source,bash]
+----
 #!/usr/bin/env bash
 
 set -e
@@ -77,7 +78,7 @@ set -e
 docker composer down
 docker compose build --pull
 docker compose up -d
-```
+----
 
 You can then run `./install` to build and start the containers defined in
 `docker-compose.yml`.
@@ -85,7 +86,8 @@ You can then run `./install` to build and start the containers defined in
 Extend the script to declare environment variables that are required by
 `docker-compose.yml`, eg:
 
-```bash
+[source,bash]
+----
 #!/usr/bin/env bash
 
 set -e
@@ -97,20 +99,21 @@ export HOST_NAME=${hostname}
 docker composer down
 docker compose build --pull
 docker compose up -d
-```
+----
 
 === `run`
 
 Install the following script in the root directory of your project, replacing
 `<username>` and `<name>` with the appropriate values:
 
-```bash
+[source,bash]
+----
 #!/usr/bin/env bash
 
 set -e
 
 docker composer exec -u <username> <name> "${@:1}"
-```
+----
 
 You can then run `./run <command> <args...>` to execute a command in the
 named container.
@@ -118,16 +121,18 @@ named container.
 Additional scripts can be created as shortcuts for running specific commands.
 For example, to run PHP's `composer`:
 
-```bash
+[source,bash]
+----
 #!/usr/bin/env bash
 
 ./run composer "${@:1}"
-```
+----
 
 And a further shortcut to install dependencies using Composer:
 
-```bash
+[source,bash]
+----
 #!/usr/bin/env bash
 
 ./composer install
-```
+----
