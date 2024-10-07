@@ -5,7 +5,8 @@
 Place the following in your project root, then run `./artisan <options>` to
 execute CLI commands defined in your application.
 
-```php
+[source,php]
+----
 #!/usr/bin/env php
 <?php
 
@@ -19,5 +20,4 @@ $status = (require_once __DIR__.'/bootstrap/app.php)
    ->handleCommand(new ArgvInput);
 
 exit($status);
-
-```
+----
