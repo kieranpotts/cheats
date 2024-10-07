@@ -82,6 +82,10 @@ more complex than utility software!
 
 * link:./src/lib/laravel.adoc[Laravel]
 
+== Services
+
+* link:./src/services/github.adoc[GitHub]
+
 ''''
 
 Copyright © 2020-present Kieran Potts, link:./LICENSE.txt[CC0 license]
