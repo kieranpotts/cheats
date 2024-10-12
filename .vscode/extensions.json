@@ -1,0 +1,29 @@
+{
+  "recommendations": [
+
+    /* AsciiDoc — Provides language support for AsciiDoc. */
+    "asciidoctor.asciidoctor-vscode",
+
+    /* AsciiDoc Snippets — Snippets for AsciiDoc for PDF and HTML output. */
+    "travismichette.adoc-snippets",
+
+    /* EditorConfig — .editorconfig file support. */
+    "editorconfig.editorconfig",
+
+    /* Java language support. */
+    "redhat.java",
+
+    /* Java debugger. */
+    "vscjava.vscode-java-debug",
+
+    /* Maven for Java. */
+    "vscjava.vscode-maven",
+
+    /* Java test runner. */
+    "vscjava.vscode-java-test",
+
+    /* Java project manager. */
+    "vscjava.vscode-java-dependency",
+
+  ]
+}

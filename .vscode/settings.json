@@ -1,0 +1,48 @@
+{
+
+  /* Vertical guidelines for line wrapping. */
+  "editor.rulers": [
+    80,
+    100,
+    120,
+  ],
+
+  /* Wrap long code lines at the viewport or 120 characters, whichever is
+  narrowest. For documentation, wrap lines at the viewport edge. */
+  "editor.wordWrap": "bounded",
+  "editor.wordWrapColumn": 120,
+  "[asciidoc]": {
+    "editor.wordWrap": "on",
+  },
+  "[markdown]": {
+    "editor.wordWrap": "on",
+  },
+
+  /* Handle indentation on a file-by-file basis - this is required due to the
+  variety of languages used in this repository. */
+  "editor.detectIndentation": true,
+  // "editor.insertSpaces": true,
+  // "editor.tabSize": 2,
+
+  /* Show control and empty space characters. */
+  "editor.renderControlCharacters": true,
+  "editor.renderWhitespace": "all",
+
+  /* Disable all auto-formatting mechanisms. */
+  "editor.formatOnPaste": false,
+  "editor.formatOnSave": false,
+  "editor.formatOnType": false,
+
+  /* Disable auto-fixes. */
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "never",
+  },
+
+  /* Don't allow commits to protected branches. */
+  "git.branchProtectionPrompt": "alwaysPrompt",
+  "git.branchProtection": [
+    // "stable",
+    // "release/*",
+  ],
+
+}
