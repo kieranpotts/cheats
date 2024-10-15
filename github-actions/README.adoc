@@ -1,0 +1,63 @@
+= GitHub Actions
+
+GitHub Actions is a CI/CD pipeline directly integrated with GitHub repositories.
+It can be used to automate workflows, such as building, testing, and deploying,
+based on triggers such as push, pull request, or issue creation. Workflows can
+also be triggered manually or run on a schedule.
+
+The main components of GitHub Actions are:
+
+* link:./events.adoc[*Events*]
+* link:./workflows.adoc[*Workflows*]
+* link:./contexts.adoc[*Contexts*]
+* link:./variables.adoc[*Variables, environment variables, and secrets*]
+* link:./functions.adoc[*Functions*]
+* link:./jobs.adoc[*Jobs*]
+* link:./runners.adoc[*Runners*]
+* link:./environments.adoc[*Environments*]
+* link:./steps.adoc[*Steps*]
+* link:./actions.adoc[*Actions*]
+* link:./inputs.adoc[*Inputs*]
+* link:./outputs.adoc[*Outputs*]
+* link:./caches-artifacts.adoc[*Caches and artifacts*]
+
+In simple terms:
+
+A *workflow* is a discrete automated process, defined in a YAML config file in
+a repository. Workflow *runs* are triggered by *events*. Each workflow has at
+least one *job*. A job is executed in a *runner*, – a runtime environment – and
+consists of a number of *steps*, which are executed in parallel by default.
+Steps execute custom commands, or they reuse existing *actions*, which can be
+thought of as shareable packaged commands.
+
+[source,txt]
+----
+┌─Workflow──────────────────────────────────┐
+│                                           │
+│ name: Workflow name                       │
+| on: push                                  │
+|                                           │
+│ ┌─Job───────────────────────────────────┐ │
+│ │                                       │ │
+│ │ jobs:                                 │ │
+│ │   build:                              │ │
+│ │     name: Checkout code               │ │
+│ │     runs-on: ubuntu-latest            │ │
+│ │                                       | |
+│ │   ┌─Step────────────────────────────┐ │ │
+│ │   │                                 │ │ │
+│ │   │ steps:                          │ │ │
+│ │   │                                 │ │ │
+│ │   │ ┌─Action──────────────────────┐ │ │ │
+│ │   │ │                             │ │ │ │
+│ │   │ │ - uses: actions/checkout@v2 │ │ │ │
+│ │   │ │ - uses: ./my-custom-action  │ │ │ │
+│ │   │ │   with:                     │ │ │ │
+│ │   │ │     MY_NAME: "Mona"         │ │ │ │
+│ │   │ │                             │ │ │ │
+│ │   │ └─────────────────────────────┘ │ │ │
+│ │   └─────────────────────────────────┘ │ │
+│ └───────────────────────────────────────┘ │
+└───────────────────────────────────────────┘
+----
+
