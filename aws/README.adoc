@@ -1,0 +1,37 @@
+= AWS
+
+== AWS CLI
+
+Via the Identity and Access Management (IAM) web console, go to *Security
+credentials* for your user, then *Access keys* > *Create access key*.
+
+Once you've generated an access key, from your terminal run:
+
+[source,sh]
+----
+aws configure
+----
+
+At the prompts:
+
+* AWS Access Key ID: Paste your access key id
+* AWS Secret Access Key: Paste your access key's secret
+* Default region name: eg., `eu-west-2` for London
+* Default output format: eg., `json`
+
+To verify:
+
+[source,sh]
+----
+cd ~/.aws
+cat credentials
+----
+
+The output should reveal a default profile with your access keys:
+
+[source,txt]
+----
+[default]
+aws_access_key_id = AKIA...
+aws_secret_access_key = ...
+----
