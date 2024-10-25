@@ -344,3 +344,12 @@ typically want to disable the `cancel-in-progress` option for deployments.)
   runs in the wrong workflows.
 
 ======
+
+== Disabling workflows
+
+Workflows can be temporarily disabled via the GitHub UI, without having to
+delete the workflow configuration file from the default branch.
+
+You can also cancel workflow runs that are in progress, also via the GitHub UI.
+
+
