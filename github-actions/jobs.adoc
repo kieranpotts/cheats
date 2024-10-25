@@ -1,2 +1,145 @@
 = Jobs
+:toc: macro
+:toc-title: Contents
 
+toc::[]
+
+== Overview
+
+Jobs are defined at the workflow level. Every workflow MUST have at least one
+job.
+
+Jobs define in which execution environment they are run. The execution
+environment is called a link:./runners.adoc[runner]. A runner may be
+GitHub-hosted or self-hosted.
+
+Jobs are composed of one or more link:./steps.adoc[steps]. Each step may be a
+shell command or script, or a reference to an link:./actions.adoc[action].
+
+Jobs are run in parallel by default. Individual steps within a job are run
+sequentially by default.
+
+== Conditionals
+
+Execution of a job can be made conditional using the `if` attribute, which
+contains a JavaScript expression. The job will only run if the expression
+evaluates to `true`.
+
+[source,yaml]
+----
+jobs:
+  production-deploy:
+    if: github.repository == 'owner/repo' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+      - run: npm install -g bats
+----
+
+[NOTE]
+======
+The value of the `if` attribute is treated as a JavaScript expression, rather
+than a string. Expressions can be used in other attributes, which assume
+string values by default, using the `${{ <expression> }}` notation.
+
+However, even for the `if` attribute, when an expression starts with `!`, you
+MUST use the `${{ }}` expression syntax or escape with `''`, `""`, or `()`.
+That's because the exclamation mark is reserved notation in YAML.
+
+If you are not sure if a value will be automatically parsed as an expression,
+you can use the `${{ }}` syntax even where it is not required.
+======
+
+== Job dependencies
+
+By default, all jobs within a workflow execute in parallel.
+
+[source,yaml]
+----
+jobs:
+  job1:
+  job2:
+  job3:
+  job4:
+----
+
+The above configuration results in four parallel jobs:
+
+[source,txt]
+----
+start
+  |
+  |-> job1
+  |-> job2
+  |-> job3
+  |-> job4
+----
+
+Execution of a job can also be made conditional on another job having completed,
+such that its output is available to the dependent job. By default, jobs run in
+parallel. But if one jobs `needs` another, the dependent job will run
+sequentially, after the job(s) it needs complete.
+
+[source,yaml]
+----
+jobs:
+  job1:
+  job2:
+  job3:
+    needs:
+      - job1
+      - job2
+  job4:
+    needs: job1
+----
+
+With this configuration, job4 will start after job1 has completed, and
+job3 will start after both job1 and job2 have completed.
+
+[source,txt]
+----
+start
+  |
+  |-> job1 -> job4
+  |        \
+  |-> job2 -> job3
+----
+
+The `needs` and `if` attributes can be combined. In the following example,
+job3 will run only after job1 and job2, and only if they were both successful.
+
+[source,yaml]
+----
+jobs:
+  job1:
+  job2:
+    needs: job1
+  job3:
+    needs: [job1, job2]
+    if: ${{ success() }}
+----
+
+In the following example, the "deploy" job depends on the "Build" job, ensuring
+that the code is built and tested before it is deployed.
+
+[source,yaml]
+----
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Build and test
+      run: |
+        echo "Building and testing..."
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy to staging
+      run: |
+        echo "Deploying to staging..."
+----
