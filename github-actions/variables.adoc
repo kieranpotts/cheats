@@ -1,1 +1,366 @@
 = Variables, environment variables, and secrets
+:toc: macro
+:toc-title: Contents
+
+toc::[]
+
+You can define configuration variables, environment variables, and secrets in
+your workflows, to customize and parameterize each workflow's behavior. Use
+cases for variables include:
+
+* Accessing sensitive information securely.
+* Defining parameters or configuration settings to dynamically control workflow
+  behavior.
+* Sharing information between workflow steps or jobs.
+
+== Secrets
+
+[IMPORTANT]
+======
+Even in private repositories, you SHOULD NOT expose sensitive information in
+workflow files. GitHub Secrets is a secure place to store sensitive information
+that your workflows need. Secrets are available within workflow files via the
+`secrets` context.
+======
+
+Secrets are encrypted variables that allow you to pass sensitive information
+to your GitHub Actions workflows.
+
+Secrets can be defined at three levels:
+
+* *Organization-level secrets*: to share secrets between multiple repositories;
+  you can use policies to control which repositories can use organization
+  secrets; updating organization secrets propagates the change to all shared
+  repositories.
+
+* *Repository-level secrets*: secrets that are shared across all workflow
+  environments for a single repository.
+
+* *Environment-level secrets*: secrets that are specific to a single workflow;
+  you can enable required reviewers to approve changes to environment secrets.
+
+Lower-level secrets override higher-level secrets.
+
+Secret names MUST contain only alphanumeric characters and underscores. Secret
+names MUST NOT start with number, and names MUST NOT started with the `GITHUB_`
+prefix, which is reserved.
+
+Names are case-insensitive, and they must be unique at the level they are at
+which they are declared.
+
+Secrets can be set via the GitHub web UI or the `gh` CLI tool. To set
+repository-level secrets:
+
+[source,sh]
+----
+# Set a secret, prompts for secret value:
+gh secret set SECRET_NAME
+
+# Set a secret and pass in the value from a text file:
+gh secret set SECRET_NAME < secret.txt
+----
+
+To set at the environment level:
+
+[source,sh]
+----
+# Prompts for secret value:
+gh secret set --env ENV_NAME SECRET_NAME
+
+# Get list of secrets for an environment:
+gh secret list --env ENV_NAME
+----
+
+To set organization-level secrets:
+
+[source,sh]
+----
+# Login with admin:org scope to manage org secrets:
+gh auth login --scopes "admin:org"
+
+# Set a secret only for private repos, and prompt for secret value:
+gh secret set --org ORG_NAME SECRET_NAME
+
+# Set a secret for public, private and internal repos:
+gh secret set --org ORG_NAME --visibility all SECRET_NAME
+
+# Set a secret for specific repos:
+gh secret set --org ORG_NAME SECRET_NAME --repos repo1-name,repo2-name
+
+# List all secrets for an organization:
+gh secret list --org ORG_NAME
+----
+
+Secrets are accessed via the secrets context, eg. `${{ secrets.MY_SECRET }}`.
+You can pass them into any step's shell commands or reused actions. Example:
+
+[source,yaml]
+----
+name: Example using secret as input
+
+on: [push]
+
+jobs:
+  use-secret-as-input:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Use secret as input
+        uses: example/action@v1
+        with:
+          api-key: ${{ secrets.API_KEY }}
+----
+
+You can also pass secrets into env vars:
+
+[source,yaml]
+----
+name: Example using secret as input
+
+on: [push]
+
+jobs:
+  use-secret-as-input:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Run a script using a secret
+        run: |
+          echo "Using API key: $API_KEY"
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+----
+
+=== Special secrets
+
+There are a handful of special secrets that the GitHub Actions runners look for:
+
+* `ACTION_RUNNER_DEBUG`: Set to `true` at the repository level to enable
+  diagnostic logging for runners.
+
+* `ACTIONS_STEP_DEBUG`: Set to `true` at the repository level to enable
+  diagnostic logging for steps.
+
+Diagnostic logging provides additional debug logging from a workflow, which can
+be useful to diagnose issues with a workflow. Additional debug logging can be
+enabled for runs and steps.
+
+== Configuration variables
+
+Configuration variables are variables that allow you to access non-sensitive
+information in your GitHub Actions workflows.
+
+Variables are accessed via the `vars` context, eg. `${{ vars.MY_VAR }}`.
+
+As with secrets, variables can be set at multiple levels, with the lower-level
+ones overrides higher-level variables where there are name collisions:
+
+* Organization-level variables
+* Repository-level variables
+* Environment-level variables
+
+[source,sh]
+----
+# Add variable value for the current repository, via interactive prompt.
+gh variable set MY_VAR
+
+# Read variable value from an environment variable.
+gh variable set MY_VAR --body "$ENV_VAR"
+
+# Read variable value from a file.
+gh variable set MY_VAR < file.txt
+
+# Set multiple variables imported from the ".env" file.
+gh variable set -f .env
+
+# Set variable for a specific deployment environment in the current repository.
+gh variable set MY_VAR --env ENV_NAME
+
+# Set organization-level variable, visible to both public and private repos.
+gh variable set MY_VAR --org ORG_NAME --visibility all
+
+# Set organization-level variable, visible to specific repositories.
+gh variable set MY_VAR --org ORG_NAME --repos repo1-name,repo2-name
+----
+
+== Environment vars
+
+=== Default env vars
+
+GitHub sets LOTS of environment variables by default, which are all available
+from every step in every workflow – but only via the runner that is executing
+the job, so in effect the env vars are available only from the `run` attribute.
+The default env vars are case-sensitive, and they refer to configuration values
+for the system and the current user.
+
+Commonly-used default env vars include:
+
+* `GITHUB_REF`
+* `GITHUB_TOKEN`
+
+To use a default env var from `run`, prefix it with the `$` sign.
+
+[source,yaml]
+----
+jobs:
+  prod-check:
+    steps:
+      - run: echo "Deploying to production server on branch $GITHUB_REF"
+----
+
+While env vars are only available via the runner, you can also access some
+environment information via _contexts_, and these are more widely available, eg.
+you can use them in conditionals. In the following example, the `github.ref`
+context is used to check the branch that triggered the workflow. Subsequently,
+the env var `$GITHUB_REF` is used to log the same branch name in the runner.
+
+[source,yaml]
+----
+name: CI
+on: push
+jobs:
+  prod-check:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deploying to production server on branch $GITHUB_REF"
+----
+
+[TIP]
+======
+It is RECOMMENDED to use the default env vars to reference the runner's
+filesystem, rather than using hard-coded file paths.
+======
+
+`GITHUB_TOKEN` is a special environment variable that is automatically set
+at the start of each workflow job. You can use the `GITHUB_TOKEN` to
+authenticate with the `gh` CLI tool. Simply assign `secrets.GITHUB_TOKEN` to
+a new env var called `GH_TOKEN`, which `gh` will automatically read and use
+for authentication.
+
+[source,yaml]
+----
+name: Open a new issue
+on:
+  - workflow_dispatch
+
+jobs:
+  open-issue:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - run: |
+          gh issue --repo ${{ github.repository }} \
+            create --title "New issue" --body "This is an issue!"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+----
+
+You can also use `${{ secrets.GITHUB_TOKEN }}` with GitHub's REST API.
+
+=== Custom env vars
+
+You can define custom env vars inline within your workflows. To create a custom
+env var, you define it in your workflow file using the `env` attribute. The
+following example shows env vars set at the workflow level, job level, and step
+level. As with default env vars, custom env vars are case-sensitive, thus
+`$Your_Name` does not reference the same value as `$YOUR_NAME`.
+
+[source,yaml]
+----
+name: Greeting on variable day
+
+on:
+  - workflow_dispatch
+
+env:
+  DAY_OF_WEEK: Monday
+
+jobs:
+  greeting_job:
+    runs-on: ubuntu-latest
+    env:
+      GREETING: Hello
+    steps:
+      - name: "Say hello"
+        run: echo "$GREETING $Your_Name. Today is $DAY_OF_WEEK."
+        env:
+          Your_Name: Mona
+----
+
+Configuration variables and secrets can be used to set your custom
+environment variables at runtime:
+
+[source,yaml]
+----
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      APP_ENV: ${{ vars.APP_ENV || "dev" }}
+      DEBUG: ${{ vars.DEBUG || "false" }}
+    steps:
+      - name: Run workflow with parameters
+        run: |
+          # Use environment variables to control workflow behavior
+          if [[ "$APP_ENV" == "production" && "$DEBUG" == "false" ]]; then
+            echo "Running in production mode."
+          else
+            echo "Running in a different mode or with debugging enabled."
+          fi
+----
+
+As with default env vars, you can access custom env vars from `run` scripts
+using the normal Unix `$` prefix. You can also use the `env` context to access
+custom env vars, which is more useful in conditional expressions.
+
+[source,yaml]
+----
+name: Greeting on variable day
+
+on:
+  - workflow_dispatch
+
+env:
+  DAY_OF_WEEK: Monday
+
+jobs:
+  greeting_job:
+    runs-on: ubuntu-latest
+    env:
+      GREETING: Hello
+    steps:
+      - name: "Say hello"
+        if: ${{ env.DAY_OF_WEEK == 'Monday' }}
+        run: echo "$GREETING $YOUR_NAME. Today is $DAY_OF_WEEK."
+        env:
+          YOUR_NAME: Mona
+----
+
+You can also  dynamically set env vars during the execution of your workflows,
+using the `GITHUB_ENV` special environment variable. This is useful for passing
+values between steps, dynamically adjusting behavior based on runtime results,
+or configuring tools and scripts executed by your workflow.
+
+[source,yaml]
+----
+name: Set env vars example
+
+on:
+  - push
+
+jobs:
+  setup-and-use-env:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set dynamic env var
+        run: |
+          echo "DYNAMIC_ENV_VAR=hello from GA" >> $GITHUB_ENV
+      - name: Use dynamic env var
+        run: |
+          echo "Dynamic env var is $DYNAMIC_ENV_VAR"
+----
