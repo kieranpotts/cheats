@@ -33,20 +33,43 @@ The following contexts are available:
 
 [cols="1,2"]
 |===
-|Context   |Description
+| Context | Description
 
-|`github`  |Information about the workflow run, eg commit SHA, event name, ref or branch or tag.
-|`env`     |Environment variables set in a workflow, job, or step.
-|`vars`    |Configuration variables set at the repository, organization, or enterprise level.
-|`job`     |Information about the current running job.
-|`jobs`    |For reusable workflows only, contains outputs of jobs from the reusable workflow.
-|`steps`   |Information about the steps that have been run in the current job.
-|`runner`  |Information about the runner that is running the current job.
-|`secrets` |Names and values of secrets that are available to the workflow.
-|`strategy`|Information about the matrix execution strategy for the current job.
-|`matrix`  |Matrix properties defined in the workflow that apply to the current job.
-|`needs`   |Outputs of all jobs that are defined as a dependency of the current job.
-|`inputs`  |Inputs passed via `with` to an action or reusable workflow, or a manually-triggered workflow.
+| `github`
+| Information about the workflow run, eg commit SHA, event name, ref or branch or tag.
+
+| `env`
+| Environment variables set in a workflow, job, or step.
+
+| `vars`
+| Configuration variables set at the repository, organization, or enterprise level.
+
+| `job`
+| Information about the current running job.
+
+| `jobs`
+| For reusable workflows only, contains outputs of jobs from the reusable workflow.
+
+| `steps`
+| Information about the steps that have been run in the current job.
+
+| `runner`
+| Information about the runner that is running the current job.
+
+| `secrets`
+| Names and values of secrets that are available to the workflow.
+
+| `strategy`
+| Information about the matrix execution strategy for the current job.
+
+| `matrix`
+| Matrix properties defined in the workflow that apply to the current job.
+
+| `needs`
+| Outputs of all jobs that are defined as a dependency of the current job.
+
+| `inputs`
+| Inputs passed via `with` to an action or reusable workflow, or a manually-triggered workflow.
 |===
 
 .Example using the `github` context
