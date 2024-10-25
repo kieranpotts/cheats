@@ -1,2 +1,512 @@
 = Runners
+:toc: macro
+:toc-title: Contents
 
+:link-docs-usage-limits: https://docs.github.com/en/actions/administering-github-actions/usage-limits-billing-and-administration
+
+toc::[]
+
+== Overview
+
+Runners are associated with link:./jobs.adoc[jobs] in a workflow. A runner is
+simply a computer environment in which a job is executed.
+
+== Runner types
+
+There are two types of runners:
+
+* *GitHub-hosted runners*: A managed service in which each jobs runs in a fresh
+  instance of a virtual environment that's specified in the workflow file, eg.
+  `runs-on: {operating system-version}`. GitHub-hosted runners come in two
+  flavors: standard runners and larger-size runners.
+
+  ** Standard runners are available for every repository. Three operating systems
+    are available:
+
+    *** Linux: ubuntu-latest, ubuntu-22.04, ubuntu-20.04...
+    *** Windows: windows-latest, windows-2022, windows-2019...
+    *** macOS: macos-latest, macos-14, macos-13, macos-12, macos-11...
+
+  ** Larger-size runners are only available for organizations using the GitHub
+    Team or GitHub Enterprise Cloud plans. They offer more RAM, CPU, and disk
+    space. They have static IP addresses, the ability to group runners,
+    autoscaling to support concurrent workflows, and more.
+
+* *Self-hosted runners*: Machines that you manage, allowing you to customize
+  the hardware, operating system, and network configurations.
+
+[NOTE]
+======
+For enterprise users, GitHub-hosted runners are available only in Enterprise
+Cloud. They are not available on Enterprise Server instances.
+======
+
+Each type of runner has its pros and cons. GitHub-hosted runners are the
+quickest to setup but have the least flexibility, for example they have caps on
+maximum execution time and the number of concurrent jobs. Self-hosted runners
+are highly configurable and flexible; you can run your workflows in (almost) any
+computing environment, off-premises on on-premises, in physical, virtual, or
+containerized servers.
+
+You can also use self-hosted runners to create custom hardware configurations,
+eg. with more processing power or memory to run larger jobs, to install software
+available only in your local computer network, and to use operating systems not
+offered by GitHub-hosted runners. The only requirement of the self-hosted
+runner is that you need to install on it the GitHub Actions Runner software,
+so it can be connected with the GitHub Actions service.
+
+Self-hosted runners can be added at the repository, organization, or enterprise
+levels.
+
+.Comparison of GitHub-hosted and self-hosted runners
+|===
+| GitHub-hosted runners | Self-hosted runners
+
+| Receive automatic updates for the operating system and preinstalled packages and tools
+| Receive automatic updates for the self-hosted runner application only
+
+| Managed and maintained by GitHub
+| Fully customizable by you; can use cloud services or even local machines
+
+| Provide a clean instance for every job execution
+| It is not necessary that each run happens in a clean environment
+
+| Some free minutes, thereafter you pay GitHub on per-minute rates
+| No GitHub charges, but you will pay for the self-hosted infrastructure somehow!
+|===
+
+== `runs-on`
+
+Runners are defined by the `runs-on` attribute in workflow files, eg.
+`runs-on: ubuntu-latest` specifies that the job will run in a GitHub-hosted
+runner with the `ubuntu-latest` environment. If you specify an array of strings,
+your workflow will execute on any runner that matches any one of the specified
+`runs-on` values.
+
+[source,yaml]
+----
+# Common options.
+runs-on: ubuntu-latest
+runs-on: windows-latest
+runs-on: macos-latest
+
+# Specifying multiple possible options.
+runs-on: [macos-14, macos-13, macos-12]
+
+# Specify self-hosted computer.
+runs-on: [self-hosted, linux, ARM64]
+----
+
+For self-hosted runners, the workflow configuration is required to specify the
+`self-hosted` label, and the operating system and hardware architecture of the
+environment, eg. `runs-on: [self-hosted, linux, ARM32]`. These are called
+*default labels*:
+
+|===
+| Label | Description
+
+| `self-hosted`
+| Default label applied to all self-hosted runners
+
+| `linux`, `windows`, `macOS`
+| Applied depending on the runner's operating system
+
+| `x64` , `ARM`, `ARM64`
+| Applied depending on the runner's hardware architecture
+|===
+
+[source,yaml]
+----
+runs-on: [self-hosted, linux, ARM64]
+----
+
+Additionally, you may create *custom labels*. Custom labels can come in handy
+when you need to run jobs on runners that have specific capabilities. For
+example, if a job in one of your workflows requires a specific type of graphics
+hardware, you could create a gpu custom label and assign it to the runners that
+have the hardware installed. All runners with the gpu label would then be
+eligible to run the job.
+
+[source,yaml]
+----
+runs-on: [self-hosted, linux, ARM64, gpu]
+----
+
+== Job matrices
+
+A job matrix, aka. matrix strategy, lets you use variables in a single
+job definition to automatically create multiple job runs. This feature is
+incredibly useful when you need to test your builds across multiple versions of
+a language runtime, or on different operating systems.
+
+Job matrices are defined in the `jobs.<job_id>.strategy.matrix` section of the
+workflow file. The matrix section contains one or more variables, each with an
+array of values.
+
+[source,yaml]
+----
+jobs:
+  example_job:
+    strategy:
+      matrix:
+        version: [10, 12, 14]
+        os: [ubuntu-latest, windows-latest]
+----
+
+The workflow will run a job for each combination of the variables. The above
+example will produce six job runs on the following combination of systems:
+
+* ubuntu-latest 10
+* ubuntu-latest 12
+* ubuntu-latest 14
+* windows-latest 10
+* windows-latest 12
+* windows-latest 14
+
+As well as defining multiple versions of operating systems, the matrix strategy
+can also be used to define multiple versions of runtime environments such as
+Python and Node:
+
+[source,yaml]
+----
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+----
+
+And you can also define a combination of OS and language versions. The following
+matrix produces four workflow runs, one for each operating system paired with
+each version of Node.
+
+[source,yaml]
+----
+strategy:
+  matrix:
+    os: [ubuntu-latest, windows-latest]
+    node-version: [16.x, 18.x]
+----
+
+You can expand existing matrix configurations or add new ones using
+`jobs.<job_id>.strategy.matrix.include`. This allows you to include additional
+key-value pairs for matrix combinations without overwriting any original matrix
+values. The below example will include the `tag` key to all combinations that
+include the `ubuntu-latest` value for the OS key, and it will also add a new
+combination for `ubuntu-latest` and Node.js version 21.x (it will not have the
+21.x Node.js version set for the `windows-latest` option).
+
+[source,yaml]
+----
+strategy:
+  matrix:
+    node-version: [18.x, 20.x]
+    os:
+      - ubuntu-latest
+      - windows-latest
+    include:
+      - os: ubuntu-latest
+        tag: linux
+      - os: ubuntu-latest
+        node-version: 21.x
+----
+
+To remove specific configurations from the matrix, use `jobs.<job_id>.strategy.matrix.exclude`. Excluded configurations do not run.
+
+You may need to pass the matrix data into the relevant `setup-<runtime>`
+action that prepares the runtime environment. That's possible because the
+variables defined in your matrix become properties in the `matrix` context.
+You can simply reference these properties in other areas of your workflow file.
+For instance, you can use `matrix.version` and `matrix.os` to access the current
+values of version and os that the job is using.
+
+[source,yaml]
+----
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run build --if-present
+    - run: npm test
+----
+
+Job matrices are useful for doing things like running test suites in multiple
+target runtime environments before publishing a package update. Example for
+a Node.js library:
+
+[source,yaml]
+----
+name: My NPM package workflow
+on: push
+
+jobs:
+  backwards-compatibility:
+    name: ${{ matrix.os }}-${{ matrix.node }}
+    strategy:
+      matrix:
+        node: [14, 16, 18]
+        os:
+    - ubuntu-latest
+    - macos-latest
+    - windows-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+----
+
+This will run the workflow on three different operating systems, each with three
+different versions of Node.js, for a total of nine job runs:
+
+* ubuntu-latest + Node.js v14
+* ubuntu-latest + Node.js v16
+* ubuntu-latest + Node.js v18
+* macos-latest + Node.js v14
+* macos-latest + Node.js v16
+* macos-latest + Node.js v18
+* windows-latest + Node.js v14
+* windows-latest + Node.js v16
+* windows-latest + Node.js v18
+
+[IMPORTANT]
+======
+Each executed job counts towards billing. A matrix consisting of 9 jobs of 3
+minutes each will lead to 27 minutes of billed time.
+======
+
+== Runner groups
+
+Runner groups are used to collect sets of runners and create a security boundary
+around them.
+
+Enterprise accounts, organizations owned by enterprise accounts, and organizations
+using GitHub Teams, can create and manage additional runner groups.
+
+[source,yaml]
+----
+jobs:
+  check-bats-version:
+    runs-on:
+      group: ubuntu-runners
+----
+
+You can also combine labels and groups:
+
+[source,yaml]
+----
+jobs:
+  check-bats-version:
+    runs-on:
+      group: ubuntu-runners
+      labels: ubuntu-10.04-16core
+----
+
+== Handling job failures
+
+You can control how job failures are handled with
+`jobs.<job_id>.strategy.fail-fast` and `jobs.<job_id>.continue-on-error`. These
+settings enable you to decide whether a job failure should affect the entire
+matrix and whether specific jobs should continue running after a failure.
+
+== Containers
+
+*GitHub supports containers running on Linux only.*
+
+This means that if your workflow uses Docker container actions, job containers,
+or service containers, then you MUST use a Linux runner.
+
+If you are using GitHub-hosted runners, you MUST use an Ubuntu runner. If you are
+using self-hosted runners, you MUST use a Linux machine as your runner, and Docker
+MUST be installed on it.
+
+== Service containers
+
+Service containers are Docker containers that provide a simple and portable way
+for you to host services that you might need to test or operate your application
+in a workflow.
+
+You can configure service containers for each job in a workflow.
+
+GitHub creates a fresh Docker container for each service configured in a
+workflow, and destroys the service container when the job completes.
+
+Steps in a job can communicate with all service containers that are part of the
+same job.
+
+[NOTE]
+======
+You cannot create and use service containers inside a composite action. They
+are available only for JavaScript and Docker actions.
+======
+
+You can configure jobs in a workflow to run directly on a runner machine or in
+a Docker container:
+
+* Run jobs in a container using Docker *bridge* mode; access the container
+  via its hostname, eg. `redis`.
+
+* Run jobs on the runner machine using Docker *host* mode; access using
+  `localhost:<port>` or `127.0.0.1:<port>`.
+
+Example of usage of the Redis container service. The job specifies the type
+of container it will run:
+
+[source,yaml]
+----
+name: Redis container example
+on:
+  - push
+
+jobs:
+  container-job:
+    runs-on: ubuntu-latest
+    # The job specifies the container:
+    container: node:16-bullseye
+    services:
+      redis:
+        image: redis
+----
+
+In the following example, the job is running on the host image rather than in
+a container. We can tell because there is no container specified, and instead
+ports are mapped to the service.
+
+[source,yaml]
+----
+name: Redis container example
+on:
+  - push
+
+jobs:
+  container-job:
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+----
+
+You can specify credentials for your service containers:
+
+[source,yaml]
+----
+jobs:
+  build:
+    services:
+      redis:
+        # Docker image hub
+        image: redis
+        ports:
+          - 6379:6379
+        credentials:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+      db:
+        # Private registry image
+        image: ghcr.io/my-org/my-test-db:latest
+        credentials:
+          username: ${{ secrets.GHCR_USERNAME }}
+          password: ${{ secrets.GHCR_PASSWORD }}
+----
+
+Example config to run a Postgres server in a service container:
+
+[source,yaml]
+----
+jobs:
+  container-job:
+    runs-on: ubuntu-latest
+    container: node:10.18-jessie
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options:
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+----
+
+== Specifications
+
+As of October 2024, standard GitHub-hosted runners have the following
+specifications:
+
+* Windows and Ubuntu:
+  ** 2 cores
+  ** 7 GB of RAM
+  ** 14 GB of disk space
+* macOS:
+  ** 3 cores
+  ** 14 GB of RAM
+  ** 14 GB of disk space
+
+[TIP]
+======
+Keep VM resources in mind, especially when running commands that rely on
+parallel execution (for example, running parallel tests).
+======
+
+== Usage limits
+
+There are usage limits on workflow runs in GitHub-hosted runners. See
+{links-docs-usage-limits}[GitHub's usage limits] for details, but in general
+terms:
+
+* Workflow runs are free for self-hosted runners (but you handle the runner
+  infrastructure).
+
+* Workflow runs are free (with usage limits) for GitHub-hosted runners in public
+  repositories.
+
+* For private repositories, each GitHub account receives some free minutes of
+  use of GitHub-hosted runners. How many free minutes depends on the account's
+  subscription plan. Usage beyond the free amounts is capped by spending
+  limits.
+
+* Large runners are always billed, including for public repositories.
+
+For GitHub-hosted runners, Linux machines are the cheapest:
+
+* Linux has a multiplier of 1.
+* Windows has a multiplier of 2.
+* macOS had a multiplier of 10.
+
+In addition to runner usage, there are also storage caps for artifacts and
+packages. Temporary caching is not included in the storage caps, but is limited
+to 10GB per repository.
+
+== Configuring self-hosted runner for Enterprise
+
+Self-hosted runners for Enterprise Cloud and Enterprise Cloud have some
+additional configuration options:
+
+* *Proxy Servers*: if you need GitHub to communicate with your self-hosted
+  runner via a proxy server, you can set the following options:
+
+  ** `https_proxy`: proxy URL for HTTP traffic.
+  ** `http_proxy`: proxy URL for HTTP traffic.
+  ** `no_proxy`: URLs (in a comma-separated list) to exclude from proxying.
+
+* *IP Allowlists*: if your Enterprise Cloud or Enterprise Server organization
+  has configured IP allowlists, you must add the IP address or IP address range
+  of your self-hosted runners to the IP allowlist in order for GitHub to
+  communicate with your self-hosted runners
