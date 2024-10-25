@@ -1,0 +1,23 @@
+name: 05 - 1 - Event Filters and Activity Types
+
+on:
+  pull_request:
+    # types: [opened, synchronize]
+    types:
+      # If you do not specify the types of PR activity that you want the workflow
+      # to tun on, GitHub will apply default activity types. Better, then,
+      # to be explicit about the activity types you want to trigger the workflow.
+      - opened
+      - synchronize
+    # The branches key is an example of an event filter. The workflow will run
+    # only when the PR is opened or synchronized AND the base branch is main or
+    # dev.
+    branches:
+      - main
+      - dev
+
+jobs:
+  echo:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Running whenever a PR is opened or synchronized AND base branch is (main OR dev)"
