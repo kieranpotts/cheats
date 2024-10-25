@@ -1,2 +1,493 @@
 = Actions
+:toc: macro
+:toc-title: Contents
 
+:link-docs-gh-actions-syntax: https://docs.github.com/en/actions/sharing-automations/creating-actions/metadata-syntax-for-github-actions
+
+toc::[]
+
+== Overview
+
+Actions – not be confused with "GitHub Actions", which happens to also be the
+brand name for the overall CI/CD service offered by GitHub – can be thought of
+as shareable packaged commands that can be reused across multiple workflows.
+
+An action is plugged in to a link:./steps.adoc[step] in a link:./jobs.adoc[job].
+See links:./steps.adoc[steps] for instructions to call an action from a step.
+
+An action may encapsulate multiple steps and commands, and indeed it may be
+run in an entirely different environment from the rest of the job from which
+the action is called.
+
+There is an extensive marketplace of open source actions, and it is RECOMMENDED
+to reuse existing actions (whether public ones or your own private library of
+actions) wherever possible. This reduces code duplication and decreases the
+chances of mistakes and bugs.
+
+== Using actions
+
+[source,yaml]
+----
+name: My NPM package workflow
+on: push
+jobs:
+ node-20-release:
+   runs-on: ubuntu-latest
+   steps:
+     - uses: actions/setup-node@v3
+       with:
+         node-version: 20
+     - run: npm ci
+     - run: npm test
+     - run: npm publish ...
+----
+
+Actions are configured via `with` key-value pairs, which is basically the
+action's input arguments.
+
+The remainder of this documentation is concerned with the _creation_ of
+custom actions, rather than their consumption from workflow steps.
+See also the {link-docs-gh-actions-syntax}[metadata syntax for actions].
+
+== Public vs private actions
+
+Actions can be published publicly or privately.
+
+*Public actions* can be used in workflows defined in any repository. Public
+actions are stored in their own repositories, rather than bundled with
+application code in project repositories. This allows you to version, track and
+release the actions independently of the workflows that use them.
+
+*Private actions* are those defined in private repositories, and they can be
+used only in workflows in the same repository. With private actions, the
+action's file can be stored in any location in the repository, though it is
+recommended to use `.github/actions` to keep things consistent.
+
+[IMPORTANT]
+======
+Public actions MUST be in their own repository if you want them to be reused
+by other repositories.
+======
+
+== Action types
+
+There are three types of GitHub actions:
+
+* *Container actions*: The runtime environment configuration is included in
+  the action's package. These actions can be run only in a Linux environment
+  in a GitHub-hosted runner. Any programming language can be used, because you
+  can configure the container however you like. Uses Docker.
+
+* *JavaScript actions*: You specify a particular version of Node, but otherwise
+  you do not include the environment in your action's code. These actions are run
+  in a VM, which can be hosted by a GitHub-hosted or self-hosted runner.
+  JavaScript actions support Linux, macOS, and Windows environments.
+
+* *Composite actions*: These actions are a way to combine multiple commands,
+  across multiple workflow steps, within a single action. This means that client
+  workflows can bundle all of the action's commands into a single step.
+
+In general, JavaScript actions are best for fast, simple tasks, while container
+actions are best for more complex tasks that require specific environments –
+they tend to be a bit slower because the job has to retrieve the image and build
+the container from it.
+
+Composite actions are the easiest of all. These are just shell scripts that are
+run in the same environment as the rest of the workflow. You can even mix
+multiple shell languages within the same action. Sometimes it's just easier to
+write a simple shell script than to use JavaScript or wrap your code in a
+Docker container!
+
+[NOTE]
+======
+Docker containers can be run only in Linux, and only in GitHub-hosted runners.
+But both JavaScript and composite actions can be run in Linux, macOS, and
+Windows.
+======
+
+The `using` attribute determines the action type. The following example is a
+JavaScript action because it is using the `node20` runtime environment, and
+because the main entry point for this action is a `.js` file.
+
+[source,yaml]
+----
+runs:
+  using: 'node20'
+  main: 'main.js'
+----
+
+All actions require a metadata file to define the inputs and outputs, and the
+main entry point, for the action.
+
+=== Docker container actions
+
+To create a Docker container action, you will need to create:
+
+* A `Dockerfile`, which defines the commands to assemble the Docker image.
+* An `action.y(a)ml` file, which defines the metadata for the actions, such as
+  its inputs and outputs. The following configuration is required:
+
+[source,yaml]
+----
+runs:
+  using: docker
+  image: Dockerfile
+----
+
+* An `entrypoint.sh` file, which is the script that runs when the container
+  starts.
+* And a `README.md` file.
+
+A README is RECOMMENDED – and sometimes REQUIRED, in the case of actions published
+to the GitHub Marketplace – and SHOULD include the following information:
+
+* A detailed description of what the action does.
+* Required input and output arguments.
+* Optional input and output arguments.
+* Secrets the action uses.
+* Environment variables the action uses.
+* An example of how to use your action in a workflow.
+
+In addition, README files should include recommendations about how users should
+reference the action in their workflows, including versioning recommendations.
+
+=== JavaScript actions
+
+JavaScript actions require knowledge of the Node.js runtime environment and
+the JavaScript programming language. But any kind of custom language is possible,
+and happily there is a whole ecosystem of NPM packages in the `@actions/*`
+namespace that provide lots of useful functionality, so you often don't
+need to write everything from scratch.
+
+The steps to create a JavaScript action are:
+
+* Create an `action.y(a)ml` metadata file, which defines the action's inputs and
+  outputs.
+* Create an `index.js` file, which is the main entry point for the action and
+  defines or imports all of its functions.
+* Optionally create a `package.json` file, if there are dependencies that need
+  to be installed. (The generated package-lock.json file should also be
+  committed and, unusually, the `node_modules` directory also needs to be
+  committed!)
+
+[TIP]
+======
+To create and use packaged JavaScript actions, you MUST download Node.js, which
+includes npm, onto the runner. A RECOMMENDED step is to use GitHub Actions
+Toolkit Node.js, which is a collection of Node.js packages that allows you to
+quickly build JavaScript actions with more consistency.
+======
+
+=== Composite actions
+
+Composite actions are the simplest type of custom actions. They can be used to
+group together multiple steps and commands, augmented by other actions (of
+any type). However, they may not be enough for complex functionality.
+
+== Metadata
+
+The `action.y(a)ml` file defines the following information about your action:
+
+[cols="1,1,1", options="header"]
+|===
+| Parameter | Description | Required
+
+| Name
+| The name of the action, which helps to identify it within the context of a job.
+| Yes
+
+| Description
+| A summary of what the action does.
+| Yes
+
+| Runs
+| The command to run when the action executes.
+| Yes
+
+| Inputs
+| Input parameters which the action expects to receive during runtime; the inputs become env vars in the runner.
+| No
+
+| Outputs
+| Output parameters allow you to specify data that subsequent steps in the workflow can use.
+| No
+
+| Branding
+| Color and Feather icon, used to create a badge for the action in the GitHub Marketplace.
+| No
+|===
+
+=== Runs
+
+The `runs` statement defines the command necessary to execute the action. The
+syntax varies depending on the action type.
+
+For Docker actions, `runs.using` needs to be set to "docker", and `runs.image`
+references either "Dockerfile" or the name of the Docker image.
+
+[source,yaml]
+----
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+----
+
+For JavaScript actions, `runs.using` needs to be set to "node12" or "node14", etc.,
+and `runs.main` references the main entry point for the action.
+
+[source,yaml]
+----
+runs:
+  using: 'node12'
+  main: 'main.js'
+----
+
+For composite actions, `runs.using` needs to be set to "composite"; `runs.steps`
+defines the action's steps; and `steps[*].run` defines the commands you want to
+run, which could be inline or in script files.
+
+[source,yaml]
+----
+runs:
+  using: "composite"
+  steps:
+    - run: ${{ github.action_path }}/test/script.sh
+      shell: bash
+----
+
+=== Inputs and outputs
+
+The `inputs` attribute specifies data that the action requires during its
+runtime.
+
+[source,yaml]
+----
+inputs:
+  num-octocats:
+    description: 'Number of Octocats'
+    required: false
+    default: '1'
+  octocat-eye-color:
+    description: 'Eye color of the Octocats'
+    required: true
+----
+
+The `outputs` attribute allows you to declare data that the action sets. Later
+steps in the workflow can use the output data from previously-run actions.
+
+[source,yaml]
+----
+outputs:
+  sum: # id of the output variable.
+    description: 'The sum of the inputs'
+----
+
+=== Branding
+
+Example:
+
+[source,yaml]
+----
+branding:
+  icon: 'shield'
+  color: 'blue'
+----
+
+== Exit codes
+
+You can use exit codes to set the status of an action.
+
+Example with a Bash script:
+
+[source,bash]
+----
+#!/bin/bash
+
+make build
+exit_status=$?
+
+if [ $exit_status -ne 0 ]; then
+  echo "::error::Build failed with exit code $exit_status"
+  exit $exit_status
+fi
+
+echo "::set-output name=status::success"
+exit 0
+----
+
+Example with Docker:
+
+[source,sh]
+----
+#!/bin/sh -l
+
+echo "API_KEY=abc123" >> $GITHUB_ENV
+
+./run-tests.sh
+if [ $? -ne 0 ]; then
+  echo "::error::Tests failed"
+  exit 1
+fi
+
+echo "test-result=passed" >> $GITHUB_OUTPUT
+
+echo "Action completed successfully"
+----
+
+The advantage of using exit codes is that consumers of the action can
+respond to those exit codes in their workflows and customize how they respond
+to them.
+
+== Files and directories
+
+GitHub provides some recommendations for organizing the code for your custom
+actions. One or more custom actions can be stored in a single repository
+(ie. a monorepo). The root directory of the repository should contain a
+subdirectory for each action, named after the action. Inside, you'll organize
+the action's source code and configuration files.
+
+----
+/your-action-name
+  /node_modules
+  action.yaml
+  index.js
+  package.json
+  README.md
+----
+
+Each action SHOULD also have a `README.md` file with usage instructions.
+
+Actions MUST have an `action.y(a)ml` file at the root of the action's directory.
+This is the metadata file that defines the action's input and outputs, and its
+main entry point:
+
+[source,yaml]
+----
+name: 'My JS action'
+description: 'A description of my JS action'
+inputs:
+  myInput:
+    description: 'A description of my input'
+    required: true
+    default: 'default value'
+outputs:
+  myOutput:
+    description: 'A description of my output'
+runs:
+  using: 'node12'
+  main: 'index.js'
+----
+
+For JavaScript actions you MUST have a `package.json` file at the root of the
+action, and an `index|main.js` file which is referenced from the `action.yaml`
+file.
+
+For Docker actions, the following filesystem structure is typical:
+
+----
+/your-docker-action-name
+  Dockerfile
+  entrypoint.sh
+  action.yaml
+  README.md
+----
+
+Example `action.yaml` for a Docker action:
+
+[source,yaml]
+----
+name: 'My Docker action'
+description: 'A description of my Docker action'
+inputs:
+  myInput:
+    description: 'A description of my input'
+    required: true
+outputs:
+  myOutput:
+    description: 'A description of my output'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.myInput }}
+----
+
+== Publishing actions to the GitHub Marketplace
+
+Public actions can be published to the GitHub Marketplace, to share with the
+GitHub community. Requirements for listing actions in the marketplace include:
+
+* Each action MUST be in its own repository, which MUST be public. This allows
+  you to release and tag actions independently.
+
+* The repository MUST only include the code and configuration necessary for the
+  action, and nothing else.
+
+* The `action.y(a)ml` metadata file MUST be in the repository's root directory.
+
+* The `name` of the action MUST be unique to the GitHub Marketplace. There are
+  other restrictions, such as not clashing with GitHub users, organizations, or
+  features.
+
+* It is RECOMMENDED to create a README file for your action which includes a
+  description, input/output arguments, secrets, environment variables, and workflow
+  examples. This makes it easier for other users to understand what the action does
+  and how to customize it.
+
+* Public actions MUST be versioned. Two or three digit Semantic Versioning
+  is REQUIRED.
+
+These restrictions do not apply for actions intended for private use. Even
+if you use public repositories for your own private/internal-use actions, as
+long as those actions are not published to GitHub's Marketplace, you have a
+lot more flexibility over how you design and manage your actions. For example,
+you are free to encapsulate multiple actions in a single repository, and
+there are no restrictions on how you name them.
+
+== Examples of popular open source actions
+
+* `actions/checkout`: checkout the repository into the runner environment.
+* `actions/create-release`: create a release.
+* `actions/delete-package-versions`: prune older versions of packages when publishing new ones.
+* `actions/upload-release-asset`: upload a release asset.
+* `actions/setup-node`: set up a Node.js environment.
+* `actions/setup-python`: set up a Python environment.
+* `actions/setup-java`: set up a Java environment.
+* `azure/login`: authenticate with Azure.
+* `azure/docker-login`: authenticate with your private Docker image registry in Azure.
+* `azure/webapps-deploy`: deploy to Azure Web Apps.
+* `docker/login-action`: login to the Docker container registry.
+* `docker/metadata-action`: extract metadata (tags and labels) for Docker image.
+* `docker/build-push-action`: build and push Docker images.
+* `pullreminders/label-when-approved-action`: add a label to a PR once it has been approved.
+
+.Example
+[source,yaml]
+----
+steps:
+ - name: Label when approved
+   uses: pullreminders/label-when-approved-action@main
+   env:
+     APPROVALS: "1"
+     # The action needs this because it will make changes to the repository:
+     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+     ADD_LABEL: "approved"
+----
+
+=== The CodeQL action
+
+Using the CodeQL actions in workflows can automate the process of code
+analysis, allowing you to find and fix security issues.
+
+[source,yaml]
+----
+steps:
+  - name: Checkout code
+    uses: actions/checkout@v2
+  - name: Initialize CodeQL
+    uses: github/codeql-action/init@v1
+    with:
+      languages: ${{ matrix.language }}
+  - name: Perform CodeQL analysis
+    uses: github/codeql-action/analyze@v1
+----
