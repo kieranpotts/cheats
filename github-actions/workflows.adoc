@@ -1,1 +1,43 @@
 = Workflows
+:toc: macro
+:toc-title: Contents
+
+:link-docs-workflow-syntax: https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions
+:link-example-workflows: https://github.com/actions/starter-workflows
+
+toc::[]
+
+== Overview
+
+A GitHub workflow is a process that you set up in your repository to automate
+software development life cycle tasks.
+
+Workflows are scoped to repositories and are configured in YAML files in the
+`./.github/workflows` directory of the repository. A repository may have
+multiple workflows; each will be configured via a single YAML file.
+
+The {link-docs-workflow-syntax}[workflow syntax is documented here], and GitHub
+also has a {link-example-workflows}[repo of example workflows] you can use to
+get started.
+
+Workflows are triggered by link:./events.adoc[*events*]. The events that trigger
+the execution of a workflow are configured via the `on` attribute in the
+workflow's YAML config, eg. `on: push`.
+
+Each workflow is composed of one or more link:./jobs.adoc[*jobs*]. Every workflow
+MUST have at least one job. Each job is associated with a
+link:./runners.adoc[*runner*], which is a runtime environment for execution of the
+job. A runner may be GitHub-hosted or self-hosted, and the actual infrastructure
+may be a container or a virtual machine (or even a physical machine in the case
+of self-hosted runners).
+
+A *run* is an instance of a workflow execution. Each run is triggered by a single
+event. It a workflow can be triggered by multiple events, each event will trigger
+a separate run by default.
+
+Each job has link:./steps.adoc[*steps*] to complete. Each step may be a shell
+command or a reference to an link:./actions.adoc[*action*]. An action can be
+thought of as a plugin to a workflow. It is a packaged bundle of reusable
+functionality. Many open source actions are shared via the GitHub Marketplace,
+making it easier to compose custom workflows from existing actions.
+
