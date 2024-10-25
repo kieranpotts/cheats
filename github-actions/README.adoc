@@ -26,9 +26,8 @@ In simple terms:
 A *workflow* is a discrete automated process, defined in a YAML config file in
 a repository. Workflow *runs* are triggered by *events*. Each workflow has at
 least one *job*. A job is executed in a *runner*, – a runtime environment – and
-consists of a number of *steps*, which are executed in parallel by default.
-Steps execute custom commands, or they reuse existing *actions*, which can be
-thought of as shareable packaged commands.
+consists of a number of *steps*. Steps execute custom commands, or they reuse
+existing *actions*, which can be thought of as shareable packaged commands.
 
 [source,txt]
 ----
