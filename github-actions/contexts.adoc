@@ -1,2 +1,106 @@
 = Contexts
 
+Contexts are predefined variables that give you access to information about
+workflow runs, your own variables and secrets, the runner environment, and
+outputs and outcomes from jobs and steps.
+
+Each context is an object that contains properties that can be strings or other
+objects. Context data is available throughout workflow files. You typically
+access them via expression syntax, `${{ }}` (though sometimes this is not
+required).
+
+The following example shows use of a context called `secrets`:
+
+[source,yaml]
+----
+steps:
+  - name: Access secrets
+    run: echo "My secret is ${{ secrets.MY_SECRET }}"
+----
+
+Or:
+
+[source,yaml]
+----
+steps:
+  - name: Access secrets
+    run: echo "My secret is $MY_SECRET"
+    env:
+      MY_SECRET: ${{ secrets.MY_SECRET }}
+----
+
+The following contexts are available:
+
+[cols="1,2"]
+|===
+|Context   |Description
+
+|`github`  |Information about the workflow run, eg commit SHA, event name, ref or branch or tag.
+|`env`     |Environment variables set in a workflow, job, or step.
+|`vars`    |Configuration variables set at the repository, organization, or enterprise level.
+|`job`     |Information about the current running job.
+|`jobs`    |For reusable workflows only, contains outputs of jobs from the reusable workflow.
+|`steps`   |Information about the steps that have been run in the current job.
+|`runner`  |Information about the runner that is running the current job.
+|`secrets` |Names and values of secrets that are available to the workflow.
+|`strategy`|Information about the matrix execution strategy for the current job.
+|`matrix`  |Matrix properties defined in the workflow that apply to the current job.
+|`needs`   |Outputs of all jobs that are defined as a dependency of the current job.
+|`inputs`  |Inputs passed via `with` to an action or reusable workflow, or a manually-triggered workflow.
+
+.Example using the `github` context
+[source,yaml]
+----
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Display event information
+      run: |
+        echo "Event Name: ${{ github.event_name }}"
+        echo "Ref: ${{ github.ref }}"
+        echo "SHA: ${{ github.sha }}"
+----
+
+.Example using the `env` and  `secrets` contexts
+[source,yaml]
+----
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use secret
+        run: |
+          echo "My Secret: ${{ env.MY_SECRET }}"
+        env:
+          MY_SECRET: ${{ secrets.MY_SECRET }}
+----
+
+.Example using the `inputs` context
+[source,yaml]
+----
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use workflow input
+        run: |
+          echo "Input Value: ${{ inputs.my_input }}"
+----
+
+.Example using the `outputs` context
+[source,yaml]
+----
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Define workflow variable
+        id: set_var
+        run: |
+          echo "Setting Workflow Variable"
+          echo "name=Max" >> "$GITHUB_OUTPUT"
+    - name: Use workflow variable
+      run: |
+        echo "Workflow Variable Value: ${{ steps.set_var.outputs.name }}"
+----
