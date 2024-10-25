@@ -16,7 +16,6 @@ jobs:
   echo-data:
     runs-on: ubuntu-latest
     env:
-      MY_JOB_VAR: 'job'
       MY_OVERWRITTEN_VAR: 'job'
     steps:
       - name: Display information
@@ -41,7 +40,7 @@ jobs:
         run: |
           echo "Workflow env: ${{ env.MY_WORKFLOW_VAR }}"
           echo "Overwritten env: ${{ env.MY_OVERWRITTEN_VAR }}"
-      - name: Print env variables (without step-scoped overrides)
+      - name: Print env variables (without job-scoped overrides)
         run: |
           echo "Workflow env: ${{ env.MY_WORKFLOW_VAR }}"
           echo "Overwritten env: ${{ env.MY_OVERWRITTEN_VAR }}"
@@ -50,7 +49,7 @@ jobs:
   echo-data2:
     runs-on: ubuntu-latest
     steps:
-      - name: Print env variables
+      - name: Print env variables (without overrides)
         run: |
           echo "Workflow env: $MY_WORKFLOW_VAR"
           echo "Overwritten env: $MY_OVERWRITTEN_VAR"
