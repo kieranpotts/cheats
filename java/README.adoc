@@ -1,0 +1,21 @@
+= Java
+
+== Compilation and execution
+
+[source,sh]
+----
+# Produces an artifact named <filename>.class
+javac <filename>.java
+
+# Run <filename>.class in the JVM.
+java <filename>
+----
+
+Or use the single-command shortcut (which works from versions of Java ≈v14).
+This does not produce a built artifact, so this is intended only for use in
+development. It works only when there is one file to compile.
+
+[source,sh]
+----
+java <filename>.java
+----
