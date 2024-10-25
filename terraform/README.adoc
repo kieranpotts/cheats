@@ -1,0 +1,146 @@
+= Terraform
+
+== Benefits
+
+* *Multi-cloud*: Terraform is cloud-agnostic and can be used to manage
+  resources in multiple cloud providers. By declaring your infrastructure as
+  code in Terraform files, you can easily reproduce your infrastructure on
+  another cloud provider, or even on-premises, reducing vendor lock-in.
+
+* *Stateful*: It allows you to track your resource changes throughout your
+  deployment in a state file, which is the single source of truth for what
+  your environments look like at any one moment in time. Terraform itself
+  uses this state file to determine what changes need to be made to your
+  infrastructure, so that the state file eventually matches your desired
+  configuration.
+
+* *Version controlled*: Terraform files are plain text files that can be
+  version controlled using Git. This allows you to track changes to your
+  infrastructure over time, and to collaborate with others on your
+  infrastructure code. The infrastructure code may be maintained alongside the
+  application code, eg. in the same repository.
+
+* *Declarative*: You declare what you want the end state of your infrastructure
+  to be, and Terraform builds is. You don't need to write out a bunch of
+  imperative commands to create, update, or delete resources. Terraform figures
+  that out.
+
+* *No manual click-ops*: You don't need to manually manage infrastructure by
+  your cloud provider's web console or CLI. As well as being time-consuming,
+  this manual approach to infrastructure management also has other overheads,
+  such as the management of access permissions and the tracking of changes.
+
+* *Reduced risk of human error*: As well as reducing the costs associated with
+  operating infrastructure manually, you can also reduced risks associated
+  with human error. With Terraform, we can declare what we want, test it,
+  and _then_ apply it.
+
+* *High levels of automation* are possible when infrastructure is defined as
+  code. For example, infrastructure can be automatically provisioned and
+  destroyed as part of a CI/CD pipeline.
+
+* And potential *cost savings* can be achieved, for example by tearing down
+  non-production infrastructure at the end of each working day, so you're
+  not paying for those resources outside of office hours.
+
+* *Disaster recovery*: You can more quickly restore your infrastructure to a
+  in the event of a disaster such as a data center outage. Because of the
+  increased speed with which infrastructure can be recreated from scratch,
+  you may choose to save further money by not maintaining a "hot standby"
+  environment.
+
+== Providers
+
+Providers are a logical abstraction of an upstream API that exposes certain
+resources, such as web services or databases. Providers are typically cloud
+service providers such as AWS, Azure, or GCP, or they may be services such
+as Kubernetes.
+
+Providers are configured in Terraform files in "provider blocks", eg.:
+
+[source,terraform]
+----
+provider "aws" {
+  # Use the "[default]" profile, which is configured
+  # in `~/.aws/credentials`.
+  profile = "default"
+  region = "eu-west-2"
+}
+----
+
+== Initializing
+
+Whenever you create a new Terraform config, you need to run `terraform init`
+from the directory containing the config files.
+
+This "initializes the backend", which is to say it enables the plugins necessary
+to interact with your infrastructure provider.
+
+[source,cli]
+----
+$ terraform init
+
+Initializing the backend...
+
+Initializing provider plugins...
+- Finding latest version of hashicorp/aws...
+- Installing hashicorp/aws v4.53.0...
+----
+
+This generates a lock file called `.terraform.lock.hcl`. It is RECOMMENDED
+to commit this to source control, which guarantees that everyone will install
+the exact same dependencies when they run `terraform init` at the same commit
+point.
+
+[IMPORTANT]
+======
+It is RECOMMENDED to always run `terraform init` before running any additional
+`terraform` commands, after pulling changes from source control.
+======
+
+== Planning
+
+Run `terraform plan` to see what changes are required for your infrastructure.
+
+== Applying
+
+Run `terraform apply` to apply the changes to your infrastructure.
+
+When applying, you can override any default values for variables defined and
+used within the Terraform files, eg.:
+
+[source,cli]
+----
+$ terraform apply -var "instance_name="MyNewNameEC2"
+----
+
+If you have more than a few variables to set, then better to create a file
+called `terraform.tfvars` and set the variables there.
+
+== Destroying
+
+Running `terraform destroy` will destroy all of the infrastructure defined
+in your Terraform files.
+
+Do this whenever you have finished using resources, so you don't get charged
+for them.
+
+== Outputs
+
+Often, you want Terraform to output some data someplace, so you can review it
+later. This is particularly important when Terraform is run in a pipeline.
+For example, you might want to know the IP addresses of newly created services,
+so you can ping them.
+
+You define outputs in an `output.tf` file. The values will be captured and
+printed to the standard output when `terraform apply` is run, eg.:
+
+[source,txt]
+----
+Outputs:
+
+instance_id = "i-07bca4e61ccba1542"
+instance_public_ip = "52.56.205.129"
+----
+
+If you want to see the outputs from the last apply, run `terraform output`.
