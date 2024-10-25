@@ -25,5 +25,8 @@
     /* Java project manager. */
     "vscjava.vscode-java-dependency",
 
+    /* Terraform */
+    "hashicorp.terraform",
+
   ]
 }
