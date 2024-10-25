@@ -1,0 +1,262 @@
+= Go
+
+== Compiling and running
+
+Run a program without compiling it first:
+
+[source,sh]
+----
+$ go run main.go
+----
+
+Compile a program:
+
+[source,sh]
+----
+$ go run main.go
+$ ls
+main   main.go
+----
+
+Run the compiled program:
+
+[source,sh]
+----
+$ ./main
+----
+
+== GOPATH and modules
+
+Initially, Go required you to put all your Go projects in the same location on
+your local filesystem, determined by the `GOPATH` environment variable.
+
+[source,sh]
+----
+export GOPATH=$HOME/go
+----
+
+Go projects were expected to be organized in the following structure:
+
+----
+$GOPATH src <vendor> <project>
+----
+
+Examples:
+
+----
+/home/kieran/go/src/github.com/kieranpotts/hello-world.go
+/home/kieran/go/src/github.com/golang/go
+----
+
+The go-get tool, used for dependency management, depended on use of the GOPATH
+and this project structure. But not everyone liked this approach, and there
+emerged a number of open source tools that managed Go dependencies differently.
+
+The dependency management system was therefore changed in Go v1.13, with the
+introduction of Go modules. Go modules allow you to manage dependencies on a
+per-project basis, without the need for a global `GOPATH`. Thus, Go projects
+(modules) can live anywhere on disk and package management is now integrated
+directly into the Go toolchain (no more need for external tools).
+
+Go modules require proper use of semantic versioning.
+
+== Concurrency vs parallelism
+
+Concurrency and parallelism are both solutions to the problem of running
+multiple tasks at the same time, but the solve the problem in different ways:
+
+* Concurrency: two or more threads are making progress, but both are not
+  running at the same time.
+* Parallelism: two or more threads are executing simultaneously.
+
+Parallelism requires multiple CPU cores, while concurrency can be achieved on a
+single core. If you run a concurrent program on a single core, the threads will
+take turns executing, while on multiple cores, they can run at the same time
+(ie. in parallel).
+
+=== Goroutines
+
+Go has been designed with concurrency in mind. In Go, concurrency is achieved
+through goroutines, which are lightweight threads managed by the Go runtime.
+Goroutines are not really OS threads, but rather are "lightweight threads of
+execution" that are multiplexed onto a smaller number of OS threads.
+
+Goroutines use the same address space, so they share the same memory. This means
+you have to be careful about how your synchronize data that is shared by
+multiple goroutines.
+
+To create a goroutine, you simply use the `go` keyword followed by a function
+call:
+
+[source,go]
+----
+go myFunction()
+----
+
+Example:
+
+[source,go]
+----
+func say(word string) {
+    for i := 0; i < 5; i++ {
+        time.Sleep(10 * time.Millisecond)
+        fmt.Println(word)
+    }
+}
+
+func main() {
+    go say("world")
+    say("hello")
+}
+----
+
+The `go` keyword starts a new goroutine in a non-blocking way, so the
+execution of the main thread immediately continues to the `say("hello")` call.
+So you will get a seemingly random output like this:
+
+[source,sh]
+----
+$ go run goroutines.go
+
+world
+hello
+world
+hello
+hello
+world
+world
+hello
+world
+hello
+----
+
+It is possible for goroutines to finish _after_ the main thread has executed. To
+make sure that the main thread waits for the goroutines to finish, you can use
+the `sync.WaitGroup` type from the `sync` package.
+
+[source,go]
+----
+func main() {
+    /*
+    Create a WaitGroup, and then Add(1) for each of the goroutines you
+    will create and wait on.
+    */
+    wg := sync.WaitGroup{}
+    wg.Add(1)
+
+    /*
+    This is an example of an anonymous function or closure, here executed
+    as a goroutine.
+    */
+    go func() {
+        /*
+        The defer keyword makes sure that `wg.Done()` will be executed when
+        the main function returns, even if there is a panic.
+        */
+        defer wg.Done()
+        say("world")
+    }()
+
+    say("hello")
+
+    /* Wait for all goroutines to finish. */
+    wg.Wait()
+
+    fmt.Println("Done!")
+}
+----
+
+This solution is useful to make sure you always do things like close file
+handles.
+
+=== Channels
+
+A great way to provide synchronization between goroutines is to use channels.
+Channels are a powerful feature in Go that allow goroutines to communicate with
+each other and synchronize their execution.
+
+You can think of channels as pipes or queues that connect goroutines. You send
+and receive messages through channels.
+
+In Go, channels are first-class citizens; a channel is a type. And channels
+themselves are typed, meaning you can specify what type of data can be sent
+through them.
+
+Channels can be bi-directional (can send and receive) or uni-directional
+(send-only or receive-only).
+
+By default, sending or receiving data on a channel is a blocking operation.
+So if a Goroutine is waiting to receive something through a channel, it will
+just pause and wait until it gets what it needs.
+
+Channels can be buffered or unbuffered. A buffered channel allows you to set a
+size limit of values that can be sent.
+
+To create a channel, first declare its type:
+
+[source,go]
+----
+var messenger chan string
+----
+
+Then create the channel using the `make` keyword:
+
+[source,go]
+----
+messenger = make(chan string)
+----
+
+To send a value on a channel, use the `<-` operator, with the arrow pointing in
+the direction of the data flow. In this case, we're passing the string value
+into the `messenger` channel:
+
+[source,go]
+----
+messenger <- "Hello, World!"
+----
+
+To receive a value from a channel, and assign that value to a variable:
+
+[source,go]
+----
+message := <-messenger
+----
+
+Go will work out that `message` is of type `string`, in this case.
+
+=== Worker pool pattern
+
+This is an example of a worker pool pattern implementation, a common pattern
+in Go and concurrent programming in general. A worker pool simply allows you
+to execute the same function concurrently.
+
+[source,go]
+----
+/*
+Create a jobs channel, of type Task which for the purpose of this example
+is an arbitrary data type.
+*/
+jobs := make(chan Task)
+
+/*
+`limit` is the maximum number of goroutines that you want to run in this
+worker pool. For each pool, create a goroutine, and within each goroutine
+iterate over the jobs channel, pick up a task, and then do something with
+that task.
+*/
+for n := limit; n > 0; n-- {
+    go func() {
+        for task := range jobs {
+            do(task)
+        }
+    }()
+}
+
+/*
+The for/range construct is used here to iterate over the values in the
+channel, and put them into the jobs channel.
+*/
+for _, task := range workSlice {
+    jobs <- task
+}
+----
