@@ -1,2 +1,269 @@
 = Steps
+:toc: macro
+:toc-title: Contents
 
+toc::[]
+
+== Overview
+
+Each link:./jobs.adoc[job] has steps to complete.
+
+Steps are sequential operations and tasks that are executed in a job.
+
+Each step may be a shell command or a reference to an link:./actions.adoc[action].
+
+== Conditionals
+
+As with link:./jobs.adoc[jobs], execution of individual steps can be made
+conditional.
+
+By default, the standard execution for steps within a job is for downstream steps
+to be executed only if the upstream steps succeed.
+
+In the following example, if step2 fails, step3 will not execute:
+
+[source,yaml]
+----
+jobs:
+  job1:
+    steps:
+      - id: step1
+        run: echo "Step 1"
+      - id: step2
+        run: echo "Step 2"
+      - id: step3
+        run: echo "Step 3"
+----
+
+If we wanted to always run `step3` even if prior steps fail, we can use
+`!cancelled()`. Now, step3 will always be run, even if step1 or step2 fails
+(but not if the whole workflow is cancelled):
+
+[source,yaml]
+----
+jobs:
+  job1:
+    steps:
+      - id: step1
+      - id: step2
+      - id: step3
+        if: ${{ !cancelled() }}
+----
+
+The `if` attribute can be used to make a step conditional. The step will only run
+if the expression evaluates to `true`. The `${{ }}` expression syntax MAY be
+omitted in most cases, but it is RECOMMENDED to keep it, wrapping all
+expressions for clarity and consistency.
+
+Contexts are commonly used in conditional expressions. In the following
+example, the build and test step will run only when the workflow is triggered
+by a push event:
+
+[source,yaml]
+----
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Build and test
+      if: github.event_name == 'push'
+      run: |
+        # Your build and test commands here
+        echo "Building and testing..."
+----
+
+In the following example, the deployment will happen only when the push event
+occurs on the `main` branch:
+
+[source,yaml]
+----
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Deploy to production
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: |
+        echo "Deploying to production..."
+----
+
+== Using actions from steps
+
+[source,yaml]
+----
+jobs:
+  example-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+      - name: Run a custom script
+        run: ./my-script.sh
+----
+
+For documentation on creating custom actions, see link:./actions.adoc[Actions].
+
+== Running shell commands in steps
+
+The simplest type of workflows consist of steps that use the `run` attribute
+to define shell commands, which will be run directly in the runner.
+
+Example:
+
+[source,yaml]
+----
+name: Hello world
+
+on:
+  - workflow_dispatch
+
+jobs:
+  hello_world:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Say hello"
+        run: echo "Hello world"
+----
+
+Multiple shell commands can be run in a single step:
+
+[source,yaml]
+----
+steps:
+  - name: Print messages
+    run: |
+      echo "Message 1"
+      echo "Message 2"
+      echo "Message 3"
+----
+
+For anything more complex than a few lines of code, it is RECOMMENDED to
+extract the script to a standalone `.sh` file and reference it from `run`:
+
+[source,yaml]
+----
+jobs:
+  example-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run a script
+        run: ./my-script.sh
+        shell: bash
+----
+
+Optionally, you can specify an alternative working directory for all external
+scripts:
+
+[source,yaml]
+----
+jobs:
+  example-job:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./scripts
+    steps:
+      - name: Run a script
+        run: ./my-script.sh
+        shell: bash
+----
+
+A common pattern is to use scripts as reusable actions that are relevant only
+to the current repository, and a convention is to store these scripts in
+`./.github/scripts`.
+
+[source,yaml]
+----
+jobs:
+  example-job:
+    steps:
+      - name: Run build script
+        run: ./.github/scripts/build.sh
+        shell: bash
+----
+
+=== Setting outputs
+
+[source,yaml]
+----
+steps:
+  - name: Set output
+    id: output_step
+    run: echo "result=output_value" >> $GITHUB_OUTPUT
+
+  - name: Use output
+    run: echo "Output is ${{ steps.output_step.outputs.result }}"
+----
+
+See link:./outputs.adoc[Outputs] for more information.
+
+=== Setting environment variables
+
+[source,yaml]
+----
+steps:
+  - name: Set env vars
+    run: |
+      echo "ACTION_ENV=production" >> $GITHUB_ENV
+----
+
+=== Extending the system path
+
+[source,yaml]
+----
+steps:
+  - name: Add dir to PATH
+    run: |
+      echo "/path/to/dir" >> $GITHUB_PATH
+----
+
+=== Logging
+
+To enable step debug logging, set the `ACTIONS_STEP_DEBUG` secret or variable
+to `true` in the repository that contains the workflow. (If both the secret and
+variable are set, the value of the secret takes precedence over the variable.)
+
+[source,yaml]
+----
+steps:
+  - name: Create debug message
+    run: echo "::debug::This is a debug message"
+----
+
+Log messages can be grouped. This makes logs easier to read:
+
+[source,yaml]
+----
+steps:
+  - name: Group log messages
+    run: |
+      echo "::group::My grouped messages"
+      echo "Message 1"
+      echo "Message 2"
+      echo "::endgroup::"
+----
+
+You can mask values in logs, preventing sensitive information from appearing
+there:
+
+[source,yaml]
+----
+steps:
+  - name: Mask secret
+    run: echo "::add-mask::${{ secrets.MY_SECRET_VALUE }}"
+----
+
+And you can use `::error::` to force a workflow to stop:
+
+[source,yaml]
+----
+steps:
+  - name: Force error and fail the workflow
+    run: echo "::error::This is an error message"
+----
+
+The `::` syntax is called a *workflow command*, and it is a way of communicating
+with the runner to print formatted lines of text code to the console log.
+Workflow commands can be used within shell commands executed directly from
+workflow steps or via actions.
