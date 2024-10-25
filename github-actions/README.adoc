@@ -7,8 +7,8 @@ also be triggered manually or run on a schedule.
 
 The main components of GitHub Actions are:
 
-* link:./events.adoc[*Events*]
 * link:./workflows.adoc[*Workflows*]
+* link:./events.adoc[*Events*]
 * link:./contexts.adoc[*Contexts*]
 * link:./variables.adoc[*Variables, environment variables, and secrets*]
 * link:./functions.adoc[*Functions*]
