@@ -9,6 +9,7 @@ The main components of GitHub Actions are:
 
 * link:./workflows.adoc[*Workflows*]
 * link:./events.adoc[*Events*]
+* link:./expressions.adoc[*Expressions*]
 * link:./contexts.adoc[*Contexts*]
 * link:./variables.adoc[*Variables, environment variables, and secrets*]
 * link:./functions.adoc[*Functions*]
