@@ -224,3 +224,94 @@ It is actually possible to nest workflows, so a workflow can call a reusable
 workflow which can call a reusable workflow… but only up to four levels of
 nesting is supported.
 
+== Workflow templates
+
+Workflow templates are available on Enterprise accounts. They allow you to
+create workflows that can be reused across multiple repositories in your
+organization. The purpose is to ensure that automation is reused, and used
+consistently, across an organization.
+
+Workflow templates are defined in a repository called `.github`, in a
+sub-directory called `workflow-templates`. There are two parts to a workflow
+template:
+
+1.  Create a YAML workflow file.
+2.  Create a JSON metadata file that describes how the template should be
+    presented to users when they are creating a workflow.
+
+The metadata file MUST have the same name as the workflow template file. But
+instead of the `.y(a)ml` extension, it MUST be appended with `.properties.json`.
+
+.Example workflow template
+[source,yaml]
+----
+name: Octo Organization CI
+
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run a one-line script
+        run: echo Hello from Octo Organization
+----
+
+Notice the `$default-branch` variable. This is a placeholder. When a workflow is
+created from this template, this placeholder will be replaced with the name of
+the repository's default branch.
+
+.Example metadata file
+[source,json]
+----
+{
+    "name": "Octo Organization Workflow",
+    "description": "Octo Organization CI workflow template.",
+    "iconName": "example-icon",
+    "categories": [
+        "Go"
+    ],
+    "filePatterns": [
+        "package.json$",
+        "^Dockerfile",
+        ".*\\.md$"
+    ]
+}
+----
+
+.Metadata file properties
+|===
+| Parameter | Description | Required?
+
+| `name`
+| Name of the workflow template, , shown in the list of available workflow templates.
+| Yes
+
+| `description`
+| Description, shown in the list of available workflow templates.
+| Yes
+
+| `iconName`
+| SVG icon name, stored in the `workflow-templates` directory.
+| No
+
+| `categories`
+| Language categories, for easier search of workflow templates for specific languages.
+| No
+
+| `filePatterns`
+| Restricts workflows to being created in repositories with matching files in the root directory.
+| No
+|===
+
+To create a new workflow based on an existing workflow template, go to the
+*Actions* tab, select *New workflow*, and then search for the template
+under the section titled *Workflows created by <organization name>*.
+
