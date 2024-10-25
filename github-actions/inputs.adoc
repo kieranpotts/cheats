@@ -1,2 +1,38 @@
 = Inputs
 
+Inputs enable us to request specific information from the caller of the workflow
+or action, and use this information at runtime.
+
+The `inputs` attribute is a top-level key in both workflow and action YAML files.
+Each entry, `inputs.<name>`, represents an individual input value. The input
+value becomes available in the workflow via the `inputs` context.
+
+.Action
+[source,yaml]
+----
+inputs:
+  url:
+    description: '...'
+    required: true
+  max-tries:
+    description: '...'
+    required: false
+    default: 3
+----
+
+.Caller
+[source,yaml]
+----
+jobs:
+  job1:
+    steps:
+      - name: Ping URL
+        uses: ping-url-example@v1
+        with:
+          url: https://example.com
+          max-tries: 5
+----
+
+In manually-triggered workflows, inputs are defined under the `workflow_dispatch`
+event, defined via the top-level `on` key. Likewise, for reusable workflows,
+inputs are defined under the `workflow_call` event.
