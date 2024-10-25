@@ -5,6 +5,10 @@ It can be used to automate workflows, such as building, testing, and deploying,
 based on triggers such as push, pull request, or issue creation. Workflows can
 also be triggered manually or run on a schedule.
 
+****
+*Example GitHub Actions workflows are configured in this repository.*
+****
+
 The main components of GitHub Actions are:
 
 * link:./workflows.adoc[*Workflows*]
