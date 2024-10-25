@@ -119,3 +119,108 @@ jobs:
           echo $MY_VAR
 ----
 
+== Reusable workflows
+
+A reusable workflow is simply a workflow that can be called from another
+workflow. This feature allows you to create modular, shareable workflow
+components that can be used across multiple repositories and workflows
+within an organization. Often, this is a better solutions to reducing
+duplication and complexity in workflows than extracting out to
+link:./actions.adoc[actions].
+
+Making a workflow reusable is a simple matter of giving it the `workflow_call`
+event trigger. Inputs and secrets may be passed to reusable workflows, and
+outputs can be captured from them. These are all specified as properties
+of the `workflow_call` event:
+
+.Reusable workflow
+[source,yaml]
+----
+on:
+  workflow_call:
+    inputs:
+      aws-region:
+        type: string
+    secrets:
+      auth-token:
+        required: true
+    outputs:
+      server-url:
+        value: <value>
+----
+
+Otherwise, reusable workflows are written in the same way as regular workflows.
+
+To call a reusable workflow from a normal workflow, use the `uses` property.
+Unlike actions, reusable workflows are called from a job, rather than from
+a step. The `with` and `secrets` properties are used to pass inputs and secrets
+respectively.
+
+.Caller workflow
+[source,yaml]
+----
+jobs:
+  backend-infra-non-prod:
+    uses: ./.github/workflows/reusable-workflow.yaml
+    with:
+      aws-region: ${{ vars.AWS_REGION }}
+    secrets:
+      auth-token: ${{ secrets.GH_PAT }}
+----
+
+(This example represents a classic use case for reusable workflows: to deploy to
+different environments while ensuring a similar deployment process for all 
+environments.)
+
+You can also capture outputs from a reusable workflow and use them in the caller
+workflow. The process is similar to using outputs between different dependent
+jobs in the same workflow, but here you also have to specify the outputs under
+the `outputs` keyword in the `workflow_call` event definition, as wells as in
+the output from jobs within the reusable workflow. The job passes its outputs
+up to the workflow, and then the `workflow_call` event passes them out to the
+caller.
+
+.Reusable workflow
+[source,yaml]
+----
+on:
+  workflow_call:
+    outputs:
+      my-output:
+        value: ${{ jobs.my-job.outputs.my-output }}
+
+jobs:
+  my-job:
+    runs-on: ubuntu-latest
+    outputs:
+      my-output: ${{ steps.my-step.outputs.my-output }}
+    steps:
+      - name: My step
+        id: my-step
+        run: |
+          # Do something
+          echo "my-output=my-value" >> "$GITHUB_OUTPUT"
+----
+
+The below example shows how workflows can consume outputs from reusable
+workflows. Notice how you need to wait for the job that uses the reusable
+workflow to complete before you can access its outputs. You do this in the
+normal way: using `needs` to define dependencies between jobs:
+
+.Caller workflow
+[source,yaml]
+----
+jobs:
+  call-reusable-workflow:
+    uses: ./.github/workflows/reusable-workflow.yaml
+  use-outputs:
+    needs: call-reusable-workflow
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ${{ needs.call-reusable-workflow.outputs.my-output }}
+----
+
+It is actually possible to nest workflows, so a workflow can call a reusable
+workflow which can call a reusable workflow… but only up to four levels of
+nesting is supported.
+
