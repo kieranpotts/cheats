@@ -17,18 +17,18 @@ GitHub Actions has 35+ event triggers, which can be broadly divided into three
 categories:
 
 * *Repository events*
-  * `push`: triggered when someone pushes to the repository.
-  * `issues`: triggered by a variety of events related to issues.
-  * `pull_request`: triggered by a variety of events related to pull requests.
-  * `pull_request_review`: triggered by a variety of events related to PR
+  ** `push`: triggered when someone pushes to the repository.
+  ** `issues`: triggered by a variety of events related to issues.
+  ** `pull_request`: triggered by a variety of events related to pull requests.
+  ** `pull_request_review`: triggered by a variety of events related to PR
     reviews, eg. submitting, editing, deleting.
-  * `fork`: triggered when a repository is forked.
-  * …
+  ** `fork`: triggered when a repository is forked.
+  ** …
 
 * *Manual triggers*
-  * Triggered via the GitHub UI.
-  * Triggered via the GitHub REST API.
-  * Triggered from another workflow.
+  ** Triggered via the GitHub UI.
+  ** Triggered via the GitHub REST API.
+  ** Triggered from another workflow.
 
 * *Scheduled*: Runs as a cron job.
 

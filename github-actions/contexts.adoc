@@ -47,6 +47,7 @@ The following contexts are available:
 |`matrix`  |Matrix properties defined in the workflow that apply to the current job.
 |`needs`   |Outputs of all jobs that are defined as a dependency of the current job.
 |`inputs`  |Inputs passed via `with` to an action or reusable workflow, or a manually-triggered workflow.
+|===
 
 .Example using the `github` context
 [source,yaml]
@@ -100,7 +101,7 @@ jobs:
         run: |
           echo "Setting Workflow Variable"
           echo "name=Max" >> "$GITHUB_OUTPUT"
-    - name: Use workflow variable
-      run: |
-        echo "Workflow Variable Value: ${{ steps.set_var.outputs.name }}"
+      - name: Use workflow variable
+        run: |
+          echo "Workflow Variable Value: ${{ steps.set_var.outputs.name }}"
 ----

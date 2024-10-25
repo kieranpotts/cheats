@@ -12,30 +12,31 @@ There are two categories of functions:
 * *General-purpose functions*: utility functions to interact with data from
   multiple contexts and to model complex behavior, such as more advanced
   control over the workflow and job execution. Examples include:
-  * `contains()`: : checks if a value contains another value; returns `true`
-        if the search value is found in the target value.
-  * `startsWith()`: checks if a string starts with a specified substring;
-        returns true if the string starts with the given substring.
-  * `endsWith()`: checks if a string ends with a specified substring.
-  * `fromJSON()`: converts a value into a JSON object or data type; it's used
-        to work with JSON data in expressions or convert environment variables
-        from strings to JSON.
-  * `toJSON()`: converts a value into a JSON string.
-  * `hashFiles()`: used to generate a hash based on a single or multiple files;
-        one use-case is to generate caching keys based on dependency lock files.
-  * `format()`: used to format a string with placeholders.
-  * …
+
+  ** `contains()`: : checks if a value contains another value; returns `true`
+         if the search value is found in the target value.
+  ** `startsWith()`: checks if a string starts with a specified substring;
+         returns true if the string starts with the given substring.
+  ** `endsWith()`: checks if a string ends with a specified substring.
+  ** `fromJSON()`: converts a value into a JSON object or data type; it's used
+         to work with JSON data in expressions or convert environment variables
+         from strings to JSON.
+  ** `toJSON()`: converts a value into a JSON string.
+  ** `hashFiles()`: used to generate a hash based on a single or multiple files;
+         one use-case is to generate caching keys based on dependency lock files.
+  ** `format()`: used to format a string with placeholders.
+  ** …
 
 * *Status-check functions*: allow using the status of the workflow, or previous
   jobs or steps, to define conditionals for the execution of subsequent parts
   of the workflow. The available status-check functions are:
 
-  * `success()`: returns `true` when none of the previous steps have failed or
-        been cancelled.
-  * `failure()`: returns `true` when any previous step of a job fails.
-  * `cancelled()`: returns `true` if the workflow was cancelled.
-  * `always()`: always returns `true` and ensures that a step executes, even
-        if previous steps failed or if the workflow was cancelled.
+  ** `success()`: returns `true` when none of the previous steps have failed or
+         been cancelled.
+  ** `failure()`: returns `true` when any previous step of a job fails.
+  ** `cancelled()`: returns `true` if the workflow was cancelled.
+  ** `always()`: always returns `true` and ensures that a step executes, even
+         if previous steps failed or if the workflow was cancelled.
 
 [TIP]
 ======
