@@ -15,6 +15,6 @@ jobs:
         id: ping-url
         uses: ./.github/actions/docker-ping-url
         with:
-          url: https://www.invalid-ubfadufhbaudhfua.com
+          url: https://www.invalid-url-xxxxxxxxxxxxxxxxxxx.com
           max_trials: 20
           delay: 5
