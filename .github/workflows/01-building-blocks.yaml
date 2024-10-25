@@ -14,6 +14,7 @@ on: workflow_dispatch
 # A job is a unit of work within a workflow. You can have multiple jobs in a
 # workflow, and they can run in parallel (by default) or sequentially.
 jobs:
+
   echo-hello:
     # Each job specifies the runner environment, such as Ubuntu, macOS, or
     # Windows. You choose the environment that best suits your workflow.
@@ -29,6 +30,7 @@ jobs:
         # Steps execute commands or scripts. These can include shell commands,
         # script files, or even invoking actions from external sources.
         run: echo "Hello, world!"
+
   echo-goodbye:
     runs-on: ubuntu-latest
     steps:
@@ -36,6 +38,17 @@ jobs:
         run: |
           echo "I will succeed"
           exit 0
-      # This second step will never run because the first job fails.
+      - name: Say goodbye
+        run: echo "Goodbye!"
+
+  dont-echo-goodbye:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Failing step
+        run: |
+          echo "I will fail"
+          exit 1
+      # This second step will never run because the first job fails
+      # with exit code 1.
       - name: Say goodbye
         run: echo "Goodbye!"
