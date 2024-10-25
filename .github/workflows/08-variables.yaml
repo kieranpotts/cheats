@@ -8,6 +8,7 @@ env:
   OVERWRITTEN_ENV_VAR: 'I will be overwritten'
 
 jobs:
+
   echo:
     runs-on: ubuntu-latest
     env:
@@ -27,12 +28,14 @@ jobs:
           OVERWRITTEN_ENV_VAR: 'I have been overwritten at the step level'
         run: |
           echo "Overwritten: ${{ env.OVERWRITTEN_ENV_VAR }}"
+
   echo2:
     runs-on: ubuntu-latest
     steps:
       - name: Print variables
         run: |
           echo "Repo var: ${{ vars.REPOSITORY_VAR }}"
+
   echo-prod:
     runs-on: ubuntu-latest
     environment: prod
