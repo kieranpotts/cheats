@@ -18,8 +18,9 @@ jobs:
 
   unit-tests:
     runs-on: ubuntu-latest
-    # Dependent jobs will run even if this job fails.
-    continue-on-error: true
+    # Uncomment this next line if you want dependent jobs to run even if
+    # this one fails:
+    #continue-on-error: true
     steps:
       - name: Running unit tests
         run: echo "Running tests..."
