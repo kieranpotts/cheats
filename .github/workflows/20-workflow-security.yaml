@@ -28,12 +28,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      # This is safer because of the way that GitHub Actions handles
-      # environment variables. So just by transferring the input to
-      # an environment variable as an intermediate variable, we are safer
-      # from command injection. But it feels a bit hacky. This is not
-      # proper input sanitization. It only works because the input value
-      # is not injected directly into the shell script.
+      # Just by transferring the input to an environment variable as an
+      # intermediate variable, we are safer from command injection. But it
+      # feels a bit hacky. This is not proper input sanitization. It only works
+      # because the input value is not injected directly into the shell script.
       - name: Check PR title
         env:
           TITLE: ${{ github.event.pull_request.title }}
