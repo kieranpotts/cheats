@@ -1,0 +1,61 @@
+name: 20 - Workflow Security
+
+on:
+  pull_request:
+
+jobs:
+  unsafe-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      # This is unsafe because the PR title could be something like:
+      # "title; ls -R"
+      # Thus we are opening ourselves up to command injection, by users
+      # typing shell scripts in the PR title.
+      - name: Check PR title
+        run: |
+          title=${{ github.event.pull_request.title }}
+          if [[ $title =~ ^feat ]]; then
+          echo "PR is a feature"
+          exit 0
+          else
+          echo "PR is not a feature"
+          exit 1
+          fi
+  safer-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      # This is safer because of the way that GitHub Actions handles
+      # environment variables. So just by transferring the input to
+      # an environment variable as an intermediate variable, we are safer
+      # from command injection. But it feels a bit hacky. This is not
+      # proper input sanitization. It only works because the input value
+      # is not injected directly into the shell script.
+      - name: Check PR title
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          if [[ $TITLE =~ ^feat ]]; then
+          echo "PR is a feature"
+          exit 0
+          else
+          echo "PR is not a feature"
+          exit 1
+          fi
+  js-safer-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      # The safest option is not to define an inline shell script, but
+      # instead use a custom action written in JavaScript. The action asks for
+      # the PR title as an input instead. The risks of script injection are
+      # much lower, because we're just running some JavaScript in an isolated
+      # environment, and not running a shell envrionment.
+      - name: Check PR title
+        uses: ./.github/actions/security-safe-input
+        with:
+          pr-title: ${{ github.event.pull_request.title }}
