@@ -315,3 +315,32 @@ To create a new workflow based on an existing workflow template, go to the
 *Actions* tab, select *New workflow*, and then search for the template
 under the section titled *Workflows created by <organization name>*.
 
+
+== Managing concurrency
+
+GiHub Actions' concurrency management feature allows you to control and limit
+the number of jobs or workflows that can run simultaneously. This is useful to
+prevent job conflicts and resource contention, especially in multi-job workflows.
+
+Concurrency is controlled using the `concurrency` property in your workflow
+YAML files. This property is used to define *concurrency groups*. The value of
+the `concurrency` property can be any string or expression. When more than one
+workflow or job is part of the same concurrency group, only one instance of
+that workflow or job will run at a time. If other runs are triggered, those 
+will be queued to run after the current-running one completes.
+
+It is also possible to cancel any currently running job or workflow in the same
+concurrency group using the `cancel-in-progress: true` option. (You will
+typically want to disable the `cancel-in-progress` option for deployments.)
+
+[NOTE]
+======
+* Concurrency group names are case-insensitive.
+
+* Ordering is not guaranteed for jobs or runs using concurrency groups; they
+  are handled in the order they are processed.
+
+* Concurrency groups MUST be unique across all workflows, to prevent cancelling
+  runs in the wrong workflows.
+
+======
