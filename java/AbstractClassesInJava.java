@@ -2,7 +2,7 @@ public class AbstractClassesInJava {
   public static void main(String[] args) {
 
     /* Abstract classes cannot be instantiated. This will not compile. */
-    //Car car = new Car();
+    // Car car = new Car();
 
     /* Only concrete classes can be instantiated. */
     Car car = new Mondeo();
