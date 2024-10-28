@@ -12,7 +12,7 @@ on:
           - prod
 
 env:
-  working-directory: react/react-app
+  working-directory: _/react-app
 jobs:
   build:
     runs-on: ubuntu-latest

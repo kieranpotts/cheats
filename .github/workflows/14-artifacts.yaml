@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: react/react-app
+        working-directory: _/react-app
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -25,8 +25,8 @@ jobs:
         uses: actions/cache@v3
         id: cache
         with:
-          path: react/react-app/node_modules
-          key: deps-node-modules-${{ hashFiles('react/react-app/package-lock.json') }}
+          path: _/react-app/node_modules
+          key: deps-node-modules-${{ hashFiles('_/react-app/package-lock.json') }}
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: npm ci
@@ -36,14 +36,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.test-coverage-key }}
-          path: react/react-app/coverage
+          path: _/react-app/coverage
       - name: Build code
         run: npm run build
       - name: Upload build files
         uses: actions/upload-artifact@v4
         with:
           name: ${{ env.build-artifact-key }}
-          path: react/react-app/build
+          path: _/react-app/build
 
   deploy:
     runs-on: ubuntu-latest

@@ -10,7 +10,7 @@ jobs:
         # Settings this in the defaults makes this the default working
         # directory for all steps in this job. It's a bit cleaner than
         # writing `cd <path>` in every step.
-        working-directory: react/react-app
+        working-directory: _/react-app
     steps:
       # Even though the workflows are defined in the same repository, the
       # workflows run in virtual machines, which do not checkout the
@@ -26,9 +26,9 @@ jobs:
           node-version: '20.x'
       - name: Install dependencies
         run: npm ci
-        # working-directory: react/react-app (inherited)
+        # working-directory: _/react-app (inherited)
       - name: Run unit tests
         # run: |
-        #   cd react/react-app
+        #   cd _/react-app
         #   npm run test
         run: npm run test
