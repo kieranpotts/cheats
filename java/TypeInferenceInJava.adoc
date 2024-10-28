@@ -1,0 +1,96 @@
+= Type inference in Java
+
+The Java compiler can infer the types of some variables based on assigned values.
+This feature is called type inference.
+
+This feature began in Java 8 when lambda expressions were introduced. In
+lambda expressions, the type declarations for arguments were optional as the
+compiler was designed to infer the argument types from the surrounding context.
+Example:
+
+[source,java]
+----
+interface A {
+  void check(int num, String name);
+}
+
+class Demo {
+  public static void main(String args[]) {
+    A obj = (num, name) -> System.out.println(num + " " + name);
+    obj.check(10, "Hello");
+  }
+}
+----
+
+This feature was extended in Java 10. The extended feature is called *local
+variable type inference* and it allows the compiler to infer the type of a local
+variable from the value assigned to it. Example:
+
+[source,java]
+----
+/* Previously: */
+int i = 8;
+
+/* From Java 10: */
+var i = 8;
+----
+
+The syntax is further simplified for arrays:
+
+[source,java]
+----
+/* Previously: */
+int nums[] = new int[10];
+
+/* From Java 10: */
+var nums = new int[10];
+----
+
+The `var` keyword is used to declare a local variable with an inferred type.
+When the compiler sees this keyword, it will infer the type of the variable
+based on the data assigned to it. In the above example, `i` is inferred to be of
+type `int`.
+
+You can't use `var` on a local variable without initializing it. The following
+code will not compile:
+
+[source,java]
+----
+var i;
+----
+
+The introduction of local variable type inference in Java 10 was intended to
+reduce Java's legendary verbosity, and so improve the readability of Java code.
+After all, code is written once but read many times.
+
+[source,java]
+----
+/* Less readable: */
+ArrayList list = new ArrayList();
+
+/* More readable: */
+var list = new ArrayList();
+----
+
+Arguably, there is little difference in readability of the above code lines.
+However, sometimes class names are very long, in which case writing a class name
+twice on the same line _does_ greatly reduce readability.
+
+You can still call variables `var` if you want, but this is not recommended –
+it's confusing. We should treat `var` as a reserved keyword, though it is not.
+
+[source,java]
+----
+/* This works but is bad practice. */
+int var = 10;
+----
+
+Type inference is limited to local variables . It is not extended to class
+instance variables, method parameters, or return types. This is a good design.
+Local variables (within a method) exist only to serve the processing of data
+through the method, and their types are usually clear from the immediate
+context. By contrast, instance variables, say, are a form of data storage, and
+therefore it is desirable to always be explicit about their expected types.
+
+Even with the introduction of `var`, Java remains a strong statically-typed
+language
