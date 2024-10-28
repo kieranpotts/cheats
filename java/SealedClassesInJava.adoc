@@ -1,0 +1,57 @@
+= Sealed classes in Java
+
+Introduced in Java 17, sealed classes are a new way of restricting inheritance.
+The existing solutions were:
+
+* Abstract classes are _meant_ to be extended (ie MUST be inherited).
+* Final classes are _meant_ to be used as is (ie MUST NOT be inherited).
+
+Sealed classes offer a middle ground between abstract and final classes. A
+sealed class can be extended but only by a fixed set of classes. There was a
+way of doing this before, but Java 17 made it easier by adding the `sealed`
+modifier to class declarations.
+
+A sealed class defines the subclasses that are allowed to extend from it.
+Besides the `sealed` modifier, a second keyword is required, `permits`. The
+`permits` keyword is followed by a list of classes that are allowed to extend
+the sealed class.
+
+[source,java]
+----
+sealed class A permits B, C, D {}
+
+/* Allowed. By declaring B as non-sealed, it can be inherited by anything (no
+restrictions are forwarded from A). */
+non-sealed class B extends A {}
+
+/* Allowed. C is allowed to extend from A, and itself MAY be further extended by C. */
+/* (The implements keyword is included here only to show that it is still allowed.) */
+sealed class C extends A implements MyContract permits F {}
+
+/* Allowed. D is NOT REQUIRED to extend A, it is only permitted to do so if it wants to. */
+class D {}
+
+/* Compile-time error: E is not permitted to extend A. */
+final class E extends A {}
+
+/* Allowed. F is allowed to extend from C. Further extension is disallowed. */
+final class F extends C {}
+----
+
+Sealed interfaces are possible, too:
+
+[source,java]
+----
+sealed interface X permits Y {}
+sealed interface Y extends X {}
+----
+
+Classes that extend from a sealed class MUST themselves have one of the
+following modifiers:
+
+* `final`
+* `sealed`
+* `non-sealed`
+
+Interfaces can never be `final`, so you MUST use either `sealed` or `non-sealed`
+when extending an interface from a sealed interface.
