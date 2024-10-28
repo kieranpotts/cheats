@@ -1,4 +1,5 @@
-/*
+= Record classes in Java
+
 In object-oriented programming there will be many use cases when you create
 *functional classes* that do some sort of processing. Service classes and
 utility classes fall into this category. But there will be times when you need
@@ -6,17 +7,10 @@ to create pure *data classes*, which exist only to store data. These types of
 classes are often called *data carriers* or *data transfer objects* (DTOs).
 
 Example of a simple, immutable data entity type:
-*/
 
+[source,java]
+----
 import java.util.Objects;
-
-public class RecordClassesInJava {
-  public static void main(String[] args) {
-    /* Usage example: */
-    Person p = new Person("Alice", 30);
-    System.out.println(p.getName() + " is " + p.getAge() + " years old.");
-  }
-}
 
 class Person {
   private final String name;
@@ -53,12 +47,20 @@ class Person {
     return "Person{" + "name='" + name + '\'' + ", age=" + age + "}";
   }
 }
+----
 
-/*
+.Usage example
+[source,java]
+----
+Person p = new Person("Alice", 30);
+System.out.println(p.getName() + " is " + p.getAge() + " years old.");
+----
+
 But that's a lot of boilerplate code to create valid data objects in Java! For
 example, the `equals()` method is necessary to compare two objects of the same
 type. Without it, the following code will return `false`.
 
+[source,java]
 ----
 Person p1 = new Person("Alice", 30);
 Person p2 = new Person("Alice", 30);
@@ -73,6 +75,7 @@ implementation (it is called by methods such as `System.out.println()` and
 In Java since version 17, it is much, _much_ easier to create this kind of
 class using the `record` keyword. All you need to do is:
 
+[source,java]
 ----
 record Person(String name, int age) {}
 ----
@@ -89,6 +92,7 @@ of the state variables optional, you could create additional constructors with
 reduced parameters (or no parameters at all). In the following example, the
 `age` field becomes optional, defaulting to the value `0` if not provided.
 
+[source,java]
 ----
 record Person(String name, int age) {
   public Person(String name) {
@@ -97,16 +101,17 @@ record Person(String name, int age) {
 }
 ----
 
-This is called a non-canonical constructor, because it does not have the same
-parameters as the canonical constructor, which is defined on the `record` line.
-To implement a non-canonical constructor, it is REQUIRED that the canonical
-constructor be called from within it. This can be done using `this()`.
+NOTE: This is called a non-canonical constructor, because it does not have the
+same parameters as the canonical constructor, which is defined on the `record`
+line. To implement a non-canonical constructor, it is REQUIRED that the
+canonical constructor be called from within it. This can be done using `this()`.
 
 You might also want to build in some validation to the constructor. For example,
 you could check that the `age` is a positive number. If it is not, you could
 throw an `IllegalArgumentException`. This is a good use case for a *compact
 canonical constructor*. Instead of the following:
 
+[source,java]
 ----
 record Person(String name, int age) {
   public Person(String name, int age) {
@@ -123,6 +128,7 @@ You can use the compact canonical constructor syntax instead. You're just
 adding the validation checks that you want to do. If no exceptions are thrown,
 Java will handle the assignments for you.
 
+[source,java]
 ----
 record Person(String name, int age) {
   public Person {
@@ -136,6 +142,7 @@ Records can be extended with any custom methods you need, and they can also
 implement interfaces. Implementation of the `Cloneable` interface, for example,
 is a common design pattern for immutable data objects in Java.
 
+[source,java]
 ----
 record Person(String name, int age) implements Cloneable {
   @Override
@@ -149,7 +156,7 @@ Values are accessed using method names that match the field names. For example,
 to access the `name` field, you would use the `name()` method. To access the
 `age` field, you would use the `age()` method.
 
+[source,java]
 ----
 System.out.println(p.name() + " is " + p.age() + " years old.");
 ----
-*/
