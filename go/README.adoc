@@ -98,15 +98,15 @@ Example:
 [source,go]
 ----
 func say(word string) {
-    for i := 0; i < 5; i++ {
-        time.Sleep(10 * time.Millisecond)
-        fmt.Println(word)
-    }
+	for i := 0; i < 5; i++ {
+		time.Sleep(10 * time.Millisecond)
+		fmt.Println(word)
+		}
 }
 
 func main() {
-    go say("world")
-    say("hello")
+	go say("world")
+	say("hello")
 }
 ----
 
@@ -137,32 +137,35 @@ the `sync.WaitGroup` type from the `sync` package.
 [source,go]
 ----
 func main() {
-    /*
-    Create a WaitGroup, and then Add(1) for each of the goroutines you
-    will create and wait on.
-    */
-    wg := sync.WaitGroup{}
-    wg.Add(1)
 
-    /*
-    This is an example of an anonymous function or closure, here executed
-    as a goroutine.
-    */
-    go func() {
-        /*
-        The defer keyword makes sure that `wg.Done()` will be executed when
-        the main function returns, even if there is a panic.
-        */
-        defer wg.Done()
-        say("world")
-    }()
+	/*
+	Create a WaitGroup, and then Add(1) for each of the goroutines you
+	will create and wait on.
+	*/
 
-    say("hello")
+	wg := sync.WaitGroup{}
+	wg.Add(1)
 
-    /* Wait for all goroutines to finish. */
-    wg.Wait()
+	/*
+	This is an example of an anonymous function or closure, here executed
+	as a goroutine.
+	*/
 
-    fmt.Println("Done!")
+	go func() {
+		/*
+		The defer keyword makes sure that `wg.Done()` will be executed when
+		the main function returns, even if there is a panic.
+		*/
+	defer wg.Done()
+	say("world")
+	}()
+
+	say("hello")
+
+	/* Wait for all goroutines to finish. */
+	wg.Wait()
+
+	fmt.Println("Done!")
 }
 ----
 
@@ -236,6 +239,7 @@ to execute the same function concurrently.
 Create a jobs channel, of type Task which for the purpose of this example
 is an arbitrary data type.
 */
+
 jobs := make(chan Task)
 
 /*
@@ -244,19 +248,21 @@ worker pool. For each pool, create a goroutine, and within each goroutine
 iterate over the jobs channel, pick up a task, and then do something with
 that task.
 */
+
 for n := limit; n > 0; n-- {
-    go func() {
-        for task := range jobs {
-            do(task)
-        }
-    }()
+	go func() {
+		for task := range jobs {
+			do(task)
+		}
+	}()
 }
 
 /*
 The for/range construct is used here to iterate over the values in the
 channel, and put them into the jobs channel.
 */
+
 for _, task := range workSlice {
-    jobs <- task
+	jobs <- task
 }
 ----
