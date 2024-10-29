@@ -1,5 +1,7 @@
 # Getting Started with Create React App
 
+**This codebase is included only to act as a target for some GitHub Actions workflow examples.**
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
