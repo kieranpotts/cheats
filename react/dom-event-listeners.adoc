@@ -1,0 +1,27 @@
+= DOM event listeners
+
+React provides a declarative way to attach event listeners to DOM elements. The
+framework supports a subset of native DOM events.
+
+[source,jsx]
+----
+export default function Example() {
+  function handleClick() {
+    console.log("I was clicked!")
+  }
+
+  function handleOnMouseOver() {
+    console.log("I was hovered over!")
+  }
+
+  return (
+    <div className="container">
+      <img
+        src="https://picsum.photos/640/360"
+        onMouseOver={handleOnMouseOver}
+      />
+      <button onClick={handleClick}>Click me</button>
+    </div>
+  )
+}
+----

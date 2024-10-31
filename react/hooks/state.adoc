@@ -1,0 +1,509 @@
+= State
+
+The following component will render a button labelled "Add Item" and a list
+of items labelled "Thing 1" and "Thing 2". When the button is clicked, the
+original array will be updated with a new item – we can see that my inspecting
+the console log – but the new item will not be rendered in the list.
+
+[source,jsx]
+----
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+function App() {
+  const thingsArray = ["Thing 1", "Thing 2"]
+  const thingsElements = thingsArray.map(thing => <p key={thing}>{thing}</p>)
+
+  function addItem() {
+    const newThingText = `Thing ${thingsArray.length + 1}`
+    thingsArray.push(newThingText)
+    console.log(thingsArray)
+  }
+
+  return (
+    <div>
+      <button onClick={addItem}>Add Item</button>
+      {thingsElements}
+    </div>
+  )
+}
+
+ReactDOM.render(<App />, document.getElementById('root'));
+----
+
+To make this component _reactive_, we need to tell React to re-render the
+component when the value of the `thingsArray` variable changes. At the moment,
+there is nothing special about `thingsArray`. It is just a local variable that
+we happen to be using to help us to do the initial rendering of the component
+(to reduce duplication of code). React doesn't know that it should re-render
+the component when the value of `thingsArray` changes.
+
+To make the component reactive, we need to use the `useState` hook. The `useState`
+hook is a function that returns an array with two elements: the first element
+is the current value of the state variable, and the second element is a function
+that we can use to update the state variable.
+
+[source,jsx]
+----
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+function App() {
+  const [things, setThings] = React.useState(["Thing 1", "Thing 2"])
+
+  function addItem() {
+    const newThingText = `Thing ${things.length + 1}`
+    setThings(prevState => [...prevState, newThingText])
+  }
+
+  const thingsElements = things.map(thing => <p key={thing}>{thing}</p>)
+
+  return (
+    <div>
+      <button onClick={addItem}>Add Item</button>
+      {thingsElements}
+    </div>
+  )
+}
+
+ReactDOM.render(<App />, document.getElementById('root'));
+----
+
+== Using state setter functions
+
+Consider the following component.
+
+[source,jsx]
+----
+export default function App() {
+  const [count, setCount] = React.useState(0)
+
+  function add() {
+    setCount(count++)
+  }
+
+  return (
+    <div className="counter">
+      <div className="counter--count">
+        <h1>{count}</h1>
+      </div>
+      <button className="counter--plus" onClick={add}>+</button>
+    </div>
+  )
+}
+----
+
+The implementation of the `add()` function is incorrect. `count++` is shorthand
+for `count = count + 1`, and this is a _mutation_ of the `count` state variable.
+It is bad practice to directly mutate variables that reference current state
+values. Rather, we should use the state setter function to create a _new_ value
+that replaces the current value.
+
+So a more correct implementation of the `add()` function is:
+
+[source,js]
+----
+function add() {
+  setCount(count + 1)
+}
+----
+
+This works, but there is better way that follows best practices. Whenever we
+want to use an existing state value to calculate a new state value, we should
+use the _functional update_ form of the state setter function. This form of the
+state setter function accepts a callback as its first argument, and that callback
+is given the current value of the state variable as input, and it is expected to
+return the new value of the state variable.
+
+[source,jsx]
+----
+export default function App() {
+  const [count, setCount] = React.useState(0)
+
+  /* Long-form notation, for clarity: */
+  // function add() {
+  //   setCount(function (oldValue) {
+  //     return oldValue + 1
+  //   })
+  // }
+
+  function add() {
+    setCount(prevCount => prevCount + 1)
+  }
+
+  function subtract() {
+    setCount(prevCount => prevCount - 1)
+  }
+
+  return (
+    <div className="counter">
+      <button className="counter--minus" onClick={subtract}>–</button>
+      <div className="counter--count">
+        <h1>{count}</h1>
+      </div>
+      <button className="counter--plus" onClick={add}>+</button>
+    </div>
+  )
+}
+----
+
+This pattern is more verbose, but it is best practice because it ensures that
+the new state value is based on the most recent state value. Here's another
+example:
+
+[source,jsx]
+----
+export default function App() {
+  const [isGoingOut, setIsGoingOut] = React.useState(true)
+
+  function changeMind() {
+    setIsGoingOut(prevState => !prevState)
+  }
+
+  return (
+    <div>
+      <h1>Do I feel like going out tonight?</h1>
+      <div onClick={changeMind}>
+        <h1>{isGoingOut ? "Yes" : "No"}</h1>
+      </div>
+    </div>
+  )
+}
+----
+
+Updating arrays in state requires a particular pattern. We should not directly
+mutate the array, but instead create an _entirely new_ array object that
+includes the new item. ES6's spread syntax is the most convenient way to
+achieve this.
+
+[source,jsx]
+----
+function App() {
+  const [thingsArray, setThingsArray] = React.useState(["Thing 1", "Thing 2"])
+
+  function addItem() {
+    setThingsArray(prevThingsArray => {
+      return [
+        ...prevThingsArray,
+        `Thing ${prevThingsArray.length + 1}`
+      ]
+    })
+  }
+
+  const thingsElements = thingsArray.map(thing => <p key={thing}>{thing}</p>)
+
+  return (
+    <div>
+      <button onClick={addItem}>Add Item</button>
+      {thingsElements}
+    </div>
+  )
+}
+----
+
+When a state value is an object, and we want to update a property of that object,
+we should (again) replace the _whole_ object.
+
+[source,jsx]
+----
+const [contact, setContact] = React.useState({
+  firstName: "John",
+  lastName: "Doe",
+  phone: "+1 (719) 555-1212",
+  email: "itsmyrealname@example.com",
+  isFavorite: true
+})
+
+let starIcon = contact.isFavorite ? "star-filled.png" : "star-empty.png"
+
+function toggleFavorite() {
+  setContact(prevContact => {
+    return {
+      ...prevContact,
+      isFavorite: !prevContact.isFavorite
+    }
+  })
+}
+
+return (
+  <img
+    src={`../images/${starIcon}`}
+    className="card--favorite"
+    onClick={toggleFavorite}
+  />
+)
+----
+
+[NOTE]
+======
+Old class-based React components use the `this.setState()` method to update
+state, and its behavior differs from the `useState` hook. With `setState`,
+you can return a new object that contains only a subset of the properties of
+the current state object, and it would merge the new object with the old one,
+thus updating only the properties that exist in the new object.
+======
+
+== Props vs State
+
+*Props* are properties that we pass into a component from the parent component,
+similarly to how a function receives parameters. Another way to think about
+props is they are values that we use to _configure_ a component. Props are
+immutable; a component receiving props is not allowed to change them.
+
+*State* refers to values that are _managed by the component itself. State is
+mutable; it can – indeed, it _should_ – change during the life cycle of a
+component. The purpose of using state is to dynamically re-render the component
+when its state changes. This is what differentiates state from props and plain
+local variables.
+
+Props MAY be used to set some initial (default) state in a component. And state
+MAY be passed as props to child components.
+
+*Whenever state changes, it will re-render the component that holds that state,
+_and_ any child components that are passed the parent component's state as props.*
+
+So, in the following example, the `App` component is the parent component, and
+the `Counter` component is the child component. When `count` changes in the
+`App` component, the `Counter` component will re-render.
+
+.App.jsx
+[source,jsx]
+----
+import React from "react"
+import Count from "./Count"
+
+export default function App() {
+  const [count, setCount] = React.useState(0)
+
+  function add() {
+    setCount(prevCount => prevCount + 1)
+  }
+
+  function subtract() {
+    setCount(prevCount => prevCount - 1)
+  }
+
+  console.log("App component rendered")
+
+  return (
+    <div className="counter">
+      <button className="counter--minus" onClick={subtract}>–</button>
+      <Count number={count} />
+      <button className="counter--plus" onClick={add}>+</button>
+    </div>
+  )
+}
+----
+
+.Count.jsx
+[source,jsx]
+----
+import React from "react"
+
+export default function Count(props) {
+  console.log("Count component rendered")
+
+  return (
+    <div className="counter--count">
+      <h1>{props.number}</h1>
+    </div>
+  )
+}
+----
+
+Child components can trigger mutations in the parent component's state simply
+by calling state setter functions that are passed from the parent via the
+child's props.
+
+.Parent
+[source,jsx]
+----
+function App() {
+  const [contact, setContact] = React.useState({
+    // ...
+    isFavorite: true
+  })
+
+  function toggleFavorite() {
+    setContact(prevContact => ({
+      ...prevContact,
+      isFavorite: !prevContact.isFavorite
+    }))
+  }
+
+  return (
+    <main>
+      <!-- ... -->
+      <Star isFilled={contact.isFavorite} handleClick={toggleFavorite} />
+      <!-- ... -->
+    </main>
+  )
+}
+----
+
+.Child
+[source,jsx]
+----
+function Star(props) {
+  const starIcon = props.isFilled ? "star-filled.png" : "star-empty.png"
+  return (
+    <img
+      src={`../images/${starIcon}`}
+      className="card--favorite"
+      onClick={props.handleClick}
+    />
+  )
+}
+----
+
+== Best practices for managing component state
+
+State should be as local as possible, which means putting state in the highest
+level of the component tree that is necessary for components to access and share
+the state – _but no higher_! If necessary, use intermediary components – between
+the app-level or page-level components, and the lowest-level components, whose
+responsibility is only to manage the state of a group of related components.
+
+Avoid *derived state*. Derived state is state that can be calculated from other
+state values. Instead of storing derived state, calculate it on-the-fly when
+needed. This will keep your state management simple and avoid bugs that can
+arise from keeping derived state in sync with other state values.
+
+In the following example, the `Box` (child) component receives the `on` prop,
+which determines the background color of the box. Clicking the box will toggle
+the background color of the box. Now, it would be entirely possible for each
+`Box` instance to manage its own state after its initial render, so individual
+boxes would use `useState()` to generate a local state variable that is derived
+from the inherited state.
+
+[source,jsx]
+----
+function Box(props) {
+  /* Local state derived from props. */
+  const [on, setOn] = React.useState(props.on)
+
+  const styles = {
+    backgroundColor: on ? "#222222" : "transparent"
+  }
+
+  function toggle() {
+    setOn(prevOn => !prevOn)
+  }
+
+  return (
+    <div style={styles} className="box" onClick={toggle}></div>
+  )
+}
+----
+
+This is derived state. It works, but this is not best practice. Better to always
+have _one source of truth_ for each piece of state. In this case, the `on`
+value originates from the parent component, and any changes to those values
+should be managed by the parent component and allowed to trickle back down
+to the child components, like this:
+
+[source,jsx]
+----
+function Box(props) {
+  const styles = {
+    backgroundColor: props.on ? "#222222" : "transparent"
+  }
+
+  /*
+  Notice the design pattern om the onClick attribute. The `toggle` function is
+  defined in the parent component, and passed down to this child component as a
+  prop. This is what allows us to "life state up" and have the parent component
+  mutate the state inherited by the child component in response to events that
+  happened in the child component. Where we want to pass values back to the
+  parent component, we simply wrap the callback function in another function.
+  */
+  return (
+    <div
+      style={styles}
+      className="box"
+      onClick={()=>props.toggle(props.id)}
+    >
+    </div>
+  )
+}
+
+export default function App() {
+  const [squares, setSquares] = React.useState(boxes)
+
+  function toggle(id) {
+    setSquares(prevSquares => {
+      // const newSquares = []
+      // for(let i = 0; i < prevSquares.length; i++) {
+      //     const currentSquare = prevSquares[i]
+      //     if(currentSquare.id === id) {
+      //         const updatedSquare = {
+      //             ...currentSquare,
+      //             on: !currentSquare.on
+      //         }
+      //         newSquares.push(updatedSquare)
+      //     } else {
+      //         newSquares.push(currentSquare)
+      //     }
+      // }
+      // return newSquares
+      return prevSquares.map(square => {
+        return square.id === id ? { ...square, on: !square.on } : square
+      })
+    })
+  }
+
+  const squareElements = squares.map(square => (
+    /*
+    Note: `key` is a special prop that React uses to keep track of which
+    elements have changed, been added, or been removed when multiple instances
+    of the same component type exist. But it is not available as a prop inside
+    the components themselves – `props.key` is always undefined. Best practice
+    is to use use a prop named `id` where you need child components to
+    have a reference to their unique key.
+    */
+    <Box
+      key={square.id}
+      id={square.id}
+      on={square.on}
+      toggle={toggle}
+    />
+  ))
+
+  return (
+    <main>
+      {squareElements}
+    </main>
+  )
+}
+----
+
+Another way to implement the callbacks would be for the parent component to
+create a custom callback function for each instance of the child `<Box>`
+component, with the `id` of the box already wrapped in the callback function.
+Then the child component would simply call the callback function in the
+normal way:
+
+[source,jsx]
+----
+/* App.jsx */
+<Box
+    key={square.id}
+    on={square.on}
+    toggle={() => toggle(square.id)}
+/>
+
+/* Box.jsx */
+<div
+  style={styles}
+  className="box"
+  onClick={props.toggle}
+>
+</div>
+
+----
+
+This is actually a better pattern. It is the parent component that creates
+the `id` values, which it needs for its own internal logic. Ideally that logical
+requirement should not leak out to other components. Better for the parent
+component to pre-wrap everything it needs in the callbacks it passes to its
+kids.

@@ -1,0 +1,40 @@
+= React basics
+
+JSX is a syntax extension for JavaScript that looks similar to HTML, with a
+few key differences. It gets compiled to a plain JavaScript object, which you
+can see by simply console logging it.
+
+[source,jsx]
+----
+/* Where JSX is assigned to a variable, it MUST be wrapped in parentheses. */
+const page = (
+  <div>
+    <h1 className="header">This is JSX</h1>
+    <p>This is a paragraph</p>
+  </div>
+)
+
+/* This will log the compiled JSX object to the console. */
+console.log(page)
+
+/* To render JSX to the DOM, the JSX structure MUST have exactly one root node. */
+ReactDOM.render(
+  page,
+  document.getElementById("root")
+)
+----
+
+The `ReactDOM` API changed in React v18, and the `render` method is now
+deprecated. We MUST use the new `createRoot` method instead. The path to the
+`ReactDOM` import is also different.
+
+.index.js
+[source,js]
+----
+import ReactDOM from "react-dom/client"
+
+// …
+
+ReactDOM.createRoot(document.getElementById("root"))
+    .render(navbar)
+----

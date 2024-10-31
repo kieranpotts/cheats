@@ -1,0 +1,266 @@
+= Effects
+
+If you loaded the following component in a web UI, you will see from the console
+that the component will re-render itself in an infinite loop.
+
+[source,jsx]
+----
+export default function App() {
+  const [starWarsData, setStarWarsData] = React.useState({})
+
+  console.log("Component rendered")
+
+  fetch("https://swapi.dev/api/people/1")
+    .then(res => res.json())
+    .then(data => setStarWarsData(data))
+
+  return (
+    <div>
+      <pre>{JSON.stringify(starWarsData, null, 2)}</pre>
+    </div>
+  )
+}
+----
+
+Why does this happen? The component renders initially with no data. Then,
+when the `fetch` is resolved, the component state is updated, triggering a
+re-render of the component. But because the `fetch` code is at the top level
+of the component, it is executed again. This is how React works - when a
+component is re-rendered, literally it's top-level logic is re-run.
+
+So you have to be careful about what you do in the top-level of a component.
+
+The solution is to use `useEffect`, aka "the effect hook". This hook allows you
+to perform side effects in function components. A side effect is defined as
+anything that happens outside of the scope of the React component. Examples
+include syncing data with back-end services, as well as interacting with native
+web platform APIs - even using things like `console.log` is considered a side
+effect.
+
+TIP: It is perhaps better to think of side effects as *outside effects*. They
+are things that happen outside of React and interact with other systems, even
+other web platform APIs such as localStorage.
+
+Here's the first part of the solution:
+
+[source,jsx]
+----
+export default function App() {
+  const [starWarsData, setStarWarsData] = React.useState({})
+
+  React.useEffect(() => {
+    fetch("https://swapi.dev/api/people/1")
+      .then(res => res.json())
+      .then(data => setStarWarsData(data))
+  })
+
+  return (
+    <div>
+      <pre>{JSON.stringify(starWarsData, null, 2)}</pre>
+    </div>
+  )
+}
+----
+
+The code that interacts with external systems is now inside the effect hook's
+callback function. There is a change in behavior here: the effect is only run
+_after_ the component is rendered for the first time. But otherwise we still
+have the same problem, and the component keeps re-rendering itself in an
+infinite loop.
+
+The `useEffect()` function has a second argument. It is an optional argument, but
+you will almost always want to use it. It is an array of dependencies. Those
+dependencies are variables that, if they change from one render to the next,
+will cause the effect to run. In other words, the dependencies controls when
+the effect runs, stopping it from running on every render (the default behavior).
+
+If you pass an empty array, the effect will only run once, after the first render,
+and never again. That's because we're not looking for any changes between one
+render and the next:
+
+[source,jsx]
+----
+export default function App() {
+  const [starWarsData, setStarWarsData] = React.useState({})
+
+  React.useEffect(() => {
+    fetch("https://swapi.dev/api/people/1")
+      .then(res => res.json())
+      .then(data => setStarWarsData(data))
+  }, [])
+
+  return (
+    <div>
+      <pre>{JSON.stringify(starWarsData, null, 2)}</pre>
+    </div>
+  )
+}
+----
+
+But if you pass an array of dependencies, the effect will run whenever one of
+those dependencies changes. The "dependencies" here are normally the state
+variables that we want to trigger execution of the effect whenever they change.
+
+In the following example, on the first render the effect will fetch the Star
+Wars character with ID 1. When the user clicks the button, the effect will
+fetch the next character with ID 2, and so on. The API response is printed
+verbatim to the screen.
+
+[source,jsx]
+----
+export default function App() {
+  const [starWarsData, setStarWarsData] = React.useState({})
+  const [num, setNum] = React.useState(1)
+
+  React.useEffect(() => {
+    fetch(`https://swapi.dev/api/people/${num}`)
+      .then(res => res.json())
+      .then(data => setStarWarsData(data))
+  }, [num])
+
+  return (
+    <div>
+      <button onClick={() => setNum(prevNum => prevNum + 1)}>Get Next Character</button>
+      <pre>{JSON.stringify(starWarsData, null, 2)}</pre>
+    </div>
+  )
+}
+----
+
+== Performance optimization
+
+In the following example, we're using a combination of `useState` and `useEffect`
+to synchronize the component's `notes` state with an item called `notes` in
+the browser's `localStorage`.
+
+[source,jsx]
+----
+const [notes, setNotes] = React.useState(
+  JSON.parse(localStorage.getItem("notes")) || []
+)
+
+React.useEffect(() => {
+  localStorage.setItem("notes", JSON.stringify(notes))
+}, [notes])
+----
+
+Every time a component is re-rendered (whenever any of its state changes), all
+the component's top-level code gets re-run, including the `React.useState()`
+calls. State will not actually get re-initialized, but the `useState` calls
+_will_ get re-run, and so we should be careful about performing expensive
+operations to initialize state.
+
+In the above example, we're interacting with the browser's `localStorage` API
+to setup the initial state of the component. This is a fairly expensive operation.
+
+React provides a way to optimize this. It is called *lazy state initialization*.
+All is required is, instead of passing a value to `useState`, you pass a function
+that returns a value.
+
+[source,jsx]
+----
+const [notes, setNotes] = React.useState(
+  () => JSON.parse(localStorage.getItem("notes")) || []
+)
+----
+
+== Memory leaks
+
+Be careful about setting things up in effect hooks that may cause memory leaks.
+Consider the following example:
+
+[source,jsx]
+----
+export default function WindowTracker() {
+  const [windowWidth, setWindowWidth] = React.useState(window.innerWidth)
+
+  React.useEffect(() => {
+    window.addEventListener("resize", function() {
+      setWindowWidth(window.innerWidth)
+    })
+  }, [])
+
+  return (
+    <h1>Window width: {windowWidth}</h1>
+  )
+}
+----
+
+Instance of this component will set up DOM event listeners when they are mounted.
+But when the component is unmounted, the event listeners are not removed. This
+is a memory leak. To fix this, you can return a cleanup function from the effect
+hook:
+
+[source,jsx]
+----
+export default function WindowTracker() {
+  const [windowWidth, setWindowWidth] = React.useState(window.innerWidth)
+
+  React.useEffect(() => {
+    function watchWindowWidth() {
+      setWindowWidth(window.innerWidth)
+    }
+
+    window.addEventListener("resize", watchWindowWidth)
+
+    return () => {
+      window.removeEventListener("resize", watchWindowWidth)
+    }
+  }, [])
+
+  return (
+    <h1>Window width: {windowWidth}</h1>
+  )
+}
+----
+
+Other things you will need to clean up in effect hooks include timers and
+subscriptions, eg. to websockets. *As React developers, we are expected to
+clean up after our effects.*
+
+== Effects with async functions
+
+It may be tempting to use async functions with `useEffect`:
+
+[source,jsx]
+----
+export default function App() {
+  // ...
+
+  React.useEffect(async () => {
+    const res = await fetch(`https://swapi.dev/api/people/${num}`)
+    const data = await res.json()
+    setStarWarsData(data)
+  }, [num])
+
+  // ...
+}
+----
+
+Unfortunately, you should never make the effect callback an async function.
+The reason is that you can optionally return a function from effects, which
+will be used by React to do any clean-up operations you need it to do after
+the component is unmounted. But an async function will always return a promise,
+or nothing. Therefore it is impossible to return a cleanup function back to
+React from an async effect callback.
+
+There is a solution, which is to simply write an inner async function, and
+our effect code calls that. This way, we still have the option of returning
+a cleanup function if we need to.
+
+[source,jsx]
+----
+React.useEffect(() => {
+  async function getMemes() {
+    const res = await fetch("https://api.imgflip.com/get_memes")
+    const data = await res.json()
+    setAllMemes(data.data.memes)
+  }
+  getMemes()
+
+  /* Return optional cleanup function. */
+  return () => {
+    // ...
+  }
+}, [])
+----

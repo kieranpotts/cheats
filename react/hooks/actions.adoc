@@ -1,0 +1,206 @@
+= Actions
+
+Actions are a new concept planned for release in React v19. This hook makes it
+easier to update state in response to form actions.
+
+Previously, to synchronize the data submitted via a form with your React
+application's state, you would use an `onSubmit` callback, which would
+`event.preventDefault` and then update the state based on the form data.
+
+[source,jsx]
+----
+function App() {
+  const [input, setInput] = useState('')
+  const [name, setName] = useState(
+    () => JSON.parse(localStorage.getItem('name')) || ''
+  )
+
+  function handleChange(event) {
+    setInput(event.target.value)
+  }
+
+  async function handleSubmit(event) {
+    event.preventDefault()
+    try {
+      const newName = await updateNameInDb(input)
+      setName(newName)
+      setInput('')
+    } catch (error) {
+      console.error(error.message)
+    }
+  }
+
+  return (
+    <>
+      <p>Your name is: {name}</p>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={input}
+          onChange={handleChange}
+          required
+        />
+        <button type="submit">Update</button>
+      </form>
+    <>
+  )
+}
+----
+
+
+In React 19, we will be able to replace the `onSubmit` callback with an `action`
+callback. This callback will receive the form's native Form Data object.
+
+[source,html]
+----
+<form action={...}>
+----
+
+Interestingly, React is piggybacking on the native capabilities of the web
+platform in its implementation of the `action` attribute The `action` attribute
+is actually native to HTML `<form>` elements. Traditionally it is given a string
+value which represents a URL to which the form data is sent. React allows you
+to set a callback function instead, and that callback receives the form's native
+Form Data object.
+
+As shown in the refactored code below, we no longer need to `useState` to keep
+track of the form's state. In this particular case, we no longer need to track
+the value of the input field.
+
+[source,js]
+----
+function App() {
+
+  const [name, setName] = useState(
+    () => JSON.parse(localStorage.getItem('name')) || ''
+  )
+
+  async function formAction(formData) {
+    try {
+      const newName = await updateNameInDb(formData.get('name'))
+      setName(newName)
+    } catch (error) {
+      console.error(error.message)
+    }
+  }
+
+  return (
+    <>
+      <p>Your name is: {name}</p>
+      <form action={formAction}>
+        <input
+          type="text"
+          name="name"
+          required
+        />
+        <button type="submit">Update</button>
+      </form>
+    <>
+  )
+}
+----
+
+This is a big improvement in React's usability, because it is tapping into the
+native capabilities of the web platform. In this case, native `<form>` elements
+are left to manage their own state, and we don't need to duplicate that state
+in our React components that use `<form>` elements.
+
+This new hook makes it much easier to work with forms in React, and we can
+remove a whole lot of boilerplate code that we previously needed to write
+for form handling.
+
+Notice that, so far, we're not even directly calling the `useActionState`
+hook. But we're already using this feature via our callback for the `action`
+attribute on the `<form>` element.
+
+The `userActionState()` function itself becomes useful when we want to
+manage error and loading states for our forms. Previously, to manage loading
+and error states in a React component, we would have to do a lot of explicit
+state management, like this:
+
+[source,jsx]
+----
+function App() {
+
+  const [name, setName] = useState(
+    () => JSON.parse(localStorage.getItem('name')) || ''
+  )
+
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+
+  async function formAction(formData) {
+    setLoading(true)
+    setError(null)
+    try {
+      const newName = await updateNameInDb(formData.get('name'))
+      setName(newName)
+    } catch (error) {
+      console.error(error.message)
+      setError(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // …
+}
+----
+
+In React 19, the `useActionState()` function will return three values, which
+represent:
+
+* The form's current state.
+* The wrapping action function to be called when the form is submitted (this
+  must get referenced from `<form action="">`.
+* A boolean value that indicates whether the action is pending.
+
+The following code shows the refactoring using `useActionState()`.
+
+[source,jsx]
+----
+import { useState, useActionState } from "react"
+
+function App() {
+
+  const [state, actionFunction, isPending] = useActionState(
+    updateState,
+    { // Initial state
+      error: null,
+      name: JSON.parse(localStorage.getItem('name')) || ''
+    }
+  )
+
+  async function updateState(prevState, formData) {
+    try {
+      const newName = await updateNameInDb(formData.get('name'))
+      return { name: newName }
+    } catch (error) {
+      return { ...prevState, error }
+    }
+  }
+
+  return (
+    <>
+      <p>Your name is: {state.name}</p>
+
+      {isPending && <p>Loading...</p>}
+
+      <form action={actionFunction}>
+        <input
+          type="text"
+          name="name"
+          required
+        />
+        <button type="submit">Update</button>
+        {!isPending && state.error && <p>{state.error.message}</p>}
+      </form>
+    <>
+  )
+}
+----
+
+Notice how error handling is implemented within our custom `updateState`
+function. It's just updating the form's state in the normal way, adding
+an error message, and we get complete control over how the rendering
+responds to that state.

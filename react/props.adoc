@@ -1,0 +1,178 @@
+= Props
+
+In React, components can receive data from their parent components. This data is
+passed as props.
+
+The following example shows four instances of a `Contact` component, each of
+which receives different data via props – which are the equivalent of attributes
+in native HTML elements.
+
+[source,jsx]
+----
+function App() {
+  return (
+    <div className="contacts">
+      <Contact
+        img="./images/mr-whiskerson.png"
+        name="Mr. Whiskerson"
+        phone="(212) 555-1234"
+        email="mr.whiskaz@catnap.meow"
+      />
+      <Contact
+        img="./images/fluffykins.png"
+        name="Fluffykins"
+        phone="(212) 555-2345"
+        email="fluff@me.com"
+      />
+      <Contact
+        img="./images/felix.png"
+        name="Felix"
+        phone="(212) 555-4567"
+        email="thecat@hotmail.com"
+      />
+      <Contact
+        img="./images/pumpkin.png"
+        name="Pumpkin"
+        phone="(0800) CAT KING"
+        email="pumpkin@scrimba.com"
+      />
+    </div>
+  )
+}
+----
+
+The `Contact` component looks like this:
+
+[source,jsx]
+----
+export default function Contact(props) {
+  return (
+    <div className="contact-card">
+      <img src={props.img}/>
+      <h3>{props.name}</h3>
+      <div className="info-group">
+        <img src="./images/phone-icon.png" />
+        <p>{props.phone}</p>
+      </div>
+      <div className="info-group">
+        <img src="./images/mail-icon.png" />
+        <p>{props.email}</p>
+      </div>
+    </div>
+  )
+}
+----
+
+Alternatively, the props can be destructured in the function signature,
+into individual variables:
+
+[source,jsx]
+----
+export default function Contact({img, name, phone, email}) {
+  return (
+    <div className="contact-card">
+      <img src={img}/>
+      <h3>{name}</h3>
+      <div className="info-group">
+        <img src="./images/phone-icon.png" />
+        <p>{phone}</p>
+      </div>
+      <div className="info-group">
+        <img src="./images/mail-icon.png" />
+        <p>{email}</p>
+      </div>
+    </div>
+  )
+}
+----
+
+[TIP]
+======
+It is RECOMMENDED to stick with a single `props` object. This will make it easier
+to distinguish between props and other local variables you may define within
+the scope of the component. It also makes it a little easier to extend components
+with additional props in the future.
+
+On the other hand, one of the advantages of destructing the props in the
+function signature is that it makes it easier to see what props are being used
+by the component.
+======
+
+Another common pattern, for complex components that require a lot of props, like
+this…
+
+[source,jsx]
+----
+const cards = data.map(item => {
+  return (
+    <Card
+      key={item.id}
+      coverImg={item.coverImg}
+      rating={item.rating}
+      reviewCount={item.reviewCount}
+      location={item.location}
+      title={item.title}
+      price={item.price}
+      available={item.available}
+    />
+  )
+})
+----
+
+… is to refactor the component's props into a single object, like this:
+
+[source,jsx]
+----
+const cards = data.map(item => {
+  return (
+    <Card
+      key={item.id}
+      item={item}
+    />
+  )
+})
+----
+
+This pattern can work particularly well with TypeScript, where you can define
+the shape of the `item` object using an interface.
+
+Alternatively, you can use the spread operator to pass all the properties of the
+`item` object as individual props, like this:
+
+[source,jsx]
+----
+const cards = data.map(item => {
+  return (
+    <Card
+      key={item.id}
+      {...item}
+    />
+  )
+})
+----
+
+This requires not changes to the `Card` component itself, but only changes to
+the calling code. All the properties of the `item` object will be passed as
+props, but any props that are not used by the component will simply be ignored -
+there is no harm in passing extra props.
+
+''''
+
+The main difference between props and attributes is that React supports _any_
+JS data type to be passed as prop values, while HTML attributes are limited to
+strings. Where non-string values are passed as props, the value needs to be
+enclosed in curly braces, so that React can evaluate the expression. Whatever
+value the JS expression resolves to will be the value that is passed to the
+prop.
+
+[source,jsx]
+----
+<Joke
+  punchline="..."
+  isPun={true}
+  upvotes={10}
+  downvotes={2}
+  comments={[{author: "", body: "", title: }]}
+/>
+----
+

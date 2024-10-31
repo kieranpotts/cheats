@@ -1,0 +1,35 @@
+= Keys
+
+In React, when you generate a list of elements, eg. using `Array.prototype.map`,
+React will warn that each child in the list should have a `key` prop with a
+unique value. The `key` value is used internally by React to keep track of each
+element, so it can efficiently re-render the list when the underlying data
+model changes.
+
+[source,jsx]
+----
+export default function App() {
+  const cards = data.map(item => {
+    return (
+      <Card
+        key={item.id} // `key` prop with a unique value
+        img={item.coverImg}
+        rating={item.stats.rating}
+        reviewCount={item.stats.reviewCount}
+        location={item.location}
+        title={item.title}
+        price={item.price}
+      />
+    )
+  })
+
+  return (
+    <div>
+      <Navbar />
+      <section className="cards-list">
+        {cards}
+      </section>
+    </div>
+  )
+}
+----

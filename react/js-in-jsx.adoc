@@ -1,0 +1,105 @@
+= JS in JSX
+
+JSX supports embedding any JS expression in curly braces. In fact, a lot of the
+tricks we do in React components is just using vanilla JavaScript in JSX. The
+following example demonstrates use of JS in JSX to do conditional rendering:
+
+[source,jsx]
+----
+export default function Joke(props) {
+  return (
+    <div>
+      {props.title && <h3>{props.title}</h3>}
+      <p>Punchline: {props.punchline}</p>
+      <hr />
+    </div>
+  )
+}
+----
+
+This is a common pattern in React: using plain JavaScript and the `&&` operator
+to conditionally render elements. Here's another example:
+
+[source,jsx]
+----
+let badgeText = "AVAILABLE"
+if (props.availableStock === 0) {
+    badgeText = "SOLD OUT"
+}
+
+return (
+  <div className="card">
+    {props.availableStock === 0 && <div className="card--badge">{badgeText}</div>}
+    <img src={`../images/${props.img}`} className="card--image" />
+    <!-- more card content -->
+  </div>
+)
+----
+
+The following adjusts the `style.display` property dynamically. The double
+`{{ … }}` actually serve different purposes. The outer brackets are JSX
+delimiters for the JavaScript expression, while the inner brackets are for
+the JavaScript object literal from which React will compile the string value
+of the `style` attribute.
+
+[source,jsx]
+----
+export default function Joke(props) {
+  return (
+    <div>
+      <h3 style={{display: props.title ? "block" : "none" }}>{props.title}</h3>
+      <p>Punchline: {props.punchline}</p>
+      <hr />
+    </div>
+  )
+}
+----
+
+JS interpolation can be used to generate dynamic content. The following example
+using JS backticks and `${ … }` interpolation to generate a string value:
+
+[source,jsx]
+----
+return (
+  <img src={`../images/${props.img}`} className="card--image" />
+)
+----
+
+There's some magic that happens when inline JS is interpreted in JSX. If a
+nested JavaScript expression resolves to an object, and the expression is
+nested within JSX, React will attempt to render the object as JSX. If an
+array of objects is returned, React will render each object in the array as
+JSX.
+
+The following example will render "12345":
+
+[source,jsx]
+----
+export default function App() {
+  const numbers = ["1", "2", "3", "4", "5"]
+  return (
+    <div>
+      {numbers}
+    </div>
+  )
+}
+----
+
+All we have to do is away the string values in the array with JSX:
+
+[source,jsx]
+----
+export default function App() {
+  const jokeElements = jokesData.map(joke => {
+    return <Joke setup={joke.setup} punchline={joke.punchline} />
+  })
+  return (
+    <div>
+      {jokeElements}
+    </div>
+  )
+}
+----
+
+This provides a convenient way to map over an array of data and generate
+a component for each element.

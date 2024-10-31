@@ -1,0 +1,80 @@
+= Transitions
+
+Imagine you have a React-driven web page that has two main views: Products,
+and About. When you click the navigation to the Products view, the view typically
+takes a second or two to load because of the sheer volume of data being fetched
+and rendered for that page.
+
+If you click Products but then immediately click About, the About page will _also_
+take a second or two to load, even though it is composed only of static content!
+That's because the state change happened after the one that triggered the Products
+view, and you have to wait for that render to finish before the next state
+transition can be processed.
+
+[source,jsx]
+----
+import { useState } from 'react'
+
+function Component() {
+
+  const [tab, setTab] = useState('home')
+
+  function switchTab(tab) {
+    setTab(tab)
+  }
+
+  // …
+}
+----
+
+Introduced in React 18, `useTransition()` is a new hook that allows you to
+define a transition as being "interruptible". This means that if a new
+transition is triggered before the previous one has completed, the new
+transition will interrupt the old one and start immediately.
+
+[source,jsx]
+----
+import { useState, useTransition } from 'react'
+
+function Component() {
+
+  const [tab, setTab] = useState('home')
+  const [isPending, starTransition] = useTransition()
+
+  function switchTab(tab) {
+
+    /*
+    Whatever state changes we implement in startTransition's callback,
+    they will be treated by React as low-priority state changes – ie.
+    they can be interrupted by new transitions.
+    */
+
+    startTransition(() => {
+      setTab(tab)
+    })
+  }
+
+  // …
+}
+----
+
+With this change, if a user navigates from Home to Product, and then immediately
+from Product to About, the About page will render immediately. There will no
+longer be a delay caused by the long rendering time of the Product page.
+
+The `isPending` variable returned by `useTransition()` is a boolean that indicates
+whether a transition is currently pending or in progress. This could be used,
+for example, to show a spinner while the Products page is loading. Before
+transitions were available in React, you would have to implement your own
+loading spinner logic using custom state variables:
+
+[source,jsx]
+----
+const [loading, setLoading] = useState(false)
+
+function switchTab(tab) {
+  setLoading(true)
+  setTab(tab)
+  setLoading(false)
+}
+----

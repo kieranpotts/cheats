@@ -1,0 +1,13 @@
+= React compiler (React v19)
+
+React v19's new compiler is an evolution of something that was released a number
+of years ago called React Forget.
+
+Essentially, React Compiler can take your React code and compile it down to
+something that is much more efficient, and much smaller in terms of the amount
+of code that is shipped to the browser, but which still works the same way.
+
+The big advantage of the React Compiler is that we're not going to need APIs
+like `React.memo()`, `React.useMemo`, or `React.useCallback` any more. The
+compiler will figure out when to memoize things and when not to, and
+automatically handle these use cases to fine-tune performance.

@@ -1,0 +1,121 @@
+= Custom components
+
+At the simplest level, a React component is just a function that returns some
+JSX or other React elements. This actually works:
+
+[source,jsx]
+----
+function myComponent() {
+  return (
+    <h1>Hello, world!</h1>
+  )
+}
+
+ReactDOM.render(myComponent(), document.getElementById("root"))
+----
+
+More conventionally, components are named using PascalCase, and instead of
+explicitly calling the function, we pass a JSX-representation of the
+component to `ReactDOM.render`:
+
+[source,jsx]
+----
+function MyComponent() {
+  return (
+    <h1>Hello, world!</h1>
+  )
+}
+
+ReactDOM.render(<MyComponent />, document.getElementById("root"))
+----
+
+This is all you need to create a full-page React app. Here's a complete
+page rendered as a single React component:
+
+[source,jsx]
+----
+function Page() {
+  return (
+    <div>
+      <header>
+        <nav>
+          <img src="./my-logo.png" />
+        </nav>
+      </header>
+      <h1>Hello, world!</h1>
+      <p>This is my new home page.</p>
+      <footer>
+        <small>© 2024 …</small>
+      </footer>
+    </div>
+  )
+}
+
+ReactDOM.render(<Page />, document.getElementById("root"))
+----
+
+But the real power of React comes from being able to _compose_ complex user
+interfaces from lots of small, reusable components.
+
+[source,jsx]
+----
+function Header() {
+  return (
+    <header>
+      <nav>
+        <img src="./my-logo.png" />
+      </nav>
+  )
+}
+
+function Footer() {
+  return (
+    <footer>
+      <small>© 2024 …</small>
+    </footer>
+  )
+}
+
+function MainContent() {
+  return (
+    <div>
+      <h1>Hello, world!</h1>
+      <p>This is my new home page.</p>
+    </div>
+  )
+}
+
+function Page() {
+  return (
+    <div>
+      <Header />
+      <MainContent />
+      <Footer />
+    </div>
+  )
+}
+
+ReactDOM.render(<Page />, document.getElementById("root"))
+----
+
+Components SHOULD be extracted out into separate files, and imported into the
+other components that depend on them:
+
+[source,jsx]
+----
+import Header from "./Header"
+import Footer from "./Footer"
+import MainContent from "./MainContent"
+
+function Page() {
+  return (
+    <div>
+      <Header />
+      <MainContent />
+      <Footer />
+    </div>
+  )
+}
+
+ReactDOM.render(<Page />, document.getElementById("root"))
+----

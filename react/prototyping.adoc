@@ -1,0 +1,46 @@
+= Prototyping React apps
+
+React interfaces can be prototyped in static files without requiring a build
+step.
+
+The React and ReactDOM libraries can be loaded from a CDN. If using JSX code,
+this will need to be transpiled at runtime using Babel. The Babel library can
+also be loaded from a CDN, and the only other requirement is to load your actual
+application via a `<script>` tag with the `type="text/babel"` attribute.
+
+.index.html
+[source,html]
+----
+<html>
+  <head>
+    <link rel="stylesheet" href="index.css">
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="index.jsx" type="text/babel"></script>
+  </body>
+</html>
+----
+
+.index.jsx
+[source,jsx]
+----
+ReactDOM.render(
+  <h1>Hello, world!</h1>,
+  document.getElementById('root')
+)
+----
+
+Now, `index.html` can be opened in a browser, directly from your local filesystem
+or from a local-running development server, and the React app will be rendered.
+
+[IMPORTANT]
+======
+This methodology MUST NOT be used in production. It is not optimized for
+performance (because compilation is done at runtime) and it is not secure
+(because it executes code imported to your app directly from third-party
+servers).
+======

@@ -1,0 +1,474 @@
+= Types of React components
+
+Since React was released in 2013, there have emerged lots of different
+ways to define components. This document covers the most common construction
+patterns for React components. Some of these are older patterns and are now
+deprecated or fully obsolete, but it's still useful to know about them.
+
+== `createClass`
+
+Originally React used an API called `createClass` to define components. This
+is effectively an implementation of the factory pattern. This API is now
+obsolete; it has been removed from React's core package, but is still available
+via a separate package ("create-react-class") if you need it to support legacy
+code.
+
+[source,jsx]
+----
+import createClass from "create-react-class"
+
+/*
+`createClass()` takes an object that represents the state and methods
+of a React component.
+*/
+const CreateClassComponent = createClass({
+
+  /*
+  The `getInitialState()` method is used to define the initial state of the
+  component.
+  */
+  getInitialState: function () {
+    return {
+      text: localStorage.getItem("text") || "",
+    }
+  },
+
+  /*
+  Life cycle methods for side-effects were available as well.
+  */
+  componentDidUpdate: function () {
+    localStorage.setItem("text", this.state.text)
+  },
+
+  /*
+  Other methods can be added to the object to serve as event handlers for
+  the component.
+  */
+  handleChangeText: function (event) {
+    this.setState({ text: event.target.value })
+  },
+
+  /*
+  The only required function is `render()`, which returns the JSX
+  that represents the component.
+  */
+  render: function () {
+    return (
+      <div>
+        <p>Text: {this.state.text}</p>
+
+        <input
+          type="text"
+          value={this.state.text}
+          onChange={this.handleChangeText}
+        />
+      </div>
+    )
+  },
+})
+
+export default CreateClassComponent
+----
+
+== Mixins
+
+Mixins was React's first pattern for reusable component logic. Mixins made it
+possible to extract logic from a component as a standalone object, and then
+reuse that logic in multiple components.
+
+This API is now obsolete.
+
+[source,jsx]
+----
+import createClass from "create-react-class"
+
+const LocalStorageMixin = {
+  getInitialState: function () {
+    return {
+      text: localStorage.getItem("text") || "",
+    }
+  },
+
+  componentDidUpdate: function () {
+    localStorage.setItem("text", this.state.text)
+  },
+}
+
+const CreateClassWithMixinComponent  = createClass({
+  mixins: [LocalStorageMixin],
+
+  handleChangeText: function (event) {
+    this.setState({ text: event.target.value })
+  },
+
+  render: function () {
+    return (
+      <div>
+        <p>Text: {this.state.text}</p>
+
+        <input
+          type="text"
+          value={this.state.text}
+          onChange={this.handleChangeText}
+        />
+      </div>
+    )
+  },
+})
+
+export default CreateClassWithMixinComponent
+----
+
+== Class components
+
+When JavaScript introduced native class syntax in ES6 (2015), React introduced
+a new way to define components using classes.
+
+[source,jsx]
+----
+import React from "react"
+
+class ClassComponent extends React.Component {
+
+  /*
+  The class constructor is primarily used to initialize the component's state,
+  and to bind methods.
+  */
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      text: "",
+    }
+
+    this.handleChangeText = this.handleChangeText.bind(this)
+  }
+
+  handleChangeText(event) {
+    this.setState({ text: event.target.value })
+  }
+
+  /* Still, the only mandatory method is `render()`. */
+  render() {
+    return (
+      <div>
+        <p>Text: {this.state.text}</p>
+
+        <input
+          type="text"
+          value={this.state.text}
+          onChange={this.handleChangeText}
+        />
+      </div>
+    )
+  }
+}
+
+export default ClassComponent
+----
+
+An alternative syntax allows for auto-binding of methods using arrow functions:
+
+[source,jsx]
+----
+class ClassComponent extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      text: "",
+    }
+
+    // removed method binding
+  }
+
+  handleChangeText = (event) => {
+    this.setState({ text: event.target.value })
+  }
+
+  // …
+}
+----
+
+React class components also offer several life cycle methods for the mounting,
+updating, and unmounting of components.
+
+[source,jsx]
+----
+class ClassComponent extends React.Component {
+  constructor(props) {
+    super(props)
+
+    this.state = {
+      text: localStorage.getItem("text") || "",
+    }
+
+    // …
+  }
+
+  componentDidUpdate() {
+    localStorage.setItem("text", this.state.text)
+  }
+
+  // …
+}
+----
+
+Internally, all the React functionality is inherited from `React.Component`.
+In theory, you could create custom components that extend from lower-level
+base components. But the best practice in the React ecosystem has always been
+to use composition instead of inheritance.
+
+Class components are considered deprecated; they still work, coexisting in
+React core with functional components, but the React team does not intend to
+extend `React.Component` with new features. Future development of React will
+focus on functional components (see below), and therefore it is RECOMMENDED
+that all new codebases adopt functional components with hooks (see below).
+
+== Higher-order components
+
+Higher-order components is a design pattern for class components that
+effectively does what mixins used to do for `createClass` components. It's
+a functional programming pattern that allows you to extend existing
+components with additional functionality.
+
+[source,jsx]
+----
+import React from "react"
+
+const withLocalStorage = (storageKey) => (Component) => {
+  return class extends React.Component {
+    constructor(props) {
+      super(props)
+
+      this.state = {
+        value: localStorage.getItem(storageKey) || "",
+      }
+    }
+
+    componentDidUpdate() {
+      localStorage.setItem(storageKey, this.state.value)
+    }
+
+    onChangeValue = (event) => {
+      this.setState({ value: event.target.value })
+    }
+
+    render() {
+      return (
+        <Component
+          value={this.state.value}
+          onChangeValue={this.onChangeValue}
+          {...this.props}
+        />
+      )
+    }
+  }
+}
+
+class ClassComponent extends React.Component {
+  render() {
+    return (
+      <div>
+        <p>Text: {this.props.value}</p>
+
+        <input
+          type="text"
+          value={this.props.value}
+          onChange={this.props.onChangeValue}
+        />
+      </div>
+    )
+  }
+}
+
+export default withLocalStorage("text")(ClassComponent)
+----
+
+[NOTE]
+======
+This pattern can also be used with functional components.
+======
+
+== Functional components
+
+Initially, functional components were stateless. They were designed for the
+composition of very simple components that did not require state or life cycle
+methods. But with the release of React Hooks in v16.8 (February 2019),
+functional components became the preferred way to define components in React.
+
+Refactored as a functional component, the previous example would look like this:
+
+[source,jsx]
+----
+import { useEffect, useState } from "react"
+
+const FunctionComponent = () => {
+  const [text, setText] = useState(localStorage.getItem("text") || "")
+
+  /*
+  The `useEffect()` hook is used to manage side-effects in functional
+  components. This callback will be executed every time the value of the
+  state of `text` changes.
+  */
+  useEffect(() => {
+    localStorage.setItem("text", text)
+  }, [text])
+
+  const handleChangeText = (event) => {
+    setText(event.target.value)
+  }
+
+  return (
+    <div>
+      <p>Text: {text}</p>
+
+      <input type="text" value={text} onChange={handleChangeText} />
+    </div>
+  )
+}
+
+export default FunctionComponent
+----
+
+We can define custom hooks, too. In the following example we have extracted
+both built-in hooks, `useState()` and `useEffect()`, into a custom hook
+called `useLocalStorage()`:
+
+[source,jsx]
+----
+import { useEffect, useState } from "react"
+
+const useLocalStorage = (storageKey) => {
+  const [value, setValue] = useState(localStorage.getItem(storageKey) || "")
+
+  useEffect(() => {
+    localStorage.setItem(storageKey, value)
+  }, [storageKey, value])
+
+  return [value, setValue]
+}
+
+const FunctionComponent = () => {
+  const [text, setText] = useLocalStorage("text")
+
+  const handleChangeText = (event) => {
+    setText(event.target.value)
+  }
+
+  return (
+    <div>
+      <p>Text: {text}</p>
+
+      <input type="text" value={text} onChange={handleChangeText} />
+    </div>
+  )
+}
+
+export default FunctionComponent
+----
+
+This custom hook can now be reused in other components, so all components in
+an application share the same logic for interacting with local storage data.
+This is the primary way that React encourages code reuse in functional
+components.
+
+== Server components
+
+In 2023 React introduced React Server Components (RSC), which allows components
+to be pre-rendered on the server (and then optionally hydrated, or partially
+hydrated, on the client).
+
+Because server components serve different use cases, ir is not possible to
+directly compare them to other types of React components.
+
+[source,jsx]
+----
+const ReactServerComponent = async () => {
+  const posts = await db.query("SELECT * FROM posts")
+
+  return (
+    <div>
+      <ul>
+        {posts?.map((post) => (
+          <li key={post.id}>{post.title}</li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+export default ReactServerComponent
+----
+
+Server components cannot use hooks or any client-side JavaScript (eg. attaching
+DOM event handlers), because they run on the server. In effect, React server
+components are more like a traditional server-side rendering (SSR) or
+"templating" solution.
+
+[NOTE]
+======
+With the emergence of server components, the React team has also introduced
+the concept of client components, which is the term that now refers to the
+traditional client-side components.
+======
+
+== Async components
+
+Async components are currently supported only for server components, but are
+expected to be added to client components in the future. Simply, if a component
+is declared as async, it can perform asynchronous operations, such as fetching
+data.
+
+The previous server component example demonstrates this: the functional component
+is defined using an `async` function, and within the body of the function the
+logic awaits a query to the database before rendering the JSX as HTML.
+
+In full-stack React applications, you can use server components to perform
+asynchronous operations on the server, such as fetching data from a database,
+and then using that data to render client components. On the server, you
+pass promises as props to the client components:
+
+[source,jsx]
+----
+import { Suspense } from "react"
+
+const ReactServerComponent = () => {
+  const postsPromise = db.query("SELECT * FROM posts")
+
+  return (
+    <div>
+      <Suspense>
+        <ReactClientComponent promisedPosts={postsPromise} />
+      </Suspense>
+    </div>
+  )
+}
+----
+
+The promises are resolved in the client components using React's `use` API:
+
+[source,jsx]
+----
+"use client"
+
+import { use } from "react"
+
+const ReactClientComponent = ({ promisedPosts }) => {
+  const posts = use(promisedPosts)
+
+  return (
+    <ul>
+      {posts?.map((post) => (
+        <li key={post.id}>{post.title}</li>
+      ))}
+    </ul>
+  )
+}
+
+export { ReactClientComponent }
+----
+
+In the future, React should support async client components, allowing client
+components to perform asynchronous operations on the client side before
+doing their rendering.
