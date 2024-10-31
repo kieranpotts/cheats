@@ -1,1 +1,4 @@
-= Training
+= Docs
+
+My personal documentation and learning notes for various languages and tools.
+
