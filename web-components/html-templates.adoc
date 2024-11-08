@@ -1,0 +1,120 @@
+= HTML templates
+
+HTML templates are a mechanism for holding client-side markup and content
+that is not intended to be rendered when a page is loaded, but which may be
+subsequently copied-and-pasted into the rendered DOM (either the light DOM or
+a shadow DOM) using client-side JavaScript.
+
+*HTML templates are snippets of HTML that are not rendered until called upon.*
+
+HTML templates are implemented through the `<template>` tag.
+
+[source,html]
+====
+<body>
+  <template>
+    <h1>I'm a header</h1>
+  </template>
+</body>
+====
+
+Loading this HTML document in a browser will render an blank page. To use the
+template, we need to include some JavaScript:
+
+[source,javascript]
+====
+const template = document.querySelector('template');
+const node = document.importNode(template.content, true);
+
+document.body.appendChild(node);
+====
+
+The `document.importNode()` function creates a copy of the template's content
+and prepares it to be inserted into another document or document fragment. The
+first argument to the function grabs the template's content and the second
+argument tells the browser to do a deep copy of the element's DOM subtree, ie.
+all of its children.
+
+We could have used the `template.content` directly, but in so doing we would
+have removed the content from the template element. Any DOM node instance can
+be connected to the DOM (or a DOM fragment) in exactly zero or one places at
+any given time. If we want to use the same template multiple times, we need to
+create copies of the template's content. Using `document.importNode` allows us
+to reuse instances of the same template content in multiple locations.
+
+HTML templates have many use cases. In the context of web components, templates
+_may_ be used to define all or some of the internal DOM structure of a custom
+element. The markup for a component may be decoupled from the component logic,
+declared outside of the JavaScript module that defines the custom component. In
+the following example, the custom component fetches its markup from the main
+document at the point it is connected to the DOM:
+
+[source,javascript]
+====
+class CustomDialog extends HTMLElement {
+  // ....
+
+  connectedCallback() {
+    const template = document.getElementById('template-dialog');
+    const node = document.importNode(template.content, true);
+    this.appendChild(node);
+  }
+}
+====
+
+But more commonly the markup and logic (and component state) for each
+component is tightly coupled, and in this case it is best practice to collocate
+the component markup and logic in the same place. So a more common design pattern
+is something like the following, where _everything_ that a custom component needs
+is defined in a single JavaScript module:
+
+
+[source,javascript]
+====
+const template = document.createElement("template");
+
+template.innerHTML = `
+<button>I'm a button</button>
+<!-- ... -->
+`;
+
+export class MyCustomElement extends HTMLElement {
+  constructor() {
+    super();
+
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.appendChild(templateEl.content.cloneNode(true));
+
+    this.button = this.shadowRoot.querySelector("button");
+  }
+
+  // ...
+}
+====
+
+Templates may create _any_ HTML, including `<style>` and `<script>` elements.
+Thus, custom elements may be fully encapsulated, with all of their markup,
+styles, and behavior defined in a single JavaScript module.
+
+[source,html]
+====
+<template id="template">
+  <script>
+    const button = document.getElementById('click-me');
+    button.addEventListener('click', event => alert(event));
+  </script>
+  <style>
+    #click-me {
+      all: unset;
+      background: tomato;
+      border: 0;
+      border-radius: 4px;
+      color: white;
+      font-family: Helvetica;
+      font-size: 1.5rem;
+      padding: .5rem 1rem;
+    }
+  </style>
+  <button id="click-me">Log click event</button>
+</template>
+====

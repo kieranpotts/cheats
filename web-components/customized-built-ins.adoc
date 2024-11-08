@@ -1,0 +1,82 @@
+= Customized built-in elements
+
+The most common way to make custom elements is to extend `HTMLElement`. Fully,
+these are known as _autonomous custom elements_. In HTML, they are identified
+by having unique custom tag names.
+
+There is another category of custom elements, called _customized built-in
+elements_. These are custom elements that extend native HTML elements, rather
+than defining entirely new HTML elements from scratch.
+
+For example, an autonomous custom button element would extend from `HTMLElement`,
+but a customized built-in button element would extend from `HTMLButtonElement`.
+
+There are pros and cons to each approach. Fully autonomous custom elements give
+you a blank canvas to work with, but they require you to implement all the
+features of the element yourself. Customized built-in elements give you a head
+start by inheriting the features of the native element, but there are
+increased risks of conflicts with existing global styles and behaviours.
+
+With customized built-in elements, you cannot change the tag name used for
+your customization in the HTML. Instead, you must use the `is` attribute to
+apply the customization. For example, a customized built-in button element
+would be used in HTML like this:
+
+[source,html]
+====
+<button is="fancy-button">Click me</button>
+====
+
+To query for this custom element specifically, you would need to use an
+attribute selector, eg. `.querySelector('button[is="fancy-button"]')`. Any
+existing code that queries for native buttons (eg. `.querySelectorAll('button')`)
+will also match your customized built-in button elements. To exclude customized
+button elements, you'd need to update all those existing queries, eg.
+`.querySelectorAll('button:not([is])`.
+
+There are also styling consideration. For the same reasons, autonomous custom
+elements are less likely to conflict with existing styles than customized
+built-in elements. Any CSS rules like `button {}` will cascade into your
+customized built-in button elements (customized built-in elements also receive
+thee default styles supplied by the browser, unless you override these in your
+global CSS).
+
+On the other hand, autonomous custom elements tend to require a lot more coding
+and configuration. Customized built-in elements have accessibility semantics
+and behaviors built-in, which can be difficult to replicate in autonomous
+custom elements that mimic the behavior of native elements.
+
+A subset of native HTML elements offer a middle ground between fully autonomous
+custom elements, and customized built-in elements. There's a subset of built-in
+elements that can be extended _and_ customized with the shadow DOM. This allows
+you to encapsulate the styles and behaviours of your custom element, while
+still inheriting the features of the native element. And, with the shadow DOM,
+you also get control over how nested elements will be rendered (via slots). But
+only a limited set of built-ins can be customized in this way. They are:
+
+* `<article>`
+* `<aside>`
+* `<blockquote>`
+* `<body>`
+* `<div>`
+* The `<header>` and `<footer>` elements
+* Heading elements `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, and `<h6>`
+* `<main>`
+* `<nav>`
+* `<p>`
+* `<section>`
+* `<span>`
+
+Where customized built-in elements are used, it is best practice to limit them
+to this subset of elements. These are all simple elements, with no default
+behaviors and minimal default styles. They are, therefore, a good baseline from
+which to build more complex custom elements. By comparison, trying to extend
+from things like `<button>` or `<input>` requires a deep understanding of those
+component's internal workings, and it can be incredibly difficult to get custom
+logic working correctly across all browsers. Likewise, many built-in elements,
+things like `<button>`, `<table>`, and `<details>`, accept only certain types
+of elements to be nested inside them, and this cannot be changed by extending
+those built-in elements.
+
+*The semantics of built-in elements cannot be changed by extending custom
+elements from them.*

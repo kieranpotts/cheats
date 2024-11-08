@@ -1,0 +1,10 @@
+= State management
+
+The web platform does not (yet) provide a native standard for managing the state
+of web components. There is no built-in way for a template to reference the
+current state of a component, and to be automatically re-rendered when that
+state changes.
+
+////
+TODO: Cover common patterns for managing state in web components.
+////

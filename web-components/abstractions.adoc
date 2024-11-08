@@ -1,0 +1,99 @@
+= Abstractions
+
+The web platform APIs used to create web components are low level and therefore
+fairly verbose. To create only simply components, web developers are
+responsible for all these implementation details:
+
+* Setting up the shadow DOM.
+* Setting up the HTML templates.
+* Cleaning up event listeners.
+* Definting the attributes we want to observe.
+* Writing logic to react to changes in the values of observed attributes.
+* Handling type conversions for the values of observed attributes.
+
+For this reason, it is common to use an abstraction library such as Lit or
+Stencil to simplify the creation of web components.
+
+The trade-off is that components coded using purely native web platform APIs
+will be the most future-proof. The web component specifications will be
+iterated in a non-breaking way, and the APIs will be supported by
+standards-compliant web browsers indefinitely. By comparison, abstraction
+libraries may introduce breaking API changes, and the libraries themselves may
+become obsolete.
+
+== Lit
+
+https://lit.dev/[Lit] is a lightweight web components abstraction library
+created and maintained by Google. Lit removes a lot of boilerplate code by
+imposing more opinions on how web components should work, and extracting
+common implementation patterns into a library.
+
+A minimal web component defined using Lit looks like this:
+
+[source,javascript]
+====
+import { LitElement, html } from "lit";
+
+export class HelloWorld extends LitElement {
+  render() {
+    return html`<p>Hello World!</p>`;
+  }
+}`
+
+customElements.define('hello-world', HelloWorld);
+====
+
+A more complex web components, with observed attributes and lifecycle methods,
+looks like this:
+
+[source,javaScript]
+====
+import { LitElement, html } from "lit";
+
+export class OdysseyCounter extends LitElement {
+  static properties = {
+    count: { type: Number },
+    disabled: { type: Boolean },
+  };
+
+  constructor() {
+    super();
+    this.count = 0;
+  }
+
+  onCount() {
+    this.count = this.count + 1;
+  }
+
+  render() {
+    return html`
+      <button ?disabled=${this.disabled} @click=${this.onCount}>
+        Press me!
+      </button>
+      <p>You pressed me ${this.count} times.</p>
+    `;
+  }
+}`
+====
+
+Note the following:
+
+* There's no need to create a shadow DOM, clone the template, or store
+  references to internal DOM nodes. Thus, the `constructor()` is much
+  simpler.
+
+* The static `properties` property is used to define the component's properties
+  and their types. When the values of these properties change, Lit will
+  re-render the template. (Lit's `properties` are not quite the same thing as
+  observed attributes, but they serve a similar purpose. If a property's value
+  is passed down as an attribute, Lit will automatically convert the value to
+  the correct type.)
+
+* The markup is defined directly within the component class. While you are free
+  to define your templates outside of the class, it is common practice to return
+  the template from Lit's `render()` method. (This is more in line with the
+  pattern of custom component solutions like React and Vue.)
+
+* Instead of the using the `attributeChangedCallback` lifecycle method, Lit's
+  `render()` function has access to all of the component's properties, which
+  simplifies the proces sof manipulating our templates.

@@ -1,0 +1,99 @@
+= Shadow DOM
+
+Prior to the introduction of the shadow DOM to the web platform, all CSS
+was scoped globally. The shadow DOM was introduced as a mechanism to allow
+web components to encapsulate their own styles, and without risk of pollution
+from the global CSS cascade.
+
+*The shadow DOM in an encapsulated instance of the DOM.* It allows web developers
+to define reusable DOM fragments that are entirely isolated from one another
+and from the main DOM of the document the fragments may be injected into.
+
+This means that component authors can define the look-and-feel of resuable
+web components and guarantee that they can be reused in any context without
+regressions. The shadow DOM provides the sort of level of encapsulation that
+was previously only possible using iframes.
+
+****
+There are a few exceptions that inherit from the parent document, like font
+family and document font sizes, but these can be overridden internally
+within shadow roots, if necessary.
+****
+
+The shadow DOM also makes it easier to manage element IDs and class names,
+to avoid conflicts. Elements IDs and class names defined in the shadow DOM
+are scoped to the shadow root, and do not conflict with IDs and class names
+defined in the main document or other shadow roots. Thus, in the context of
+web components, CSS class naming conventions or CSS-in-JS solutions are not
+required as solutions to the problems associated with global scope.
+
+[NOTE]
+======
+Generally, content inside of a document's scope is referred to as the
+*light DOM*, and anything inside of a shadow root is referred to as the
+*shadow DOM*.
+======
+
+When using the light DOM, an element can be selected by using
+`document.querySelector('...')` or by targeting any element's children by
+using `element.querySelector('...')`. In the same way, a shadow root's
+children can be targeted by calling `shadowRoot.querySelector('...')`, where
+`shadowRoot` is a reference to the document fragment.
+
+But the children of a shadow root cannot be selected from the light DOM. That's
+because child elements of a shadow root belong to a different
+`DocumentOrShadowRoot` instance.
+
+Style selectors have the same restrictions.
+
+To create a shadow root in a custom element, and so use that shadow root as the
+base node for the element's shadow DOM tree, we use the element instance's
+`shadowRoot()` method:
+
+[source,javascript]
+====
+class MyCustomDialog extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+
+    this.close = this.close.bind(this);
+  }
+}
+====
+
+By calling `attachShadow()` with the open mode option, we are telling our
+element to save a reference to the shadow root on the `element.shadowRoot`
+property. `attachShadow()` always returns a reference to the shadow root, but
+we don't need to capture that if it's going to be made available via
+`element.shadowRoot`.
+
+If we had called the method with `{ mode: 'closed' }`, no reference would have
+been stored on the element, and we would have to create our own means of
+storage and retrieval, probably using Object or WeakMap, something like the
+below implementation.
+
+[source,javascript]
+====
+const shadowRoots = new WeakMap();
+
+class ClosedRoot extends HTMLElement {
+  constructor() {
+    super();
+    const shadowRoot = this.attachShadow({ mode: 'closed' });
+    shadowRoots.set(this, shadowRoot);
+  }
+
+  connectedCallback() {
+    const shadowRoot = shadowRoots.get(this);
+    shadowRoot.innerHTML = `<h1>Hello from a closed shadow root!</h1>`;
+  }
+}
+====
+
+In general, all custom elements should be open. This reduces unncecessary
+boilerplate, and it makes it easier for automated tests to inspect changes to
+the shadow DOM. The closed mode is really only intended for use by native HTML
+elements that use the shadow DOM in their implementation, like `<audio>` or
+`<video>`. There may be legitimate edge cases for using closed shadow roots in
+custom elements, but the default should be open.

@@ -1,0 +1,14 @@
+= Slots
+
+A shadow root can also include content from its containing document (or
+document fragment - ie. whatever is DOM is immediately "outside" of the shadow
+root).
+
+This is sone using the `<slot>` element. *A slot allows content outside of
+the shadow root to be rendered inside the shadow root's DOM tree.* It's similar
+in concept to Angular's `ng-transclude` directive or React's `children` prop.
+
+A shadow root can have any number of slot elements, which can be distinguished
+with a `name` attribute. The first slot inside of the shadow root without a
+name will be the default slot, and all content not otherwise assigned will flow
+inside of that node.

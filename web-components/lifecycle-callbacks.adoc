@@ -1,0 +1,58 @@
+= Lifecycle callbacks
+
+Web components have lifecycle methods, also known as lifecycle callbacks. These
+methods are called at different stages of a component's lifecycle.
+
+[source,javascript]
+====
+const templateEl = document.createElement("template");
+
+templateEl.innerHTML = `
+<button>Press me!</button>
+`;
+
+export class MyButton extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.appendChild(templateEl.content.cloneNode(true));
+
+    this.button = this.shadowRoot.querySelector("button");
+  }
+
+  /*
+  The `connectedCallback` method is executed when an instance of the component
+  is added to the DOM. This is a good place to set up event listeners.
+  */
+  connectedCallback() {
+    this.button.addEventListener("click", this.handleClick);
+  }
+
+  /*
+  If we set up event listeners, it is our responsibility to clean these up
+  when the component gets removed from the DOM.
+  */
+  disconnectedCallback() {
+    this.button.removeEventListener("click", this.handleClick);
+  }
+
+  handleClick = () => {
+    alert("Button clicked!");
+  };
+}
+====
+
+== `connectedCallback`
+
+The `connectedCallback` method serves a separate puprose to the element's
+constructor. Whereas the constructor is used to set up the bare bones of the
+element, the `connectedCallback` methos is typically used to add dynamic
+content to the element, to set up event listeners, and otherwise initialize
+the component's dynamic behavior in the DOM.
+
+In fact, by design, the constructor can't be used to modify or manipulate the
+element's attributes. The constructor is called when a new instance of a custom
+element is created (eg. using `document.createElement()`), and it is expected
+to return a simple node with no attributes or dynamic content inserted. These
+are done subsequently when the element is connected to the DOM, and this is
+the responsibility of the `connectedCallback` method.

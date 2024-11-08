@@ -1,0 +1,145 @@
+= Observable attributes
+
+As with native HTML elements, the state of custom elements is typically reflected
+by what attributes are present, and the values of those attributes.
+
+Unlike components built using custom component solutions like React or Vue,
+web components don't automatically re-render when a prop (or attribute) changes.
+Instead, we need to explicitly define which attributes we want to observe, and
+then use the `attributeChangedCallback` lifecycle method to define how we want
+our component to react to the new attribute's value.
+
+[source,javascript]
+====
+const templateEl = document.createElement("template");
+
+templateEl.innerHTML = `
+<button>Press me!</button>
+<p>You pressed me 0 times.</p>
+`;
+
+export class MyButton extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: "open" });
+    this.shadowRoot.appendChild(templateEl.content.cloneNode(true));
+
+    this.button = this.shadowRoot.querySelector("button");
+    this.p = this.shadowRoot.querySelector("p");
+
+    this.setAttribute("count", "0");
+  }
+
+  connectedCallback() {
+    this.button.addEventListener("click", this.handleClick);
+  }
+
+  disconnectedCallback() {
+    this.button.removeEventListener("click", this.handleClick);
+  }
+
+  /*
+  Set the `observedAttributes` static property to an array of attribute names
+  that you want to observe.
+  */
+  static observedAttributes = ["disabled", "count"];
+
+  /*
+  When one of these attributes changes, the `attributeChangedCallback` method
+  will run.
+  */
+  attributeChangedCallback(name, _, newVal) {
+    if (name === "count") {
+      this.p.innerHTML = `You pressed me ${newVal} times.`;
+    }
+    if (name === "disabled") {
+      this.button.disabled = true;
+    }
+  }
+
+  /*
+  Unlike React props, HTML attributes are always string values. This means it's
+  our job to convert types. In this case, we're converting a string to a number,
+  incrementing it, and then converting it back to a string.
+  */
+  handleClick = () => {
+    const counter = Number(this.getAttribute("count"));
+    this.setAttribute("count", `${counter + 1}`);
+  };
+}
+====
+
+== `observedAttributes`
+
+The `observedAttributes` static property is an array of attribute names that you
+want to observe. When one of these attributes changes, the `attributeChangedCallback`
+method will run.
+
+[source,javascript]
+====
+static observedAttributes = ["disabled", "count"];
+====
+
+The `observedAttributes` static property can also be defined as a getter method,
+which is useful if you need to calculate the list of observed attributes.
+
+[source,javascript]
+====
+static get observedAttributes() {
+  return ['open'];
+}
+====
+
+== `attributeChangedCallback()`
+
+The `attributeChangedCallback` method is called whenever one of the observed
+attributes changes. The method receives three arguments:
+
+1. `name`: The name of the attribute that changed.
+2. `oldValue`: The previous value of the attribute.
+3. `newValue`: The new value of the attribute.
+
+In the following example, the `attributeChangedCallback` method is used to keep
+changes to the custom element's attributes in sync with the component's internal
+properties. A property exists on a JavaScript object whereas an attribute
+exists on an HTMLElement. A common pattern is to use the `attributeCHangedCallback`
+to keep the two in sync.
+
+[source,javascript]
+====
+class MyCustomDialog extends HTMLElement {
+  static get observedAttributes() {
+    return ['open'];
+  }
+
+  attributeChangedCallback(attrName, oldValue, newValue) {
+    if (newValue !== oldValue) {
+      this[attrName] = this.hasAttribute(attrName);
+    }
+  }
+
+  get open() {
+    return this.hasAttribute('open');
+  }
+
+  set open(isOpen) {
+    if (isOpen) {
+      this.setAttribute('open', true);
+    } else {
+      this.removeAttribute('open');
+    }
+  }
+
+  // ...
+}
+====
+
+Notice, in the above example, the use of a conditional check inside the
+`attributeChangedCallback` method. This is to prevent an infinite loop. The
+`open` setter and getter are used to set the element's `open` attribute when the
+corresponding class property is updated. The `attributeChangedCallback` method
+does the inverse: it updates the property when the attribute changes.
+
+Keeping properties and attributes in sync is not _technically_ required, but
+it is considered best practice, and is a common design pattern, in the
+implementation of web components.

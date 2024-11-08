@@ -1,0 +1,16 @@
+= Web Components
+
+Web components are a set of web platform APIs that allow you to create new
+custom, reusable HTML elements using the native capabilities of web browsers.
+
+== Contents
+
+* link:./custom-elements.adoc[Custom elements]
+* link:./shadow-dom.adoc[Shadow DOM]
+* link:./html-templates.adoc[HTML templates]
+* link:./observable-attributes.adoc[Observable attributes]
+* link:./lifecycle-callbacks.adoc[Lifecycle callbacks]
+* link:./styling.adoc[Styling]
+* link:./state-management.adoc[State management]
+* link:./abstractions.adoc[Abstractions (Lit etc.)]
+* link:./customized-built-ins.adoc[Customized built-in elements]

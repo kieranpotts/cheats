@@ -1,0 +1,31 @@
+= Styling
+
+There are several methods for styling web components. Each method has its own
+pros and cons.
+
+A simple approach is to add a `<style>` element to the shadow root's inner HTML.
+This provides a very high degree of per-component encapsulation, but it comes
+at the cost of lots of duplicate code. Browsers will try to optimize by
+de-duplicating common styles across custom elements. This has a small bit of
+memory overhead, but generally not enough to notice.
+
+To share a central stylesheet across all components, you can use a `<link>`
+tag. Alternatively, you can use the `@import` rule to import specific styles
+from a shared library of stylesheets. This is a common pattern in component
+libraries, where the design goal is to achieve a high degree of consistency in
+the presentation of lots of discrete components. This requires the shared styles
+to be served from a central, and consistent, location. You also need to think
+about cache invalidation and versioning. When you change the location of a
+shared stylesheet, all the dependent components will need to be updated
+with the new location.
+
+Another option is to use the CSS `:host` and `:host-context` selectors. This
+can be a good option where the custom elements are quite primitive block-level
+elements. These selectors allow consumers of the elements to provide classes
+to style things like fonts and backgrounds.
+
+CSS custom properties — colloquially known as CSS variables — bleed through
+shadow DOMs. This is by design. It gives component developers a surface for
+allowing theming of their components from the outside. (It is worth noting that
+changes made to custom properties inside a shadow root do not bleed back outside
+of it.)

@@ -1,0 +1,51 @@
+= Custom elements
+
+Web components are composed from three web platform APIs: custom elements, the
+shadow DOM, and HTML templates. Each of these APIs may be used independently,
+or combined (optionally with any other web platform APIs) to create custom,
+reusable HTML components.
+
+Custom elements are fully valid HTML elements with custom markup, behaviors
+and content. They are creating using JavaScript APIs and can be used in HTML
+documents using normal HTML tags.
+
+Custom elements are distinguishes from native HTML elements by having a namespace
+or prefix in their tag name. The namespace is separated from the element name
+with a hyphen. Thus, all custom elements MUST have one or more hyphens in their
+name, eg. `<kierans-button>`. By contrast, no native HTML elements have hyphens
+in their names, and they never will have, so eliminating the risk of future name
+collisions. The only requirement on web developers is to choose a namespace that
+does not conflict with any other open source custom elements that they may also
+use in the same project.
+
+Custom elements are implemented by extending the `HTMLElement` class. To use a
+custom element directly in an HTML document, you also need to define a unique
+HTML tag name that is associated with the custom element. (This second part is
+not a requirement of creating a custom element; if a custom element is only
+ever injected into the DOM using JavaScript, then there is no need to define
+an HTML tag name for it.)
+
+[source,javascript]
+====
+const template = document.createElement('template');
+template.innerHTML = `<p>Hello World</p>`;
+
+class HelloWorld extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.append(template.content.cloneNode(true));
+  }
+}
+
+customElements.define('hello-world', HelloWorld);
+====
+
+This script does the following:
+
+* It creates a new *template element* and sets its inner HTML.
+* It creates a *shadow root* and explicitly sets its mode to "open".
+* It clones the template's content and appends it to the shadow root.
+* A new *custom element* is registered, allowing the component to be rendered
+  by embedding the `<hello-world>` tag in the document.
+
