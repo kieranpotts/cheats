@@ -1,7 +1,7 @@
 = Observable attributes
 
-As with native HTML elements, the state of custom elements is typically reflected
-by what attributes are present, and the values of those attributes.
+As with native HTML elements, the state of custom elements is typically
+reflected by what attributes are present, and the values of those attributes.
 
 Unlike components built using custom component solutions like React or Vue,
 web components don't automatically re-render when a prop (or attribute) changes.
@@ -72,8 +72,8 @@ export class MyButton extends HTMLElement {
 == `observedAttributes`
 
 The `observedAttributes` static property is an array of attribute names that you
-want to observe. When one of these attributes changes, the `attributeChangedCallback`
-method will run.
+want to observe. When one of these attributes changes, the
+`attributeChangedCallback` method will run.
 
 [source,javascript]
 ====
@@ -102,8 +102,8 @@ attributes changes. The method receives three arguments:
 In the following example, the `attributeChangedCallback` method is used to keep
 changes to the custom element's attributes in sync with the component's internal
 properties. A property exists on a JavaScript object whereas an attribute
-exists on an HTMLElement. A common pattern is to use the `attributeCHangedCallback`
-to keep the two in sync.
+exists on an HTMLElement. A common pattern is to use the
+`attributeCHangedCallback` to keep the two in sync.
 
 [source,javascript]
 ====
@@ -138,8 +138,10 @@ Notice, in the above example, the use of a conditional check inside the
 `attributeChangedCallback` method. This is to prevent an infinite loop. The
 `open` setter and getter are used to set the element's `open` attribute when the
 corresponding class property is updated. The `attributeChangedCallback` method
-does the inverse: it updates the property when the attribute changes.
+does the inverse: it updates the property when the attribute changes. A
+conditional check is required to update the property only when the attribute
+value has changed, else an infinite loop will occur.
 
 Keeping properties and attributes in sync is not _technically_ required, but
-it is considered best practice, and is a common design pattern, in the
+it is considered best practice and is a common design pattern in the
 implementation of web components.

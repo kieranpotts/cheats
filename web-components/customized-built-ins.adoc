@@ -8,8 +8,8 @@ There is another category of custom elements, called _customized built-in
 elements_. These are custom elements that extend native HTML elements, rather
 than defining entirely new HTML elements from scratch.
 
-For example, an autonomous custom button element would extend from `HTMLElement`,
-but a customized built-in button element would extend from `HTMLButtonElement`.
+An autonomous custom button element would extend from `HTMLElement`, but a
+customized built-in button element would extend from `HTMLButtonElement`.
 
 There are pros and cons to each approach. Fully autonomous custom elements give
 you a blank canvas to work with, but they require you to implement all the
@@ -34,12 +34,12 @@ will also match your customized built-in button elements. To exclude customized
 button elements, you'd need to update all those existing queries, eg.
 `.querySelectorAll('button:not([is])`.
 
-There are also styling consideration. For the same reasons, autonomous custom
+There are also styling considerations. For the same reasons, autonomous custom
 elements are less likely to conflict with existing styles than customized
 built-in elements. Any CSS rules like `button {}` will cascade into your
-customized built-in button elements (customized built-in elements also receive
-thee default styles supplied by the browser, unless you override these in your
-global CSS).
+customized built-in button elements. (Customized built-in elements also receive
+the default styles supplied by the browser, unless you override these in your
+global CSS.)
 
 On the other hand, autonomous custom elements tend to require a lot more coding
 and configuration. Customized built-in elements have accessibility semantics
@@ -47,7 +47,7 @@ and behaviors built-in, which can be difficult to replicate in autonomous
 custom elements that mimic the behavior of native elements.
 
 A subset of native HTML elements offer a middle ground between fully autonomous
-custom elements, and customized built-in elements. There's a subset of built-in
+custom elements and customized built-in elements. There's a subset of built-in
 elements that can be extended _and_ customized with the shadow DOM. This allows
 you to encapsulate the styles and behaviours of your custom element, while
 still inheriting the features of the native element. And, with the shadow DOM,

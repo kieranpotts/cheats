@@ -44,9 +44,9 @@ export class MyButton extends HTMLElement {
 
 == `connectedCallback`
 
-The `connectedCallback` method serves a separate puprose to the element's
-constructor. Whereas the constructor is used to set up the bare bones of the
-element, the `connectedCallback` methos is typically used to add dynamic
+The `connectedCallback` method has a separate purpose to the element's
+constructor. Whereas the constructor is used to set up the bare bones of a
+custom element, the `connectedCallback` method is typically used to add dynamic
 content to the element, to set up event listeners, and otherwise initialize
 the component's dynamic behavior in the DOM.
 
@@ -54,5 +54,5 @@ In fact, by design, the constructor can't be used to modify or manipulate the
 element's attributes. The constructor is called when a new instance of a custom
 element is created (eg. using `document.createElement()`), and it is expected
 to return a simple node with no attributes or dynamic content inserted. These
-are done subsequently when the element is connected to the DOM, and this is
+are added subsequently when the element is connected to the DOM, and this is
 the responsibility of the `connectedCallback` method.

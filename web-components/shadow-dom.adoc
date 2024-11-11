@@ -2,23 +2,25 @@
 
 Prior to the introduction of the shadow DOM to the web platform, all CSS
 was scoped globally. The shadow DOM was introduced as a mechanism to allow
-web components to encapsulate their own styles, and without risk of pollution
+web components to encapsulate their own styles without risk of pollution
 from the global CSS cascade.
 
-*The shadow DOM in an encapsulated instance of the DOM.* It allows web developers
-to define reusable DOM fragments that are entirely isolated from one another
-and from the main DOM of the document the fragments may be injected into.
+*The shadow DOM is an encapsulated instance of the DOM.* It allows web
+developers to define reusable DOM fragments that are entirely isolated from one
+another and from the main DOM of the document the fragments may be injected
+into.
 
 This means that component authors can define the look-and-feel of resuable
 web components and guarantee that they can be reused in any context without
 regressions. The shadow DOM provides the sort of level of encapsulation that
 was previously only possible using iframes.
 
-****
+[NOTE]
+======
 There are a few exceptions that inherit from the parent document, like font
 family and document font sizes, but these can be overridden internally
 within shadow roots, if necessary.
-****
+======
 
 The shadow DOM also makes it easier to manage element IDs and class names,
 to avoid conflicts. Elements IDs and class names defined in the shadow DOM
@@ -27,18 +29,15 @@ defined in the main document or other shadow roots. Thus, in the context of
 web components, CSS class naming conventions or CSS-in-JS solutions are not
 required as solutions to the problems associated with global scope.
 
-[NOTE]
-======
 Generally, content inside of a document's scope is referred to as the
 *light DOM*, and anything inside of a shadow root is referred to as the
 *shadow DOM*.
-======
 
 When using the light DOM, an element can be selected by using
-`document.querySelector('...')` or by targeting any element's children by
-using `element.querySelector('...')`. In the same way, a shadow root's
-children can be targeted by calling `shadowRoot.querySelector('...')`, where
-`shadowRoot` is a reference to the document fragment.
+`document.querySelector('...')` or `element.querySelector('...')`. In the same
+way, a shadow root's children can be targeted by calling
+`shadowRoot.querySelector('...')`, where `shadowRoot` is a reference to the
+document fragment.
 
 But the children of a shadow root cannot be selected from the light DOM. That's
 because child elements of a shadow root belong to a different
@@ -62,7 +61,7 @@ class MyCustomDialog extends HTMLElement {
 }
 ====
 
-By calling `attachShadow()` with the open mode option, we are telling our
+By calling `attachShadow()` with the "open" mode option, we are telling our
 element to save a reference to the shadow root on the `element.shadowRoot`
 property. `attachShadow()` always returns a reference to the shadow root, but
 we don't need to capture that if it's going to be made available via

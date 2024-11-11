@@ -2,12 +2,12 @@
 
 The web platform APIs used to create web components are low level and therefore
 fairly verbose. To create only simply components, web developers are
-responsible for all these implementation details:
+responsible for all of these implementation details:
 
 * Setting up the shadow DOM.
 * Setting up the HTML templates.
-* Cleaning up event listeners.
-* Definting the attributes we want to observe.
+* Setting up, and subsequently cleaning, up event listeners.
+* Defining the attributes we want to observe.
 * Writing logic to react to changes in the values of observed attributes.
 * Handling type conversions for the values of observed attributes.
 
@@ -24,7 +24,7 @@ become obsolete.
 == Lit
 
 https://lit.dev/[Lit] is a lightweight web components abstraction library
-created and maintained by Google. Lit removes a lot of boilerplate code by
+created and maintained by Google. It removes a lot of boilerplate code by
 imposing more opinions on how web components should work, and extracting
 common implementation patterns into a library.
 
@@ -43,14 +43,14 @@ export class HelloWorld extends LitElement {
 customElements.define('hello-world', HelloWorld);
 ====
 
-A more complex web components, with observed attributes and lifecycle methods,
+A more complex web component, with observed attributes and lifecycle methods,
 looks like this:
 
 [source,javaScript]
 ====
 import { LitElement, html } from "lit";
 
-export class OdysseyCounter extends LitElement {
+export class MyCounter extends LitElement {
   static properties = {
     count: { type: Number },
     disabled: { type: Boolean },
@@ -96,4 +96,4 @@ Note the following:
 
 * Instead of the using the `attributeChangedCallback` lifecycle method, Lit's
   `render()` function has access to all of the component's properties, which
-  simplifies the proces sof manipulating our templates.
+  simplifies the proces sof manipulating templates based on data changes.
