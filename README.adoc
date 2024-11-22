@@ -4,7 +4,7 @@ Cheat sheets for various tools and technologies.
 
 == Contents
 
-== Unix
+=== Unix
 
 * link:./src/unix/filesystem.adoc[Unix filesystem]
 * link:./src/unix/permissions.adoc[Unix permissions]
@@ -24,7 +24,7 @@ Cheat sheets for various tools and technologies.
   ** link:./src/unix/commands/mv.adoc[mv]
   ** link:./src/unix/commands/rm.adoc[rm]
 
-== Linux
+=== Linux
 
 * link:./src/linux/apt.adoc[APT package manager]
 * link:./src/linux/distros.adoc[Linux distributions]
@@ -32,17 +32,17 @@ Cheat sheets for various tools and technologies.
 * link:./src/linux/systemd.adoc[systemd]
 * link:./src/linux/users.adoc[User management in Linux]
 
-== Shells
+=== Shells
 
 * link:./src/shells/posix.adoc[POSIX]
 * link:./src/shells/bash.adoc[Bash]
 
-== Protocols
+=== Protocols
 
 * link:./src/protocols/ssh.adoc[SSH]
 * link:./src/protocols/ssl-tls.adoc[SSL/TLS]
 
-== Utilities
+=== Utilities
 
 ****
 I'm defining utility software as any simple computer program with only a
@@ -58,7 +58,7 @@ command line interface and which specializes in a single discrete task.
 * link:./src/utils/wget.adoc[wget]
 * link:./src/utils/whois.adoc[whois]
 
-== Applications
+=== Applications
 
 ****
 Application software is defined here any any computer program that is
@@ -78,13 +78,13 @@ more complex than utility software!
 * link:./src/apps/tmux.adoc[tmux]
 * link:./src/apps/xdebug.adoc[Xdebug]
 
-== Application libraries and frameworks
-
-* link:./src/lib/laravel.adoc[Laravel]
-
-== Services
+=== Services
 
 * link:./src/services/github.adoc[GitHub]
+
+=== Application libraries and frameworks
+
+* link:./src/lib/laravel.adoc[Laravel]
 
 ''''
 
