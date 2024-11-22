@@ -81,7 +81,11 @@ static observedAttributes = ["disabled", "count"];
 ====
 
 The `observedAttributes` static property can also be defined as a getter method,
-which is useful if you need to calculate the list of observed attributes.
+which is useful if you need to calculate the list of observed attributes. (At the
+time when custom elements were standardized, using getters and setters was the
+only way of defining properties on an ES5 class definition. Subsequently,
+static class fields were standardized in ECMAScript, and this is now the more
+common syntax to declare observed attributes in custom elements.)
 
 [source,javascript]
 ====
