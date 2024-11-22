@@ -1,0 +1,62 @@
+= AWS networking
+
+A *Virtual Private Cloud (VPC)* is like a private network to isolate a group
+of resources that sit within it.
+
+When you create a VPC, you will create a *CIDR range*. A CIDR range is a
+notation that specifies a range of IP addresses. Examples:
+
+* 10.0.0.0/24
+* 10.0.0.0/16
+* 10.0.0.0/8
+
+Each octet (a digit between the dots) can be between 0 and 254, so is an
+8-bit number. The number after the slash is the number of bits that are fixed
+in the range. So if you see `/24` on the end, this means that the first three
+octets (8+8+8=24) are fixed, and the last octet can be any number between 0 and
+254. If you see `/16` on the end, it means the first two octets are fixed, and
+`/8` means only the first octet is fixed.
+
+Inputting `10.0.0.0/16` for your CIDR range will give you 65,536 possible IP
+addresses, which will be more than sufficient for most networking requirements.
+
+[TIP]
+======
+IP Subnet Calculator:
+https://www.calculator.net/ip-subnet-calculator.html
+======
+
+Within a VPC you will have isolate networks within the CIDR ranges called
+*subnets*. A subset is a defined range of IP addresses within a VPC's CIDR range.
+Subnets are used to increase the security and efficiency of network
+communications. You can think of them as postcodes, which help to more
+efficiently route mail than could be achieved using just the street address and
+city.
+
+What you will usually see in a VPC is a public subnet and a private subnet. The
+public subnet will have a route to the wider internet and its resources will
+therefore be accessible by the public. The private subnet will encapsulate
+resources that you do not want to be accessible by the public.
+
+Often what people do, within each VPC, is create a public subnet and a private
+subnet in one geographic zone, and a second public-private subnet pair in a
+different zone. Therefore, if one zone goes down, you will have high availability
+by having a second zone to failover to.
+
+You can now launch resources into subnets.
+
+Resources within different subnets within a VPC can communicate with each
+other. But to allow public access into a subnet, you need to create a *gateway*,
+specifically an internet gateway. A gateway, in general, connects one computer
+network to another computer network. And internet gateway connects a computer
+network to the internet.
+
+You then need to give the public subnet a *route* to your internet gateway.
+This is done using something called *route tables*.
+
+[NOTE]
+======
+Every VPC has a router by default. You don't need to setup a router, only
+route tables.
+======
+

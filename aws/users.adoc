@@ -1,0 +1,23 @@
+= AWS users
+
+== Root user
+
+The root user is created when you first sign up for a new AWS organization
+account. It has full access to all AWS services and resources in the account.
+
+After signing up, you SHOULD enable Multi-Factor Authentication for the
+root user account, and make sure that the root user does not have any access
+keys.
+
+Subsequently to access the AWS Management Console, it is better to do so using
+a dedicated IAM (Identity and Access Management) admin users, rather than the
+root user. Go to *Users* > *Add Users*. Enter a username and select the option
+to give the user access to the AWS Management Console. Choose *Create an IAM
+user* and set a password.
+
+On the *Set permissions* screen, select *Attach policies directly*, and choose
+*AdministratorAccess*.
+
+On completion, new IAM users will be given a dedicated URL they can use to
+access the AWS Management Console. This URL just auto-populates the account
+number.

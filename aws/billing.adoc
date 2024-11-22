@@ -1,0 +1,15 @@
+= AWS billing
+
+== Billing alerts
+
+It is RECOMMENDED to setup billing alarms, so you don't spend more than you have
+budgeted for on AWS resources.
+
+Go to *Billing* > *Billing preferences*. Under *Alert preferences*, select
+*Receive CloudWatch billing alerts*, and optionally *Receive AWS Free Tier alerts*
+too.
+
+Now that alerts are enabled, you need to create some alerts. Go to *Cloudwatch*
+> *Create alarms*. You must be in the region US East (N. Virginia) (`us-east-1`)
+to create billing alarms. Billing metrics are stored in this region. You can
+then choose *Billing* as your alarm metric. Set the threshold.
