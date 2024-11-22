@@ -13,3 +13,8 @@ reusable HTML elements using the native capabilities of web browsers.
 * link:./styling.adoc[Styling]
 * link:./abstractions.adoc[Abstractions (Lit etc.)]
 * link:./customized-built-ins.adoc[Customized built-in elements]
+
+== References
+
+* https://learn-wcs.com/[Learn Web Components] - A free roadmap.
+* https://thomaswilburn.github.io/wc-book/[Web Components at Work] by Thomas Wilburn.
