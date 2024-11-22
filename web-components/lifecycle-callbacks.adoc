@@ -42,8 +42,6 @@ export class MyButton extends HTMLElement {
 }
 ====
 
-== `connectedCallback`
-
 The `connectedCallback` method has a separate purpose to the element's
 constructor. Whereas the constructor is used to set up the bare bones of a
 custom element, the `connectedCallback` method is typically used to add dynamic
@@ -51,8 +49,125 @@ content to the element, to set up event listeners, and otherwise initialize
 the component's dynamic behavior in the DOM.
 
 In fact, by design, the constructor can't be used to modify or manipulate the
-element's attributes. The constructor is called when a new instance of a custom
-element is created (eg. using `document.createElement()`), and it is expected
-to return a simple node with no attributes or dynamic content inserted. These
-are added subsequently when the element is connected to the DOM, and this is
-the responsibility of the `connectedCallback` method.
+element's DOM or attributes. The constructor is called when a new instance of a
+custom element is created (eg. using `document.createElement()`), and it is
+expected to return a simple node with no attributes or dynamic content inserted.
+
+The work of manipulating the element's DOM and attributes, and adding event
+listeners and other dynamic behaviors, is the responsibility of the lifecycle
+callbacks.
+
+The lifecycle callbacks are called when an element is attached to a DOM, when it
+is subsequently removed from that DOM, and when its attributes are changed.
+
+[source,javascript]
+====
+class LifecycleExample extends HTMLElement {
+  constructor() {
+    super();
+  }
+
+  static get observedAttributes() {
+    return ["src"]
+  }
+
+  connectedCallback() {
+    // called when the element is attached to the document
+    // similar to React's "componentDidMount"
+  }
+
+  disconnectedCallback() {
+    // called on removal
+    // similar to React's "componentWillUnmount"
+  }
+
+  attributeChangedCallback(attribute, previousValue, currentValue) {
+    // called when attributes are added, removed, or changed
+  }
+
+}
+====
+
+== `connectedCallback()`
+
+The `connectedCallback` method is run whenever the element gets attached to the
+document, either by the HTML parser or any JavaScript that appends it to a
+parent element.
+
+The `connectedCallback()` method will run several times if an element is moved
+around in the DOM. For a one-time setup, you'd need to add a guard property to
+track execution.
+
+[source,javascript]
+====
+connectedCallback() {
+  if (!this.initialized) {
+    // Run expensive first-time setup code here.
+    this.initialized = true;
+  }
+
+  // Regular re-connection code can go here.
+}
+====
+
+In practice, the `connectedCallback()` method tends to be used to insert a small
+HTML template, set up event listeners on the document or window, and set up
+observers (of the Intersection or Mutation variety).
+
+== `disconnectedCallback()`
+
+This method gets called when the element is disconnected from the document. It's
+typically used for cleanup code: removing observers and eveent listeners that
+were setup by `connectedCallback()`.
+
+== `adoptedCallback()`
+
+This is another lifecycle method that gets called when the element is moved from
+the document where it was created to another document or document fragment. This
+lifecycle method is rarely seen in the wild.
+
+== `attributeChangedCallback`
+
+This lifecycle method is called whenever an attribute is added, removed, or
+changed on the element. This can happen in several scenarios:
+
+* During HTML parsing, for each attribute in the markup source.
+* Via `setAttribute()` calls in scripts.
+* When a user edits the element's attributes from the dev tools.
+* In response to an attribute change notification, eg. when an animation started.
+
+Not every attribute will trigger this lifecycle method. In order to get
+notifications about changes, the element class needs to declare a static
+`observedAttributes` property that returns an array of the names of attributes
+to watch.
+
+[source,javascript]
+====
+static get observedAttributes() {
+  return [ "src", "title" ]
+}
+====
+
+The lifecycle method is called with three arguments:
+
+* The name of the attribute that got added or removed, or its value changed.
+* The previous value (if any) of the attribute.
+* The current value (if any) of the attribute.
+
+The first argument is guaranteed, but depending on the type of mutation the
+other two may be either a string or null value.
+
+|===
+| Attribute was... | previousValue | currentValue
+
+| Added | null | "new value"
+| Changed | "old value" | "new value"
+| Removed | "old value" | null
+|===
+
+The attribute system only accepts one type: DOMString (which is, for all intents
+and purposes, a regular JavaScript string). It's possible to pass complex data
+types by, for example, encoding JSON objects as strings. But, in web components,
+if you need a non-primitive value like an object or array, it is better practice
+to use a set property or a method as the interface, rather than use an attribute
+to pass the value to the element.
