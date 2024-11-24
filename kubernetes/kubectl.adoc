@@ -1,0 +1,76 @@
+= `kubectl`
+
+The Kubernetes API Server endpoint is how you will communicate with the master
+server. There's a multi-platform tool called `kubectl` that you use to control
+your Kubernetes cluster via the master server.
+
+To connect, `kubectl` needs to know the location of the Kubernetes API Server
+endpoint. This is typically done via a configuration file.
+
+```
+export KUBECONFIG=kubeconfig.yaml
+```
+
+The actual configuration file is normally downloaded from your CSP.
+
+```bash
+# Get state of worker nodes.
+kubectl get nodes
+
+# Get info on the k8s cluster.
+kubectl cluster-info
+
+# Create, for each node, a K8s "pod", inside of which containers are run.
+# The container system could be Docker, Rocket, containerd, etc. It is possible
+# to have multiple containers running inside a pod, but more typically there is
+# one container per pod.
+kubectl run <pod-name> --image=<container-image> --port=<port>
+
+# Get list if existing pods.
+kubectl get pods
+
+# Get detailed info on a pod. Each pod gets its own internal (private) IP
+# address, which will be listed here.
+kubectl describe pods
+```
+
+`kubectl run` is really for creating ad hoc pods. To prepare a whole cluster,
+you will configure a *deployment*. A deployment config might say:
+
+* Create 3 pods.
+* Use this Docker image for each one.
+* Expose port 80 on each pod.
+
+Deployments are configured in YAML files. These are called manifests.
+
+```bash
+kubectl apply -f <manifest>.yaml
+
+kubectl get deployments
+
+kubectl edit deployment <deployment-name>
+```
+
+You could have 10 pods but only three servers. You can have a bunch of pods on
+one mode – that's fine. The K8s scheduler's job is to look at all the available
+worker nodes and figure out how busy they are and give them jobs.
+
+```bash
+# This command will show you what worker node each pod is running in – should
+be evenly distributed. The master is continuously monitoring this process.
+kubectl get pods -o wide
+```
+
+In K8s, to expose a pod or group of pods to a network, we create a *service*.
+And the service will actually be a load balancer – it will distribute traffic
+between the nodes and the pods.
+
+Services are also defined in separate YAML manifests.
+
+```bash
+kubectl apply -f <service-manifest>.yaml
+
+kubectl get services
+
+kubectl describe service <service-name>
+```
