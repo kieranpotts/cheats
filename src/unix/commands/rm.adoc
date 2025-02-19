@@ -12,8 +12,7 @@ To remove a directory:
 rm -r <directory_name>
 ----
 
-To avoid mistakes, use the `-i` interactive-mode switch. This will request a
-yes/no confirmation before deleting the file or directory.
+To avoid mistakes, use the `-i` interactive-mode switch. This will request a yes/no confirmation before deleting the file or directory.
 
 [source]
 ----

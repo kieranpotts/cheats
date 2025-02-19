@@ -1,7 +1,6 @@
 = iptables
 
-An `iptables` firewall blocks incoming and outgoing connections except for the
-ones that we explicitly approve, based on rules.
+An `iptables` firewall blocks incoming and outgoing connections except for the ones that we explicitly approve, based on rules.
 
 Check your server's default firewall rules:
 
@@ -10,8 +9,7 @@ Check your server's default firewall rules:
 sudo iptables -L
 ----
 
-Examine the output. If you haven't implemented any firewall rules yet, you
-should see an empty ruleset, as shown below:
+Examine the output. If you haven't implemented any firewall rules yet, you should see an empty ruleset, as shown below:
 
 [source]
 ----
@@ -32,8 +30,7 @@ Create a file to hold your firewall rules:
 sudo nvim /etc/iptables.firewall.rules
 ----
 
-The following rules will allow traffic to the following services and ports:
-HTTP (80), HTTPS (443), SSH (22), and ping. All other ports will be blocked.
+The following rules will allow traffic to the following services and ports: HTTP (80), HTTPS (443), SSH (22), and ping. All other ports will be blocked.
 
 [source]
 ----
@@ -90,8 +87,7 @@ sudo iptables -L
 
 Check that the output matches what you expect.
 
-Next, you need to ensure that the firewall rules are activated every time you
-restart your machine.
+Next, you need to ensure that the firewall rules are activated every time you restart your machine.
 
 [source]
 ----

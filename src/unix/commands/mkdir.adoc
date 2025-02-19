@@ -5,8 +5,7 @@
 mkdir <directory_name>
 ----
 
-If creating nested directories, you can use the `-p` option to automatically
-create all parent directories recursively, as needed:
+If creating nested directories, you can use the `-p` option to automatically create all parent directories recursively, as needed:
 
 [source]
 ----
@@ -20,5 +19,4 @@ To make a directory and set permissions at the same time:
 mkdir -m a=rwx <directory_name>
 ----
 
-The `-m` option is short for "mode", and `a=rwx` means that all users have read,
-write, and execute permissions on the directory.
+The `-m` option is short for "mode", and `a=rwx` means that all users have read, write, and execute permissions on the directory.

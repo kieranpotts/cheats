@@ -22,26 +22,17 @@ yum install openssl
 
 === Create self-signed certificates
 
-SSL certificates are used to encrypt traffic between a client (eg. a web
-browser) and a server (eg. an HTTP server). In production environments,
-SSL certificates will be purchased from recognized third parties, known as
-the root or intermediate authority, to say that your SSL certificate is both
-valid and legitimately used by its owners.
+SSL certificates are used to encrypt traffic between a client (eg. a web browser) and a server (eg. an HTTP server). In production environments, SSL certificates will be purchased from recognized third parties, known as the root or intermediate authority, to say that your SSL certificate is both valid and legitimately used by its owners.
 
-In development environments that are not accessible publicly, you can instead
-create a self-signed certificate, which you can configure your local computer
-to recognize and accept as being a valid certificate. The steps are:
+In development environments that are not accessible publicly, you can instead create a self-signed certificate, which you can configure your local computer to recognize and accept as being a valid certificate. The steps are:
 
 1. Create a private key.
 2. Create a certificate signing request (CSR).
 3. Create a self-signed certificate using the private key and CSR.
 
-NOTE: When you purchase an SSL certificate from a third party certificate
-signing authority, the third party does the last step.
+NOTE: When you purchase an SSL certificate from a third party certificate signing authority, the third party does the last step.
 
-Create a directory to store your SSL certificates. By convention, these go
-in `/etc/ssl` or in a subdirectory of the HTTP server that will use the
-certificates:
+Create a directory to store your SSL certificates. By convention, these go in `/etc/ssl` or in a subdirectory of the HTTP server that will use the certificates:
 
 [source]
 ----
@@ -72,19 +63,13 @@ sudo openssl req -new -key "/etc/<web-server>/ssl/example.key" \
   -out "/etc/<web-server>/ssl/example.csr"
 ----
 
-You will be asked a series of questions. The `Common Name` option is the most
-important. It must match the domain name you will use the certificate for. If
-you use the `www` subdomain`, this must be included in the `Common Name`.
+You will be asked a series of questions. The `Common Name` option is the most important. It must match the domain name you will use the certificate for. If you use the `www` subdomain`, this must be included in the `Common Name`.
 
-For self-signed certificates, you can skip the `Organizational Unit Name` and
-`Email Address` options.
+For self-signed certificates, you can skip the `Organizational Unit Name` and `Email Address` options.
 
-DO NOT provide a challenge password. This is only something needed by
-certificate authorities (if you're purchasing a certificate) in case you
-need to regenerate a certificate.
+DO NOT provide a challenge password. This is only something needed by certificate authorities (if you're purchasing a certificate) in case you need to regenerate a certificate.
 
-Two files, `example.key` and `example.csr` will have been created. You now
-use these files to create the self-signed certificate:
+Two files, `example.key` and `example.csr` will have been created. You now use these files to create the self-signed certificate:
 
 [source]
 ----
@@ -100,8 +85,7 @@ Explanation:
 * `-days 365` make the certificate valid for one year.
 * `-in "/etc/<web-server>/ssl/example.csr"` is the path to the CSR.
 * `-signkey "/etc/<web-server>/ssl/example.key"` is the path to the private key.
-* `-out "/etc/<web-server>/ssl/example.crt"` is the output path for the
-  certificate.
+* `-out "/etc/<web-server>/ssl/example.crt"` is the output path for the certificate.
 
 == Wildcard certificates
 
@@ -206,8 +190,7 @@ $ sudo service nginx reload
 
 === Command-line tools
 
-To interact with your insecure local application via `curl` and `wget`, for
-example, you will need to tell the tools to ignore the certificate verification.
+To interact with your insecure local application via `curl` and `wget`, for example, you will need to tell the tools to ignore the certificate verification.
 
 [source]
 ----

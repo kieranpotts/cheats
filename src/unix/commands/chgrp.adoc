@@ -7,5 +7,4 @@
 chgrp <group> <file>
 ----
 
-Only the owner of a file — or root, who is exempt from all permissions — can
-change the ownership and group ownership of filesystem objects.
+Only the owner of a file — or root, who is exempt from all permissions — can change the ownership and group ownership of filesystem objects.

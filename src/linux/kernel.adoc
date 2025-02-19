@@ -1,7 +1,6 @@
 = Linux kernel
 
-Use either of the following commands to find the version number of the
-Linux kernel:
+Use either of the following commands to find the version number of the Linux kernel:
 
 [source]
 ----

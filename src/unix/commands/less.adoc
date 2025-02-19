@@ -1,7 +1,6 @@
 = less
 
-The `less` command allows you to scroll through the contents of a text file,
-without risk of modifying it.
+The `less` command allows you to scroll through the contents of a text file, without risk of modifying it.
 
 [source]
 ----

@@ -16,8 +16,7 @@ Change the ownership for all files in the current directory:
 chown <username>:<groupname> *
 ----
 
-Recursively change the ownership of all files and directories in the current
-directory.
+Recursively change the ownership of all files and directories in the current directory.
 
 [source]
 ----

@@ -14,9 +14,7 @@ location ~ \.php$ {
 }
 ----
 
-`upstream` defines servers that can be referenced to. In the following example,
-the `factcgi_pass` setting is replaced by a reference to the `php` server,
-defined by the earlier `upstream` block.
+`upstream` defines servers that can be referenced to. In the following example, the `factcgi_pass` setting is replaced by a reference to the `php` server, defined by the earlier `upstream` block.
 
 [source]
 ----
@@ -32,9 +30,7 @@ location ~ \.php$ {
 }
 ----
 
-The benefit of using `upstream` blocks is that you can configure more than one
-server/port/service as upstream, and distribute traffic across the servers.
-Example:
+The benefit of using `upstream` blocks is that you can configure more than one server/port/service as upstream, and distribute traffic across the servers. Example:
 
 [source]
 ----

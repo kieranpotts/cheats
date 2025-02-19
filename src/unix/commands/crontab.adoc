@@ -51,12 +51,9 @@ MAILTO="hostmaster@example.com"
 
 Sunday can be the first (0) or last (7) day of the week.
 
-There must be a line break at the end of the command, ie. the file must end
-with an empty line.
+There must be a line break at the end of the command, ie. the file must end with an empty line.
 
-If installing a system-wide crontab – in `/etc/crontab` or `/etc/cron.d`
-fragments – then you also need to append the command with a named user that
-will run it:
+If installing a system-wide crontab – in `/etc/crontab` or `/etc/cron.d` fragments – then you also need to append the command with a named user that will run it:
 
 [source]
 ----

@@ -2,8 +2,7 @@
 
 == Artisan helper
 
-Place the following in your project root, then run `./artisan <options>` to
-execute CLI commands defined in your application.
+Place the following in your project root, then run `./artisan <options>` to execute CLI commands defined in your application.
 
 [source,php]
 ----

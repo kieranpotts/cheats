@@ -1,12 +1,10 @@
 = APT package manager
 
-Advanced Package Tool (or APT) is the main command-line package manager for
-Debian and its derivative distros.
+Advanced Package Tool (or APT) is the main command-line package manager for Debian and its derivative distros.
 
 == Package installation
 
-You can specify the specific version of a package to install using either of
-the following commands.
+You can specify the specific version of a package to install using either of the following commands.
 
 [source]
 ----
@@ -16,9 +14,7 @@ sudo apt-get -t=<target release> install <package-name>
 
 == Hard-remove related packages and files
 
-The following command will remove all packages beginning "mysql". The `--purge`
-switch tells the package manager to also delete configs and related files from
-the system.
+The following command will remove all packages beginning "mysql". The `--purge` switch tells the package manager to also delete configs and related files from the system.
 
 [source]
 ----

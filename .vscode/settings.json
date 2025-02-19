@@ -1,9 +1,8 @@
 {
 
   /* Vertical guidelines for line wrapping. */
-  // "editor.rulers": [
-  //   100,
-  // ],
+  "editor.rulers": [
+  ],
 
   /* Wrap long code lines at the viewport or 100 characters, whichever is
   narrowest. Same for documentation. */

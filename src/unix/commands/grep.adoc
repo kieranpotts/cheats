@@ -1,12 +1,10 @@
 = grep
 
-`grep` is a command line utility for searching plain text files and data sets
-using regular expressions.
+`grep` is a command line utility for searching plain text files and data sets using regular expressions.
 
 == Basic search
 
-The following example will print out each line in the file `science.txt`
-containing the word "science" (case sensitive).
+The following example will print out each line in the file `science.txt` containing the word "science" (case sensitive).
 
 [source]
 ----
@@ -71,16 +69,14 @@ Count the number of matching lines:
 grep -c 'word' /path/to/file
 ----
 
-The `-v` option inverts the matches, which means it matches only those lines
-that do _not_ match the expression:
+The `-v` option inverts the matches, which means it matches only those lines that do _not_ match the expression:
 
 [source]
 ----
 grep -v 'exclude' /path/to/file
 ----
 
-`--include`: eg. search through only those files that have `.c` or `.h`
-extensions:
+`--include`: eg. search through only those files that have `.c` or `.h` extensions:
 
 [source]
 ----
@@ -94,8 +90,7 @@ grep --include=\*.{c,h} -rnw '/path/to/somewhere/' -e "pattern"
 grep --exclude=*.o -rnw '/path/to/somewhere/' -e "pattern"
 ----
 
-Exclude a particular directory with the `--exclude-dir` parameter. Example,
-exclude the directories `dir1/`, `dir2/` and all directories matching `*.dst/`:
+Exclude a particular directory with the `--exclude-dir` parameter. Example, exclude the directories `dir1/`, `dir2/` and all directories matching `*.dst/`:
 
 [source]
 ----

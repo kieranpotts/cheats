@@ -1,12 +1,8 @@
 = Unix commands
 
-The following commands can be found on most Unix-like operating systems. These
-are "mandatory" commands as specified in the Single Unix Specification (SUS) –
-a family of standards for computer operating systems, compliance with which
-is required to qualify for using the "UNIX" trademark.
+The following commands can be found on most Unix-like operating systems. These are "mandatory" commands as specified in the Single Unix Specification (SUS) – a family of standards for computer operating systems, compliance with which is required to qualify for using the "UNIX" trademark.
 
-See also the link:https://archive.org/details/unixtoolbox[Unix Toolbox] by
-Colin Barschel (archived).
+See also the link:https://archive.org/details/unixtoolbox[Unix Toolbox] by Colin Barschel (archived).
 
 == Shell programming
 
@@ -152,9 +148,7 @@ uname     # Return system name.
 ----
 
 ****
-To find out more about any Unix command or program, view its man pages with the
-command `man <command>`. In addition, most commands accept the `--help` option,
-which will output a short summary of their available arguments.
+To find out more about any Unix command or program, view its man pages with the command `man <command>`. In addition, most commands accept the `--help` option, which will output a short summary of their available arguments.
 
 [source]
 ----

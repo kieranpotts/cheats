@@ -5,8 +5,7 @@
 ls
 ----
 
-Use the `l` switch to show long-form output, and the `a` switch to include
-directories and hidden files in the list.
+Use the `l` switch to show long-form output, and the `a` switch to include directories and hidden files in the list.
 
 [source]
 ----

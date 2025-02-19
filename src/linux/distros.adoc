@@ -9,7 +9,4 @@ lsb_release -a
 hostnamectl
 ----
 
-Reading the `/etc/*-release` files produces at least some useful information
-on all distros. The `lsb_release` command displays certain Linux Standard Base
-(LSB) and distribution-specific information. The `hostnamectl` works for
-GNU systemd-based  distros.
+Reading the `/etc/*-release` files produces at least some useful information on all distros. The `lsb_release` command displays certain Linux Standard Base (LSB) and distribution-specific information. The `hostnamectl` works for GNU systemd-based  distros.
