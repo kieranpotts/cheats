@@ -1,0 +1,31 @@
+= Annotations
+
+== Spring Boot annotations
+
+Annotations are a key feature of Spring Boot. They are used to reduce boilerplate code and configuration, and support a more declarative programming style (where behavior is _declared_ alongside classes and methods, rather than bring _configured_ centrally).
+
+Commonly used annotations in Spring Boot include:
+
+* `@SpringBootApplication`: This annotation is essential to any Spring Boot application. It acts as a convenience declaration that groups three fundamental annotations:
+
+  ** `@Configuration`: Designates a class as the source of bean definitions for the application context.
+
+  ** `@EnableAutoConfiguration`: Instructs Spring Boot to start automatically, configuring the framework based on the libraries and dependencies available on the classpath. This annotation significantly reduces the need for manual configuration.
+
+  ** `@ComponentScan`: Allows Spring to scan the package where the annotated class and its sub-packages are located, to automatically register Spring components.
+
+* `@RestController`: A specialized version of the `@Controller` annotation, this is used to mark a class as a controller where each method returns a data object rather than a view. Spring automatically formats the returned data into JSON or XML, depending on the configuration.
+
+* `@RequestMapping`: Used to map HTTP requests to handler methods.
+
+* `@GetMapping`: Specifically handles HTTP `GET` requests. It acts as a shorthand for `@RequestMapping(method = RequestMethod.GET)`.
+
+* `@PathVariable`: Used in controller method mapping, this annotation binds a segment of a URL to a controller method parameter. It is useful for capturing dynamic URL values.
+
+* `@RequestParam`: This annotation is used to associate HTTP request parameters with variables in a controller method. It facilitates the handling of query or form parameters in GET and POST requests.
+
+* `@Autowired`: Used for automatic dependency injection. This annotation can be placed on fields, constructors, or specific methods, allowing Spring to provide the necessary bean without manual configuration. See *link:./dependency-injection.adoc[dependency injection]*.
+
+* `@Service`: Marks a class as a service, which is ideal for implementing business logic. Although this annotation does not alter behavior by itself, it informs Spring that the class plays a special role within the business layer, facilitating its detection during automatic scanning.
+
+* `@Repository`: Indicates that a class manages database access, acting as a repository. Beyond encapsulating data access logic, Spring uses this annotation to translate specific persistence exceptions into its own generic, unchecked data access exception hierarchy.

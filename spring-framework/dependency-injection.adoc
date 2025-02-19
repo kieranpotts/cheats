@@ -1,0 +1,96 @@
+= Dependency injection
+
+== Beans
+
+Beans are the fundamental building blocks of a Spring application, and form the basis of the dependency injection system.
+
+A bean is an object that is instantiated, assembled, and manages throughout its life cycle by the Spring IoC (Inversion of Control) container.
+
+A bean can be defined using Java annotations:
+
+[source,java]
+----
+import org.springframework.stereotype.Component;
+
+@Component
+public class MyBean {
+  // Bean properties and methods.
+}
+----
+
+To fetch a bean from the Spring IoC container:
+
+[source,java]
+----
+package com.example;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+
+@SpringBootApplication
+public class ExampleApplication {
+
+  public static void main(String[] args) {
+    ApplicationContext context = SpringApplication.run(PrototypeApplication.class, args);
+
+    MyBean myBean = context.getBean(MyBean.class);
+    myBean.callSomeMethod();
+  }
+
+}
+----
+
+== Autowiring
+
+More commonly, beans are wired together using the `@Autowired` annotation:
+
+[source,java]
+----
+@Component
+public class MyClass {
+
+  @Autowired
+  private MyBean myBean; // = new MyDependency(); --> This is not longer necessary.
+
+  // Other bean properties and methods.
+
+}
+----
+
+Alternatively, the dependency can be passed in via a constructor – no annotation required:
+
+[source,java]
+----
+@Component
+public class MyClass {
+
+  private MyBean myBean; // = null;
+
+  public MyClass(MyBean myBean) {
+    this.myBean = myBean;
+  }
+
+}
+----
+
+Setter injection is also possible:
+
+[source,java]
+----
+@Component
+public class MyClass {
+
+  private MyBean myBean;
+
+  @Autowired
+  public void setMyBean(MyBean myBean) {
+    this.myBean = myBean;
+  }
+
+}
+----
+
+So, constructor injection is the default way to wire beans together in Spring, and no annotations are required to make this work. Field injection and setter injection are offered as alternative patterns, but require the `@Autowired` annotation to work.
+
+Constructor injection SHOULD be preferred, and field injection SHOULD be avoided.
