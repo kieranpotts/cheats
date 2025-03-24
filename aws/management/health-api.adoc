@@ -1,0 +1,11 @@
+= AWS Health API
+
+Health API is an API to get health-related information about your resources.
+
+The same information can also be viewed in the AWS Management Console in the *Personal Health Dashboard*.
+
+The Personal Health Dashboard provides alerts and remediation guidance when AWS is experiencing events that may _impact you_. Personal Health Dashboard gives you a _personalized_ view into the performance and availability of the AWS services underlying your AWS resources. So, it is a personalized version of a conventional status dashboard, as it shows only the information that is relevant to you.
+
+The Personal Health Dashboard also provide proactive notification of planned events that may impact your resources, and provides guidance on how to prepare for and respond to these scheduled events.
+
+The *Service Health Dashboard* is a more conventional status dashboard. It provides a _global_ (non-personalized) view of the status of AWS services. This information is generalized and is publicly available. Also, there is no proactive notification of scheduled activities in this view. It shows only the status of AWS services _right now_.

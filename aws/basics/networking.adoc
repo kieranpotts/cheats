@@ -3,7 +3,7 @@
 This document introduces basic networking concepts in AWS, through a series of
 practical steps that will build a virtual private cloud that looks like this:
 
-image::./_/aws-networking.png[]
+image::../_/aws-networking.png[]
 
 == Virtual Private Cloud (VPC)
 
@@ -49,10 +49,10 @@ sufficient for most networking requirements.
 IP Subnet Calculator:
 https://www.calculator.net/ip-subnet-calculator.html
 
-image::./_/ipv4-subnet-calculator.png[]
+image::../_/ipv4-subnet-calculator.png[]
 ======
 
-image::./_/create-vpc.png[]
+image::../_/create-vpc.png[]
 
 == Subnets
 
@@ -66,7 +66,7 @@ and city.
 
 Subnets are created within a VPC.
 
-image::./_/create-subnet.png[]
+image::../_/create-subnet.png[]
 
 For each subnet you create within a VPC, you give the subnet a name, choose an
 availability zone, and specify the subnet's IPv4 CIDR block, which must exist
@@ -75,7 +75,7 @@ the VPC is 10.0.0.0/16, while the IPv4 CIDR block for the subnet is 10.0.0.0/24.
 It means for the subnet, only the last octet of the IP range can vary, so the
 subnet's range is 10.0.0.1 to 10.0.0.254.
 
-image::./_/create-subnet-settings.png[]
+image::../_/create-subnet-settings.png[]
 
 You can create one or more subnets within each VPC. What you will usually see
 in a VPC is a public subnet and a private subnet. The public subnet will have a
@@ -87,7 +87,7 @@ In the following settings for the private subnet, the subnet's IPv4 CIDR block
 is set to 10.0.1.0/24. This means that the subnet's IP range is 10.0.1.1 to
 10.0.1.254.
 
-image::./_/create-subnet-settings-2.png[]
+image::../_/create-subnet-settings-2.png[]
 
 Another common pattern is to have, within each VPC, a public subnet and a
 private subnet in one geographic zone, and a second public-private subnet pair
@@ -102,7 +102,7 @@ to specify the subnet you want it to be launched into.
 The AWS networking diagram above shows an EC2 instance launched in the public
 subnet. To do this, go to *EC2* > *Launch instance*.
 
-image::./_/launch-ec2-instance.png[]
+image::../_/launch-ec2-instance.png[]
 
 Choose a system image, instance type, and create a public-private key pair if
 you do not already have one you can reuse.
@@ -113,7 +113,7 @@ to enable *auto-assign public IP*. Configure firewall settings by creating or
 reusing a security group. For most public resources, you will at least want an
 "ssh" security group rule from "anywhere".
 
-image::./_/launch-ec2-instance-network-settings.png[]
+image::../_/launch-ec2-instance-network-settings.png[]
 
 [NOTE]
 ======
@@ -125,7 +125,7 @@ port, and source/destination IP address.
 Click *Launch instance*. You now have an EC2 instance running in your public
 subnet.
 
-image::./_/ec2.png[]
+image::../_/ec2.png[]
 
 == Gateways
 
@@ -144,7 +144,7 @@ network diagram at the top of this diagram. But to allow public access into a
 subnet and its resources, you need to create a gateway, specifically an
 *internet gateway*, which is represented by this symbol:
 
-image::./_/internet-gateway.png[]
+image::../_/internet-gateway.png[]
 
 [NOTE]
 ======
@@ -157,13 +157,13 @@ To crete an internet gateway, go to *VPC* > *Internet gateways* > *Create
 internet gateway*. Give the gateway a name, and then click *Create internet
 gateway*. You can only have one internet gateway per VPC.
 
-image::./_/create-internet-gateway.png[]
+image::../_/create-internet-gateway.png[]
 
 Once the internet gateway is created, you need to attach it to the VPC. Select
 the internet gateway, and then click *Actions* > *Attach to VPC*. Choose the VPC
 you want to attach the gateway to, and then click *Attach internet gateway*.
 
-image::./_/attach-internet-gateway-to-vpc.png[]
+image::../_/attach-internet-gateway-to-vpc.png[]
 
 == Route tables
 
@@ -172,13 +172,13 @@ because the subnet does not have a route to the internet gateway. You then need
 to give the public subnet a *route* to your internet gateway. This is done using
 something called a *route table*, which has this symbol:
 
-image::./_/route-table.png[]
+image::../_/route-table.png[]
 
 And this is the symbol for a router. Every VPC has a router by default, so you
 don't need to explicitly set up a router. You only need to set up route tables
 for the subnets.
 
-image::./_/router.png[]
+image::../_/router.png[]
 
 To do that, from the *VPC* dashboard go to *Route tables*. All VPC's come with
 default route tables, which will be listed here. The default route table is
@@ -187,7 +187,7 @@ table. If you select the main route table and then view the routes within it,
 you will see that it has a route to the local VPC CIDR range. This is how all
 resources within a VPC can communicate with each other by default.
 
-image::./_/main-route-table-routes.png[]
+image::../_/main-route-table-routes.png[]
 
 For the main route table, if you look under the *Subnet associations* tab, you
 will see that there are no explicit subnets associated with the main route
@@ -203,7 +203,7 @@ routing.
 Create two new route tables, one "public" and one "private", and both associated
 with the VPC.
 
-image::./_/create-route-table.png[]
+image::../_/create-route-table.png[]
 
 Route tables belong to VPCs, but each route table is associated with one or more
 subnets within that VPC. Select the public route table, and associate it with
@@ -281,7 +281,7 @@ From the VPC dashboard, go to *NAT gateways* > *Create NAT gateway*. Give it a
 name, choose the public subnet, set the connectivity type to public, and click
 the button to generate an elastic IP address. Click *Create NAT gateway*.
 
-image::./_/create-nat-gateway.png[]
+image::../_/create-nat-gateway.png[]
 
 Next, go to *Route tables*, select your private route table, and add a route
 out to the new NAT gateway. For the destination, allow everything as before

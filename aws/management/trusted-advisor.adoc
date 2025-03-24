@@ -1,0 +1,10 @@
+= AWS Trusted Advisor
+
+AWS Trusted Advisor is an service that helps you to reduce cost, increase performance, and improve security by optimizing your AWS environment. It provides real-time guidance to help you provision resources, following best practices.
+
+Trusted Advisor will advise you on:
+
+* *Cost optimization*.
+* *Performance* best practices.
+* *Security* best practices.
+* How to achieve *fault tolerance*.

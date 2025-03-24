@@ -1,0 +1,17 @@
+= AWS Service Catalog
+
+The *Service Catalog* allows organizations to create and manage catalogs of IT services that the organization has approved for use on AWS. It allows you to centrally manage commonly-deployed IT services.
+
+The allowed IT services are one that we can define templates for. Service Catalog therefore relies on CloudFormation templates, which we publish in the catalog to allow the organization's users to deploy those services.
+
+IT services can include virtual machine images, servers, software, databases, and multi-tier application architectures.
+
+It enables users to quickly deploy only the approved IT services they need, following the organization's guidelines.
+
+It works like this:
+
+* A *Service Catalog Administrator* creates a *Product* in the *Service Catalog*. The product is defined using a template from which instances of the product can be created.
+
+* The CloudFormation service will build the products based on the templates selected by users from the Service Catalog.
+
+* Administrators can add Products to *Portfolios* within the Service Catalog, and then grant Users/Group access only to specific Portfolios.

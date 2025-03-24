@@ -1,0 +1,17 @@
+= AWS Systems Manager
+
+AWS Systems Manager manages many AWS resources including EC2, S3, and RDS. It is a powerful services that is comprised of several different components:
+
+* *Automation*: Documents can be passed through the Automation feature, which can then do things like take a snapshot of an RDS DB instance. The actions are defined in the documents that are passed into the Automation system, which then runs based on a schedule or parameters that you configure.
+
+* *Run command*: The run command is similar. Documents are passed in, and the system runs the commands that are defined in the documents. For example, you might check for missing updates in EC2 instances.
+
+* *Inventory*: This is where all of the managed systems in Systems Manager report in information about themselves. We can see things like the OS version, the applications that are installed, and the roles that apply. We can then use that inventory to analyze our systems, eg. what are the patch levels of our systems?
+
+* *Patch Manager*: This is used for deploying operating system and software patches automatically across large groups of EC2 or on-premises instances.
+
+* *Compliance*: Can be used to scan managed instances for patch compliance and configuration inconsistencies. Thus we use this to verify that all components of our system are compliant with our desired configuration.
+
+* *Session Manager*: This provides secure remote management of instances, without needing to log in to the instances. It means you don't need to use the secure shell (SSH) protocol, or the Remote Desktop Protocol (RDP) used with Windows. By using Session Manager to access our instances, we don't need to open firewall ports or manage SSH keys. Session Manager replaces the need to bastion hosts (when you connect into a private subnet from instances in a public subnet), SSH, or remote PowerShell or RDP.
+
+* *Parameter Store*: This provides secure, hierarchical storage for configuration data and secrets.

@@ -1,0 +1,29 @@
+= AWS Config
+
+The AWS Config service is used for viewing and managing the configuration of your resources on AWS. It is often used in compliance and security scenarios.
+
+The primary use case for AWS Config is to evaluate your AWS resource configurations against desired configurations. Services such as EC2, ELB, and RDS will notify AWS Config of configuration changes. AWS Config will then record that information in S3. You can then used AWS Config to sent notifications with SNS, or send alerts via CloudWatch Events (and maybe trigger Lambda functions, etc.).
+
+We can also use *Systems Manager Automation* to automatically remediate non-compliant resources.
+
+Other use cases for AWS Config include:
+
+* Review the relationships between resources.
+* View current and historical configurations of resources.
+
+.Examples of AWS COnfig rules
+|===
+|Rule |Description
+
+|`s3-bucket-server-side-encryption-enabled`
+|Checks that your S3 bucket either has S3 default encryption enabled, or that the S3 bucket policy explicitly denies put-object requests without server-side encryption.
+
+|`restricted-ssh`
+|Checks whether security groups that are in use disallow unrestricted incoming SSH traffic.
+
+|`rds-instance-public-access-check`
+|Checks that RDS instances are not publicly accessible.
+
+|`cloudtrail-enabled`
+|Checks that CloudTrail is enabled in your AWS account.
+|===

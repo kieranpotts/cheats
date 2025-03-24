@@ -1,0 +1,19 @@
+= AWS Control Tower
+
+AWS Control Tower simplifies the process of creating multi-account environments. It sets up the governance, compliance, and security guardrails for you. It integrates with other services and features to setup the environment for you, including:
+
+* AWS Organizations
+* Security Control Policies (SCPs)
+* Organizational Units
+* AWS CloudTrail
+* Amazon S3
+* Amazon SNS
+* AWS CloudFormation
+* AWS Service Catalog
+* AWS Single Sign-On (SSO)
+
+Some of the guardrails you can configure with AWS Control Tower include:
+
+* Disallowing public write access to Amazon Simple Storage Service (S3) buckets.
+* Disallowing access as a root user without multi-factor authentication.
+* Enabling encryption for Amazon EBS volumes attached to Amazon EC2 instances.

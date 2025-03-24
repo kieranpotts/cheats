@@ -2,7 +2,21 @@
 
 == Contents
 
-* link:./users.adoc[Users]
-* link:./billing.adoc[Billing]
-* link:./cli.adoc[CLI]
-* link:./networking.adoc[Networking]
+=== Basics
+
+* link:./basics/cli.adoc[CLI]
+* link:./basics/networking.adoc[Networking]
+
+=== Management and governance
+
+* link:./management/users.adoc[Users]
+* link:./management/billing.adoc[Billing]
+* link:./management/organizations.adoc[Organizations]
+* link:./management/control-tower.adoc[Control Tower]
+* link:./management/systems-manager.adoc[Systems Manager]
+* link:./management/service-catalog.adoc[Service Catalog]
+* link:./management/config.adoc[Config]
+* link:./management/trusted-advisor.adoc[Trusted Advisor]
+* link:./management/health-api.adoc[Health API]
+* link:./management/compute-optimizer.adoc[Compute Optimizer]
+* link:./management/launch-wizard.adoc[Launch Wizard]
