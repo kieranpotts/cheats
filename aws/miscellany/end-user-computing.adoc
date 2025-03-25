@@ -1,0 +1,21 @@
+= End-user computing
+
+== Workspaces
+
+Amazon Workspaces is a managed *Desktop-as-a-Service (DaaS)* solution. It allows you to provision Windows or Linux desktops in the cloud, and provide your users with a secure, fast, and reliable desktop experience.
+
+This simplifies delivery of desktops compared to traditional virtual desktop infrastructure (VDI) deployments.
+
+It can be integrated with AWS Managed Microsoft AD.
+
+== AppStream 2.0
+
+This is a fully-managed non-persistent application streaming service. It is an alternative to products like Citrix XenApp. You are streaming individual applications from the cloud (running on a streaming EC2 instance) to a client — rather than streaming a whole OS desktop environment.
+
+== WorkLink
+
+This provides a secure, one-click access to your internal websites and web apps using mobile browsers, without needing a VPN client.
+
+== WorkDocs
+
+This is a fully managed, secure content creation, storage, and collaboration service. It allows users to create, edit, and share content that's centrally stored on AWS.

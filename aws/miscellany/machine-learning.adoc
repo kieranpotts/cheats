@@ -1,0 +1,17 @@
+= AWS machine learning and AI services
+
+This is a fast-growing area of cloud services. Below are just a few of the services available.
+
+* *AWS Rekognition* is used to identify objects, scenes, and text in images and videos, and to perform facial analysis.
+
+* *Transcribe* is used to add speech-to-text capabilities to applications. It uses a deep learning process called automatic speech recognition (ASR) to convert speech to text quickly and accurately.
+
+* *Translate*: Neural machine translation service that delivers fast, high-quality, and affordable language translation. It also uses deep learning models to deliver more accurate and more natural sounding translations. It may be used for localizing context on websites, for example.
+
+* *Comprehend* is a natural-language processing (NLP) service. It uses machine learning to uncover information in unstructured data. It can identify critical elements in data, including references to language, people, and places. A use case may be to detect customer sentiment about your product or service in social media.
+
+* *Lex*: This is a conversational AI that can be used to power chatbots. You can use it to build conversational interfaces in your applications using voice and text. Use cases include improving the productivity of call centers.
+
+* *DevOps Guru*: This is a cloud operations service for improving application performance and availability. It detects behaviors that deviate from normal operating patterns, helping you to detect potential operational issues. Other use cases include resolving issues with ML-powered insights, elastically scaling operational analytics, and using ML to reduce alarm noise.
+
+* *CodeGuru Security*: This can detect, track, and fix code security vulnerability issues anywhere in the development life cycle. It uses ML and automated reasoning. It integrates with IDEs and CI/CD tools. It also offers automated bug tracking, automatic detection of anomalies in application profiles, and assisted remediation through suggested code fixes. It can recommend performance optimizations, too.

@@ -1,0 +1,5 @@
+= AWS Device Farm
+
+This is an application testing service used for web and mobile application development.
+
+You get 1,000 device minutes free with a one-time trial for new customers on the AWS Free Tier.

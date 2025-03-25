@@ -51,5 +51,15 @@
 * link:./billing/consolidated-billing.adoc[Consolidated billing]
 * link:./billing/cost-allocation-tags.adoc[Cost allocation tags]
 * link:./billing/cost-management-tools.adoc[Cost management tools]
-* link:./billing/xxxx.adoc[]
-* link:./billing/xxxx.adoc[]
+
+=== Miscellaneous
+
+* link:./miscellany/migration-and-transfer.adoc[Migration and transfer services]
+* link:./miscellany/machine-learning.adoc[Machine learning and AI services]
+* link:./miscellany/end-user-computing.adoc[End-user computing]
+* link:./miscellany/iot-core.adoc[IoT Core]
+* link:./miscellany/device-farm.adoc[Device Farm]
+* link:./miscellany/knowledge-center.adoc[Knowledge Center]
+* link:./miscellany/connect.adoc[Amazon Connect]
+* link:./miscellany/amplify-appsync.adoc[Amplify and AppSync]
+* link:./miscellany/customer-enablement.adoc[Customer enablement services]

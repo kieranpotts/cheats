@@ -1,0 +1,21 @@
+= Customer enablement services
+
+Customer enablement is a category of services in AWS that includes the following.
+
+== AWS IQ
+
+AWS IQ is a marketplace to help customers find, collaborate with, and pay AWS-certified third-party experts for on-demand project work. It's a way to get help with your AWS projects from experts who have been vetted by AWS (through certification and proof of experience).
+
+The platform includes secure collaboration tools, secure messaging, project tracking, and other tools. IQ also simplifies the payment process, using AWS's secure payment infrastructure.
+
+== AWS Managed Services (AMS)
+
+With AMS, AWS consultants will take over the daily operations of your AWS infrastructure, handling tasks such as patch management, backup, and incident monitoring.
+
+This can also help to speed up the process of migration to AWS.
+
+== AWS Activate for Startups
+
+This program is designed to help startups get up and running on AWS. It includes credits, training, and technical support, as well as things like architectural blueprints/patterns, and other resources.
+
+This program also connects startups with a community of developers, mentors, and entrepreneurs.

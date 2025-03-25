@@ -1,0 +1,27 @@
+= AWS migration and transfer services
+
+AWS has a suite of services to help you migrate and transfer your applications and data to the AWS cloud.
+
+You connect a region to your corporate data center using a VPN or Direct Connect (or over the Internet if you really have to). You can then use the *AWS Application Discovery Service* to automatically discover the services you are running in your corporate data center. It will create an inventory of your applications.
+
+You can then use the *AWS Application Migration Service ("AWS MGN")* to migrate applications into EC2 instances. This is ideal for "lift and shift" operations, in which you replicate a server (its operating system and applications) verbatim into EC2 instances. You can do *test* instances and *cutover* migrations.
+
+There is also an *AWS Server Migration Service (SMS)*, and a *VM Import/Export* service. These are older services that are still available.
+
+The *AWS Database Migration Service (DMS)* can help you migrate databases to RDS, Aurora, RedShift, or other solutions. It includes a *Schema Conversion Tool* to help convert database schemas in heterogeneous migrations.
+
+And *AWS DataSync* can be used to help us transfer data from network-attached storage (NAS) or file server, into S3 or EFS, for example. For large-scale data transfer there is the Snowball family — see below.
+
+Finally, there's *AWS Migration Hub* which helps you to manage the actual migration process and visualize what's happening.
+
+== The Snowball family
+
+For advanced data migration, there is the Snowball family.
+
+These are physical devices used for migrating very large amounts of data into AWS. You connect the device to your own data center, you load the data on to it, and physically send it back to AWS. So this family of products is used to provide the secure _physical_ transfer of data between two locations.
+
+The "Snowball" devices come in sizes of 50TB and 80TB, while "Snowball Edge" is 100TB — this is known as "petabyte scale". There's also "Snowmobile" which is up to 100PB, known as "exabyte scale". This is literally a shipping container that sits on the back of a truck!
+
+There's also "Snowcone" which is used to transfer smaller amounts of data.
+
+The Snowball Client is software that is installed on a local computer and is used to identify, compress, encrypt, and transfer data to the Snowball device. It uses 256-bit encryption (managed with AWS KMS) and tamper-resistant enclosures with a Trusted Platform Module (TPM) to ensure data security.

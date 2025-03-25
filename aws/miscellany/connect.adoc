@@ -1,0 +1,5 @@
+= Amazon Connect
+
+This is Amazon's contact center, where customer support agents (real human ones) help customers.
+
+Features include telephony automation, chatbots, task management, and analytics.
