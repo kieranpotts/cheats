@@ -1,0 +1,33 @@
+= Network firewalls and DDoS protection
+
+*Security Groups* and *Network Access Control Lists* are firewalls for protecting EC2 instances.
+
+The AWS *Web Application Firewall (WAF)* is another type of firewall. It is auditing the network at a higher level than Security Groups and NACLs, looking at application traffic.
+
+WAF lets you create rules to filter web traffic based on conditions that include IP addresses, HTTP headers and body, or custom URIs. This makes it easy to block common web exploits like *SQL injection* and *cross-site scripting*.
+
+The rules defined in WAF are known as *Web ACLs* (Web Access Control Lists).
+
+WAF instances could be put in front of CloudFront, ALBs, API Gateways, AppSync, or directly in front of EC2 instances.
+
+*AWS Shield* is a managed *distributed denial of service (DDoS)* protection and mitigation service. DDoS attacks can be quite sophisticated, so you need a sophisticated always-on detection system, with automatic *inline mitigations*. AWS Shield will minimize application downtime and latency in the event of a DDoS attack.
+
+AWS Shield has two tiers:
+
+* *Standard* comes at no cost, and is integrated with *CloudFront* by default.
+* *Advanced*: $3,000 per month per organization, and a 1 year commitment.
+
+There are also a couple of newer AWS firewall services:
+
+* AWS Network Firewall
+* AWS DNS Firewall
+
+*AWS Network Firewall* is managed service for VPN network protection. It includes a stateful and stateless firewall, and intrusion prevention system (IPS), and web filtering. It works like this. Two subnets are launched into a VPC: a *protected subnet* and a *firewall subnet*. The VPCs resources will be launched into the protected subnet. The firewall subnet is where you put an endpoint for your AWS Network Firewall (you do not deploy resources into the firewall subnet). The Network Firewall has a rules engine that gives you fine-grained control over the network traffic that you allow or disallow into the protected subnet. Traffic for resources in the protected subnets is routed via the firewall endpoints in the firewall subnets, which in turn is connected to a gateway of some sort — an Internet Gateway, a transit gateway, or a direct connection. Route tables are used to direct traffic in the normal way. Internally, the Firewall Endpoint uses a VPC endpoint and a Gateway Load Balancer.
+
+For high availability, it is recommended that you allocate one firewall subnet per availability zone.
+
+It is also possible to manage multiple AWS Network Firewall deployments using either *AWS Firewall Manager* or *AWS Organizations*, allowing for centralized management of firewall rules across multiple VPCs and even multiple AWS accounts.
+
+Finally, the *Route 53 Resolver* is a feature of Route 53 we you can control routing into and out from your VPCs. This can be used for both public and private connections. The *Route 53 Resolver DNS Firewall* helps to prevent DNS exfiltration of data — a situation where a malicious exploit causes your resources to resolve external DNS names to incorrect results, resulting you sending data to malicious actors. You can also use this firewall to monitor and control the list of domains that applications are allowed to query (ie. which domain names your applications are allowed to get DNS resolutions for).
+
+You can also use *AWS Firewall Manager* to centrally configure and manage your DNS Firewall rules across multiple VPs and accounts in AWS Organizations.

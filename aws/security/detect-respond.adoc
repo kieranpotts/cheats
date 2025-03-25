@@ -1,0 +1,9 @@
+= Detecting and responding
+
+The following are AWS services we can use to help us to detect suspicious or malicious activity in our account, and to respond to it:
+
+*Amazon Detective* is a service to analyze, investigate, and quickly identify the root cause of potential security issues or suspicious activities. It automatically collects log data from your AWS resources, and creates a unified, interactive view of your resources, their users, and the interactions between them. It then uses machine learning, statistical analysis, and graph theory to try and work out what interactions look to be normal, and which do not. The data sources that you can ingest into Detective include VPC Flow Logs, CloudTail, and GuardDuty.
+
+*AWS GuardDuty* is an intelligent threat detection service. It detects account compromises, instance compromises, bucket compromises, and malicious reconnaissance. It does continuous monitoring of events across a number of services: CloudTrail Management Events, CloudTrail S3 Data Events, VPS Flow Logs, and DNS Logs.
+
+*Amazon Macie* is a fully-managed data security and data privacy service. It uses machine learning and pattern matching to discover, monitor, and protect your sensitive data on S3. It enables security compliance and preventative security. Macie can identify a variety of data types, including: Personally-Identifiable Information (PII), Protected Health Information (PHI), regulatory documents, API keys, and secret keys. So, if you want to audit your S3 buckets for sensitive data, Macie is the service to use.

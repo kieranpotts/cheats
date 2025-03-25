@@ -20,3 +20,17 @@
 * link:./management/health-api.adoc[Health API]
 * link:./management/compute-optimizer.adoc[Compute Optimizer]
 * link:./management/launch-wizard.adoc[Launch Wizard]
+
+=== Cloud Security and Identity
+
+* link:./security/identity-and-federation.adoc[Identity providers and federation]
+* link:./security/directory-services.adoc[Directory Services]
+* link:./security/protecting-secrets.adoc[Protecting secrets]
+* link:./security/encryption.adoc[Encryption]
+* link:./security/logging-auditing.adoc[Logging and auditing]
+* link:./security/detect-respond.adoc[Detecting and responding]
+* link:./security/firewalls-ddos.adoc[Network firewalls and DDoS protection]
+* link:./security/resource-access-manager.adoc[Resource Access Manager]
+* link:./security/compliance-services.adoc[Compliance services]
+* link:./security/security-management.adoc[Security management]
+* link:./security/penetration-testing.adoc[Penetration testing]

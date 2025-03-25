@@ -1,0 +1,50 @@
+= Encryption
+
+Encryption can be applied to data *in transit* or to data *at rest*.
+
+For *encryption in transit*, SSL/TLS is typically used. This is used in the HTTPS protocol, for example. The data is encrypted only for as long as it is in transit. It is encrypted as the source, and decrypted at the destination.
+
+For *encryption at rest*, the data is encrypted when it is stored. This is typically done using an encryption key. S3, for example, encrypts objects as they are written to disk, and decrypts them when they are read, using an encryption keys. Encryption keys are stored separately from the encrypted data.
+
+Another concept to understand is *asymmetric encryption*. This is also known as *public key cryptography*. Messages encrypted with a public key can only be decrypted with the corresponding private key. This system of cryptography is used in SSL/TLS and SSH, for example.
+
+AWS has a service called *AWS Certificate Manager (ACM)* that can be used to create, store, and renewing SSL/TLS certificates (also known as X.509, after the specification). It can support single domains, multiple domain names, and wildcard domains. It integrates with several AWS services including:
+
+* Elastic Load Balancing
+* CloudFront
+* CloudFormation
+* Elastic Beanstalk
+* AWS Nitro Enclaves
+
+For example, when we are using CloudFront to distribute content, we can use ACM to create a certificate for our domain, and then associate that certificate with our CloudFront distribution.
+
+*Symmetric encryption* is another type of encryption. In this case, the same key is used for both encryption and decryption. This is typically used for encrypting data at rest. The key is stored separately from the data, and is used to encrypt and decrypt the data.
+
+*AWS Key Management Service (KMS)* is a service that can be used to create and manage encryption keys, both asymmetric and symmetric encryption keys. The *customer master keys (CMKs)*, which are used as part of the encryption process, are protected by hardware security modules (HSMs). Users create *customer-managed keys*, and there are *aws-managed keys* as well (which have names prefixed `aws/`).
+
+There is another service called *AWS CloudHSM*, which is a cloud-based hardware security module (HSM). This is similar to the KMS service but uses a slightly different configuration. It is also used for generating encryption keys, and for storing and managing them. But is uses a higher level of security, due to its physical separation and single tenancy. CloudHSM runs in _your_ VPC.
+
+.AWS CloudHSM versus AWS KMS
+|===
+|- |CloudHSM |KMS
+
+|Tenancy
+|Single tenant
+|Multi-tenant
+
+|Availability
+|Customer-managed
+|Highly available service
+
+|Root of Trust
+|Customer-managed
+|AWS-managed
+
+|FIPS 140-2
+|Level 3
+|Level 2 (Level 3 in some regions)
+
+|3rd party support
+|Broad 3rd party support
+|Broad AWS service support
+|===
