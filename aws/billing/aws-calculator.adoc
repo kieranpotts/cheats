@@ -1,0 +1,4 @@
+= AWS Calculator
+
+The AWS Calculator is served from https://calculator.aws and we can use it to estimate the cost of all the components that we want to build into our infrastructure.
+

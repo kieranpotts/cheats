@@ -1,0 +1,34 @@
+= Cost management tools
+
+== AWS Cost Explorer
+
+This is a free tool that allows you to view charts of your costs.
+
+You can view cost daa for the past 13 months, and forecast what you are likely to spend over the next three months.
+
+Cost Explorer can be used to discover patterns in how much you spend on AWS resources over time, and to identify cost problem areas.
+
+Cost Explorer can help you to identify service usage statistics, such as:
+
+* Which services you use the most.
+* Which AZs have the most traffic.
+* Which linked accounts are used the most.
+
+== AWS Cost & Usage Report
+
+This service publishes billing reports to an S3 bucket.
+
+Reports break down costs by the hour, day, month, product, product resource, and tags.
+
+You can have updated reports up to three times a day.
+
+You can create, retrieve, and delete your reports using the AWS CUR API.
+
+== AWS Price List API
+
+This allows you to query the prices of AWS services. There are two components to this:
+
+* *Price List Service API* (aka the Query API), which you query with JSON.
+* *Price List API* (aka the Bulk API), which you download in bulk and query with HTML.
+
+Alerts can be sent via SNS when prices change.

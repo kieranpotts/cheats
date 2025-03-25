@@ -1,0 +1,7 @@
+= Consolidated billing
+
+This is a feature of AWS Organizations. You get *one bill for multiple accounts*. This means you can easily track charges across multiple account, and download the combined cost and usage data.
+
+You can also combine the usage across all accounts in the organization, so benefiting from volume pricing discounts and Reserved Instance discounts.
+
+There are no extra fees for consolidated billing.

@@ -1,0 +1,15 @@
+= AWS pricing fundamentals
+
+AWS pricing is based on:
+
+* *Compute*: amount of resources such as CPU and RAM, by the duration of time you use those resources.
+
+* *Storage*: quantity of data stored (in some cases, like with EBS volumes, price is based on storage _allocation_ rather than actual _utilization).
+
+* *Outbound data transfer*: the quantity of data that is transferred out from all services. Typically, data that goes _into_ AWS, is not charged. So for S3 you pay for the storage and for getting data out, but not for uploading data to buckets in the first place.
+
+AWS uses a *pay-as-you-go* billing model. This helps you to adapt to changing business requirements, and respond to change more easily. You can adapt your spend based on evolving needs, rather than on forecasts. With cloud, you reduce your risk of over-provisioning (aka. over-positioning) resources, or of under-provisioning. It's much easier to get the sizing right to fit actual needs, because you can scale on-demand.
+
+There is also a pricing model known as *save when you reserve*. This means investing in reserved capacity (eg. RDS and EC2). You can reduce your costs by up to 75% compared to pay-as-you-go. The more you pay up-front, the greater the discount.
+
+You can also *pay less by using more*. This refers to volume-based discounts. As you go through tiers of usage, then you will pay a lower rate per unit cost. Tiered pricing means the more you use, the lower the unit pricing (eg. per GB cost in S3).

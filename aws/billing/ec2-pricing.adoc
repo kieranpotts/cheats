@@ -1,0 +1,140 @@
+= EC2 pricing options
+
+The main pricing options for EC2 are:
+
+* *On-demand*: Standard rate (no discount). No commitments. Great for dev and test, or for short-term needs, or for unpredictable workloads.
+
+* *Reserved capacity*: 1 or 3 year commitment, giving up to 75% discount. Good for steady-state, predictable workloads.
+
+* *Spot instances*: Get discounts of up to 90% for using EC2 capacity that would otherwise go unused. AWS may terminate your instances at any time (if the spot price rises above your bid price), but this can be good for low-cost compute that is not time-sensitive.
+
+* *Dedicated instances*: Offer physical isolation at the host hardware level, from instances belonging to other customers. Pay per instance. This is similar to...
+
+* *Dedicated hosts*: This is a step-up from a dedicated instance. Here you get an actual physical server dedicated for your exclusive use. Pay per host — which is expensive — but this may be necessary in some use cases, for example where you are using software where the license is tied to a particular physical computer. This also offers better visibility of the underlying hardware (you can assign the software to the particular cores or sockets on the host).
+
+* *Savings plans*: You commit to a consistent amount of usage (eg. EC2 + Fargate + Lambda) for a 1 or 3 year term, and in return you pay a fixed dollar amount per hour.
+
+== EC2 billing
+
+Billing for EC2 varies:
+
+* *Billed per second*, with a minimum time of 1 minute. Per-second billing is for Amazon Linux, Windows, and Ubuntu on On-Demand, Reserved, and Spot forms.
+
+* *Billed per hour*, with a minimum time of 1 hour. This is applicable to commercial Linux distros such as RedHat EL (Enterprise Linux) and SUSE ES (Enterprise Server)
+
+* *Volumes per second*, with a minimum time of 1 minute. This is for EBS volumes that are attached to Ec2 instances.
+
+== EC2 Reserved Instances
+
+The term for a reserved instance is either 1 year or 3 years.
+
+You can get either a *Standard RI (Reserved Instance)* or a *Convertible RI*.
+
+For Standard RIs, you can change AZs, instance sizes (for Linux only), and the networking type. You would use the `ModifiedReservedInstances` API to do that.
+
+For Convertible RIs, you can also change AZs, instance sizes (for Linux only), and the networking type. But you can also change the instance family, OS, tenancy (default or dedicated), and payment option. You would use the `ExchangeReservedInstances` API to do that.
+
+For both types of reserved instances, you can pay *all up-front*, *partial up-front*, or *no up-front*. You will get the biggest discount for all up-front.
+
+When the attributes of a used EC2 instance match the attributes of an RI, the discount is applied.
+
+== EC2 On-Demand Capacity Reservations.
+
+This is a way to reserve compute capacity for EC2 instances in a specific Availability Zone. Any duration can be specified.
+
+This mitigates against the risk of bring unable to get on-demand capacity, which can happen from time to time.
+
+This does not require any term commitments, and it can be cancelled at any time.
+
+When you create a Capacity Reservation, you specify:
+
+* The *Availability Zone* in which to reserve the capacity.
+* The *number of instances* for which to reserve capacity.
+* The *instance attributes*, including the instance type, tenancy, and platform/OS.
+
+== Savings Plans
+
+There are two types of savings plans: the Compute Savings Plan and the EC2 Savings Plan.
+
+The *Compute Savings Plan* requires a 1 or 3 year commitment, and hourly commitment to usage of Fargate, Lambda, and EC2. The plan can be applied to any region, family, size, tenancy, and OS.
+
+With an *EC2 Savings Plan*, you commit to a 1 or 3 year contract, and an hour commitment of EC2 within a selected region and instance family; you can choose any size, tenancy, and OS.
+
+== Spot instances
+
+A *spot instance* is one or more EC2 instances. A *spot fleet* launches and maintains the number of spot and on-demand instances, to meet your specified target capacity.
+
+You can also use an *EC2 fleet* to launch and maintain a specified number of spot, on-demand, and reserved instances, via a single API call.
+
+You can define separate on-demand and spot capacity targets, a spot price, instance types, and AZs.
+
+You will get a *2 minute warning* if AWS needs to reclaim capacity. This warning is send via CloudWatch Events and instance metadata. You might want to enable some automation to handle such events, for example to save some state from the particular instance that will shut down.
+
+== Spot block
+
+Let's say you have a requirement for 1-6 hours of uninterrupted compute time, and you want to get a good price on that capacity. The solution is to request a *spot block*, which is a defined duration of time (1 to 6 hours) during which you will have a guaranteed capacity.
+
+----
+$ aws ec2 request-spot-instances \
+  --block-duration-minutes 360 \
+  --instance-count 5 \
+  --spot-price "0.25" ...
+----
+
+You set the spot price — the amount you're willing to pay. Typically the pricing is 30-45% less than the on-demand price, so it's not quite as good as spot instances but you do get guaranteed capacity for a certain amount of time.
+
+== Dedicated instances and dedicated hosts.
+
+|===
+|Characteristic |Dedicated instance |Dedicated host
+
+|Enables the use of dedicated physical servers
+|X
+|X
+
+|Per instance billing (subject to a $2 fee per region)
+|X
+|
+
+|Per host billing
+|
+|X
+
+|Visibility of sockets, cores, host ID
+|
+|X
+
+|Affinity between a host and instance
+|
+|X
+
+|Targeted instance placement
+|
+|X
+
+|Automatic instance placement
+|X
+|X
+
+|Add capacity using an allocation request
+|
+|X
+|===
+
+Visibility of sockets and cores is really useful when you have server-bound software licenses.
+
+With affinity you can see and control which host a specific instance runs on. So, if you were clustering at the OS or application level, and you want to make sure that two instances are running on separate dedicated hosts, so there is no correlation in hardware failure, then you would use a dedicated host.
+
+== EC2 pricing use cases
+
+_Scenario 1_: A developer is working on a small project for several hours, and cannot be interrupted. *On-demand* would be a good EC2 pricing option for this use case.
+
+_Scenario 2_: Compute-intensive, cost-sensitive, distributed computing; can withstand interruption. This is a good use case for a *Spot Instance*.
+
+_Scenario 3_: Steady-state, business critical, line-of-business application; continuous demand. A *Reserved Instance* is going to be a good choice here, because we can commit to a long time frame and we want to minimize disruptions to the business.
+
+_Scenario 4_: A reporting application that runs for 6 hours a day, 4 days a week. *Scheduled Reserved* is a good option here. (Scheduled Reserved is actually deprecated now, but it still turns up in exams.)
+
+_Scenario 5_: Database with per-socket licensing. You would need a *Dedicated Host* for this.
+
+_Scenario 6_: Security-sensitive application; requires dedicated hardware; per-instance billing. This will be a good thing to put on a *Dedicated Instance*.
