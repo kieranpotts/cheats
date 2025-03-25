@@ -34,3 +34,9 @@
 * link:./security/compliance-services.adoc[Compliance services]
 * link:./security/security-management.adoc[Security management]
 * link:./security/penetration-testing.adoc[Penetration testing]
+
+=== The Well-Architected Framework
+
+* link:./well-architected/overview.adoc[AWS Well-Architected: Overview]
+* link:./well-architected/framework.adoc[The Well-Architected Framework]
+* link:./well-architected/adoption.adoc[Cloud Adoption Framework]

@@ -1,0 +1,22 @@
+= AWS Cloud Adoption Framework (CAF)
+
+The Cloud Adoption Framework helps organizations understand how adopting cloud infrastructure transforms the way they will function. You can't just adopt technology without understanding how it will impact on other areas of your business!
+
+The CAF leverages AWS experience and best practices to help you to digitally transform and accelerate your business outcomes through innovative use of AWS.
+
+The CAF groups its capabilities into six perspectives (a "perspective" being the viewpoint of a particular stakeholder in a project):
+
+* *Business*: Helps ensure that your cloud investments accelerate your digital transformation ambitions and business outcomes.
+
+* *People*: Serves as a bridge between technology and business, accelerating the cloud journey to help organizations more rapidly evolve to a culture of continuous growth and learning.
+
+* *Governance*: Helps you to orchestrate your cloud initiatives while maximizing organizational benefits and minimizing transformation-related risks.
+
+* *Platform*: This is the technology angle. This perspective is about helping you to build an enterprise-grade, scalable, hybrid cloud platform; modernize existing workflows; and implement new cloud native solutions. This is the domain of the Solutions Architects who will be designing new ways to deploy your applications using cloud infrastructure.
+
+* *Security*: Helps you to achieve the confidentiality, integrity, and availability of your data and cloud workloads.
+
+* *Operations*: Helps ensure that your cloud services are delivered at a level that meets the needs of your business.
+
+For more information, see the official documentation on CAF, here: +
+https://d1.awsstatic.com/whitepapers/aws-caf-ebook.pdf
