@@ -1,5 +1,0 @@
-= Cost allocation tags
-
-Cost allocation tags are a way of adding metadata to our resources and then using that metadata for billing purposes, so we can attribute costs to certain resources.
-
-Normal tags are "activated" to become "cost allocation tags". There are both user-defined and AWS-defined cost allocation tags.

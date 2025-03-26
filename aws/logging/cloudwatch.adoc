@@ -1,0 +1,11 @@
+= CloudWatch Logs
+
+* Gather application and system logs.
+* Define expiration policies.
+* Encrypt logs with KMS.
+
+EC2 instances, or even on-premises servers, send logs to CloudWatch. This requires the *Unified CloudWatch Agent* to be installed on the client server. The client application sends application logs and/or system logs to CloudWatch.
+
+Logs can also be sent from AWS Lambda functions, which just require the necessary permissions to add CloudWatch Logs.
+
+The *Amazon Elasticsearch Service* can be integrated with CloudWatch to enable real-time processing, using something called a *subscription filter*. AWS Lambda can also be used for real-time processing.

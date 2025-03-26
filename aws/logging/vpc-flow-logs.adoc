@@ -1,0 +1,11 @@
+= VPC Flow Logs
+
+This is about logging what happens in an account at the network level. Flow logs capture information about the IP traffic going to and from network interfaces in a VPC.
+
+Flow logs can be created at the following levels:
+
+* VPC
+* Subnet
+* Network interface (which is attached to EC2 instances)
+
+Flow log data is stored in CloudWatch Logs.

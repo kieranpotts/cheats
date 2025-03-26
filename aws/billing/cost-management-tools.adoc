@@ -1,8 +1,26 @@
 = Cost management tools
 
+== Budgets and billing alerts
+
+It is RECOMMENDED to setup billing alarms, so you don't spend more than you have budgeted for on AWS resources.
+
+Go to *Billing and Cost Management* > *Preferences and settings* > *Billing preferences*. Under the *Alert preferences* panel, enable the options for Free Tier and CloudWatch alerts.
+
+Next, under *Budgets and Planning*, click *Budgets*, and then *Create a budget*. Choose to *Use a template* and from their set your budget — eg. $5 per month.
+
+Now that CloudWatch alerts are enabled for billing, you need to create some alarms. Go to *Cloudwatch* > *Create alarms*. You must be in the region US East (N. Virginia) (`us-east-1`) to create billing alarms because billing metrics are stored in this region. You can then choose *Billing* as your alarm metric. Set the threshold.
+
+== Consolidated billing
+
+This is a feature of AWS Organizations. You get *one bill for multiple accounts*. This means you can easily track charges across multiple accounts, and download the combined cost and usage data.
+
+You can also combine the usage across all accounts in the organization, so benefiting from volume pricing discounts and Reserved Instance discounts.
+
+There are no extra fees for consolidated billing.
+
 == AWS Cost Explorer
 
-This is a free tool that allows you to view charts of your costs.
+This is a free tool that allows you to view itemized breakdowns of your spending in a graphical format.
 
 You can view cost daa for the past 13 months, and forecast what you are likely to spend over the next three months.
 
@@ -24,6 +42,12 @@ You can have updated reports up to three times a day.
 
 You can create, retrieve, and delete your reports using the AWS CUR API.
 
+== Cost Allocation Tags
+
+Cost Allocation Tags are a way of adding metadata to our resources and then using that metadata for billing purposes, so we can attribute costs to certain resources.
+
+Normal tags are "activated" to become Cost Allocation Tags. There are both user-defined and AWS-defined Cost Allocation Tags.
+
 == AWS Price List API
 
 This allows you to query the prices of AWS services. There are two components to this:
@@ -32,3 +56,9 @@ This allows you to query the prices of AWS services. There are two components to
 * *Price List API* (aka the Bulk API), which you download in bulk and query with HTML.
 
 Alerts can be sent via SNS when prices change.
+
+== AWS Calculator
+
+The AWS Calculator is served from https://calculator.aws.
+
+Use it to to estimate the cost of the components that you want to build into your AWS cloud infrastructure.

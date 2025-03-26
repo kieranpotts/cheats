@@ -14,4 +14,4 @@ It works like this:
 
 * The CloudFormation service will build the products based on the templates selected by users from the Service Catalog.
 
-* Administrators can add Products to *Portfolios* within the Service Catalog, and then grant Users/Group access only to specific Portfolios.
+* Administrators can add Products to *Portfolios* within the Service Catalog, and then grant Users/Groups access only to specific Portfolios.

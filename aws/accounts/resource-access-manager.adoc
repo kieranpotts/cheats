@@ -1,6 +1,6 @@
 = AWS Resource Access Manager (RAM)
 
-RAM is a service we can use to share resources across our accounts, and within AWS Organizations as well. The resources that can be shared are:
+Resource Access Manager (RAM) is a service we can use to share resources across our accounts, and within AWS Organizations as well. The resources that can be shared are:
 
 * AWS Transit Gateways
 * Subnets

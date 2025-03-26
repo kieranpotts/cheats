@@ -1,0 +1,11 @@
+= AWS CloudTrail
+
+This is an *auditing service* — ie. it is all about understanding who did what and when.
+
+CloudTrail logs *API activity* for auditing purposes. Whenever an API call is made in an account, CloudTrail records the details — the user, the resource, the time, etc. This includes calls made via the AWS Management Console, the AWS CLI, SDKs, and other clients.
+
+By default, management events are logged and retained for 90 days. But if we create a CloudTrail _Trail_, we can capture those events in S3 and retain them indefinitely. A Trail can be within a region, or all regions.
+
+*CloudWatch Events* can be triggered based on API calls made to CloudTrail. So, when we record in CloudTrail a certain event, we can have CloudWatch Events trigger something based on that.
+
+CloudTrail events cna also be streamed to CloudWatch Logs.

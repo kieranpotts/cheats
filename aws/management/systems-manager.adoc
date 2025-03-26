@@ -2,7 +2,7 @@
 
 AWS Systems Manager manages many AWS resources including EC2, S3, and RDS. It is a powerful services that is comprised of several different components:
 
-* *Automation*: Documents can be passed through the Automation feature, which can then do things like take a snapshot of an RDS DB instance. The actions are defined in the documents that are passed into the Automation system, which then runs based on a schedule or parameters that you configure.
+* *Automation*: Documents can be passed through the Automation feature, which can then do things like take a snapshot of an RDS DB instance. The actions are defined in the documents that are passed into the Automation system, which then run based on a schedule or parameters that you configure.
 
 * *Run command*: The run command is similar. Documents are passed in, and the system runs the commands that are defined in the documents. For example, you might check for missing updates in EC2 instances.
 

@@ -1,0 +1,15 @@
+= IAM Identity Center
+
+The *Identity and Access Management (IAM)* service is used to create *users*, *groups*, *roles*, and *policies*. The policies define which resources users can create and manage in the AWS account.
+
+The *IAM Identity Center*, which was previously known as the *AWS Single Sign-On (SSO)* service, serves a broader purpose. It is used for managing identities of all kinds, including but not limited to IAM users.
+
+It is now RECOMMENDED to use the IAM Identity Center to manage all user identities from a single, centralized service.
+
+IAM Identity Center can have multiple identity sources. An identity source could be IAM itself, or it could be an external identity provider (IdP) such as Active Directory (self-managed), Azure AD (hosted), Okta, or any other standard identity provider that uses SAML 2.0.
+
+To connect to Active Directory services we could use *AD Connector* or *AWS Managed Microsoft AD*.
+
+IAM Identity Center also supports built-in SSO integrations with many widely-used business applications, from Adobe Creative Cloud to Zoom, so you can enable user access to lots of SaaS services very easily.
+
+IAM Identity Center also integrates with *AWS Organizations*, which provides an alternative interface through which to manage IAM users.

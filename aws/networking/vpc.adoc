@@ -1,0 +1,44 @@
+= Virtual Private Clouds (VPC)
+
+This section introduces basic networking concepts in AWS, through a series of practical steps that will build a virtual private cloud that looks like this:
+
+image::../_/aws-networking.png[]
+
+We start with VPCs.
+
+A *Virtual Private Cloud (VPC)* is like a private network to isolate a group of resources that sit within it.
+
+When you create a VPC, you will create an IPv4 *CIDR range*. A CIDR range is a notation that specifies a range of IP addresses. Examples:
+
+* 10.0.0.0/24
+* 10.0.0.0/16
+* 10.0.0.0/8
+
+Each octet (the digits between the dots) can be between 0 and 254 – an 8-bit integer. The number after the slash is the number of bits that are fixed in the range. So if you see `/24` on the end, this means that the first three octets (8 + 8 + 8 = 24) are fixed, and the last octet can be any number between 0 and 254. If you see `/16` on the end, it means the first two octets are locked, and `/8` means only the first octet is locked.
+
+|===
+|CIDR range |Min IPv4 |Max IPv4
+
+|10.0.0.0/24
+|10.0.0.1
+|10.0.0.254
+
+|10.0.0.0/16
+|10.0.0.1
+|10.0.255.254
+
+|10.0.0.0/8
+|10.0.0.1
+|10.255.255.254
+|===
+
+Inputting `10.0.0.0/16` for your CIDR range will give you 65,536 possible IP addresses, in the range 10.0.0.1 to 10.0.255.254, which will be more than sufficient for most networking requirements.
+
+[TIP]
+======
+IP Subnet Calculator: https://www.calculator.net/ip-subnet-calculator.html
+
+image::../_/ipv4-subnet-calculator.png[]
+======
+
+image::../_/create-vpc.png[]

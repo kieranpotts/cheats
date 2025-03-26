@@ -11,7 +11,7 @@ Other use cases for AWS Config include:
 * Review the relationships between resources.
 * View current and historical configurations of resources.
 
-.Examples of AWS COnfig rules
+.Examples of AWS Config rules
 |===
 |Rule |Description
 

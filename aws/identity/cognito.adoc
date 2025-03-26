@@ -1,0 +1,14 @@
+= Amazon Cognito
+
+Amazon Cognito is often used with web and mobile applications.
+
+There are two components:
+
+* Cognito User Pool
+* Cognito Identity Pool
+
+Externally, we can also have social IdPs such as Google and Facebook.
+
+The mobile app connects to the Cognito User Pool in AWS. The User Pool may have user accounts stored within it, or it may call out to social IdPs to authenticate users that way. But ultimately, the Cognito User Pool is responsible for authenticating the user on behalf of the client app.
+
+The Cognito User Pool returns a JWT to the client app, which is then passed to the Cognito Identity Pool, which in turn calls the AWS STS service via the `sts:AssumeRoleWithWebIdentity` API. As before, the JWT gets exchanged for temporary security credentials, which the client finally uses to access the AWS resources that it needs.

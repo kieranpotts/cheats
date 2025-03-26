@@ -1,4 +1,4 @@
-= Detecting and responding
+= Detection tools
 
 The following are AWS services we can use to help us to detect suspicious or malicious activity in our account, and to respond to it:
 

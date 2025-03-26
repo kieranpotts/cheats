@@ -1,6 +1,4 @@
-= Compliance services
-
-*AWS Config* is a service you can use for configuration compliance auditing.
+= AWS Artifact
 
 *AWS Artifact* is another compliance service. It provides on-demand access to AWS' security and compliance reports — so you can see the security and compliance documents that relate to the AWS platform itself.
 

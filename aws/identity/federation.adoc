@@ -1,0 +1,30 @@
+= Federation
+
+*Federation* refers to the process of linking and trusting identities across multiple systems. It enables users to access multiple systems using a single set of credentials. For example, employees at a company could access their Google Workspace using their Azure AD credentials.
+
+Federation relies on *Identity Providers (IdPs)*, such as Active Directory or Azure AD, to authenticate users and share identity information securely between services. 
+
+Federation uses protocols such as SAML (Security Assertion Markup Language), OAuth, and OpenID Connect to establish trust between systems.
+
+There are two protocols we can use to _federate to AWS_:
+
+* SAML 2.0
+* Web Identity
+
+== SAML 2.0 Identity Federation
+
+Imagine we have an on-premises Active Directory service — very common in enterprise environments — and we want to allow users to access AWS resources using their existing AD credentials.
+
+*Active Directory* is an *LDAP identity store*. This means that it stores user information in a hierarchical structure, and it uses the LDAP protocol to communicate with other services. Users can authenticate to AD using their username and password, and so gain access to resources that AD manages.
+
+However, for a user (or an application) to access AWS resources, we need to add an *Active Directory Federation Service (ADFS)*, which is an *Identity Provider (IdP)*. The client (user or application) communicates with the ADFS service, which in turn authenticates the user with the AS service. The IdP returns a *SAML assertion* to the client, which proves that the user is who they say they are.
+
+The SAML assertion is then passed to *AWS STS (Security Token Service)* via the `sts:AssumeRomeWithSAML` API call. This API call includes the SAML assertion as a parameter, and it returns temporary security credentials to the client. It is these credentials that the client can then use to access the AWS resources it needs, such as a DynamoDB table.
+
+== Web Identity Federation
+
+In this case, we are using social identity providers suc as Google, Facebook, and also Amazon. Any *Open ID Connect (OIDC)* compatible IdP is supported by AWS.
+
+Via an app, usually a web or mobile app, the user authenticates with the Open ID Connect IdP, which returns a *JSON Web Token (JWT)*. This token is then passed to AWS STS via the `sts:AssumeRoleWithWebIdentity` API call, which returns temporary security credentials to the client, which the app can then use to access the permitted AWS resources.
+
+IMPORTANT: AWS recommends you use *Cognito*, rather than Open ID Connect directly, for web identity federation.

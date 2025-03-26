@@ -1,0 +1,5 @@
+= Access Logs
+
+*Elastic Load Balancing Access Logs* capture detailed information about requests sent to a load balancer. These can be used to analyze traffic patterns and troubleshoot issues. You can use these logs to identify the requester, IP, request type, etc. Optionally, this information can be stored in S3.
+
+*S3 Access Logs* provide detailed records for any requests that are made to a target bucket. The logs will include information such as the requester, bucket name, request time, request action, response status, and any error codes.
