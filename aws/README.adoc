@@ -13,7 +13,7 @@
 * link:./identity/cli.adoc[CLI]
 * link:./identity/federation.adoc[Federation]
 * link:./identity/identity-center.adoc[IAM Identity Center]
-* link:./security/directory-services.adoc[Directory services]
+* link:./identity/directory-services.adoc[Directory services]
 * link:./identity/cognito.adoc[Amazon Cognito]
 
 == Billing
@@ -72,7 +72,7 @@
 * link:./networking/nat-gateways.adoc[NAT gateways]
 * link:./networking/nacls-security-groups.adoc[NACLs and security groups]
 
-== Miscellaneous
+== Miscellaneous tools and services
 
 * link:./miscellany/migration-and-transfer.adoc[Migration and transfer services]
 * link:./miscellany/machine-learning.adoc[Machine learning and AI services]
