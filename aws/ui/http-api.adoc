@@ -1,0 +1,5 @@
+= AWS HTTP API
+
+AWS services are made available to the public through an API-first approach. An HTTP API provides the backbone for all user interactions with AWS services.
+
+The web console and CLI are built on top of the HTTP API. Thus, everything you can do in the CLI and the web console, you can also do programmatically via the HTTP API. Every action you take in AWS is an API call. For example, `s3:GetObject` is an API call to retrieve an object from an S3 bucket.

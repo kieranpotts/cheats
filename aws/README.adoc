@@ -10,15 +10,21 @@
 == Users and identity
 
 * link:./identity/iam-users.adoc[IAM users]
-* link:./identity/cli.adoc[CLI]
 * link:./identity/federation.adoc[Federation]
 * link:./identity/identity-center.adoc[IAM Identity Center]
 * link:./identity/directory-services.adoc[Directory services]
 * link:./identity/cognito.adoc[Cognito]
 
+== User interfaces
+
+* link:./ui/http-api.adoc[AWS HTTP API]
+* link:./ui/cli.adoc[AWS CLI]
+* link:./ui/web-console.adoc[AWS web console]
+
 == Billing
 
 * link:./billing/pricing-models.adoc[Pricing models]
+* link:./billing/payment-models.adoc[Payment models]
 * link:./billing/resource-pricing.adoc[Resource pricing]
 * link:./billing/cost-management-tools.adoc[Cost management tools]
 
@@ -44,6 +50,15 @@
 * link:./optimization/launch-wizard.adoc[Launch Wizard]
 * link:./optimization/well-architected.adoc[Well-Architected]
 * link:./optimization/adoption-framework.adoc[Cloud Adoption Framework]
+
+== AWS global infrastructure
+
+* link:./infrastructure/responsibility.adoc[Shared responsibility model]
+* link:./infrastructure/regions-zones.adoc[Regions and zones]
+* link:./infrastructure/network.adoc[AWS global network]
+* link:./infrastructure/subnets.adoc[Subnets]
+* link:./infrastructure/outposts.adoc[Outposts]
+* link:./infrastructure/cloudfront.adoc[CloudFront]
 
 == Networking
 

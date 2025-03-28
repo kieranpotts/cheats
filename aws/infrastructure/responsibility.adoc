@@ -1,0 +1,7 @@
+= Shared responsibility model
+
+In using AWS infrastructure, responsibility for security is shared between AWS and the customer. This is known as the "shared responsibility model".
+
+AWS is responsible for the security _of_ the cloud: compute, storage, databases, networking, and the rest of the global infrastructure.
+
+Customers are responsible for security _in_ the cloud: application security, data encryption (at rest and in transit), access management, OS patches, network and firewall configuration, and so on.

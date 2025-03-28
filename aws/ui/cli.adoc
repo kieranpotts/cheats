@@ -1,4 +1,4 @@
-= CLI
+= AWS CLI
 
 To use the *AWS CLI*, you need to authenticate with a user that has *access keys*.
 

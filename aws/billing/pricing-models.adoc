@@ -1,15 +1,13 @@
 = Pricing models
 
-AWS pricing is based on:
+AWS pricing is based on three things:
 
-* *Compute*: The amount of resources used, such as CPU and RAM, by the duration of time you use those resources.
+1. *Compute*: The amount of resources used, such as CPU and RAM, by the duration of time (normally in minutes) the resources are in use.
 
-* *Storage*: The quantity of data stored. In some cases, like with EBS volumes, price is based on storage _allocation_ rather than actual _utilization_.
+2. *Storage*: The quantity of data stored or allocated.
 
-* *Outbound data transfer*: The quantity of data that is transferred out from all services. Typically, data that goes _into_ AWS is not charged. So for S3 you pay for the storage and for getting data out, but not for uploading data to buckets in the first place.
+3. *Outbound data transfer*: The quantity of data that is transferred _out_ from an availability zone or region.
 
-AWS uses a *pay-as-you-go* billing model. This helps you to adapt to changing business requirements, and to respond to change more easily. You can adapt your spend based on evolving needs, rather than on forecasts. With cloud, you reduce the costs of over-provisioning resources, and reduce the risks of under-provisioning. It's much easier to get the sizing right, fitting actual needs, because you can quickly scale up and down on-demand.
+For storage, you are normally paid for _utilization_. This is the case for S3, for example. But in some cases the price is based on storage _allocation_. This is the case for EBS volumes, for example. So, when you launch an EC2 instance, you will choose an instance type which determines the amount of CPU, RAM, and storage that is allocated to the instance. If you shut down the instance, you will no longer be billed for CPU and RAM time, but you will continue to be billed for the associated EBS storage.
 
-There is also a pricing model known as *save-when-you-reserve*. This means investing in reserved capacity (eg. RDS and EC2). You can reduce your costs by up to 75% compared to pay-as-you-go. The more you pay up-front, the greater the discount.
-
-You can also *pay-less-by-using-more*. This refers to volume-based discounts. As you go through tiers of usage, then you will pay a lower unit cost (eg. per GB cost in S3).
+Typically, data that goes _in_ to AWS is not charged. So, for S3 you pay for the storage and for getting data out, but not for uploading data to buckets in the first place.

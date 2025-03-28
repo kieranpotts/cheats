@@ -1,0 +1,7 @@
+= Payment models
+
+By default, AWS uses a *pay-as-you-go* billing model. This provides lots of flexibility. You can easy adapt to changing business requirements, adapting your spend dynamically based on evolving needs rather than forecasts.
+
+There is also a pricing model known as *save-when-you-reserve*. This means investing in reserved capacity (eg. RDS and EC2). You commit to a period of time — usually a 1-year or a 3-year contract — but you can reduce your per-unit costs by up to 75% compared to pay-as-you-go/on-demand. The more you pay up-front, the greater the discount.
+
+You can also *pay-less-by-using-more*. This refers to volume-based discounts. As you go through tiers of usage, then you will pay a lower unit cost (eg. per GB cost in S3).

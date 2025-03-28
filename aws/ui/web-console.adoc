@@ -1,0 +1,5 @@
+= AWS web console
+
+The AWS Management Console is a web-based interface for managing your AWS services. It is a graphical user interface (GUI) that allows you to interact with AWS services using your web browser.
+
+Behind-the-scenes, the web console uses the HTTP API to interact with AWS services.

@@ -1,0 +1,6 @@
+= CloudFront
+
+*CloudFront* is a key part of the AWS global infrastructure.
+
+CloudFront is a *Content Delivery Network (CDN)*. It is used to cache content in different locations around the world, reducing latency for global users.
+
