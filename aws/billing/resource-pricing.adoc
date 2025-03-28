@@ -1,0 +1,129 @@
+= Resource pricing
+
+== EC2 pricing
+
+The main pricing options for EC2 are:
+
+* *On-demand*: This is the standard EC2 pricing option. It's pure pay-as-you-go with no time or spend commitments, but there are also no discounts by default and there are no guarantees that EC2 resources will always be available on-demand. This is a good option for development and testing environments, and other non-production use cases, or to handle _ad hoc_ and unpredictable workloads or to meet other short-term resource needs. An example use case would be a developer working on a small project for several hours, and who cannot be interrupted.
+
+* *Reserved*: You can get up to 75% discounted from the standard on-demand price by committing to a 1-year or 3-year contract. There are two options: *Standard RI* (Reserved Instance) and *Convertible RI*. With Standard RIs, you can change AZs, instance sizes (for Linux only), and the networking type — using the `ModifiedReservedInstances` API. With Convertible RIs, you can also change the instance family, OS, tenancy (default or dedicated), and payment option — using the `ExchangeReservedInstances` API . For both types of Reserved Instances, you can pay nothing up-front, partial up-front, or all up-front — with progressively better discounts. Reserved Instances are a great option for long-term, steady-state, predictable workloads. An example use case would be business critical, line-of-business applications that are continuously in demand — or any other scenario in which you want to minimize disruptions and can commit to a long time frame.
+
+* *On-Demand Reserved*: This is a way to reserve compute capacity in a specific Availability Zone. When you reserve some on-demand capacity, you specify the number of instances you will want, the instance attributes (instance type, tenancy, platform/OS, etc.), and the Available Zone you will want to launch the instances into. You can reserve the capacity for any duration of time, and then use it on-demand whenever you need it. The option is a halfway point between on-demand and reserved: you reserve capacity but there are no term commitments and you can cancel at any time. This is a good option where you want the pay-as-you-go model but you also want to mitigate the risk of not being able to get on-demand capacity when you need it.
+
+* *Scheduled Reserved* is now deprecated, but still available in some older accounts. This is a way to reserve capacity for a specific period (eg. 6 hours a day, 4 days a week) at specific time. This is a good option for workloads that are predictable and need to be scheduled.
+
+* *Spot instances*: Spot instances are a good option for low-cost, _ad hoc_ compute. You bid on unused EC2 capacity and, when capacity becomes available and if you're the highest bidder, the capacity will be released to you. There are no guarantees when the capacity will become available, but when it does the cost can be up to 90% lower than the standard on-demand pricing. AWS may terminate your instances at any time. This will happen if the spot price rises above your bid price, or if AWS needs to reclaim the capacity for any other reason. You will get a two-minute warning, sent via CloudWatch Events, which you might use to persist some state before shutdown. This is a good option for low-cost, compute-intensive, distributed workloads that are not time-sensitive and are resilient to interruption.
+
+* *Spot blocks* This is a way to reserve spot capacity for a defined duration between 1 and 6 hours. You set the spot price, and you get guaranteed capacity for that time. This is a good option for workloads that are not time-sensitive, but when they start they require uninterrupted compute time for a known duration. If these are your workload requirements, a spot block will give you the best price. It's not as cheap as spot instances, but still you typically get 30-45% less than the on-demand price.
+
+* A *fleet* can be used to launch and maintain multiple spot, on-demand, and reserved instances, as requirement to meet your specified target capacity. You can specify spot and on-demand capacity targets separately.
+
+* *Dedicated instances*: This type of EC2 instance provides physical isolation at the host hardware level. In other words, it guarantees that your instances run on hardware that is dedicated to you and is not shared with other AWS customers. You pay on-demand per instance, but it is more expensive than the standard on-demand plan. This is a good option for security-sensitive applications, or for workloads that benefit from dedicated hardware for any other reason.
+
+* *Dedicated hosts*: This is a step-up from dedicated instances. As with dedicated instances, you get hardware that is dedicated to your account, but in addition you get visibility over the server's physical attributes (eg, sockets, cores) and there is affinity between the host and the instance, which means you control which host an instance runs on. These features may be required for server-bound software (ie. software in which the license is bound to specific physical devices, such as a database system with per-socket licensing), or where you are clustering at the OS or application level and you want to make sure that two instances are running on separate dedicated hosts so there is no correlation in hardware failure. You pay per host, rather than per instance, which can be more cost-effective if you have a large number of instances.
+
+.Dedicated instance versus dedicate host
+|===
+|Characteristic |Dedicated instance |Dedicated host
+
+|Enables the use of dedicated physical servers
+|X
+|X
+
+|Per instance billing (subject to a $2 fee per region)
+|X
+|
+
+|Per host billing
+|
+|X
+
+|Visibility of sockets, cores, host ID
+|
+|X
+
+|Affinity between a host and instance
+|
+|X
+
+|Targeted instance placement
+|
+|X
+
+|Automatic instance placement
+|X
+|X
+
+|Add capacity using an allocation request
+|
+|X
+|===
+
+Finally, there are a number of *savings plans* which can be applied to EC2. This is where you commit to a consistent amount of usage for a 1-year or 3-year term, and in return you pay a fixed dollar amount per hour. There are two types of savings plans. With a *EC2 Savings Plan* you commit to a number of hours of usage within a selected region and instance family, and you can choose any size, tenancy, and OS. With a *Compute Savings Plan* you commit to a number of hours of usage across EC2, Fargate, and Lambda.
+
+So, depending on which plan you choose, you will be billed for EC2 compute either by the second or by the hour:
+
+* *Billed per second*: For Amazon Linux, Windows, and Ubuntu on On-Demand, Reserved, and Spot types. The minimum billing time is 1 minute.
+
+* *Billed per hour*: This is applicable to commercial Linux distros such as RedHat EL (Enterprise Linux) and SUSE ES (Enterprise Server). The minimum billing time is 1 hour.
+
+In addition, you will be billed for any EBS volumes that are attached to your EC2 instances. You are billed for the *provisioned storage* of the volume, not the actual data stored on the volume, *per second* of the volume's existence. The minimum bill time for volumes is 1 minute. You are also billed for volume *snapshots*, which are stored in S3.
+
+== S3 pricing
+
+You pay for:
+
+* *Storage class*, eg. Standard or IA.
+* *Storage quantity*: the data volume store in your buckets on a per-GB basis.
+* *Number of requests*, eg. GET, PUT, POST, LIST, COPY.
+* *Life cycle transition requests*, ie. moving data between storage classes.
+* *Data transfer* our of an S3 region is charged.
+* *Retrievals and Requests* for some storage classes like Glacier.
+
+== EBS pricing
+
+You pay for:
+
+* *Volumes*: Volume storage for all EBS volume types is charged by the amount of GB _provisioned_ (not used) per month.
+* *Snapshots*: Based on the amount of space consumed by snapshots, which are stored in S3. Copying snapshots is charged on the amount of data copied across regions.
+* *Data transfer*: Inbound data is free, outbound data charges are tiered.
+
+== RDS pricing
+
+You pay for:
+
+* *Clock hours of server uptime*, ie. the amount of time the DB instance is running.
+* *Database characteristics*, eg. database engine, size and memory class.
+* *Database purchase type*, eg. on-demand, reserved.
+* The *number of database instances*.
+* *Provisioned storage*. Backup is included up to 100% of the size of the DB.
+* *Additional storage*: The amount of storage in addition to the provisioned storage is charged per GB per month.
+* *Requests*: The number of input and output requests to the DB.
+* *Deployment type*: Single AZ or Multi-AZ.
+* *Reserved Instances*: RDS RIs can be purchased with no up-front, partial up-front, or all up-front terms.
+
+== DynamoDB pricing
+
+You pay for:
+
+* Reading, writing, and storing data.
+* For *on-demand capacity mode*, you are charged only for reads and writes, and there's no need to specify how much capacity is required. This is a good option for unpredictable workloads.
+* For *provisioned capacity mode*, where you specify the number of reads and write per second. It can use auto-scaling. This is good for predictable workloads, and consistent traffic or gradual changes.
+
+== CloudFront pricing
+
+You pay for:
+
+* *Traffic distribution*: Data transfer and request pricing varies across regions, and is based on the edge location from which the content is served.
+* *Requests*: You pay for the number and type of requests (HTTP and HTTPS have different pricing) and the geographic region in which they are made.
+* *Data transfer out*: Quantity of data transferred out from CloudFront edge locations.
+
+There are additional chargeable items, too, such as invalidation requests, field-level encryption requests, and custom SSL certificates.
+
+== Lambda pricing
+
+You pay for:
+
+* *Number of requests*
+* *Duration of a request* (rounded up to the nearest millisecond)
+* The price is also dependent on the amount of *memory* that is allocated to the function.

@@ -12,6 +12,4 @@ The normal workflow is:
 2. Add the user to a group.
 3. Add a policy to the group (which will be inherited by all users in the group).
 
-*Policies* define what resources a user can access, in terms of resources and services in AWS. IAM principals can then create those resources across AWS regions.
-
-Policies MAY be attached directly to users, but it is best practice to attach them to groups instead. This makes it much easier to manage permissions across multiple users. This is especially important for large organizations with lots of users.
+*Policies* define what AWS services and resources a user can access. Policies MAY be attached directly to users, but it is best practice to attach them to groups instead. This makes it much easier to manage permissions across multiple users. This is especially important for large organizations with lots of users.

@@ -8,6 +8,7 @@ The following services help you to manage security in your AWS environments.
 * Aggregates, organizes, and prioritizes security alerts (or findings) from multiple AWS services.
 * Continuously monitors your environment using automated security checks.
 * You can configure security standards to validate your environments against, including:
+
   ** AWS Foundational Security Best Practices v1.0.0
   ** CIS AWS Foundations Benchmark v1.2.0
   ** PCI DSS v3.2.1
@@ -19,10 +20,12 @@ The following services help you to manage security in your AWS environments.
 
 == AWS Trust & Safety Team
 
-* You should contact the AWS Trust & Safety Team if you find AWS resources that are being used for:
-  ** Spam
-  ** Port scanning
-  ** Denial of Service (DoS) attacks
-  ** Intrusion attempts
-  ** Hosting of objectionable or copyrighted content
-* Their email address is abuse@amazonaws.com.
+You should contact the AWS Trust & Safety Team if you find AWS resources that are being used for:
+
+* Spam
+* Port scanning
+* Denial of Service (DoS) attacks
+* Intrusion attempts
+* Hosting of objectionable or copyrighted content
+
+Their email address is abuse@amazonaws.com.

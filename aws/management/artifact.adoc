@@ -7,5 +7,3 @@ The reports made available include *Service Organization Control (SOC)* reports,
 There are also some select agreements that are made available, such as the *Business Associate Addendum (BAA)* and the *Nondisclosure Agreement (NDA)*.
 
 AWS Artifacts has some very useful information if you are building a solution that has high security compliance requirements, like a PCI-compliant solution.
-
-

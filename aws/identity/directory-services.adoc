@@ -1,13 +1,15 @@
-= AWS Directory Services
+= Directory services
 
-This is actually a suite of different products for hosting or connecting to directory services. The options are:
+AWS offers a suite of different products for hosting or connecting to directory services. The options are:
 
 *Simple AD*: This is compatible with Active Directory but doesn't have as many features, but it is lower in cost. It is an AD implementation based on Samba. This is good for smaller implementations.
 
-*AWS Managed Microsoft Active Directory*: A fully-managed managed implementation of Microsoft Active Directory running on Windows Server 2012 R2 on AWS infrastructure. We can use this option to security connect to EC2 Linux and Windows instances, and to synchronize users and federate identities with Azure/Microsoft 365. And there is also integration with services that support authentication and authorization using AWS Directory Services, such as Console, RDS, QuickSight, Workspaces, Workdocs, and Workmail. This is a great choice if your have more than 5,000 users and/or you need a trust relationship between different Active Directories. For example, you can setup trust relationships to extend authentication from on-premises Active Directories into the AWS cloud.
+*AWS Managed Microsoft Active Directory*: This is a fully-managed implementation of Microsoft Active Directory running on Windows Server 2012 R2 on AWS infrastructure. We can use this option to security connect to EC2 Linux and Windows instances, and to synchronize users and federated identities with Azure/Microsoft 365. There is also integration with services that support authentication and authorization using AWS Directory Services, such as Console, RDS, QuickSight, Workspaces, Workdocs, and Workmail.
 
-*AD Connector*: This is a good option where we have a self-managed Microsoft Active Directory in our own on-premises data center. We create a VPN to the AD Connector, which then connects us to various services within AWS, such as Workspaces, WorkDocs, and WorkMail. So, rather than having an Active Directory service in the cloud, we are just connecting our on-premises Active Directory service into the cloud via this connector. That means we're not synchronizing identities or creating trust relationships, but we simply have all our identities in one place.
+This is a great choice if your have more than 5,000 users and/or you need a trust relationship between different Active Directories. For example, you can set up trust relationships to extend authentication from on-premises Active Directories into the AWS cloud.
 
-The AWS Management Console can be used to map those identities to IAM Roles in the normal way, and you can seamlessly join Windows EC2 instances to an on-premises Active Directory domain.
+*AD Connector*: This is a good option where you have a self-managed Microsoft Active Directory in our own (on-premises) data center. You create a VPN to the AD Connector, which then connects to various services within AWS, such as Workspaces, WorkDocs, and WorkMail. So, rather than having an Active Directory service in the cloud, you just connecting your on-premises Active Directory service into the cloud via this connector. It's simpler. No need to synchronize identities or creating trust relationships
 
-Think of AD Connector as a directory gateway for redirecting directory requests to your own on-premises Active Directory. AD Connector eliminates the need for directory synchronization, and the complexity of hosting a federation infrastructure.
+With AD Connector, you can use the AWS Management Console to map the AD identities to IAM roles in the normal way. You can also seamlessly join Windows EC2 instances to an on-premises Active Directory domain.
+
+Think of AD Connector as a directory gateway for redirecting directory requests to your own on-premises Active Directory. AD Connector eliminates the need for directory synchronization, and the complexity of hosting federation infrastructure.

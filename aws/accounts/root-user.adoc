@@ -6,9 +6,9 @@ The root user has full access to all AWS services and resources in the account. 
 
 So, after first signing up, you SHOULD:
 
-* Set a very, very strong password for the root user.
+* Set a very, _very_ strong password for the root user.
 * Enable multi-factor authentication for the root user.
-* Make sure that the root user does not have any access keys (this restricting root access to the web console only).
+* Make sure that the root user does not have any access keys (so restricting root access to the web console only).
 * Create an admin user, and use it to administer the account instead.
 * Set alerts for root user activity.
 
@@ -16,6 +16,6 @@ To access the AWS Management Console, it is better to do so using a dedicated IA
 
 On the *Set permissions* screen, select *Attach policies directly*, and choose *AdministratorAccess*.
 
-To further reduce the need for root access, you can also enable billing access for IAM users. To do this, go to your *Account* page under *Billing and Cost Management* (this is accessed via the account dropdown in the far top-right corner of the AWS Management Console). Scroll down to "IAM user and role access to billing information" and click *Edit*. Check the box to give IAM users access to billing and cost management.
+To further reduce the need for root access, you can also enable billing access for IAM users. To do this, go to your *Account* page under *Billing and Cost Management* (this is accessed via the account dropdown in the far top-right corner of the AWS Management Console). Scroll down to *IAM user and role access to billing information* and click *Edit*. Check the box to give IAM users access to billing and cost management.
 
 There will still be a few use cases where you will need to access AWS using the root user. For example, when you want to close your AWS account, or when you want to change the email address associated with the account.

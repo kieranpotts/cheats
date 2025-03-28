@@ -1,10 +1,10 @@
-= AWS CLI
+= CLI
 
-To use the AWS CLI, you need to authenticate with a user that has *access keys*.
+To use the *AWS CLI*, you need to authenticate with a user that has *access keys*.
 
-Via the Identity and Access Management (IAM) web console, go to *Security credentials* for your user, then *Access keys* > *Create access key*.
+You can create access keys via the Identity and Access Management (IAM) service. In the IAM web console, go to *Security credentials* for your user, then *Access keys* > *Create access key*. Follow the steps to generate an access key.
 
-Once you've generated an access key, from your terminal run:
+Then the the following from your terminal:
 
 [source,sh]
 ----
@@ -13,10 +13,10 @@ aws configure
 
 At the prompts:
 
-* AWS Access Key ID: Paste your access key id
-* AWS Secret Access Key: Paste your access key's secret
-* Default region name: eg., `eu-west-2` for London
-* Default output format: eg., `json`
+* *AWS Access Key ID*: Paste your access key id
+* *AWS Secret Access Key*: Paste your access key's secret
+* *Default region name*: eg., `eu-west-2` for London
+* *Default output format*: eg., `json`
 
 To verify:
 

@@ -14,19 +14,18 @@
 * link:./identity/federation.adoc[Federation]
 * link:./identity/identity-center.adoc[IAM Identity Center]
 * link:./identity/directory-services.adoc[Directory services]
-* link:./identity/cognito.adoc[Amazon Cognito]
+* link:./identity/cognito.adoc[Cognito]
 
 == Billing
 
-* link:./billing/fundamentals.adoc[AWS pricing fundamentals]
-* link:./billing/pricing.adoc[Resource pricing]
+* link:./billing/pricing-models.adoc[Pricing models]
+* link:./billing/resource-pricing.adoc[Resource pricing]
 * link:./billing/cost-management-tools.adoc[Cost management tools]
 
 == Support
 
 * link:./support/support-plans.adoc[Support plans]
-* link:./support/connect.adoc[Amazon Connect]
-* link:./support/knowledge-center.adoc[Knowledge Center]
+* link:./support/support-resources.adoc[Support resources]
 * link:./support/customer-enablement.adoc[Customer enablement services]
 
 == Management, governance, and compliance tools
@@ -35,16 +34,26 @@
 * link:./management/systems-manager.adoc[Systems Manager]
 * link:./management/service-catalog.adoc[Service Catalog]
 * link:./management/config.adoc[Config]
+* link:./management/health.adoc[Health APIs and dashboards]
 * link:./management/artifact.adoc[AWS Artifact]
-* link:./management/health-api.adoc[Health API]
 
 == Optimization tools
 
 * link:./optimization/trusted-advisor.adoc[Trusted Advisor]
 * link:./optimization/compute-optimizer.adoc[Compute Optimizer]
 * link:./optimization/launch-wizard.adoc[Launch Wizard]
-* link:./optimization/well-architected-framework.adoc[The Well-Architected Framework]
+* link:./optimization/well-architected.adoc[Well-Architected]
 * link:./optimization/adoption-framework.adoc[Cloud Adoption Framework]
+
+== Networking
+
+* link:./networking/vpc.adoc[Virtual Private Clouds (VPC)]
+* link:./networking/subnets.adoc[Subnets]
+* link:./networking/resources.adoc[Resources]
+* link:./networking/gateways.adoc[Gateways]
+* link:./networking/route-tables.adoc[Route tables]
+* link:./networking/nat-gateways.adoc[NAT gateways]
+* link:./networking/nacls-security-groups.adoc[NACLs and security groups]
 
 == Security
 
@@ -61,16 +70,6 @@
 * link:./logging/cloudtrail.adoc[CloudTrail]
 * link:./logging/vpc-flow-logs.adoc[VPC Flow Logs]
 * link:./logging/access-logs.adoc[Access Logs]
-
-== Networking
-
-* link:./networking/vpc.adoc[Virtual Private Clouds (VPC)]
-* link:./networking/subnets.adoc[Subnets]
-* link:./networking/resources.adoc[Resources]
-* link:./networking/gateways.adoc[Gateways]
-* link:./networking/route-tables.adoc[Route tables]
-* link:./networking/nat-gateways.adoc[NAT gateways]
-* link:./networking/nacls-security-groups.adoc[NACLs and security groups]
 
 == Miscellaneous tools and services
 

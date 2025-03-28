@@ -1,8 +1,6 @@
-= The Well-Architected Framework
+= AWS Well-Architected
 
-AWS Well-Architected is a series of resources, tools that help you to design and implement high quality services on AWS, following best practices for cloud architecture.
-
-AWS Well-Architected helps cloud architects to build secure, high-performing, resilient, and efficient infrastructure for their applications and workloads on AWS.
+*AWS Well-Architected* is a series of resources, tools that help you to design and implement high quality services on AWS, following best practices for cloud architecture. AWS Well-Architected helps cloud architects to build secure, high-performing, resilient, and efficient infrastructure for their applications and workloads on AWS.
 
 AWS Well-Architected consists of:
 
@@ -27,7 +25,9 @@ The *Well-Architected Framework* helps you to understand the pros and cons of de
 
 It is based on six pillars — the *Well-Architected Pillars*:
 
-1 - *Operational Excellence*: This pillar focuses on running and monitoring systems, and continually improving processes and procedures. Key topics include automating changes, responding to events, and defining standards to manage daily operations.
+=== 1. Operational Excellence
+
+This pillar focuses on running and monitoring systems, and continually improving processes and procedures. Key topics include automating changes, responding to events, and defining standards to manage daily operations.
 
 Best practices for operational excellence include:
 
@@ -41,7 +41,9 @@ Best practices for operational excellence include:
 
 * Learn from operational failures (use post-mortems to understand what went wrong and how to prevent it from happening again).
 
-2 - *Security*: The security pillar focuses on protecting information and systems. Key topics include confidentiality and integrity of data, managing user permissions, and establishing controls to detect security events.
+=== 2. Security
+
+The security pillar focuses on protecting information and systems. Key topics include confidentiality and integrity of data, managing user permissions, and establishing controls to detect security events.
 
 Best practices for security include:
 
@@ -53,7 +55,9 @@ Best practices for security include:
 * Keep people away from data.
 * Prepare for security events.
 
-3 - *Reliability*: The reliability pillar focuses on workloads performing their intended functions and how to recover quickly from failure to meet demands. Key topics include distributed system design, recovery planning, and adapting to changing requirements.
+=== 3. Reliability
+
+The reliability pillar focuses on workloads performing their intended functions and how to recover quickly from failure to meet demands. Key topics include distributed system design, recovery planning, and adapting to changing requirements.
 
 Best practices for reliability include:
 
@@ -63,7 +67,9 @@ Best practices for reliability include:
 * Stop guessing capacity — this is a big benefit of AWS, we can accurately measure capacity and utilization, and adjust capacity as needed.
 * Automate change procedures as much as possible.
 
-4 - *Performance Efficiency*: This pillar focuses on structured and streamlined allocation of IT and computing resources. Key topics include selecting resource types and sizes optimized for workload requirements, monitoring performance, and maintaining efficiency as business needs evolve.
+=== 4. Performance Efficiency
+
+This pillar focuses on structured and streamlined allocation of IT and computing resources. Key topics include selecting resource types and sizes optimized for workload requirements, monitoring performance, and maintaining efficiency as business needs evolve.
 
 Best practices for performance efficiency include:
 
@@ -73,7 +79,9 @@ Best practices for performance efficiency include:
 * Experiment more often — use the features and benefits of the cloud to experiment and test.
 * Consider mechanical sympathy: understand how your systems work and how the components interact with each other.
 
-5 - *Cost Optimization*: This pillar focuses on avoiding unnecessary costs. Key topics include controlling fund allocation, selecting resources of the right type and quantity, and scaling to meet business needs without overspending. In short, this is about delivering business value at the lowest cost.
+=== 5. Cost Optimization
+
+This pillar focuses on avoiding unnecessary costs. Key topics include controlling fund allocation, selecting resources of the right type and quantity, and scaling to meet business needs without overspending. In short, this is about delivering business value at the lowest cost.
 
 Best practices for cost optimization include:
 
@@ -83,7 +91,9 @@ Best practices for cost optimization include:
 * Stop spending money on undifferentiated heavy lifting (ie. the things you used to do outside of AWS, like buying servers and running your own data centers, etc.).
 * Analyze and attribute expenditure.
 
-6 - *Sustainability*: This pillar focuses on minimizing the environmental impacts of running cloud workloads. Key topics include a shared responsibility model for sustainability (ie. both AWS and its customers are responsible for this), understanding impact, and maximizing utilization to minimize required resources and reduce downtime impacts.
+=== 6. Sustainability
+
+This pillar focuses on minimizing the environmental impacts of running cloud workloads. Key topics include a shared responsibility model for sustainability (ie. both AWS and its customers are responsible for this), understanding impact, and maximizing utilization to minimize required resources and reduce downtime impacts.
 
 AWS is responsible for optimizing the sustainability _of_ the cloud — delivering efficient, shared infrastructure, water stewardship, and sourcing renewable power.
 

@@ -20,11 +20,7 @@ There are no extra fees for consolidated billing.
 
 == AWS Cost Explorer
 
-This is a free tool that allows you to view itemized breakdowns of your spending in a graphical format.
-
-You can view cost daa for the past 13 months, and forecast what you are likely to spend over the next three months.
-
-Cost Explorer can be used to discover patterns in how much you spend on AWS resources over time, and to identify cost problem areas.
+This is a free tool that allows you to view itemized breakdowns of your spending in a graphical format. You can view cost data for the past 13 months, and forecast what you are likely to spend over the next three months. Cost Explorer can be used to discover patterns in how much you spend on AWS resources over time, and to identify cost problem areas.
 
 Cost Explorer can help you to identify service usage statistics, such as:
 
@@ -34,19 +30,11 @@ Cost Explorer can help you to identify service usage statistics, such as:
 
 == AWS Cost & Usage Report
 
-This service publishes billing reports to an S3 bucket.
-
-Reports break down costs by the hour, day, month, product, product resource, and tags.
-
-You can have updated reports up to three times a day.
-
-You can create, retrieve, and delete your reports using the AWS CUR API.
+This service publishes billing reports to an S3 bucket. Reports break down costs by the hour, day, month, product, product resource, and tags. You can have updated reports up to three times a day. You can create, retrieve, and delete your reports using the AWS CUR API.
 
 == Cost Allocation Tags
 
-Cost Allocation Tags are a way of adding metadata to our resources and then using that metadata for billing purposes, so we can attribute costs to certain resources.
-
-Normal tags are "activated" to become Cost Allocation Tags. There are both user-defined and AWS-defined Cost Allocation Tags.
+Cost Allocation Tags are a way of adding metadata to our resources and then using that metadata for billing purposes, so we can attribute costs to certain resources. Normal tags are "activated" to become Cost Allocation Tags. There are both user-defined and AWS-defined Cost Allocation Tags.
 
 == AWS Price List API
 
@@ -59,6 +47,4 @@ Alerts can be sent via SNS when prices change.
 
 == AWS Calculator
 
-The AWS Calculator is served from https://calculator.aws.
-
-Use it to to estimate the cost of the components that you want to build into your AWS cloud infrastructure.
+The AWS Calculator is served from https://calculator.aws. Use it to to estimate the cost of the components that you want to build into your AWS cloud infrastructure.

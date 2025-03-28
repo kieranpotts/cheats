@@ -1,4 +1,4 @@
-= AWS accounts
+= Accounts
 
 A new AWS account is created when you first sign up to AWS.
 

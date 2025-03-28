@@ -1,3 +1,0 @@
-= AWS Knowledge Center
-
-This is a collection of articles and tutorials that provide answers to common questions and use cases. The content is based on frequently asked questions that AWS receives from its customers.
