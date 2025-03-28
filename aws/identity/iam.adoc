@@ -1,38 +1,45 @@
 = Identity and Access Management (IAM)
 
-It is RECOMMENDED that you do not use the root user for everyday tasks, and that you do not share the root user credentials with others.
+*Identity and Access Management (IAM)* is one of AWS's core service. It is a global service, which is to say it is not scoped to any particular AWS region.
 
-Instead, use the *Identity and Access Management (IAM)* service to create *users*, *user groups*, *roles*, and *policies*.
+IAM is primarily used to create *users*, user *groups*, *policies*, and *roles*. Collectively, these resources are used to manage access to all other AWS services and resources within an AWS account. IAM offers fine-grained access controls and programmatic access management, which is useful for giving applications access to AWS resources.
 
-IAM is one of AWS's core services. It is a global service, not scoped to any particular AWS region.
+Other use cases for IAM include federating with external identity providers (IdPs) for single sign-on (SSO) to AWS services — but this is now better done via IAM Identity Center (formerly known as AWS SSO), a newer service.
 
-.IAM use cases
-****
-* Manage AWS resources and permissions.
-* Create and manage IAM users and roles within AWS.
-* Federating with external IdPs for SSO to AWS services.
-* Programmatic access management.
-* Fine-grained access control.
-****
+You can create up to 5,000 IAM users per AWS account. Each user will have _no permissions_ by default — ie. _all permissions are implicitly denied by default_.
 
-In AWS, every resource has a unique URL. And this is no different for IAM resources. Every user, group, role, and policy has a unique URL.
+== Resources
+
+In AWS, every resource has a unique URL. And this is no different for IAM resources: every user, group, role, and policy has a unique URL. Example:
 
 ----
 arn:aws:iam::625148252389:user/Andrea
-
-arn = Amazon Resource Name
-aws = This is an AWS resource
-iam = This resource is part of the IAM service
-625148252389 = Account number
-user = The resource type
-Andrea = The resource name
 ----
 
-A user is also known as a *principal*. This term refers to a person or application that can make a request for an action or operation on an AWS resource.
+* `arn` = Amazon Resource Name
+* `aws` = this is an AWS resource
+* `iam` = this resource is part of the IAM service
+* `625148252389` = account number
+* `user` = the resource type
+* `Andrea` = the resource name
 
-IAM principals must be *authenticated* to send requests (with a few exceptions), and also *authorized* to make the request. Whether a principal is authorized depends on the permissions *policies* applies to the principal — known as identity-based policies.
+== Actions
 
-*Policies* define permissions for the *identities* or *resources* they are associated with. Policies are JSON documents that encode permissions. The following permissions document allows all actions on every resource in your AWS account.
+In AWS, an *action* is a specific operation that can be performed on a resource. Actions are defined by the service and are usually named in the format `service:action`. For example, `iam:CreateUser` is the action to create a new IAM user.
+
+== Users, identities, and principals
+
+In AWS, *identities* are IAM resource objects that have permissions (defined via attached *policies*) to perform certain *actions* on certain *resources*. An identity may be an IAM *user*, *group*, or *role*. It may also be a *federated identity* — an identity that is authenticated by an external identity provider (IdP), such as Active Directory or a SAML-based IdP.
+
+Thus, an IAM *user* is a specific type of identity.
+
+We also talk about the concept of principals. A *principal* is an active entity making a request for an action on a resource. A principal may be a person, a client application, or another AWS resource
+
+IAM principals must be *authenticated* to send requests (with a few exceptions), and also *authorized* to make the request. Whether a principal is authorized depends on the identity-based *policies* applied to the principal, and also on the resource-based (policies) applied to the target resource.
+
+== Policies
+
+*Policies* define permissions for the *identities* or *resources* they are associated with. Policies are written as JSON documents. The following example allows all actions on every resource in an AWS account.
 
 [source,json]
 ----
@@ -48,59 +55,34 @@ IAM principals must be *authenticated* to send requests (with a few exceptions),
 }
 ----
 
-
 There are two categories of policies:
 
 * *Identity-based policies*
 * *Resource-based policies*
 
-Identity-based policies like `AdministratorAccess` can be applied to users, groups, and roles. Resource-based policies cna be applied only to resources such as S3 buckets, restricting allowed actions (by all users) on those resources. (Not all resources support resource-based policies in AWS.)
+Identity-based policies like `AdministratorAccess` can be applied to users, groups, and roles. Resource-based policies can be applied to resources such as S3 buckets, restricting allowed actions (by all users) on those resources. (Not all types of resources support resource-based policies.)
 
-Identity-based policies are those that are applied to users, groups, or roles. Identity-based policies may be attached directly to users, but it is best practice to attach them to groups instead. Users inherit the policies of the groups to which they belong. A user who belongs to multiple groups will inherit multiple sets of permissions that will be dynamically combined into a single permissions set that is unique to the user. This makes it much easier to manage permissions across multiple users — especially in large organizations with lots of users.
+== Groups
+
+Identity-based policies may be attached directly to users, but it is best practice to attach them to groups. This makes it much easier to manage permissions across multiple users — especially in large organizations with lots of users.
+
+Users inherit the policies of the groups to which they belong. A user who belongs to multiple groups will inherit multiple sets of permissions that will be dynamically combined into a single permissions set that is unique to the user.
+
+== Roles
 
 Most of the time, most users will need only a limited set of permissions. But occasionally you would need a little extra control for one-off tasks. This is the purpose of *roles* — to temporarily extend a user's default permissions.
 
-An IAM *role* is an identity that has specific permissions assigned. Roles are used for *delegation* and they are *assumed*, ie. "assuming a role" allows a principal (an identity, which may be a user or an application, or an AWS resource) to take on special policies temporarily.
+An IAM *role* is an identity that has specific permissions assigned. Roles are used for *delegation* and they are *assumed*, ie. "assuming a role" allows a principal (ie. an identity that is already authenticated) to take on special policies temporarily.
 
-Once an identity assumes a role, the identity "becomes" the role and gain's all the role's permissions, as defined via the role's policies. Think of a role as being like a hat that can be passed around and worn by different identities at different times. You only wear the hat temporarily, for as long as you need to perform a particular task. For security, you should remove the role as soon as you're finished, and then you return to your more limited set of default permissions.
+Once an identity assumes a role, the identity "becomes" the role and gain's all the role's permissions, as defined via the role's policies. Think of a role as being like a hat that can be passed around and worn by different principals at different times. You only wear the hat temporarily, for as long as you need to perform a particular task. For security, you should remove the role as soon as you're finished, and then you return to your more limited set of default permissions.
 
-A user can assume a role by using the API call `sts:AssumeRole` (the user must have permission to be able to user this action, ie. be allowed to "switch roles"). The AWS *Security Token Service (STS)* generates short-term credentials with the role's permissions applied. Applications and services can use exactly the same mechanism to gain access to AWS.
+A user can assume a role by using the API call `sts:AssumeRole` (the user must have permission to be able to use this action, ie. be allowed to "switch roles"). The AWS *Security Token Service (STS)* generates short-term credentials with the role's permissions applied. Authenticated applications can use exactly the same mechanism to gain access to AWS.
 
 [TIP]
 ======
 Roles, rather than access keys, SHOULD be used for programmatic access to AWS resources from your applications that run in EC2 instances.
 ======
 
-You can create up to 5,000 IAM users per AWS account. Each user will have _no permissions_ by default — ie. *all permissions are implicitly denied by default*.
+== Service Control Policies (SCPs)
 
-== IAM best practices
-
-* Require human users to federate with an identity provider to gain access to AWS using temporary credentials.
-
-* Require workloads to use temporary credentials with IAM roles to access AWS.
-
-* Require multi-factor authentication.
-
-* Rotate access keys regularly, for use cases that require long term credentials.
-
-* Safeguard your root user credentials, and don't use the root user for everyday tasks.
-
-* Apply least-privilege permissions (the minimum permissions required for a user to do their job).
-
-* Get started with *AWS-managed policies* (this is a great option for new AWS customers), then incrementally move toward your own custom least-privilege policies, locking them down to _exactly_ what you need, once you are comfortable writing your own permissions.
-
-* Use *IAM Access Analyzer* to automatically generate least-privilege policies based on access activity.
-
-* Regularly review and remove unused users, roles, permissions, policies, and credentials.
-
-* Use conditions in IAM policies to further restrict access.
-
-* Use *IAM Access Analyzer* to verify public and cross-account access to resources.
-
-* Use *IAM Access Analyzer* to validate your IAM policies to ensure secure and functional permissions.
-
-* Establish permissions guardrails across multiple accounts.
-
-* Use *permissions boundaries* to delegate permissions management within an account.
-
-See also https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html[Security best practices in IAM].
+*Service Control Policies (SCPs)* are a feature of *AWS Organizations*. They allow you to control the available permissions in an AWS account. SCPs do not actually grant permissions, they only restrict what permissions can be applied to identities within an account.

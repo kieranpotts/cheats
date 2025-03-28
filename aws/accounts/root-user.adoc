@@ -2,20 +2,18 @@
 
 The root user is created when you first sign up for a new AWS account.
 
-The root user has full access to all AWS services and resources in the account. The root user is the most privileged user in the account, and it therefore represents a security risk. For this reason, it is RECOMMENDED that you do not use the root user for everyday tasks, and instead you create an administrative IAM user with more limited permissions.
+The root user is the most privileged user in an AWS account, having access to all services and resources. It therefore represents a security risk. For this reason, it is recommended that the root user is not used for everyday tasks. Instead you should create an administrative IAM user with more limited permissions.
 
-So, after first signing up, you SHOULD:
+So, after first signing up, you should:
 
-* Set a very, _very_ strong password for the root user.
+* Set a very strong password for the root user.
 * Enable multi-factor authentication for the root user.
 * Make sure that the root user does not have any access keys (so restricting root access to the web console only).
-* Create an admin user, and use it to administer the account instead.
+* Create an admin IAM user, and use it to administer the account instead.
 * Set alerts for root user activity.
 
-To access the AWS Management Console, it is better to do so using a dedicated IAM (Identity and Access Management) admin user, rather than the root user. Go to *Users* > *Add Users*. Enter a username and select the option to give the user access to the AWS Management Console. Choose *Create an IAM user* and set a password.
-
-On the *Set permissions* screen, select *Attach policies directly*, and choose *AdministratorAccess*.
+To access the AWS Management Console, it is better to do so using a dedicated IAM (Identity and Access Management) admin user, rather than the root user. Go to *Users* > *Add Users*. Enter a username and select the option to give the user access to the AWS Management Console. Choose *Create an IAM user* and set a password. On the *Set permissions* screen, select *Attach policies directly*, and choose *AdministratorAccess*.
 
 To further reduce the need for root access, you can also enable billing access for IAM users. To do this, go to your *Account* page under *Billing and Cost Management* (this is accessed via the account dropdown in the far top-right corner of the AWS Management Console). Scroll down to *IAM user and role access to billing information* and click *Edit*. Check the box to give IAM users access to billing and cost management.
 
-There will still be a few use cases where you will need to access AWS using the root user. For example, when you want to close your AWS account, or when you want to change the email address associated with the account.
+There will still be a few use cases where you will need to access AWS using the root user. For example, when you want to close your AWS account, or when you want to change the email address associated with the account. Otherwise, the root user should not be used.

@@ -1,5 +1,0 @@
-= Service Control Policies (SCPs)
-
-*Service Control Policies (SCPs)* are a feature of *AWS Organizations*. They allow you to control the available permissions in an AWS account.
-
-SCPs do not actually grant permissions, they only restrict what permissions can be applied to users within an account.

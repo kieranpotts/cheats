@@ -1,8 +1,8 @@
 = Federation
 
-*Federation* — aka. Federated Identity Management (FIM) — refers to the process of linking and trusting identities across multiple systems. It enables users to access multiple systems using a single set of credentials. Federation is what makes it possible for employees at a company to access their Google Workspace using their Azure AD credentials.
+*Federation* — aka. Federated Identity Management (FIM) — refers to the process of linking and trusting identities across multiple systems. Federation is what makes it possible for employees at a company to access their Google Workspace using their Azure AD credentials.
 
-Federation relies on *Identity Providers (IdPs)*, such as Active Directory or Azure AD, to authenticate users and share identity information securely between independent services. Thus, once a user has authenticated with an IdP, the user has access to all the services that trust that IdP.
+Federation relies on *Identity Providers (IdPs)*, such as *directory services* like Active Directory or Azure AD, to authenticate users and share identity information securely between independent services. Thus, once a user has authenticated with an IdP, the user has access to all the services that trust that IdP.
 
 This is known as *Single Sign-On (SSO)* and it depends on *mutual trust* between the IdP and the service provider (SP). The IdP is responsible for authenticating the user, while the SP is responsible for authorizing access to its resources.
 
@@ -17,9 +17,9 @@ There are two protocols we can use to federate _to_ AWS:
 
 Imagine we have an on-premises Active Directory service — which is very common in enterprise environments — and we want to allow users to access AWS resources using their existing AD credentials.
 
-*Active Directory* is an *LDAP identity store*. This means that it stores user information in a hierarchical structure and uses the LDAP protocol to communicate with other services. Users can authenticate to AD using their username and password, and so gain access to resources that AD manages.
+*Active Directory (AD)* is an *LDAP identity store*. This means that it stores user information in a hierarchical structure and uses the Lightweight Directory Access Protocol to communicate with other services. Users can authenticate to AD using their username and password, and so gain access to resources that AD manages.
 
-However, for a user (or an application) to access AWS resources, we need to add an *Active Directory Federation Service (ADFS)*, which is an *Identity Provider (IdP)*. The client (user or application) communicates with the ADFS service, which in turn authenticates the user with the AD service. The IdP returns a *SAML assertion* to the client, which proves that the user is who they say they are.
+However, for a user (or an application) to access AWS resources, we need to add an *Active Directory Federation Service (ADFS)*, which is another type of IdP. The client (which may be a user or application) communicates with the ADFS service, which in turn authenticates the user with the AD service. The IdP returns a *SAML assertion* to the client, which proves that the user is who they say they are.
 
 The SAML assertion is then passed to *AWS STS (Security Token Service)* via the `sts:AssumeRomeWithSAML` API call. This API call includes the SAML assertion as a parameter, and it returns temporary security credentials to the client. It is these credentials that the client can then use to access the AWS resources it needs, such as a DynamoDB table.
 

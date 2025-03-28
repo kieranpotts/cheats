@@ -2,7 +2,7 @@
 
 A new AWS account is created when you first sign up to AWS.
 
-Each AWS account has a single root user. You can then add additional user identities to the account, for example using the *Identity and Access Management (IAM)* service.
+Each AWS account has a single root user. You can then add additional user identities to the account, using the *Identity and Access Management (IAM)* service.
 
 Each AWS account is given its own unique URL via which IAM users can sign in to the account's AWS Management Console. (This URL just auto-populates the account number input field.)
 

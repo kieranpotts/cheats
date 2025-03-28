@@ -1,21 +1,10 @@
 = IAM Identity Center
 
-The *Identity and Access Management (IAM)* service is used to create *users*, *groups*, *roles*, and *policies*.
+While the *Identity and Access Management (IAM)* service is used to create *users*, *groups*, *roles*, and *policies*, the *IAM Identity Center* — which was previously known as the *AWS Single Sign-On (SSO)* service — serves a broader purpose. It is used for managing identities of all kinds — not limited to IAM users, but also federated identities from external identity providers (IdPs) for the purpose of Single Sign-On (SSO) access to multiple AWS accounts and third-party business applications.
 
-The *IAM Identity Center*, which was previously known as the *AWS Single Sign-On (SSO)* service, serves a broader purpose. It is used for managing identities of all kinds, including but not limited to IAM users. It is used mostly for *identity federation*, which is where you want an SSO service for multiple business applications.
+It is now RECOMMENDED to use the IAM Identity Center to manage all identities associated with an account from a single, centralized service. AWS is actively encouraging customers to use IAM Identity Center instead of IAM for everything related to identity management.
 
-It is now RECOMMENDED to use the IAM Identity Center to manage all user/client identities from a single, centralized service. AWS is actively encouraging customers to use IAM Identity Center instead of IAM for everything related to identity management.
-
-Unlike IAM, IAM Identity Center supports multiple identity sources. An identity source could be IAM itself, or it could be an external federated identity provider (IdP) (aka. directory service) such as Active Directory (self-managed), Azure AD (hosted), Okta, or any other standard identity provider that uses SAML 2.0.
-
-.IAM Identity Center use cases
-****
-* Providing SSO access to AWS and non-AWS applications.
-* Centralize identity management for multiple AWS accounts.
-* Integrate with external directory services.
-* Streamlining access to business applications.
-* Enhancing user experience with a user portal.
-****
+Unlike IAM, IAM Identity Center supports multiple identity sources. An identity source could be IAM itself, or it could be an external identity provider (IdP) such as Active Directory (self-managed), Azure AD (hosted), Okta, or any other standard identity provider that uses SAML 2.0.
 
 To connect to Active Directory services we could use *AD Connector* to connect to *Azure AD*, or *AWS Managed Microsoft AD* to connect to a self-managed Active Directory service. This allows us to use existing user accounts and groups in our directory service, and to manage them from a single place.
 

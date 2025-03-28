@@ -10,7 +10,6 @@
 == Users and identity
 
 * link:./identity/iam.adoc[Identity and Access Management (IAM)]
-* link:./identity/service-control-policies.adoc[Service Control Policies (SCPs)]
 * link:./identity/federation.adoc[Federation]
 * link:./identity/identity-center.adoc[IAM Identity Center]
 * link:./identity/directory-services.adoc[Directory services]
