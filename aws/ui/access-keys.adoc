@@ -1,0 +1,10 @@
+= Access keys
+
+To access the web console, users will authenticate using their username and password.
+
+For programmatic access via the HTTP API or CLI, users will need *access keys*. There are two parts:
+
+* *Access key ID*
+* *Secret access key*
+
+In addition, the AWS *Security Token Service (STS)* can be sued to generate short-ter access credentials.

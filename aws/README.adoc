@@ -9,7 +9,8 @@
 
 == Users and identity
 
-* link:./identity/iam-users.adoc[IAM users]
+* link:./identity/iam.adoc[Identity and Access Management (IAM)]
+* link:./identity/service-control-policies.adoc[Service Control Policies (SCPs)]
 * link:./identity/federation.adoc[Federation]
 * link:./identity/identity-center.adoc[IAM Identity Center]
 * link:./identity/directory-services.adoc[Directory services]
@@ -20,6 +21,7 @@
 * link:./ui/http-api.adoc[AWS HTTP API]
 * link:./ui/cli.adoc[AWS CLI]
 * link:./ui/web-console.adoc[AWS web console]
+* link:./ui/access-keys.adoc[Access keys]
 
 == Billing
 

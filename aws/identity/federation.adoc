@@ -1,8 +1,10 @@
 = Federation
 
-*Federation* refers to the process of linking and trusting identities across multiple systems. It enables users to access multiple systems using a single set of credentials. Federation is what makes it possible for employees at a company to access their Google Workspace using their Azure AD credentials.
+*Federation* — aka. Federated Identity Management (FIM) — refers to the process of linking and trusting identities across multiple systems. It enables users to access multiple systems using a single set of credentials. Federation is what makes it possible for employees at a company to access their Google Workspace using their Azure AD credentials.
 
-Federation relies on *Identity Providers (IdPs)*, such as Active Directory or Azure AD, to authenticate users and share identity information securely between independent services.
+Federation relies on *Identity Providers (IdPs)*, such as Active Directory or Azure AD, to authenticate users and share identity information securely between independent services. Thus, once a user has authenticated with an IdP, the user has access to all the services that trust that IdP.
+
+This is known as *Single Sign-On (SSO)* and it depends on *mutual trust* between the IdP and the service provider (SP). The IdP is responsible for authenticating the user, while the SP is responsible for authorizing access to its resources.
 
 Federation uses protocols such as SAML (Security Assertion Markup Language), OAuth, and OpenID Connect to establish trust between systems.
 
@@ -11,7 +13,7 @@ There are two protocols we can use to federate _to_ AWS:
 * SAML 2.0
 * Web Identity Federation
 
-== SAML 2.0
+== SAML (Security Assertion Markup Language
 
 Imagine we have an on-premises Active Directory service — which is very common in enterprise environments — and we want to allow users to access AWS resources using their existing AD credentials.
 

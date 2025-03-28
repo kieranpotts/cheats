@@ -2,14 +2,48 @@
 
 The *Identity and Access Management (IAM)* service is used to create *users*, *groups*, *roles*, and *policies*.
 
-The *IAM Identity Center*, which was previously known as the *AWS Single Sign-On (SSO)* service, serves a broader purpose. It is used for managing identities of all kinds, including but not limited to IAM users.
+The *IAM Identity Center*, which was previously known as the *AWS Single Sign-On (SSO)* service, serves a broader purpose. It is used for managing identities of all kinds, including but not limited to IAM users. It is used mostly for *identity federation*, which is where you want an SSO service for multiple business applications.
 
-It is now RECOMMENDED to use the IAM Identity Center to manage all user/client identities from a single, centralized service.
+It is now RECOMMENDED to use the IAM Identity Center to manage all user/client identities from a single, centralized service. AWS is actively encouraging customers to use IAM Identity Center instead of IAM for everything related to identity management.
 
-IAM Identity Center can have multiple identity sources. An identity source could be IAM itself, or it could be an external federated identity provider (IdP) such as Active Directory (self-managed), Azure AD (hosted), Okta, or any other standard identity provider that uses SAML 2.0.
+Unlike IAM, IAM Identity Center supports multiple identity sources. An identity source could be IAM itself, or it could be an external federated identity provider (IdP) (aka. directory service) such as Active Directory (self-managed), Azure AD (hosted), Okta, or any other standard identity provider that uses SAML 2.0.
 
-To connect to Active Directory services we could use *AD Connector* or *AWS Managed Microsoft AD*.
+.IAM Identity Center use cases
+****
+* Providing SSO access to AWS and non-AWS applications.
+* Centralize identity management for multiple AWS accounts.
+* Integrate with external directory services.
+* Streamlining access to business applications.
+* Enhancing user experience with a user portal.
+****
 
-IAM Identity Center also supports built-in SSO integrations with many widely-used business applications, from Adobe Creative Cloud to Zoom, so you can enable user access to lots of SaaS services very easily.
+To connect to Active Directory services we could use *AD Connector* to connect to *Azure AD*, or *AWS Managed Microsoft AD* to connect to a self-managed Active Directory service. This allows us to use existing user accounts and groups in our directory service, and to manage them from a single place.
+
+IAM Identity Center also supports built-in SSO integrations with many widely-used business applications, from Adobe Creative Cloud to Zoom, via GitHub and NewRelic, so you can enable user access to lots of SaaS services very easily. You can also use Identity Center to enable SSO to AWS accounts.
 
 IAM Identity Center also integrates with *AWS Organizations*, which provides an alternative interface through which to manage IAM users.
+
+.IAM versus IAM Identity Center
+|===
+|Use case | IAM | IAM Identity Center
+
+|Primary purpose
+|Manage access to AWS services and resources.
+|Centralized identity management; SSO access to AWS accounts and business applications.
+
+|Identity federation
+|Supports federation with external IdPs using SAML and Open ID Connect.
+|Built-in federation with external IdPs, streamlined for ease of setup and management.
+
+|Multi-account access
+|Requires more complex setup for cross-account access.
+|Simplifies granting users access to multiple AWS accounts and applications with a single login.
+
+|Integration with business apps
+|Limited to AWS services; requires custom setup for non-AWS apps.
+|Provides SSO access to commonly-used business apps like Salesforce and Microsoft 365, in addition to AWS accounts.
+
+|SSO capability
+|Enables SSO through federation, but setup is complex and manual.
+|Offers a more user-friendly and simplified SSO setup for both AWS and non-AWS applications.
+|===
