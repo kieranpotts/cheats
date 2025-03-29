@@ -74,6 +74,16 @@ image::./_/aws-networking.png[]
 6. link:./networking/nat-gateways.adoc[NAT gateways]
 7. link:./networking/nacls-security-groups.adoc[NACLs and security groups]
 
+== Compute
+
+* link:./compute/ec2.adoc[EC2]
+* link:./compute/lightsail.adoc[Lightsail]
+* link:./compute/batch.adoc[Batch]
+* link:./compute/containers.adoc[Container services]
+
+== Storage
+
+== Databases
 
 == Security
 
