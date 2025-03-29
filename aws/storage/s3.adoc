@@ -1,0 +1,88 @@
+= Simple File Storage (S3)
+
+S3 is AWS's object storage service. It is enormous scalable and durable. A single bucket can store millions of objects — with each object up to 5TB in size — and the SLA declares eleven 9s of durability — that's 99.999999999% or, to explain it another way, if you stored 10 million objects, you would expect to lose one object every 10,000 years.
+
+S3 is used for a wide variety of use cases, including backup and restore, archiving, big data analytics, and content distribution. S3 can even be used for *static site hosting* — you just need to put CloudFront in front to enable HTTPS.
+
+Like a key-value store, objects are access via a key, which is unique to the bucket. Two URL formats are supported for retrieval:
+
+----
+https://<bucket>.s3.<region>.amazonaws.com/<key>
+https://s3.<region>.amazonaws.com/<bucket>/<key>
+----
+
+These are public-facing URLs. Even though buckets are created in a region, bucket names must be unique across the whole of AWS. For this reason, organizations often use a naming convention that includes a combination of organization name, project name, region, and environment, and perhaps also a creation data or a random string or number.
+
+[TIP]
+======
+Choose a region that is closest to your users, for the lowest latency.
+======
+
+An S3 object consists of:
+
+* A *key*, which is the name of the object.
+* *Version ID*
+* *Value*, which is the stored data itself.
+* *Metadata*
+* *Subresources*
+* *Access control* information
+
+For the object key, we can mimic a hierarchy by using a forward slash (/) in the key name. In the Management Console, the prefixes will be navigable like directories (even though they are really just part of the key name).
+
+Because S3 is a global service that sits in the AWS public space, to connect resources running in a VPC to S3 we need to go out via an Internet Gateway. Alternatively, we can create an *S3 Gateway Endpoint*, which allows our EC2 instances to connect to S3 using a private address. This is a good (more secure) option for instances that sit in a private subnet.
+
+== Storage classes
+
+All S3 storage classes have eleven 9s *durability*, but *availability* varies depending on how many availability the data is stored in.
+
+The storage classes determine the availability. The main options are:
+
+* *S3 Standard*: 99.99% availability, for frequently accessed data. This is the most common option. You pay only for storage, not for retrieval or upload. (All other storage classes include some cost for retrieval.)
+
+* *S3 Intelligent-Tiering*: For data with unknown or changing access patterns, but which you still want to access quickly. AWS will automatically adjust the storage class, based on analysis of the access patterns, to optimize cost and performance.
+
+* *S3 Standard-IA*: 99.9% availability, also for *infrequently accessed* data, but which you want to get access to quickly when it is requested. There's a lower cost for storing your data, but you will pay an additional retrieval fee when you access it.
+
+There is also a special storage class known as *One Zone-IA*, which is for infrequently accessed data that is not critical to the business. It is stored in a single availability zone, so it has a lower cost, but it is less durable and available than the other classes — all other storage classes replicate data across _at least three_ availability zones. This can be a good low-cost storage option if you also have the data backed up somewhere else.
+
+S3 also offers a number of archive storage classes, known as *S3 Glacier*. While the standard storage classes have a *first-byte latency* in milliseconds, the glacier classes have a latency between hours and days. But the storage costs are much lower. You pay only for what you need with no commitment or up-front fees.
+
+* *S3 Glacier Instant Retrieval*: Used for archiving data that is rarely accessed but where you want retrieval to take only milliseconds in the rare cases it is needed.
+
+* *S3 Glacier Flexible Retrieval*: Used for archives where you want to retrieve _some_ data in minutes, but where you can wait for longer for other data. This offers slightly lower costs than instant retrieval.
+
+* *S3 Glacier Deep Archive*: Used for long-term archiving of data that you may never need to access again. Retrieval, if you did need it, make take hours, but it is very low cost.
+
+Glacier-specific features include Object Lock and Vault Lock. *Object Lock* stores objects in a write-once-read-many (WORM) state, which prevents the objects from bring deleted or overwritten for a fixed time, or indefinitely. *Vault Lock* can also be used to enforce the WORM model, but with the addition that once the policy is enforced you can lock down the policy, preventing future edits. In effect, the whole object store is locked down. These are good features to enforce data retention compliance requirements.
+
+== S3 life cycle management
+
+S3 buckets can be transitioned to different storage classes. Generally, you can only transition a bucket to a lower-cost storage class, eg. from S3 Standard to S3 Standard-IA, and not the other way around.
+
+You can use *life cycle management* to set conditions under which buckets should be automatically transitioned to other storage classes.
+
+Life cycle management can also be used to define when objects should be automatically expired/deleted from a bucket.
+
+== S3 versioning
+
+Versioning is means of keeping multiple variants of an object in the same bucket. With versioning enabled, if you upload a new file with the same name as an existing one, the old one will be persisted as an older version of the same object.
+
+Use versioning to preserve, retrieve, and restore every version of every object stored in a bucket. This is particularly useful for protecting against accidental overwrites and deletions.
+
+== S3 replication
+
+By default, every S3 bucket is replicated across _at least three_ availability zones. For even greater durability, the following replication options are also available:
+
+* *Cross-region replication (CRR)*: Replicates a bucket into another region.
+* *Same-region replication (SSR)*: Creates a copy in the same region.
+
+S3 versioning MUST be enabled to use S3 replication.
+
+== Miscellaneous S3 features
+
+* *Transfer acceleration*: Uses CloudFront to speed up the upload of data into S3 buckets (but it costs a bit more).
+
+* *Requester pays*: This is a payment model in which the AWS account requesting objects from a bucket pays for the retrieval costs.
+
+* *Encryption*: Data can be encrypted at rest.
+

@@ -1,0 +1,30 @@
+= Elastic File System (EFS)
+
+The AWS *Elastic File System (EFS)* is a shared (networked) file system. EFS can be used with Linux instances only. That's because the protocol uses is NFS, which is supported only by Linux.
+
+// TODO: Diagram.
+
+EFS is region-scoped by default. This means we can connect EC2 instances to EFS from multiple availability zones within a region. An EC2 instance in one AZ can connect to the *mount point* of an EFS system in another AZ.
+
+EFS supports other launch options, too. *EFS One Zone* means to launch EFS into a single availability zone. It is also possible to connect to EFS from other VPCs.
+
+// TODO: Diagram showing deployment options.
+
+You can also connect to EFS from on-premises clients, typically via a VPN or a direct connection.
+
+Write operations for region-scoped file systems are durably stored across availability zones (meaning: there's lots of copies of your data). *EFS replication* can be enabled to further replicate data across regions, for even more durability. The RPO (Recovery Point Objective) and RTO (Recovery Time Objective) disaster recovery metrics are in _minutes_! EFS also integrates with *AWS Backup*, offering an alternative DR strategy.
+
+EFS can have connections to multiple EC2 instances concurrently. But NFS client applications can use NFSv4 *file locking* for read and write operations on EFS files, to try to maintain consistency.
+
+EFS offers three storage classes:
+
+* *EFS Standard*: Uses SSD for low-latency.
+* *EFS Infrequent Access (IA)*: This is a cost-effective option if you don't need access to your data regularly.
+* *EFS Archive*: This is even cheaper, but is good only for archival, where data is accessed very infrequently (once or twice a year, say).
+
+All storage classes offer eleven 9s of durability, which is the same as S3. This is an incredibly high level — it is highly unlikely you will lose your data.
+
+There are also two performance modes:
+
+* *Provisioned throughput*: You specify the level of throughput you need. This is provisioned independently of the file system's size.
+* *Bursting throughput*: This is where throughput automatically scales up and down based on the size of the file system, to maintain support for bursting to high levels.

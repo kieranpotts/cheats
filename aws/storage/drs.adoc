@@ -1,0 +1,24 @@
+= Elastic Disaster Recovery service (DRS)
+
+This service is for *application recovery*, ie. to protect and recover critical business applications, quickly and at low cost.
+
+DRS does block-based replication. It basically takes all the information on a hard drive (on your own servers) and replicates it in AWS.
+
+To use DRS, in AWS we need to create a couple of different types of subnets in our target VPCs:
+
+* Staging area subnets
+* Recovery subnets
+
+// TODO: Add diagram.
+
+*AWS Replication Agents* are installed on your servers, with direct access to your disk drives. The *Replication Servers* are actually EC2 instances. We have continuous block-level replication from the downstream replication agents to the upstream replication servers.
+
+Initially, the replicated data is stored in a low-cost *staging area*. This is used to maintain the replicated data until it is needed for recovery. During a DR event, the systems are fully restored into AWS servers. The recovery subnets are used for this purpose.
+
+Because backup data gets replicated to EBS volumes, these volumes could be used, for example, to boot up EC2 instances within AWS in a disaster recovery scenario. DRS can launch recovery instances into the recover subnets with Recovery Time Objective (RTO) metrics of minutes, and Recovery Point Objective (RPO) metrics of seconds, restoring business operations quickly.
+
+DRS can recover applications from physical infrastructure, VMware, vSphere, Hyper-V, and even other (non-AWS) clouds. You can also use DRS for disaster recover from AWS itself, eg. to recover from failures in one region to another.
+
+DRS can also interact with CloudWatch and EventBridge, which you might want to send to an email using SNS, for example.
+
+Although the intended purpose of DRS is for disaster recovery, the same process can also be used to migrate data and applications from on-premises data centers, or other cloud providers, into AWS.

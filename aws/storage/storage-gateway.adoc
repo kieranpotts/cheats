@@ -1,0 +1,18 @@
+= Storage Gateway
+
+*AWS Storage Gateway* is used to connect on-premises applications into proprietary cloud storage using standard protocols. This is known as *hybrid storage*.
+
+Use cases for Storage Gateway include:
+
+* Moving backups into the cloud.
+* Using on-premises file shares that get backed up to cloud storage.
+* Low latency access to data in AWS from on-premises apps.
+* Disaster recovery.
+
+There are three types of Storage Gateway — think of these as virtual appliances that you install in your corporate data center, which then connect to AWS Storage Gateway:
+
+* *File Gateway*: A file-based storage system, which uses the NFS or SMB protocols to connect with S3. You can choose from multiple S3 storage classes. Plus, a local cache maintained in your on-premises data center gives you low latency access to recently-used data.
+
+* *Volume Gateway*: This is a block storage system. Your on-premises servers mount a block-based volume, which maps to S3 storage.
+
+* *Backup Gateway*: With this option, application servers have access to either block or file storage protocols via a virtual backup software application, installed locally. The storage volume appears to the client as a virtual tape library, but its actually just another S3 abstraction.

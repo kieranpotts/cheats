@@ -1,0 +1,45 @@
+= Storage categories
+
+There are three main categories of storage:
+
+* Block
+* File
+* Object
+
+== Block storage
+
+Block storage basically means raw hard drives.
+
+In AWS, you can choose between HDD an SSD block storage.
+
+SSD is the most commonly used block storage device used in the cloud. It uses flash memory, which is much faster than HDD (_thousands_ of times faster, in some cases). It is more like a chip, with no moving parts. SSD is newer technology than HDD, but it has still been around a while and the technology is mature and reliable.
+
+SSD is more expensive than HDD, for for cost-sensitive use cases HDD may be a better option. A hard disk drive is a magnetic disk with moving parts. It is an older technology and much slower than SSD.
+
+Within an operating system, a physical disk drive is represented as a *volume*. An OS can *partition* a  volume, and *format* it.
+
+The OS reads and writes at the block level.
+
+Disks can be internal or network-attached.
+
+== File storage
+
+File storage is a more abstract view of the contents of a disk drive. Below a file storage system is a block storage device of some kind.
+
+A file storage system is a hierarchical system of directories and files. Applications read and write to file storage at the file level.
+
+There are numerous systems of file storage. On Windows you have *NTFS*, for example.
+
+In the cloud, file storage systems are shared across a network via a *Network Attached Storage Server (NAS)*, which has disk drives within it. The NAS "shares" file systems over the network (the local OS sees the networked file system via a *mapping* to a local drive letter), or a NAS could be *mounted* as a drive directly attached to the client computer.
+
+A NAS can be shared by multiple clients, which means in a cloud system multiple applications may share the same file system, providing a mechanism for sharing state.
+
+== Object storage
+
+In an object storage system, a user uploads a file to an *object storage container*. On AWS, this is called a *bucket*.
+
+Unlike file storage, there is no natural hierarchy of objects in a bucket. The objects are stored in a flat namespace, like a key-value store. However, each object is identified by a unique key, which could be any string, and we can therefore adopt naming conventions to mimic a hierarchy.
+
+AWS used the HTTPS protocol to expose an API to manage buckets and to read and write objects to them. This makes it very easy to write programs that programmatically interact with object storage.
+
+Object storage is massively scalable and low cost.

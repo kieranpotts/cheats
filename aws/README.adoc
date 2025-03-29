@@ -83,7 +83,13 @@ image::./_/aws-networking.png[]
 
 == Storage
 
+* link:./storage/categories.adoc[Storage categories: block, file, object]
 * link:./storage/ebs.adoc[Elastic Block Store (EBS)]
+* link:./storage/efs.adoc[Elastic File System (EFS)]
+* link:./storage/s3.adoc[Simple File Storage (S3)]
+* link:./storage/fsx.adoc[FSx]
+* link:./storage/storage-gateway.adoc[Storage Gateway]
+* link:./storage/drs.adoc[Elastic Disaster Recovery service (DRS)]
 
 == Databases
 

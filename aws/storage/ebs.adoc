@@ -1,7 +1,51 @@
 = Elastic Block Store (EBS)
 
-*Elastic Block Store (EBS)* is a high-performance block storage services using by EC2 instances. EBS volumes are used as the primary storage for EC2 instances, and can be used to store data, applications, and operating systems.
+// TODO: Diagram
+
+*Elastic Block Store (EBS)* is a high-performance block storage service used by EC2 instances. EBS volumes are used as the primary storage for EC2 instances, and they are also known as *instance volumes* for this reason.
+
+EBS volumes are attached over the network, but they appear to the OS within an EC2 instance as a local drive.
+
+You can attach multiple EBS volumes to a singe EC2 instance. You can also attach a single EBS volume to multiple EC2 instances, but with some constraints. This is useful for sharing data between instances.
+
+"Root" EBS volumes are, by default, deleted on termination of the EC2 instances to which they are attached (though you can change this default behavior to persist root volumes indefinitely). However, extra non-root EBS volumes are not deleted on termination of the EC2 instances. This is useful for data that you want to persist after termination of EC2 instances. EBS volumes may also exist entirely independently of any EC2 instances.
+
+EBS volumes exist within an availability zone. You cannot connect to volumes in other AZs. EBS volumes will be automatically replicated within the AZ of the instance to which they are attached.
 
 EBS supports multiple volume types, including SSD and HDD. SSD is a good choice for transactional workloads, while HDD is good for throughput-intensive workloads.
 
+== Instance store volumes
+
+// TODO: Diagram
+
+*Instance store volumes* are a special category of EBS volume in which the volumes are _physically attached_ to the host EC2 instance. These are physical devices, a bit like a flash USB drive.
+
+Instance store volumes are *ephemeral* storage, meaning they are temporary and will be lost if the instance is stopped or terminated. They are not replicated or backed up automatically. If the power is lost to the host instance, the data on the instance store volumes will be lost.
+
+Normal EBS volumes, by comparison, are automatically replicated within their AZ, and they are attached over the network and persist beyond the destruction of any EC2 instances that happen to be connected to them.
+
+Instance store volumes can be a good choice for temporary data, such as caches or buffers, where you can afford to lose the data if the instance is stopped or terminated. They may also be a good choice for high-performance workloads that require very low latency and high throughput, such as big data processing or high-performance computing.
+
+Instance store volumes are available only on certain instance types, and they are not available in all regions.
+
+== EBS snapshots
+
+// TODO: Diagram
+
 You can create point-in-time backups of your EBS volumes, called *snapshots*.
+
+Snapshots are not stored in the same availability zone as the EBS volumes from which they are created. In fact, snapshots are stored in S3, which is a regional service.
+
+Snapshots are incremental. Each new snapshot only captures the diff since the last one. You often need to keep only the most recent snapshots, and you can safely delete older snapshots to save space and costs — unless you want to be able to recreate past states.
+
+Volumes can be recreated from snapshots. And this provides a good mechanism to replicate volumes in other AZs in the same region (and then attach the replicated volume to another EC2 instance).
+
+When you take an EC2 backup, you are creating an EBS snapshot. Amazon Machine Images (AMIs), used for containers, are also created from EBS snapshots.
+
+== Data Lifecycle Manager (DLM)
+
+The *Data Lifecycle Manager (DLM)* is a service that automates the creation, retention, and deletion of EBS snapshots. It is a good way to manage the life cycle of your EBS snapshots and ensure that you are not retaining unnecessary snapshots that could incur costs or have implications for data retention compliance.
+
+You can also use DLM to create standardized AMIs that are refreshed at regular intervals.
+
+DLM is often used to implement *disaster recovery* strategies.

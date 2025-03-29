@@ -1,0 +1,10 @@
+= FSx
+
+FSx provides fully-managed third-party file systems. Specifically, two types of file system are available:
+
+* FSX for Windows File Server
+* FSX for Lustre
+
+*FSx for Windows File Server* is for Windows-based applications. It provides a fully-managed native Windows file system, with full support for the SMB protocol, Windows NTFS, and Active Directory (AD) integration. It supports Windows-native file system features like Access Control Lists (ACLs), shadow copies, and user quotas. And the NTFS file system can be access from thousands of compute instances concurrently using rhe SMB protocol. Data is replicated within an availability zone by default; for high availability, a standby server can be added to another AZ. FSx can also be accessed via on-premises Windows clients, via a VPN or a Direct Connection.
+
+* *FSx for Lustre* is a high-performance file system for compute-intensive workloads. Use cases include high performance computing (HPC), machine learning, video processing, financial modeling, and electronic design automation (EDA). It has deep integration with S3, allowing you to transparently read and write your S3 objects as through they were local files (you can't do this with any other type of AWS file system). Lustre has a POSIX-compliant file system interface. It can also be accessed via on-premises clients, via a VPN or Direct Connection — indeed, this is commonly used for *cloud bursting* and *data migration* use cases.
