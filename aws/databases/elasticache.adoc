@@ -1,0 +1,11 @@
+= ElastiCache
+
+*Amazon ElastiCache* is an *in-memory database* for fast, temporary storage of small amounts of data. It is very useful for speeding up access to data. It tends to be used in front of another DBMS, like RDS.
+
+ElastiCache is basically a fully-managed implementation of Redis and Memcached (which are open source alternatives). As an in-memory store, if gives very high performance and low latency.
+
+There are many use cases for putting in-memory caches between applications and their databases. Caching recurring queries is the obvious one. Another use case would be persistent session information for stateful applications, so that sessions can be restored by a failover even if the primary server goes down. Another use case could be to provide a landing spot for streaming sensor data from a factory floor, and serving that data to real-time dashboards.
+
+ElastiCache can also be used as a conventional key-value store.
+
+ElastiCache runs on EC2 instances.

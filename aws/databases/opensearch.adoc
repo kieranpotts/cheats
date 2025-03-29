@@ -1,0 +1,41 @@
+= OpenSearch (formerly known as Elasticsearch)
+
+OpenSearch is a fully-managed (but not serverless), petabyte-scale, secure, highly available service to search, visualize, and analyze _text_ and _unstructured data_. It is based on the popular open source Elasticsearch (formerly ELK) software stack.
+
+OpenSearch supports SQL-like query syntax, and data can be encrypted at rest and in transit.
+
+To deploy an OpenSearch service:
+
+* Create a cluster via the management console, API, or CLI. Clusters are known as *OpenSearch Service domains*.
+* Specify the number of instances and instance types.
+* Specify storage options, from Ultra Warm to Cold Storage.
+
+OpenSearch clusters are deployed into a VPC. Nodes can be replicated across AZs. You can scale out by simply adding more instances into the cluster.
+
+Data can be integrated from various source, including:
+
+* Kinesis Firehose
+* Logstash
+* Elasticsearch/OpenSearch API
+
+If the data sources are in the same VPC, they can be easily integrated with the OpenSearch cluster because they already have direct intra-VPC communication with the cluster. A VPN or proxy will be required to connect to sources outside of AWS.
+
+Alternatively, you can deploy a cluster into the public domain, outside of your own VPCs, and make the cluster directly accessible from the Internet.
+
+When deployed into a VPC, you cannot use IP-based access policies for the cluster. There are also other limitations of VPC deployments:
+
+* You can't switch later from a VPC to a public endpoint, or vice versa.
+* You can't launch your domain within a VPC that used dedicated tenancy.
+* After you place a domain within a VPC, you can't move it to a different VPC, but you can change the subnets and security group settings.
+
+Once the data sources are connecting, you might then use an open source tool like Kibana to search, analyze, and visualize that data.
+
+== OpenSearch best practices
+
+* Deploy OpenSearch data instances across three AZs for the best availability.
+* Provision instances in multiples of three for equal distribution across AZs. (If three AZs are not available in a region, use two AZs, and multiples of two for the instance counts.)
+* Use three dedicated master nodes.
+* Configure at least one replica for each index.
+* Apply restrictive resource-based access policies to the domain, or use fine-grained access controls.
+* Create the domain with the VPC.
+* For sensitive data, use node-to-node encryption, and encryption at rest.

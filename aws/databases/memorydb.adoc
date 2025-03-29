@@ -1,0 +1,14 @@
+= MemoryDB for Redis
+
+This is a Redis-compatible, durable, low-latency, in-memory database service.
+
+The entire dataset is stored in memory, but also persisted on disk. It is a complete database + cache solution — ie. both the database and its cache are bundled together into a single product. This is what distinguished this service from ElastiCache, which is only an in-memory caching system that would typically sit in front of another database system, and it caches query results rather than the underlying data itself.
+
+This services uses Redis data structures, APIs, and commands — it is fully compatible with Redis, making it easy to migrate from that open source solution to this managed service.
+
+This service offers microsecond reads and single-digit millisecond write latency, _and_ high throughput. It's actually a higher performance option (ie. lower latency) than even ElastiCache.
+
+Data is stored durably across multiple AZs, using a distributed transactional log.
+
+Write scaling is supported through sharding, and read scaling by adding read replicas. MemoryDB also offers strong consistency for primary nodes, and eventual consistency for replica nodes. By comparison, with ElastiCache, there can be some inconsistency and latency, depending on the endgine and caching strategy you choose, eg. write-through versus lazy loading.
+

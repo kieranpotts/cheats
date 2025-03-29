@@ -1,0 +1,9 @@
+= Redshift
+
+*Amazon Redshift* is a fully-managed *data warehouse* solution for Online Analytics Processing (OLAP) use cases on very large volumes of aggregated data, stored in relational formats.
+
+Redshift runs on EC2 instance, so you scale up by changing the instance type in the normal way.
+
+Redshift automatically keeps three copies of your data, for durability. It can also do continuous, incremental backups.
+
+Typically, data is loaded into a warehouse from production databases and other sources. Data can then be analyzed using *business intelligence (BI)* tools such as *QuickSight*, or even good-old SQL.

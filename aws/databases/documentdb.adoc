@@ -1,0 +1,3 @@
+= DocumentDB
+
+*Amazon DocumentDB* is a fully-managed document database service. It supports *MongoDB* workloads, and queries and indexes JSON data.

@@ -1,0 +1,27 @@
+= RDS
+
+Amazon's *Relational Database Service (RDS)* is a managed relational database service used for Online Transaction Processing (OLTP) use cases. It is highly available, fault tolerant, and very scalable.
+
+RDS is a good choice if you just need a traditional relational database. RDS supports all of the following database engines:
+
+* *MySQL* and *MariaDB*: MySQL is one of the most popular open source relational database management systems. MariaDB is a community-maintained fork of MySQL.
+
+* *PostgreSQL*: Advanced open source relational database management systems, which supports both relational (SQL) and non-relational (JSON) queries.
+
+* *Aurora*: This is Amazon's proprietary database engine, which is very scalable, very fast, and cost efficient. It is compatible with both MySQL and PostgreSQL databases.
+
+* *Oracle*: AWS offers support for Oracle Database under two licensing models: License Included and Bring Your Own License (BYOL).
+
+* *Microsoft SQL Server*: Several editions are supported.
+
+RDS runs in EC2 instances. So you need to choose your instance type when you launch a new RDS database. A single EC2 instance may hold one or more user-defined databases.
+
+RDS can be scaled _up_ by upgrading the instance type in the normal way. For example, you might need to scale up to achieve better write performance. Scaling up requires an outage, as you will need to shutdown then restart the newly-upgraded instance. (By comparison, DynamoDB allows you to dynamically modify its performance while the DB continues to run.)
+
+RDS also supports horizontal scaling. This is done by creating *read replicas* of your write database (there is always one *primary instance*, and it is always the *write* database). This requires your application being configured to interact with the appropriate database instance, depending on the operating being performed. You can't scale out the write operations — this is a solution for read-heavy workloads only.
+
+RDS also has a feature called *Multi-AZ*, in which we have standbys of instances — including the primary write databases — in other availability zones. Replication is synchronous, so the replicas are always up-to-date (writes happen across all replicas at the same time, and the write transaction is not complete until all replicas are updated). Multi-AZ deployments enable automatic disaster recovery. Even if the application is pointing to the primary database, it is actually pointing to an alias. When the primary is down, the alias is automatically redirected to its failover (this is a simple CNAME change). You can even have a read replica take over the role of the primary write database in a disaster recovery event.
+
+Read replicas are synchronized asynchronously. Read replicas could be in the same AZ, a different AZ, or even in a different region.
+
+Like all EC2 instances, EBS volumes are used for storage. Backups are made using EBS snapshots, saved to S2. You can encrypt both your RDS instances and/or their snapshots at rest, using AWS KMS encryption keys.

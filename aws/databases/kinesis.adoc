@@ -1,0 +1,21 @@
+= Kinesis
+
+*Amazon Kinesis* is actually made up of lots of different services that are all related to *streaming data* use cases. Example use cases include:
+
+* Purchases from online stores.
+* Stock prices.
+* Game data.
+* Social network data.
+* Geospatial data.
+* IoT sensor data.
+
+The commonality here is fairly large but consistent streams of small individual units of data. Kinesis is optimized to handle data streams like these.
+
+*Kinesis Data Streams* is a service that allows data producers to store data in shards for up to 7 days. Consumers then process the data and save it to another service.
+
+*Kinesis Data Firehose* serves data directly to another service, eg. S3, Splunk, Redshift, or Elasticsearch. It is completely automated, elastically scalable, and there are no shards — just a stream of data.
+
+*Kinesis Data Analytics* provides real-time SQL processing on streaming data.
+
+There is also a *video analytics* service in the Kinesis family.
+

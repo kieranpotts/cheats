@@ -93,6 +93,27 @@ image::./_/aws-networking.png[]
 
 == Databases
 
+* link:./databases/rds.adoc[RDS]
+* link:./databases/aurora.adoc[Aurora]
+* link:./databases/dynamodb.adoc[DynamoDB]
+* link:./databases/documentdb.adoc[DocumentDB]
+* link:./databases/redshift.adoc[Redshift]
+* link:./databases/emr.adoc[Elastic MapReduce (EMR)]
+* link:./databases/elasticache.adoc[ElastiCache]
+* link:./databases/memorydb.adoc[MemoryDB for Redis]
+* link:./databases/athena.adoc[Athena]
+* link:./databases/glue.adoc[Glue]
+* link:./databases/kinesis.adoc[Kinesis]
+* link:./databases/opensearch.adoc[OpenSearch]
+* link:./databases/data-exchange.adoc[Data Exchange]
+* link:./databases/msk.adoc[Managed Streaming for Kafka (MSK)]
+* link:./databases/data-pipeline.adoc[Data Pipeline]
+* link:./databases/quicksight.adoc[QuickSight]
+* link:./databases/neptune.adoc[Neptune]
+* link:./databases/qldb.adoc[QLDB]
+* link:./databases/managed-blockchain.adoc[Managed Blockchain]
+* link:./databases/custom.adoc[Custom databases]
+
 == Security
 
 * link:./security/secrets.adoc[Secrets]

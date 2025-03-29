@@ -1,0 +1,45 @@
+= DynamoDB
+
+*Amazon DynamoDB* is a fully-managed, serverless, NoSQL database services with *in-memory performance*, *low latency* (in milliseconds), *high I/O*, and both dynamic *auto-scaling* or manual *push-button scaling* with no downtime. It can be very cost effective for many storage use cases.
+
+DynamoDB can be used as both a *key-value store* and as a *document database*. The core components are:
+
+* *Tables*
+* *Items* (analogous to rows in relational DBs)
+* *Attributes* (each item has one or more attributes)
+
+Data is stored in *partitions* that are replicated across multiple availability zones in a region.
+As you data grows, it automatically gets stored across more partitions — so maintaining durability and redundancy at scale. Scaling happens without downtime.
+
+When you adjust the performance characteristics of your database, AWS automatically adjusts how data is stored to optimize read and write performance as you require.
+
+*DynamoDB Accelerator (DAX)* is an optional in-memory cache that sits in front of DynamoDB to achieve even lower latency.
+
+.Key features
+****
+* *Serverless*: Fully-managed, fault-tolerant, serverles.
+
+* *High availability*: 99.99% availability; SLA of 99.999% for global tables.
+
+* *NoSQL schema*: Flexible schema.
+
+* *Horizontal scaling*: Seamless scalability to any scale, with push-button or auto-scaling.
+
+* *DynamoDB streams*: Captures a time-ordered sequence of item-level modifications.
+
+* *Transaction options*: Strongly consistent or eventually consistent reads. Support for ACID transactions.
+
+* *Backup*: Point-in-time recovery, down to the second, from the last 35 days. On-demand backup and restore.
+
+* *Global Tables*: Fully-managed, multi-region, multi-master solution.
+****
+
+== Pricing
+
+Pricing can be based on either provisioned throughput or on-demand capacity.
+
+The first option means you choose a *provisioned capacity* and you pay for the volume of reads and writes that you have allocated. This is a good option when you understand the performance requirements ad usage patterns of your application.
+
+Otherwise, choose *on-demand capacity*. You will pay for the _actual_ read and write operations performed, without needing to worry about capacity planning.
+
+In addition, you pay for the *storage costs* of your data. Additional costs also apply for use of the Global Tables service, DynamoDB Streams, backups and restore, and other add-on features.

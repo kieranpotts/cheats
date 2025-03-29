@@ -1,0 +1,9 @@
+= Glue
+
+*AWS Glue* is a fully-managed *extract, transform, and load (ETL)* service. It is used to prepare data for analytics. Commonly, it is used to build tables in Athena.
+
+AWS Glue runs the ETL jobs on a fully-managed, scale-out Apache Spark environment. (You could also use Apache Hive for this purpose.)
+
+AWS Glue discovers data and stores the associated metadata (eg. table definition and schema) in the AWS Glue Data Catalog. You can use a *crawler* to populate the AWS Glue Data Catalog with data tables. A crawler can crawl multiple data stores in a single run. Upon completion, the crawler create or updates one or more tables in your Data Catalog.
+
+It works with data lakes (eg. data in S3), data warehouses (including Redshift), and data stores (including RDS and other EC2-hosted databases).

@@ -1,0 +1,15 @@
+= Elastic MapReduce (EMR)
+
+Hadoop is a framework for *big data* (ie. analytics on very large quantities of data). EMR is a managed implementation of Hadoop.
+
+Use cases include processing data for analytics and business intelligence, and also for transforming and moving very large amounts of data (for example in a data migration scenario).
+
+A MapReduce system performs *extract, transform, and load (ETL)* functions, ie. extracting data from one system and transforming it into some other database format and schema.
+
+Data storage options include:
+
+* S3 / S3 Glacier
+* Redshift
+* DynamoDB
+* RDS
+* HDFS (also from Hadoop)

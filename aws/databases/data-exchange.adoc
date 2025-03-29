@@ -1,0 +1,19 @@
+= Data Exchange
+
+*AWS Data Exchange* is used to subscribe to data feeds from third-party data providers/publishers — services like "apptopia" (for performance data on mobile apps) and "SimilarWeb" (for global website rankings).
+
+Subscribers fetch the data feeds from the Data Exchange API, which provides a uniform abstraction of thousands of third-party APIs. For example, you might use a Lambda function to fetch the feeds and port the data to your own stores.
+
+There are currently over 3,500 data sets from more than 300 publishers. You, too, can use Data Exchange to publish your own data feeds, for others to subscribe to.
+
+There are a few related products:
+
+* *Data Exchange for S3*: Subscribers can find, subscribe to, and use third-party files directly from publishers' S3 buckets.
+
+* *Data Exchange for Lake Formation*: Get access to live, ready-to-use structured tables through Lake Formation.
+
+* *Data APIs*: Use IAM credentials and SDKs to call data APIs from all of the data providers in Data Exchange.
+
+* *Data Files*: Automatically export new or updated data to your S3 buckets.
+
+* *Data Tables*: Find and subscribe to third-party data in Data Exchange, and directly query that data in minutes via Redshift.

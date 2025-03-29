@@ -1,0 +1,21 @@
+= Managed Streaming for Kafka (MSK)
+
+*Amazon MSK* is a fully-managed service that enables you to build and run applications that use Apache Kafka to process streaming data. This service is used for ingesting and processing streaming data in real-time.
+
+This is an alternative to Kinesis, which is proprietary to Amazon.
+
+MSK provides the control-plane operations, such as those for creating, updating, and deleting clusters. Kafka itself provides the data-plane operations — those for producing and consuming data.
+
+Components of MSK include:
+
+* *Topics*: The Kafka name for data streams.
+
+* *Producers*: Kafka clients that publish data to topics.
+
+* *Consumers*: Kafka client that read data from topics
+
+* *Kafka clusters*: At the core of MSK is a set of Kafka brokers, coordinated by Zookeeper nodes.
+
+* *Broker nodes*: These are Kafka servers that store data and serve clients. Clusters typically contain multiple brokers to ensure data reliability and availability.
+
+* *Zookeeper nodes*: Manage and coordinate the Kafka brokers. MSK automatically sets up a highly available *Zookeeper ensemble* (ie. Zookeeper nodes) for every Kafka cluster.
