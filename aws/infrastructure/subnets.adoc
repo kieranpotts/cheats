@@ -1,7 +1,0 @@
-= Subnets
-
-Within availability zones we create *subnets*. A subnet is an *IP space* and it may be public or private. Public subnets have public accessibility, while private subnets do not have any direct connectivity from the outside world.
-
-We launch resources into our subnets. We can achieve high availability by launching resources into subnets across different availability zones.
-
-See the networking section for more information on subnets.

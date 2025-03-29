@@ -1,14 +1,12 @@
-= Virtual Private Clouds (VPC)
+= Virtual Private Clouds (VPCs)
 
-This section introduces basic networking concepts in AWS, through a series of practical steps that will build a virtual private cloud that looks like this:
+A *Virtual Private Cloud (VPC)* is like a private network to isolate a group of resources that sit within it. Each VPC is isolated from other VPCs, even those in the same availability zones.
 
-image::../_/aws-networking.png[]
+A VPC is region-specific, meaning it is created within a single AWS region. But a single VPC can actually span multiple availability zones within the same region. In fact, this is one of the main advantages of using a VPC. It allows resources to be distributed across multiple AZs, adding redundancy to your architecture to achieve high availability and fault tolerance (if one AZ goes down, you can failover to resources in other AZs). Leveraging multiple AZs also allows for better resource scaling and balancing.
 
-We start with VPCs.
+When you create a VPC, you will create an IPv4 *CIDR range*, which is used to define the range of IP addresses that is reserved for use within the VPC. The CIDR range must be unique to the VPC and cannot overlap with the CIDR ranges of other VPCs in the same region and associated with the same account. Resources launched into a VPC can be assigned IP addresses from the VPC's CIDR range, for the purpose of routing traffic.
 
-A *Virtual Private Cloud (VPC)* is like a private network to isolate a group of resources that sit within it.
-
-When you create a VPC, you will create an IPv4 *CIDR range*. A CIDR range is a notation that specifies a range of IP addresses. Examples:
+A CIDR range is a notation that specifies a range of IP addresses. Examples:
 
 * 10.0.0.0/24
 * 10.0.0.0/16
@@ -33,12 +31,5 @@ Each octet (the digits between the dots) can be between 0 and 254 – an 8-bit i
 |===
 
 Inputting `10.0.0.0/16` for your CIDR range will give you 65,536 possible IP addresses, in the range 10.0.0.1 to 10.0.255.254, which will be more than sufficient for most networking requirements.
-
-[TIP]
-======
-IP Subnet Calculator: https://www.calculator.net/ip-subnet-calculator.html
-
-image::../_/ipv4-subnet-calculator.png[]
-======
 
 image::../_/create-vpc.png[]

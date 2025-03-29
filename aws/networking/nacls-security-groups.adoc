@@ -1,14 +1,13 @@
 = NACLs and security groups
 
-Network access control list (NACL) is like a virtual firewall that protects a whole subnet, controlling traffic in and out of it. It's another layer of protection around a subnet.
+A *network access control list (NACL)* is like a virtual firewall that protects a whole subnet, controlling traffic in and out of it. It's another layer of protection around a subnet.
 
 A NACL is stateless, so if you allow some traffic in to the subnet, it doesn't remember that state and automatically allow it back out. You must have a corresponding outbound rule.
 
 Most people leave the NACL in its default configuration, which is to allow all traffic in and all traffic out. Often, that's sufficient security, because you already have routes and security groups.
 
-One thing people do use NACLs for is to block an IP address at the subnet level. That's a good use case for NACLs. But normally you just leave the defaults but it's there as an added layer of protection if you need it.
+One thing people do use NACLs for is to block an IP address at the subnet level. That's a good use case for NACLs. But normally you just leave the defaults, but it's there as an added layer of protection if you need it.
 
-A NACL protects a subnet, but once a communication gets through the NACL, you have security groups that protect the individual resources within the subnet. Every EC2 instance gets associated with a security group.
+A NACL protects a subnet, but once a communication gets through the NACL, you have *security groups* that protect the individual resources within the subnet. Every EC2 instance gets associated with a security group.
 
 Unlike a NACL, a security group is stateful. If some traffic is allowed through by an inbound rule, its going to remember that state and allow the response out.
-

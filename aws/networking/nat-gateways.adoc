@@ -37,7 +37,7 @@ sudo yum update -y
 
 This will fail, because the private subnet does not have a route to the internet gateway. To allow the private subnet to access the internet, you need to create a *NAT gateway*.
 
-A NAT gateway allows resources to reach out to the internet, but disallows incoming traffic from the internet. A NAT gateway is a network address translation (NAT) service that allows instances in a private subnet to connect to the internet, or other services outside the VPC, but external services cannot initiate a connection with those instances.
+A NAT gateway allows resources to reach out to the internet, but disallows incoming traffic from the internet. A NAT gateway is a *network address translation (NAT)* service that allows instances in a private subnet to connect to the internet, or other services outside the VPC, but external services cannot initiate a connection with those instances.
 
 To create a NAT gateway, you will actually create it in your public subnet, because the public subnet has a route to the internet gateway. And then you will use your private route table to create a route to that NAT gateway.
 

@@ -1,10 +1,10 @@
 = Subnets
 
-Within a VPC you will have isolated networks called *subnets*. A subset is a defined range of network IP addresses within a VPC's CIDR range.
+Within a VPC you will have isolated networks called *subnets*. A subset is a defined range of network IP addresses — an *IP space* — within a VPC's CIDR range.
 
-Subnets are used to increase the security and efficiency of network communications. You can think of them as postcodes, which help to more efficiently route mail than could be achieved using just the street address and city.
+Subnets are used to increase the security and efficiency of network communications. You can think of them as postcodes, which help to route mail in a more efficient way than could be achieved using just the street address and city.
 
-Subnets are created within a VPC.
+Subnets are created within a VPC, but each subnet must be mapped to exactly one availability zone.
 
 image::../_/create-subnet.png[]
 

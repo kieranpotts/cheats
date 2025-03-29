@@ -1,6 +1,6 @@
 = Route tables
 
-If you try again to SSH into the EC2 instance... it still won't work. This is because the subnet does not have a route to the internet gateway. You then need to give the public subnet a *route* to your internet gateway. This is done using something called a *route table*, which has this symbol:
+If you try again to SSH into the EC2 instance… it still won't work! This is because the subnet does not have a route to the internet gateway. You need to give the public subnet a *route* to your internet gateway. This is done using something called a *route table*, which has this symbol:
 
 image::../_/route-table.png[]
 

@@ -4,16 +4,16 @@ Once a new instance is running inside a subnet, you can select the instance from
 
 The reason is there is no route from the internet to the instance.
 
-Resources created within different subnets within the same VPC can communicate with each other automatically. This is the default behavior. This private traffic between a VPC's subnets is represented by the two-way arrows in the network diagram at the top of this diagram. But to allow public access into a subnet and its resources, you need to create a gateway, specifically an *internet gateway*, which is represented by this symbol:
+Resources created within different subnets within the same VPC can communicate with each other automatically. This is the default behavior — private traffic between resources within a VPC's subnets works out-of-the-box. But to allow public access into a subnet and its resources, you need to create a gateway, specifically an *internet gateway*, which is represented by this symbol:
 
-image::../_/internet-gateway.png[]
+image::../_/internet-gateway.png[Symbol for an internet gateway]
 
 [NOTE]
 ======
 A gateway, in general, connects one computer network to another computer network. An internet gateway connects a computer network to the internet. Other types of gateways include transit gateways and NAT gateways.
 ======
 
-To crete an internet gateway, go to *VPC* > *Internet gateways* > *Create internet gateway*. Give the gateway a name, and then click *Create internet gateway*. You can only have one internet gateway per VPC.
+To create an internet gateway, go to *VPC* > *Internet gateways* > *Create internet gateway*. Give the gateway a name, and then click *Create internet gateway*. You can have only one internet gateway per VPC.
 
 image::../_/create-internet-gateway.png[]
 
