@@ -133,3 +133,12 @@ The above example will return a list of metadata that you can request. You can t
 http://169.254.169.254/latest/meta-data/local-ipv4
 ----
 
+== Access keys and user roles
+
+Access keys and user roles are two ways that we can give EC2 instances — and, by extension, the applications running inside of them — permission to programmatically access other AWS resources and services.
+
+*Access keys* are associated with IAM users and they grant all the permissions (via IAM *policies*) that the user has. Access keys are stored in plain text within a running EC2 instance. Access keys are long-term credentials, so they are convenient, but they are also less secure than user roles.
+
+User *roles* are a more secure solution. No credentials are stored within a running EC2 instance, and the permissions are granted only temporarily. Like any other principal, an EC2 instance may "assume" a role for a short time, to gain temporary access to AWS resources and services, such as an S3 bucket.
+
+We use the *Security Token Service (STS)* to get temporary access keys with the permissions associated with the requested role.

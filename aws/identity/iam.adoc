@@ -80,7 +80,7 @@ A user can assume a role by using the API call `sts:AssumeRole` (the user must h
 
 [TIP]
 ======
-Roles, rather than access keys, SHOULD be used for programmatic access to AWS resources from your applications that run in EC2 instances.
+Roles, rather than access keys, SHOULD be used for programmatic access to AWS resources and services from your applications that run in EC2 instances. See the documentation on EC2 for more information.
 ======
 
 == Service Control Policies (SCPs)
