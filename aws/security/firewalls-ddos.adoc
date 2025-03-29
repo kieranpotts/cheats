@@ -14,6 +14,8 @@ The rules defined in WAF are known as *Web ACLs* (Web Access Control Lists).
 
 WAF instances could be put in front of CloudFront, ALBs, API Gateways, AppSync, or directly in front of EC2 instances.
 
+A WAF can even be used to protect on-premises resources if they are deployed behind an Application Load Balancer (ALB). In this scenario the on-premises website servers are added to a target group by IP address. The ALB has a WAF WebACL attached to it and distributes connections to the on-premises website.
+
 === AWS Shield
 
 *AWS Shield* is a managed *distributed denial of service (DDoS)* protection and mitigation service. DDoS attacks can be quite sophisticated, so you need a sophisticated always-on detection system, with automatic *inline mitigations*. AWS Shield will minimize application downtime and latency in the event of a DDoS attack.

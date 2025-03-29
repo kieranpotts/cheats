@@ -16,4 +16,4 @@ To access the AWS Management Console, it is better to do so using a dedicated IA
 
 To further reduce the need for root access, you can also enable billing access for IAM users. To do this, go to your *Account* page under *Billing and Cost Management* (this is accessed via the account dropdown in the far top-right corner of the AWS Management Console). Scroll down to *IAM user and role access to billing information* and click *Edit*. Check the box to give IAM users access to billing and cost management.
 
-There will still be a few use cases where you will need to access AWS using the root user. For example, when you want to close your AWS account, or when you want to change the email address associated with the account. Otherwise, the root user should not be used.
+There will still be a few use cases where you will need to access AWS using the root user. For example, when you want to close your AWS account, or when you want to change the account name or the email address associated with the account, or when you want to change support plans, and so on. Otherwise, the root user should not be used.

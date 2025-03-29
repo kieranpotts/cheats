@@ -1,6 +1,8 @@
 = Simple File Storage (S3)
 
-S3 is AWS's object storage service. It is enormous scalable and durable. A single bucket can store millions of objects — with each object up to 5TB in size — and the SLA declares eleven 9s of durability — that's 99.999999999% or, to explain it another way, if you stored 10 million objects, you would expect to lose one object every 10,000 years.
+S3 is AWS's object storage service. It is enormous scalable and durable. A single bucket can store an *unlimited amount of data* and an unlimited number of objects. Each individual object can be up to 5TB in size, with the largest object that can be uploaded in a single PUT request being 5GB.
+
+The SLA declares eleven 9s of durability — that's 99.999999999% or, to explain it another way, if you stored 10 million objects, you would expect to lose one object every 10,000 years.
 
 S3 is used for a wide variety of use cases, including backup and restore, archiving, big data analytics, and content distribution. S3 can even be used for *static site hosting* — you just need to put CloudFront in front to enable HTTPS.
 

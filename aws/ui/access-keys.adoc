@@ -7,4 +7,6 @@ For programmatic access via the HTTP API or CLI, users will need *access keys*. 
 * *Access key ID*
 * *Secret access key*
 
-In addition, the AWS *Security Token Service (STS)* can be sued to generate short-ter access credentials.
+Customers should rotate their access keys regularly.
+
+In addition, the AWS *Security Token Service (STS)* can be used to generate short-term access credentials.
