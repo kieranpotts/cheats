@@ -77,11 +77,13 @@ image::./_/aws-networking.png[]
 == Compute
 
 * link:./compute/ec2.adoc[EC2]
-* link:./compute/batch.adoc[Batch]
 * link:./compute/lightsail.adoc[Lightsail]
-* link:./compute/containers.adoc[Container services]
+* link:./compute/ecs.adoc[Elastic Container Service (ECS)]
+* link:./compute/batch.adoc[Batch]
 
 == Storage
+
+* link:./storage/ebs.adoc[Elastic Block Store (EBS)]
 
 == Databases
 

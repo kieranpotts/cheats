@@ -1,0 +1,7 @@
+= Lightsail
+
+*Lightsail* is Amazon's "Simple Cloud Server". It is another compute service that is similar to EC2, but the difference is Lightsail's user interface is much simpler. Lightsail is suitable for customers who do not have a strong background in cloud computing. It can be thought of as a competitor to "no-frills" cloud computing providers like Digital Ocean and Vultr.
+
+On Lightsail, the cost of virtual servers start at $3.50/month for Linux, $8/month for Windows. The costs are generally cheaper than EC2, but there are fewer features. You can still add devices like load balancers in front of Lightsail VMs, but the virtualization system itself does not come with features like auto-scaling.
+
+Lightsail is a good choice if you do not require the high-end compute power of EC2, and you do not need EC2's advanced optimization features.

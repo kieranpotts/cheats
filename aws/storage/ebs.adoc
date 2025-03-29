@@ -1,0 +1,7 @@
+= Elastic Block Store (EBS)
+
+*Elastic Block Store (EBS)* is a high-performance block storage services using by EC2 instances. EBS volumes are used as the primary storage for EC2 instances, and can be used to store data, applications, and operating systems.
+
+EBS supports multiple volume types, including SSD and HDD. SSD is a good choice for transactional workloads, while HDD is good for throughput-intensive workloads.
+
+You can create point-in-time backups of your EBS volumes, called *snapshots*.

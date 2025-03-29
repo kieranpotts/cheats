@@ -1,0 +1,90 @@
+= Elastic Container Service (ECS)
+
+AWS supports the use of Docker containers for deployment of applications.
+
+Docker is an ideal choice for *cloud-native applications* — that is, things lke microservices that are designed from the ground-up to be deployed into distributed, virtualized environments, and which have a high degree of decoupling from the underlying infrastructure on which they run, and even from things like network messaging (for communication between components).
+
+The *Elastic Container Service (ECS)* is the service we use to launch Docker containers in AWS. Only Docker containers are supported by AWS at this time, but both Linux and Windows Docker containers are supported.
+
+With ECS, we can choose to deploy an *ECS cluster*, which may span multiple availability zones. An ECS cluster is a logic grouping of tasks or services.
+
+// TODO: Diagram.
+
+An *ECS task* is a single instance of a running Docker container. A task comes from a *task definition*, which is a blueprint for the things we want to run in a container. A task definition is required to run Docker containers in ECS. A task definition is a JSON text file that defines one or more containers, up to a maximum of 10.
+
+Each container definition requires a reference to an *image*, which is a packaged version of the application we want to run in the container.
+
+We can also deploy *ECS services* within an ECS cluster. This is used to maintain long-running tasks, to control the number of running tasks or enable auto-scaling, to attach load balancers, and so on.
+
+ECS integrates with *Elastic Load Balancing (ELB)*, so we can use an ELB to distribute traffic across containers using an *Application Load Balancer (ALB)* or a *Network Load Balancer (NLB)*.
+
+== Container image registries
+
+Images may be pulled from the AWS *Elastic Container Registry (ECR)*, or any other Docker registry, such as Docker Hub.
+
+ECR supports private Docker repositories, with resource-based policies used for access control (managed via IAM).
+
+You can use the Docker CLI to push, pull, and manage images in ECR.
+
+== Launch types
+
+There are two optional "launch types" for ECS:
+
+* *EC2* launch type: You manage the underlying EC2 instances that will host your containers.
+* *Fargate* launch type: AWS fully manages the underlying compute, cluster, and scaling.
+
+=== EC2 container instances
+
+An *EC2 container instance* is an EC2 instance that hosts an ECS container.
+
+We use an *EC2 launch type* to launch EC2 instances into our account, and those instances must have the *EC2 Container Agent* running, so we can join them into an ECS cluster. Those EC2 instances become the hosts on which our containers are run.
+
+Unlike ECS tasks and services (which are a bit more "serverless"), we manage ourselves the EC2 instances that are used to host our ECS container instances. However, you get all the normal features of EC2, including auto-scaling. You have more work to do to optimize your container clusters, but the trade-off is you get more control over the infrastructure.
+
+// TODO: Diagram.
+
+EC2 container instances support EFS, FSx, and EBS for storage options.
+
+When using EC2 container instances as hosts for our ECS tasks, we will be charged per running EC2 instance (plus storage etc.) as per the normal EC2 pricing model.
+
+=== Fargate
+
+// TODO: Diagram.
+
+Fargate is a serverless service. So, unlike with ECS where we have the option of managing the underlying infrastructure on which our containers run, using EC2 instances as hosts for ECS container instances, with Fargate we don't have any control over the underlying infrastructure. That is fully abstracted away.
+
+Fargate automatically provisions the compute resources needed to run our containers, and you are charged for running tasks (rather than running instances).
+
+For file system mounting, only EFS is supported with Fargate. EBS and FSx are not supported.
+
+== IAM roles
+
+When using ECS, we need to provide permissions to our container instances and to the running tasks.
+
+// TODO: Diagram.
+
+Policies attached to container instances will provide permissions to the _host_. The following example allows an EC2 container to access parts of the ECS service.
+
+.AmazonEC2ContainerServiceforEC2Role
+[source,json]
+----
+{
+  "Effect": "Allow",
+  "Action": [
+    "ec2:DescribeTags",
+    "ec2:CreateCluster",
+    "ec2:DeregisterContainerInstance",
+    // Etc.
+  ]
+}
+----
+
+Tasks also need to be given permissions (usually via IAM roles) to access AWS services.
+
+With the Fargate launch type, the container instance role is replaced with the *task execution role*, which provides the necessary permissions to execute the task. But we still need to provide the task with our own IAM role that provides access to other services and resources, like S3 or DynamoDB, as required by the containerized application.
+
+=== Orchestration
+
+ECS offers fully-managed container *orchestration* — the control plane is managed for you.
+
+*ECS Anywhere* is a service that enables the use of ECS to orchestrate on-premises container system implementations.

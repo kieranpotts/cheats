@@ -1,0 +1,9 @@
+= Batch
+
+*AWS Batch* is a managed service to run *batch jobs*. A batch job is a unit of work, typically implemented as a shell script (or otherwise using a low-level programming language), executable, or a Docker image, and which requires quite a bit of compute power.
+
+A batch job is defined in a *job definition* and added to a *job queue*, until scheduled onto a *batch compute environment* which builds and run everything.
+
+AWS Batch is a managed service, so all of the necessary resource provisioning is done for you. The system works out how much compute you wil need, and provisions it automatically. It is also possible to run batch jobs as an *unmanaged* service.
+
+Batch jobs may be run in EC2 or a container service (ECS or Fargate).
