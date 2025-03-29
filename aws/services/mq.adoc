@@ -1,0 +1,3 @@
+= MQ
+
+*Amazon MQ* is similar to EventBridge in that it is another message broker service. It is based on Apache *ActiveMQ* and *RabbitMQ*, so it is a great option for customers who want to use industry-standard APIs and protocols, rather than the proprietary APIs and protocols of EventBridge, SQS and SNS.

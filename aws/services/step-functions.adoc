@@ -1,0 +1,11 @@
+= Step Functions
+
+*AWS Step Functions* is a service that coordinates the components of a distributed application. For example, a Step Function may check the output from a Lambda function and, depending on the result, run other functions or trigger other events.
+
+AWS Step Functions is like a *state machine*. There's a GUI in the web console that makes it easy to visually build, and watch the execution of, executable steps in a distributed workflow.
+
+The steps in a workflow are defined in the JSON-based *Amazon States Language* (ASL). The visual console automatically graphs the steps to represent their execution order.
+
+When you start an execution, the console highlights the real-time states of each step. It also provides a detailed history of past executions. This is how you can verify that your workflows are working as expected.
+
+AWS Step Functions also automatically scales the underlying compute layers, ensuring the application components execute reliably, even under increased demand.

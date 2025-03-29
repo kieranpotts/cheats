@@ -1,0 +1,11 @@
+= Simple Notification Service (SNS)
+
+While SQS is a pull-based integration service, SNS is more push-based, and it is more widely used for one-to-many communication patterns.
+
+SNS is a fully managed pub/sub messaging service. A *publisher* creates a *topic*, to which various *subscribers* listen. There is _instantaneous_ push-based delivery out to subscribers — no polling required.
+
+Subscribers could be web apps, Lambda functions, or even an SQS queue. Publishers can be any AWS service that can send messages to SNS, including CloudWatch alarms, CloudTrail logs, and even custom applications.
+
+For transporting messages to subscribers, multiple transport protocols are supported, including HTTP/S, email, and SMS. Thus, SNS can be used to send messages to mobile devices and to email.
+
+SNS is billed on a pay-as-you-go basis.

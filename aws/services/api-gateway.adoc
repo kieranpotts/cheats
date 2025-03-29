@@ -1,0 +1,9 @@
+= API Gateway
+
+*Amazon API Gateway* is a fully-managed service. It is like an API that sits in front of other APIs that are internal to AWS. The purpose of an API Gateway is to act as a "front door" to your services. It plays host to the public API of your services, and it routes the traffic that comes in from the internet to the appropriate backing services.
+
+An API Gateway sits within a region. We can connect to it over the internet using any HTTP client. It also supports WebSockets.
+
+An API Gateway may forward requests to, for example, Lambda functions (in the same region) or EC2 instances (in a VPC in the same region).
+
+You can talk to almost any other AWS service from an API Gateway. An API Gateway can also talk _out_ to other public API endpoints served from elsewhere on the web, which could be a service being served from an on-premised data center. Thus, an API Gateway can sit in front of both internal and external services.

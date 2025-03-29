@@ -1,0 +1,22 @@
+= EventBridge
+
+*Amazon EventBridge* is a serverless *event bus*. As with SNS and SQS, this service falls under the category of "integration services" that provide the communication links between loosely coupled components in distributed systems.
+
+[NOTE]
+======
+Amazon EventBridge is the successor to Amazon CloudWatch Events. Both services are available in the AWS console, but they are essentially the same service.
+======
+
+EventBridge supports many event sources, including:
+
+* Other AWS services.
+* Custom applications, such as those running in EC2 instances.
+* External SaaS applications.
+
+These *sources* send events to the EventBridge event bus. The event bus can then route these events to various *targets*.
+
+Which targets receive the events is determined by *rules* that you define in the EventBus service. Rules are created very easily through a graphical wizard, which has lots of deep integrations with other AWS services.
+
+SNS is often used as a target, where you want to send notifications for events such as termination of EC2 instances.
+
+EventBridge is intended to be used as the backbone for event-driven application, responsible for processing state changes in application resources. But it is a very versatile system and can really be used for managing all sorts of events at both the application and system levels.

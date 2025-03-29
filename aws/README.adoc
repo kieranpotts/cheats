@@ -114,6 +114,18 @@ image::./_/aws-networking.png[]
 * link:./databases/managed-blockchain.adoc[Managed Blockchain]
 * link:./databases/custom.adoc[Custom databases]
 
+== Application services
+
+* link:./services/serverless.adoc[Serverless services]
+* link:./services/lambda.adoc[Lambda]
+* link:./services/sqs.adoc[Simple Queue Service (SQS)]
+* link:./services/sns.adoc[Simple Notification Service (SNS)]
+* link:./services/event-bridge.adoc[EventBridge]
+* link:./services/mq.adoc[MQ]
+* link:./services/step-functions.adoc[Step Functions]
+* link:./services/snf.adoc[Simple Workflow Services (SWF)]
+* link:./services/api-gateway.adoc[API Gateway]
+
 == Security
 
 * link:./security/secrets.adoc[Secrets]

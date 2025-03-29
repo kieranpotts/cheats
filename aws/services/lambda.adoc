@@ -1,0 +1,23 @@
+= Lambda
+
+*AWS Lambda* is a store of function. A function is evoked in in response to some kind of trigger, which is communicated via an event.
+
+An event could come from any other AWS service or resource. Alternatively, an event could be a direct invocation of a Lambda function via the AWS API.
+
+Functions can be invoked synchronously or asynchronously. With *synchronous* invocation, applications wait for the function to process the event and return a response (a success or failure outcome). With *asynchronous* invocation, Lambda queues the event for processing and returns a response immediately — just to acknowledge it has received the invocation requests. The client is not automatically informed of the outcome of the function's invocation (you will have to setup another chain of events if you want this information to make its way back to the application).
+
+If the code run by a Lambda function accesses other AWS services and resources, IAM roles should be used to give the function the necessary permissions.
+
+Lambda functions are regional, and so they do not have access to VPCs by default. If we want a function to have access to a resource in a VPC, such as an EC2 instance, we have to comment the Lambda function to the VPC. Then, from Lambda, you select the VPC, subnet, and security groups, and then Lambda will create an *Elastic Network Interface (ENI)* in those subnets. The function will also need to have the relevant permissions to create the ENI, so that permission must be in the policy of the role used to execute the function.
+
+If a Lambda function is required to call out to the wider internet, a NAT gateway will be required. This will be the part of the VPC that the Lambda function connects too. The NAT gateway would need to be deployed into a public subnet with the VPC.
+
+Pricing is based on the memory assigned to functions by you, and the duration of the function execution. You assign memory to a function, but Lambda will then allocate a proportional amount of compute power (CPU). Billing is done by the millisecond of usage.
+
+Besides the memory allocation, you can also specify the maximum execution time for a function. The maximum allowed setting is 15 minutes.
+
+Lambda supports multiple programming languages natively: Java, Go, Powershell, JavaScript (via Node.js), C#, Python, and Ruby.
+
+Scaling is entirely automated. Lambda scales horizontally by running multiple instances of a function in parallel, up to the concurrency limit set by you.
+
+Lambda integrates with CloudWatch for seamless monitoring and logging.

@@ -1,0 +1,5 @@
+= Simple Queue Service (SQS)
+
+This is a serverless *message queue* system. Like the Simple Notification Service (SNS), it is in the category of "integration services" that provide the communication links between components in distributed cloud applications.
+
+EC2 instances or Lambda functions can poll the message queue, looking for new messages. So SQS is primarily used as a pull-based, one-to-one message queue. However, it is also possible to have Lambda functions respond to events emitted by the queue, thus you can use Lambda functions to process new messages added to the queue.
