@@ -1,0 +1,73 @@
+= Auto-scaling
+
+Auto-scaling is all about launching and terminating instances dynamically as demand changes — ie. horizontal scaling. It provides *elasticity* (ie. scaling out and in, to meet demand while minimizing costs), and *availability* (ie. replacing failed instances and providing just enough resources to maintaining a steady state).
+
+In AWS, auto-scaling is primarily a feature of EC2, but by extension is also applied to ECS and EKS. The auto-scaling system automatically launches and terminates instances based on whether the instances are under- or over-utilized, or if they need to be replaced (because they are not performing as expected), or if you need to adjust capacity of the cluster as a whole (eg. to increase availability).
+
+Auto-scaling integrates with lots of other AWS services, including:
+
+* *CloudWatch* for monitoring. Instances constantly send information to CloudWatch — things like metrics on the CPU utilization — which can be used by auto-scaling to determine whether to scale  the cluster out or in, so adding or terminating individual nodes.
+
+* *Elastic Load Balancing* for distributed connections, so the LB automatically knows about changes in instances to which it can distribute traffic.
+
+* *VPC*, because we want to deploy new instances within the VPC and across availability zones.
+
+Auto-scaling working like this:
+
+* Across AZs, we define an *auto-scaling group (ASG)*.
+
+* In the ASG, we might define that we want four instances within that group, to maintain a steady state. The auto-scaling rules we define in a *scaling policy*.
+
+* The instances in the ASG send metrics to CloudWatch — every 5 minutes for basic monitoring, or every 1 minute for detailed monitoring.
+
+* If resources are limited, eg. if CPU utilization is above 80% across all four instances — CloudWatch will notify the ASG to launch a new node. You choose the thresholds which trigger alarms in CloudWatch.
+
+This is an *automatic scaling* scenario. Another scenario may be to *maintain availability*. If an EC2 status check fails on one instance, CloudWatch can notify Auto-Scaling and the ASG can replace the failed instance.
+
+It is also possible to define *scaling policies* that adjust resources on a schedule, rather than based on metrics. This can be useful when you can anticipate changes in demand at certain times.
+
+.Types of auto-scaling
+****
+* *Manual*: You manually add or remove instances from the ASG.
+* *Dynamic*: The ASG automatically adds or removes instances based on demand, determined by various sources of metrics.
+* *Predictive*: Uses machine learning to predict demand, based on past usage, and scale the ASG accordingly.
+* *Scheduled*: Based on a schedule.
+****
+
+== Launch configuration
+
+Auto-Scaling requires a *Launch Template* that specifies a configuration for an EC2 instance, including:
+
+* AMI
+* Instance type
+* Security groups
+* Key pair
+* IAM instance profile
+* User data
+* Shutdown behavior
+* Termination protection
+* Placement group name
+* Capacity reservation
+* Tenancy
+
+There's also something called *Launch Configs*, which are an older system and have fewer options. These are now deprecated in favour of Launch Templates.
+
+Besides the Launch Template, we also need to specify:
+
+* Purchasing options, eg. on-demand versus spot.
+* The VPC and subnets to launch instances into.
+* Load balancers.
+* Configuration for health checks (for both the EC2 instances and their load balancers).
+* Group size and scaling policies.
+
+== Scaling policies
+
+Scaling policies are the policies we apply to our ASGs to define how we want an ASG to behave. There are a few different types of policy.
+
+* *Target tracking*: Attempts to keep the group at, or close to, the target metric, eg. we might say we want our instances to be using about 70% CPU each (on average, as an aggregate across the group). This sort of metric strikes a balance between limiting the likelihood of performance problems and not wasting resources. The ASG will terminate instances if the CPU usage drops down, and it will launch instances if it goes above the threshold.
+
+* *Simple scaling*: Adjusts the group size based on a metric, eg. "launch another instance when > 80% CPU usage".
+
+* *Step scaling*: Adjust group size based on a metric. Adjustments vary based on the size of the alarm breach, eg. if you're just a little bit above your threshold, then it may launch one instance, but if it's much more above the threshold, you might want more instances launched. You can define multiple stepped thresholds.
+
+* *Scheduled scaling*: Adjust the group size at a specific time, eg. at 8am on a Monday morning, launch 10 instances. And at 6pm on a Friday, terminate them again. It takes a while for dynamic scaling to kick-in, so if you can predict changes in demand, then scheduled scaling is a good option to maintain high availability.

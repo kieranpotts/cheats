@@ -114,6 +114,13 @@ image::./_/aws-networking.png[]
 * link:./databases/managed-blockchain.adoc[Managed Blockchain]
 * link:./databases/custom.adoc[Custom databases]
 
+== DNS, auto-scaling, and load-balancing
+
+* link:./routing/route53.adoc[Route53]
+* link:./routing/auto-scaling.adoc[Auto-scaling]
+* link:./routing/load-balancers.adoc[Load balancers]
+* link:./routing/health-checks.adoc[Health checks]
+
 == Application services
 
 * link:./services/serverless.adoc[Serverless services]

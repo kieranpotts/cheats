@@ -1,0 +1,29 @@
+= Load balancers
+
+*Amazon Elastic Load Balancing (ELB)* is a family of load balancing systems that are all about distributing load evenly between a range of different types of target resource.
+
+Load balancing provides high availability and fault tolerance for your applications.
+
+ELBs distribute load across availability zones, but not regions.
+
+An ELB instance is a single IP endpoint — a DNS name or IP address — behind which a bunch of different target resources sit. Targets could be:
+
+* EC2 instances.
+* ECS containers.
+* IP addresses.
+* Lambda functions.
+* Other load balancers (you can chain LBs together — there are some use cases where this can be advantageous).
+
+Load balancers implement their own health checks on their targets, and they will send traffic only to healthy instances. If an instance becomes unhealthy, the ELB will stop sending traffic to it until it becomes healthy again. An ELB can also tell an Auto-Scaling Group to replace failing instances, and in turn the ASG tells ELBs about new instances that is creates, and old ones it has terminated.
+
+If an ELB sits in front of multiple availability zones, then the Auto-Scaling Group should also span the same AZs. ASGs try to spread load across multiple AZs, while ELBs distribute connectivity to all the available instances across all those AZs.
+
+There are different types of load balancer available in the AWS Elastic Load Balancer family:
+
+* The *Application Load Balancer (ALB)* is a layer 7 load balancer, operating at the request level, routing based on the content of the request message. It has access to the host header information, eg. domain name and URL path, so supporting host-based routing, path-based routing, query-string parameter routing, and source IP address-based routing. ALB can sit in front of EC2 instances, IP addresses, Lambda functions, and containers as targets.
+
+* The *Network Load Balancer (NLB)* is a layer 4 load balancer, operating at the connection level and routing connections based on IP protocol data — TCP, TLS, UDP, and TCP_UDP. It offers ultra low latency and TLS offloading at scale. An NLB can have a static IP address, which are *elastic IPs* in each availability zone. By giving an NLB a static IP address, it means you can hardcode the IP and whitelist it in firewalls, etc.
+
+* The *Gateway Load Balancer* is a very different thing. This is used in front of virtual appliances such as firewalls, intrusion detection and prevention systems (IDS/IPS), and deep packet inspection (DPI) appliances. It is a layer 3 load balancer, operating at the network level, listening on all packets on all ports. It exchanges traffic with appliances using the GENEVE protocol on port 6081. Use cases include where you want to deploy, scale, and manage third-party virtual network appliances, for centralized inspection and monitoring, and to sit in front of intrusion detection systems and deep packet inspection systems.
+
+The *classic load balancer (CLB)* is the original AWS load balancer. It is now deprecated and should not be used for new applications (it is still available in the console for backwards compatibility). It operates at both the request and connection level, ie. handling both HTTP/S traffic (Level 7 LB) and TCP traffic (Level 4 LB).

@@ -1,0 +1,10 @@
+= Health checks
+
+There are different types of health checks that are involved in routing, auto-scaling, and load balancing. The main ones are:
+
+* EC2 health checks.
+* ELB health checks.
+
+ELB instances also do their own health checks on the EC2 instances they are routing to.
+
+A *health check grace period* is how long to wait before checking the health status of an instance or load balancers. This should not be too quick, as it can take some time for applications to bootstrap.
