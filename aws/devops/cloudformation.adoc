@@ -1,0 +1,17 @@
+= CloudFormation
+
+*AWS CloudFormation* is an *Infrastructure-as-Code (IaC)* solution, similar to Terraform but it is proprietary to AWS.
+
+Infrastructure patterns are defined in a *template* file in JSON or YAML. The file is uploaded to CloudFormation, which will build the infrastructure according to the definitions in the template.
+
+Pretty much every service in AWS can be deployed using CloudFormation.
+
+The core components of this service are:
+
+* *Templates*: The JSON or YAML file that contains the instructions to build out the AWS environment.
+
+* *Stacks*: The entire environment described by the template and created, updated, and deleted as a single unit.
+
+* *Stack Sets*: Extend the functionality of stacks by allowing you to create, update, and delete stacks across multiple accounts and regions.
+
+* *Change Sets*: A summary of proposed changes to your stack that will allow you to see how those changes might impact your existing resources before you apply them.

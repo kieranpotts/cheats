@@ -1,6 +1,6 @@
 = AWS Systems Manager
 
-AWS Systems Manager manages many AWS resources including EC2, S3, and RDS. It is a powerful services that is comprised of several different components:
+*AWS Systems Manager* manages many AWS resources including EC2, S3, and RDS. It is a powerful services that is comprised of several different components:
 
 * *Automation*: Documents can be passed through the Automation feature, which can then do things like take a snapshot of an RDS DB instance. The actions are defined in the documents that are passed into the Automation system, which then run based on a schedule or parameters that you configure.
 
@@ -15,3 +15,5 @@ AWS Systems Manager manages many AWS resources including EC2, S3, and RDS. It is
 * *Session Manager*: This provides secure remote management of instances, without needing to log in to the instances. It means you don't need to use the secure shell (SSH) protocol, or the Remote Desktop Protocol (RDP) used with Windows. By using Session Manager to access our instances, we don't need to open firewall ports or manage SSH keys. Session Manager replaces the need to bastion hosts (when you connect into a private subnet from instances in a public subnet), SSH, or remote PowerShell or RDP.
 
 * *Parameter Store*: This provides secure, hierarchical storage for configuration data and secrets.
+
+* *AppConfig*: This is a service that allows you to create, manage, and deploy application configurations — the settings that control the behavior of your applications, and which allow you to adjust application behavior dynamically without deploying new code changes. AppConfig can be used to implement feature flags and dynamic configurations like throttling limits and logging verbosity. _There is more information on AppConfig in the DevOps section._

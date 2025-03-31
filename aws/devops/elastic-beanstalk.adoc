@@ -1,0 +1,47 @@
+= Elastic Beanstalk
+
+This is a managed *platform-as-a-service (PaaS)*, allowing you to deploy your applications to AWS by simply uploading your code and data.
+
+By comparison, *infrastructure-as-a-service (IaaS)* requires you to provision and manage the underlying infrastructure, such as virtual machines, storage, and networking. You must also install and manage the operating systems and runtime environments on which your applications run.
+
+image::../_/iaas-versus-paas.drawio.svg[]
+
+IaaS and PaaS are the two main models for cloud application deployment. IaaS provides the most control over the underlying infrastructure, while PaaS abstracts away much of the complexity, allowing developers to focus on writing code and managing their customer's data.
+
+With Elastic Beanstalk, you upload your source code as a ZIP file. The service automatically creates an *ElasticBeanstalk (EB) environment*. The EB environment could include multiple instances of your application, and load balancers to distribute traffic.
+
+All this is managed by Beanstalk. But you still need to define the VPC, subnets, and availability zones (AZs) into which you want the EB environment to launch run. Beanstalk itself cannot create or manage these parts of the infrastructure.
+
+Beanstalk supports many application runtime environments, including Java, .NET, JavaScript (Node.js), PHP, Ruby, Python, and Go. It also supports Docker containers, which allows you to run any application that can be packaged in a container — so, basically everything.
+
+Behind-the-scenes, Beanstalk uses services including EC2, ECS, Auto-Scaling, and Elastic Load Balancing. As a managed service, Beanstalk manages the deployments of patches for the underlying operating system and runtime environment.
+
+It also provides a UI to monitor and manage the health of your applications.
+
+== Applications
+
+In Beanstalk, an *application* encapsulates environments, environment configs, and application versions.
+
+*Application versions* are references to specific units of deployable code. An application version will typically point to an object in an S3 bucket, which would be the ZIP archive of the application code at a specific point in time.
+
+An application may have multiple versions. Every time you upload new code for an existing Beanstalk application, a new version will be automatically created.
+
+Application versions allow *rollbacks* to previous versions of the application. This can be useful is a newly deployed version is found to have critical bugs or performance issues in production.
+
+== Environments
+
+Application versions can be deployed to different *environments*, eg. "testing" or "production".
+
+An environment is comprised of resources that have been provisioned, and are managed, by Beanstalk. Resources in an environment will typically include EC2 instances, as well as Elastic Load Balancers (ELBs) and Auto-Scaling Groups (ASGs).
+
+Each environment can be updated and rolled back independently of other environments.
+
+== Web workers
+
+Applications deployed to Beanstalk are web applications that are executed by web servers. These web servers are typically fronted by a load balancer, which distributes incoming requests to the web servers.
+
+Beanstalk also supports the deployment of applications to *worker environments*.
+
+*Workers* are used for background processing, asynchronous to the execution of the web applications. They are typically used for offloading long-running tasks from the web applications.
+
+Worker applications listen and respond to messages on Amazon SQS.

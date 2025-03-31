@@ -1,0 +1,9 @@
+= Cloud9
+
+*AWS Cloud9* is a *cloud IDE* used to write, run, and debug code.
+
+It has all the features of modern IDEs, including syntax highlighting, code completion, debugging, error checking, and a built-in terminal.
+
+It also provides collaborative features, facilitating multiple developers working on the same codebase simultaneously.
+
+As you'd expect, it integrates wih lots of AWS services, including Lambda, Ec2, and CodePipeline.

@@ -1,0 +1,7 @@
+= Cloud Development Kit (CDK)
+
+This is an open source *software development framework* that enables you to model your cloud resources using familiar programming languages: TypeScript, Python, Java, and .NET.
+
+It is a higher-level abstraction over AWS CloudFormation, which is a *declarative* way to define your infrastructure as code. CDK is *imperative*, meaning you can use programming constructs like loops and conditionals to define your infrastructure.
+
+The main use case is to avoid needing to learn CloudFormation's proprietary syntax!

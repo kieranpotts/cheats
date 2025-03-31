@@ -1,0 +1,13 @@
+= Code* family
+
+The *AWS Code* family is a suite of CI/CD tools that help you automate the software release process. The tools in the *AWS Code* family are:
+
+* *AWS CodeCommit*: A fully managed source control service for hosting Git repositories — equivalent to Bitbucket.
+
+* *AWS CodeBuild*: CI service to build and test code automatically — equivalent to Jenkins.
+
+* *AWS CodeDeploy*: CD service to automate code deployments to running services — equivalent to Ansible.
+
+* *AWS CodePipeline*: Combines the previous three services to create an integrated CI/CD solution — equivalent to GitHub and GitLab.
+
+* *AWS CodeStar*: IDE extension providing a unified user interface to the AWS Code family tools, plus other AWS devops tools such as CloudFormation.

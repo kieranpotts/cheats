@@ -1,0 +1,12 @@
+= X-Ray
+
+*AWS X-Ray* is used to debug distributed applications. For example, you can use this service to audit the latency between an instance and its database.
+
+This service supports applications running on:
+
+* EC2
+* ECS
+* Lambda
+* Beanstalk
+
+The only requirement is that your application must be instrumented with the X-Ray Agent, which is available from the X-Ray SDK.

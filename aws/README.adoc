@@ -153,8 +153,8 @@ image::./_/aws-networking.png[]
 == DevOps
 
 * link:./devops/cloudformation.adoc[CloudFormation]
-* link:./devops/quick-starts.adoc[Quick Starts]
 * link:./devops/cdk.adoc[Cloud Development Kit (CDK)]
+* link:./devops/quick-starts.adoc[Quick Starts]
 * link:./devops/elastic-beanstalk.adoc[Elastic Beanstalk]
 * link:./devops/code.adoc[Code* family]
 * link:./devops/cloud9.adoc[Cloud9]

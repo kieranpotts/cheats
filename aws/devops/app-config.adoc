@@ -1,0 +1,21 @@
+= AppConfig
+
+*AWS AppConfig* is a feature of *AWS Systems Manager* that allows you to create, manage, and deploy application configurations — the settings that control the behavior of your applications, and which allow you to adjust application behavior dynamically without deploying new code changes.
+
+AppConfig can be used to implement feature flags and dynamic configurations like throttling limits and logging verbosity.
+
+AppConfig configurations are available to:
+
+* Applications running in EC2 instances (including containerized applications)
+* Lambda functions
+* Mobile applications
+* IoT devices
+
+AppConfig injects configurations into applications at runtime, so you can change application behavior without deploying new code. An alternative approach is to inject configurations at build time. This requires a new deployment to change the configuration. But this would give you a lot more flexibility over where you store your application configurations. You could use, for example, S3, Systems Manager Parameter Store, AWS Secrets Manager, or even secrets stored in GitHub etc.
+
+You can also control how application configurations are deployed to running applications. For example, the following deployment strategies are available:
+
+* `AllAtOnce`: Deploy the configuration to all targets at once.
+* `Linear50PercentEvery30Seconds`: Deploy the configuration to 50% of targets every 30 seconds.
+
+Another feature of AppConfig is *validators* to ensure that configuration data is syntactically and semantically correct. Validators are either JSON Schema validators or AWS Lambda validators.
