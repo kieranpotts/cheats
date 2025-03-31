@@ -1,0 +1,22 @@
+= Global Accelerator
+
+The *AWS Global Accelerator* is a tool to leverage more of the private *AWS Global Network*, and less of the public Internet, to handle requests from users. This improves the performance of applications by reducing the latency and jitter associated with the public Internet.
+
+Route53 responds to a request with two possible IP addresses. These are *static public IP addresses*, which are provided by Global Accelerator as fixed entry points to your application. There are two IP addresses, so that traffic can be routed to the healthiest endpoint — Route53 does its own health checks. These are known as *anycast IP addresses*.
+
+.Anycast, unicast, broadcast, and multi-cast IP addresses
+****
+Normally, the IP address associated with a web server is *unicast*, ie. it is attached to a single network adapter somewhere in the world.
+
+*Anycast* IP addresses are actually physically present in multiple locations. Routing protocols will send the request to the nearest location, based on the routing table.
+
+There are also *broadcast* and *multi-cast* IP addresses.
+****
+
+The user traffic *ingresses* using the closest CloudFront *edge location*. There are hundreds of these around the world, so the request will be handled by a server that is physically close to the user. Thus, a request will travel over the public Internet for the shortest possible distance, before entering AWS's private network. The rest of the request is now handled by the AWS Global Network, rather than the public Internet, offering reliable bandwidth and consistent latency.
+
+Global Accelerator then chooses where to forward the traffic. It will forward requests to the best regions — the nearest region that is also healthy, etc.
+
+Global Accelerator operates at the network *transport layer* (Layer 4) of the OSI model. Global Accelerator supports both the TCP and UDP protocols, making it suitable for a wide range of applications including those that use non-HTTP protocols.
+
+While Global Accelerator can be used to improve the performance of HTTP/S applications, CloudFront (which _only_ supports HTTP/S) is more commonly used for that purpose. Global Accelerator, which runs on CloudFront's infrastructure, is more commonly used for non-HTTP/S applications, such as gaming, VoIP, and IoT applications.

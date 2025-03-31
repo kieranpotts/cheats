@@ -59,6 +59,7 @@
 * link:./infrastructure/network.adoc[AWS global network]
 * link:./infrastructure/outposts.adoc[Outposts]
 * link:./infrastructure/cloudfront.adoc[CloudFront]
+* link:./infrastructure/global-accelerator.adoc[Global Accelerator]
 
 == Networking
 
@@ -130,7 +131,7 @@ image::./_/aws-networking.png[]
 * link:./services/event-bridge.adoc[EventBridge]
 * link:./services/mq.adoc[MQ]
 * link:./services/step-functions.adoc[Step Functions]
-* link:./services/snf.adoc[Simple Workflow Services (SWF)]
+* link:./services/swf.adoc[Simple Workflow Services (SWF)]
 * link:./services/api-gateway.adoc[API Gateway]
 
 == Security
@@ -151,7 +152,14 @@ image::./_/aws-networking.png[]
 
 == DevOps
 
+* link:./devops/cloudformation.adoc[CloudFormation]
 * link:./devops/quick-starts.adoc[Quick Starts]
+* link:./devops/cdk.adoc[Cloud Development Kit (CDK)]
+* link:./devops/elastic-beanstalk.adoc[Elastic Beanstalk]
+* link:./devops/code.adoc[Code* family]
+* link:./devops/cloud9.adoc[Cloud9]
+* link:./devops/app-config.adoc[AppConfig]
+* link:./devops/xray.adoc[X-Ray]
 
 == Miscellaneous tools and services
 
