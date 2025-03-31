@@ -2,5 +2,29 @@
 
 *CloudFront* is a key part of the AWS global infrastructure.
 
-CloudFront is a *Content Delivery Network (CDN)*. It is used to cache content in different locations around the world, reducing latency for global users.
+CloudFront is a *Content Delivery Network (CDN)*, which is a system that implements *geographical replication*. Content is cached in *regions* and *edge locations* around the world, reducing latency by serving content from locations nearer to global users.
 
+With CloudFront, we create a *distribution*, inside of which we have the *origin*. The origin is the source of the content that CloudFront will distribute. The origin could be an S3 bucket, for example.
+
+We can also define custom origins, such as an EC2 instance behind a load balancer.
+
+Distribution is via:
+
+* *Regional edge cache*: There are relatively few of these. They tend not to offer the lowest latency (due to distance from users), but the trade-off is they have high bandwidth.
+* *Edge location*: There are many more of these (hundreds), so offering the lowest latency.
+
+Content from the origin gets cached around the world. You have control over which geographies your content is replicated to.
+
+Origins, regional edge caches, and edge locations, are connected together by the AWS Global Network.
+
+Users get routed to their nearest edge location. The only path on the public Internet is from the user to the edge location. Everything else is in Amazon's private global network.
+
+CloudFront can deliver both static and dynamic content, and it automatically optimized delivery based on the content type. It even supports live streaming and video-on-demand.
+
+*Lambda@Edge* is a feature of CloudFront that enables the processing of data via Lambda functions that are closer to users.
+
+CloudFront uses HTTPs — so transit of caches between the origin and destinations are encrypted — and it integrates with *AWS Certificate Manager (ACM)* for easy management of the SSL/TLS certificates.
+
+CloudFront also integrates with *AWS Shield* (for DDoS protection) and *AWS Web Application Firewall (WAF)* (via which you create rules to protect against malicious web traffic) for additional security. Content can also be protected with features like signed cookies, signed URLs, and origin access identity (OAI).
+
+In fact, the security features of CloudFront are so good that a common use case is to just use CloudFront as a proxy in front of origin services, to benefit from the extra security layers it provides without using its caching features.
