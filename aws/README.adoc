@@ -149,6 +149,10 @@ image::./_/aws-networking.png[]
 * link:./logging/vpc-flow-logs.adoc[VPC Flow Logs]
 * link:./logging/access-logs.adoc[Access Logs]
 
+== DevOps
+
+* link:./devops/quick-starts.adoc[Quick Starts]
+
 == Miscellaneous tools and services
 
 * link:./miscellany/migration-and-transfer.adoc[Migration and transfer services]
