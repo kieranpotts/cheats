@@ -1,0 +1,13 @@
+= VPC peering
+
+This is a way to get our VPCs to communicate with each other using private IPv4 or IPv6 addresses.
+
+image::../_/vpc-peering.drawio.svg[]
+
+VPC peering can be used to connect VPCs in different regions, and even in different AWS accounts.
+
+For this to work, each VPC must have a separate block of IP addresses. This is why it is important for CIDR ranges to not overlap with one another.
+
+VPC connections are not transitive (ie. you can't route traffic to one VPC via another VPC, it must be direct). So if you want to create a mesh of connections between a group of VPCs, each individual VPC-to-VPC connection must be configured independently. In this use case, a *transit gateway* might be more convenient.
+
+image::../_/vpc-peering-mesh.drawio.svg[]

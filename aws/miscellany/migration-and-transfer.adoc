@@ -2,7 +2,7 @@
 
 AWS has a suite of services to help you migrate and transfer your applications and data to the AWS cloud.
 
-You connect a region to your corporate data center using a VPN or Direct Connect (or over the Internet if you really have to). You can then use the *AWS Application Discovery Service* to automatically discover the services you are running in your corporate data center. It will create an inventory of your applications.
+You connect a region to your corporate data center using a VPN or Direct Connect (or over the internet if you really have to). You can then use the *AWS Application Discovery Service* to automatically discover the services you are running in your corporate data center. It will create an inventory of your applications.
 
 You can then use the *AWS Application Migration Service ("AWS MGN")* to migrate applications into EC2 instances. This is ideal for "lift and shift" operations, in which you replicate a server (its operating system and applications) verbatim into EC2 instances. You can do *test* instances and *cutover* migrations.
 

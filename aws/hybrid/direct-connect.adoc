@@ -1,0 +1,5 @@
+= Direct Connect
+
+*AWS Direct Connect* enables *private connections* from on-premises data centers to AWS. Thus, *hybrid clouds* are established without relying on the public internet for connectivity.
+
+AWS Direct Connect provides high bandwidth and low latency, with reliable performance.

@@ -1,6 +1,10 @@
-= Gateways
+= Internet gateways
 
-Once a new instance is running inside a subnet, you can select the instance from the list of EC2 instance and then click *Connect*. Choose *EC2 Instance Connect* to connect to the instance using the browser-based SSH client. The connection should not work – the expected outcome is an error messages saying "Failed to connect to your instance".
+*Internet gateways* are attached to VPCs to provide a pathway between EC2 instances (and other resources) in public subnets and the internet.
+
+Once a new instance is running inside a subnet, you can select the instance from the list of EC2 instances and then click *Connect*. Choose *EC2 Instance Connect* to connect to the instance using the browser-based SSH client. The connection should not work – the expected outcome is an error messages saying "Failed to connect to your instance".
+
+image::../_/aws-networking-2.drawio.svg[]
 
 The reason is there is no route from the internet to the instance.
 
@@ -20,3 +24,9 @@ image::../_/create-internet-gateway.png[]
 Once the internet gateway is created, you need to attach it to the VPC. Select the internet gateway, and then click *Actions* > *Attach to VPC*. Choose the VPC you want to attach the gateway to, and then click *Attach internet gateway*.
 
 image::../_/attach-internet-gateway-to-vpc.png[]
+
+Now the infrastructure looks like this:
+
+image::../_/aws-networking-3.drawio.svg[]
+
+If you try again to SSH into the EC2 instance… it still won't work! This is because the subnet does not have a route to the internet gateway. You need to give the public subnet a *route* to your internet gateway. This is done using something called a *route table*…

@@ -12,60 +12,6 @@ EC2 instance types are grouped into families based on their target use cases. Fo
 
 EC2 instances typically run Linux or Windows. There is also a version that runs macOS — but this is basically dedicated hardware and is therefore relatively expensive.
 
-== EC2 networking
-
-When you launch an EC2 instance, you have the following IP address options:
-
-* *Public IP address*: Used in public subnets, public IP addresses will be lost when the instance is dropped. Public IP addresses cannot be moved from one EC2 instance to another. The public IP address for an EC2 instance is associated with a private IP address that is used within the EC2 instance itself (all EC2 instances have private IP addresses, which is retained between restarts). There is no charge to use public IP addresses.
-
-* *Private IP addresses*: These are retained when an instance is dropped. They can be used in both public and private subnets.
-
-* *Elastic IP addresses*: These are perhaps better described as *static public IP addresses*. They are also associated with the private IP address of the instance to which they are assigned, but you also have the flexibility of moving these addresses between EC2 instances (and also Elastic Network Adapters). You are charged for these even when you're not using them.
-
-// TODO: Add diagram.
-
-*Internet Gateways* are attached to VPCs to provide a pathway between EC2 instances and the internet.
-
-Subnets have *route tables* associated with them, which determine how traffic is routed within the subnet.
-
-.Public subnet route table
-|===
-|Destination |Target
-
-|172.31.0.0/16
-|Local
-
-|0.0.0.0/0
-|igw-id
-|===
-
-In this route table, `172.31.0.0/16` is the CIDR block, ie. the overall IP address range for the VPC. This is mapped to the `Local` route, which means any IP addresses within this range are going to be routed internally to resources within the VPC. This is the default configuration for subnet route tables, and it is how all resources within a VPC communicate with each other by default.
-
-The second routing rule says that any other traffic must be routed out to the Internet Gateway. This is how EC2 instances within the VPC can communicate with the outside world.
-
-In the example above, the EC2 instance was launched into the public subnet. We can also launch EC2 instances into private subnets, and indeed this is a more common practice. For security, it is best practice to launch EC2 instances into private subnets and instead put NAT gateways or load balancers into the corresponding public subnets.
-
-// TODO: Diagram.
-
-EC2 instances launched into private subnets will not have internet connectivity by default. That's because the instances will have private IP addresses; you cannot assign public (or elastic) IP addresses to resources launched into private subnets.
-
-Public and private subnets each have their own route tables.
-
-.Private subnet route table
-|===
-|Destination |Target
-
-|172.31.0.0/16
-|Local
-
-|0.0.0.0/0
-|nat-gateway-id
-|===
-
-In this route table, all non-local traffic will be directed to a NAT Gateway, which would be launched into the public subnet. Now, the EC2 instance in the private subnet will communicate with the NAT gateway in the public subnet using its private IP address, and vice versa. But the NAT gateway will have an Elastic IP address connecting it to the VPC's Internet Gateway.
-
-*NAT Gateways* are AWS-managed devices and they only allow outbound traffic. So, in this case, the EC2 instance in the private subnet can pull stuff (download things) from the world-wide web, but there is no mechanism to direct Internet traffic _to_ the EC2 instance. If you wanted to do that, you would use a *Load Balancer* instead.
-
 == EC2 instance types
 
 |===

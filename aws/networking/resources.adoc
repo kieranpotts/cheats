@@ -12,11 +12,6 @@ Under *Network settings*, choose your VPC, and then choose the subnet you want t
 
 image::../_/launch-ec2-instance-network-settings.png[]
 
-[NOTE]
-======
-A *security group* is a virtual firewall that controls the traffic to and from your instances. It is a set of rules that filter traffic based on IP protocol, port, and source/destination IP address.
-======
-
 Click *Launch instance*. You now have an EC2 instance running in your public subnet.
 
-image::../_/ec2.png[]
+image::../_/aws-networking-2.drawio.svg[]

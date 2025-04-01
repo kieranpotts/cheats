@@ -1,0 +1,14 @@
+= Transit gateways
+
+A *transit gateway (TGW)* is another type of networking device. It is useful where you want to connect lots and lots of VPCs, and perhaps even on-premises networks, without needing to explicitly configure all of the possible individual routes.
+
+A transit gateway is a *network transit hub* that interconnects VPs and on-premises networks.
+
+image::../_/transit-gateway.drawio.svg[]
+
+TGW's can be attached to:
+
+* VPNs
+* Direct Connect gateways
+* Third-party appliances
+* TGWs in other regions and AWS accounts

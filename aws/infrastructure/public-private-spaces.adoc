@@ -1,0 +1,7 @@
+= Public and private spaces
+
+In the AWS Cloud we say that some services are in the public space while others are in the private space.
+
+*Public space* services include S3, DynamoDB. Route53, and CloudFront. These services are publicly accessible via the internet by default, ie. they have public APIs.
+
+*Private space* services are those that are launched into VPCs. They include EC2 instances, RDS, and EFS. The resources launched by these services are not accessible from the internet by default. However, you may assigned these resources public IP addresses and then use an internet Gateway to route traffic to them. This is how private space resources are made publicly accessible.

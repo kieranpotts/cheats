@@ -1,0 +1,47 @@
+= NACLs
+
+NACLs and security groups are the two main types of *firewalls* that we use to protect our own resources (in our own VPCs) in AWS — EC2 instances, RDB databases, etc.
+
+A *network access control list (NACL)* — pronounced "nak-ul" — is like a virtual firewall that protects a whole subnet, controlling traffic in and out of it. It's another layer of protection around a subnet.
+
+image::../_/aws-networking-7.drawio.svg[]
+
+A NACL is *stateless*, so if you allow some traffic in to the subnet, it doesn't remember that state and automatically allow it back out. You must have a corresponding outbound rule.
+
+NACLS do not screen traffic _between_ resources inside a subnet. They only screen traffic _to_ and _from_ the subnet (ie. ingress and egress traffic).
+
+Most people leave the NACL in its default configuration, which is to allow all traffic in and all traffic out. Often, that's sufficient security, because you already have routes and security groups.
+
+One thing people do use NACLs for is to block an IP address at the subnet level. That's a good use case for NACLs. But normally you just leave the defaults, but it's there as an added layer of protection if you need it.
+
+.Stateful versus stateless firewalls
+****
+image::../_/stateless-firewall.drawio.svg[]
+
+The server is listening on port 80 for incoming connections. This is the "destination port" for client requests. A client making a request to the server assigns its own "source port" — this is dynamically allocated by the OS of the client machine and is a high-numbered port rather than one of the standard low-level ports in the range 1 - 1,124.
+
+When a server receives a request, it may create a second connection to the client and use it to send a response back to the client. The server's response is sent to the same port the client used to make the initial request. This becomes the destination port for the server's response.
+
+Thus, the request-response cycle consists of two distinct traffic flows, which are described in this table:
+
+|===
+|Protocol |Source IP |Source port |Destination IP |Destination port
+
+|HTTP
+|10.1.1.1
+|65188
+|10.2.1.1
+|80
+
+|HTTP
+|10.2.1.1
+|80
+|10.1.1.1
+|65188
+|===
+
+In a *stateful* firewall, you need only to explicitly allow the initial inbound traffic. Return traffic is implicitly allowed. That works because the firewall persists records of client-to-server connections, and automatically allows corresponding return traffic.
+
+A *stateless* firewall does not distinguish between inbound and outbound traffic. It checks for matching rules against traffic in both directions.
+****
+

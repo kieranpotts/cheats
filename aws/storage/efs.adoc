@@ -2,13 +2,9 @@
 
 The AWS *Elastic File System (EFS)* is a shared (networked) file system. EFS can be used with Linux instances only. That's because the protocol uses is NFS, which is supported only by Linux.
 
-// TODO: Diagram.
-
 EFS is region-scoped by default. This means we can connect EC2 instances to EFS from multiple availability zones within a region. An EC2 instance in one AZ can connect to the *mount point* of an EFS system in another AZ.
 
 EFS supports other launch options, too. *EFS One Zone* means to launch EFS into a single availability zone. It is also possible to connect to EFS from other VPCs.
-
-// TODO: Diagram showing deployment options.
 
 You can also connect to EFS from on-premises clients, typically via a VPN or a direct connection.
 

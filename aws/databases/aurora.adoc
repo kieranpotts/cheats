@@ -21,9 +21,9 @@ Aurora has some great features, especially in terms of scalability and durabilit
 
 There must be a single primary database instance, which is the only instance that can be written to, and it will immediately update all read replicas. Aurora can scale out read requests through *read replicas*. *Auto-scaling* can be enabled, to create read replicas automatically based on usage. The replicas can be in other availability zones, but they must always be in the same region as the primary.
 
-Fault tolerance is achieved by creating a single logical volume across three availability zones. In a disaster recovery scenario, a replica can be promoted to the primary, or a new primary can be created from a backup.
+Fault tolerance is achieved by creating a _single logical volume_ across three availability zones. In a disaster recovery scenario, a replica can be promoted to the primary, or a new primary can be created from a backup.
 
-// TODO: Diagram
+image::../_/aurora.drawio.svg[]
 
 .Replication comparison: Aurora versus MySQL
 |===

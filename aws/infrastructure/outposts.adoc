@@ -1,5 +1,0 @@
-= Outposts
-
-If you have a corporate data center, you can install a piece of hardware that connects it to the AWS cloud. This is called an *AWS Outpost*.
-
-AWS Outposts support a subset of AWS services, eg. EC2 can be run on-premises, with connectivity back to an AWS region.

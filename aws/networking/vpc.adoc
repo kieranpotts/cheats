@@ -1,35 +1,11 @@
 = Virtual Private Clouds (VPCs)
 
-A *Virtual Private Cloud (VPC)* is like a private network to isolate a group of resources that sit within it. Each VPC is isolated from other VPCs, even those in the same availability zones.
+A *Virtual Private Cloud (VPC)* is like a private network to isolate a group of resources that sit within it. Each VPC is isolated from other VPCs, even those that span the same availability zones in the same region.
 
-A VPC is region-specific, meaning it is created within a single AWS region. But a single VPC can actually span multiple availability zones within the same region. In fact, this is one of the main advantages of using a VPC. It allows resources to be distributed across multiple AZs, adding redundancy to your architecture to achieve high availability and fault tolerance (if one AZ goes down, you can failover to resources in other AZs). Leveraging multiple AZs also allows for better resource scaling and balancing.
+A VPC is analogous to having your own data center, but in the cloud. A VPC is a private network in a specific region that is logically separated from other networks in the same region. Because of the logical separation, you can configure and manage a VPC however you like. You have complete control over the virtual networking environment within a VPC, including its IP address range, subnets, route tables, network gateways, and security settings.
 
-When you create a VPC, you will create an IPv4 *CIDR range*, which is used to define the range of IP addresses that is reserved for use within the VPC. The CIDR range must be unique to the VPC and cannot overlap with the CIDR ranges of other VPCs in the same region and associated with the same account. Resources launched into a VPC can be assigned IP addresses from the VPC's CIDR range, for the purpose of routing traffic.
+Any resources you launch into a VPC will be visible only to your AWS account by default. Resources launched in different VPCs under the same account will be hidden from each other — unless you explicitly configure them to communicate with each other. This is the primary purpose of VPCs: to created logically-isolated groups of resources.
 
-A CIDR range is a notation that specifies a range of IP addresses. Examples:
+A VPC is region-specific, meaning it is created within a single AWS region. A VPC will span all the availability zones within the same region (there's usually two or three) — in effect, spanning multiple data centers that are geographically close together. This allows resources to be distributed across multiple AZs, adding redundancy to your architecture to achieve high availability and fault tolerance (if one AZ goes down, you can failover to resources in other AZs in the same region). Distributing load across multiple AZs also allows for better resource balancing and scaling.
 
-* 10.0.0.0/24
-* 10.0.0.0/16
-* 10.0.0.0/8
-
-Each octet (the digits between the dots) can be between 0 and 254 – an 8-bit integer. The number after the slash is the number of bits that are fixed in the range. So if you see `/24` on the end, this means that the first three octets (8 + 8 + 8 = 24) are fixed, and the last octet can be any number between 0 and 254. If you see `/16` on the end, it means the first two octets are locked, and `/8` means only the first octet is locked.
-
-|===
-|CIDR range |Min IPv4 |Max IPv4
-
-|10.0.0.0/24
-|10.0.0.1
-|10.0.0.254
-
-|10.0.0.0/16
-|10.0.0.1
-|10.0.255.254
-
-|10.0.0.0/8
-|10.0.0.1
-|10.255.255.254
-|===
-
-Inputting `10.0.0.0/16` for your CIDR range will give you 65,536 possible IP addresses, in the range 10.0.0.1 to 10.0.255.254, which will be more than sufficient for most networking requirements.
-
-image::../_/create-vpc.png[]
+You can create multiple VPCs in a region, up to a maximum of five.

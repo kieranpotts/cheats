@@ -20,7 +20,7 @@ Data can be integrated from various source, including:
 
 If the data sources are in the same VPC, they can be easily integrated with the OpenSearch cluster because they already have direct intra-VPC communication with the cluster. A VPN or proxy will be required to connect to sources outside of AWS.
 
-Alternatively, you can deploy a cluster into the public domain, outside of your own VPCs, and make the cluster directly accessible from the Internet.
+Alternatively, you can deploy a cluster into the public domain, outside of your own VPCs, and make the cluster directly accessible from the internet.
 
 When deployed into a VPC, you cannot use IP-based access policies for the cluster. There are also other limitations of VPC deployments:
 

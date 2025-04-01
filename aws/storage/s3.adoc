@@ -31,7 +31,7 @@ An S3 object consists of:
 
 For the object key, we can mimic a hierarchy by using a forward slash (/) in the key name. In the Management Console, the prefixes will be navigable like directories (even though they are really just part of the key name).
 
-Because S3 is a global service that sits in the AWS public space, to connect resources running in a VPC to S3 we need to go out via an Internet Gateway. Alternatively, we can create an *S3 Gateway Endpoint*, which allows our EC2 instances to connect to S3 using a private address. This is a good (more secure) option for instances that sit in a private subnet.
+Because S3 is a global service that sits in the AWS public space, to connect resources running in a VPC to S3 we need to go out via an internet gateway. Alternatively, we can create an *S3 Gateway Endpoint*, which allows our EC2 instances to connect to S3 using a private address. This is a good (more secure) option for instances that sit in a private subnet.
 
 == Storage classes
 

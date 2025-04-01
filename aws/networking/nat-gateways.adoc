@@ -1,6 +1,12 @@
 = NAT gateways
 
-Repeat the steps above to launch an EC2 instance into the private subnet. This time, do not enable *auto-assign public IP*. Create a new security group for private resources, but allow SSH access as before.
+In the previous steps, we launched an EC2 instance into a public subnet, and then connected the instance to the internet via an internet gateway. A more common pattern, for better security, is to launch instances into private subnets, and then launch NAT gateways or load balancers into the corresponding public subnet, which can then be used to set up connections between the private instances and the internet.
+
+Repeat the previous steps to launch an EC2 instance into the private subnet. This time, do not enable the *auto-assign public IP* option. Create a new security group for private resources, but allow SSH access as before.
+
+This is the new architecture:
+
+image::../_/aws-networking-5.drawio.svg[]
 
 Next, to SSH from the public EC2 instance to the private EC2 instance, you will need to upload a key pair to the public EC2 instance. You can do this using the following command:
 
@@ -37,9 +43,9 @@ sudo yum update -y
 
 This will fail, because the private subnet does not have a route to the internet gateway. To allow the private subnet to access the internet, you need to create a *NAT gateway*.
 
-A NAT gateway allows resources to reach out to the internet, but disallows incoming traffic from the internet. A NAT gateway is a *network address translation (NAT)* service that allows instances in a private subnet to connect to the internet, or other services outside the VPC, but external services cannot initiate a connection with those instances.
+A NAT gateway is a AWS-managed *network address translation (NAT)* service that allows instances in a private subnet to connect to the internet, or to other services outside the VPC. But external services cannot initiate a connection with those private instances. Thus, NAT gateways are used to allow instances to pull stuff (download things) from the internet and elsewhere, but cannot be used to direct inbound traffic to private instances.
 
-To create a NAT gateway, you will actually create it in your public subnet, because the public subnet has a route to the internet gateway. And then you will use your private route table to create a route to that NAT gateway.
+To create a NAT gateway, you will actually create it in your public subnet, because the public subnet has a route to the internet gateway. And then you will use your private route table to create a route from the private subnet to the NAT gateway in the public subnet.
 
 From the VPC dashboard, go to *NAT gateways* > *Create NAT gateway*. Give it a name, choose the public subnet, set the connectivity type to public, and click the button to generate an elastic IP address. Click *Create NAT gateway*.
 
@@ -47,4 +53,45 @@ image::../_/create-nat-gateway.png[]
 
 Next, go to *Route tables*, select your private route table, and add a route out to the new NAT gateway. For the destination, allow everything as before (`0.0.0.0/0`), and for the target, select the NAT gateway you just created.
 
+The route table configuration will looks something like the example below. Notice that all non-local traffic is configured to be directed to the NAT gateway. This is what will allow resources in the private subnet to connect to the NAT gateway, which they will do via the NAT gateway's private IP address.
+
+.Private subnet route table
+|===
+|Destination |Target
+
+|172.31.0.0/16
+|Local
+
+|0.0.0.0/0
+|nat-gateway-id
+|===
+
+A NAT gateway will also be given a public or elastic IP address, which is used to allow connections between it and the VPC's internet gateway.
+
 The NAT gateway takes a few minutes to become available. Once it is available, try again to SSH into the private EC2 instance from the public EC2 instance, and then try updating the system packages. This time, it should work.
+
+The new architecture looks like this:
+
+image::../_/aws-networking-6.drawio.svg[]
+
+In summary, NAT gateways are always launched into public subnets with the purpose of creating a bridge from resources in private subnets to the internet gateway (IGW). The NAT gateway "translates" (ie. forwards) connections on to the IGW.
+
+A NAT gateway allows resources to reach out to the internet, but disallows incoming traffic from the internet. If you needed a mechanism to direct traffic _to_ an instance in a private subnet, you would use a load balancer.
+
+== NAT instances
+
+A *NAT instance* is a legacy way of implementing NAT in AWS. It is an actual EC2 instances in the public subnet, so it's not an AWS-managed device like a NAT gateway. But otherwise it works in just the same way as a NAT gateway.
+
+.NAT instance versus NAT gateway
+|===
+|NAT instance | NAT gateway
+
+|Managed by you. You're responsible for software patches, etc.
+|Managed by AWS.
+
+|Scale-up manually and use enhanced networking.
+|Elastic scalability up to 45Gbps.
+
+|No high availability by default, but you can achieve HA by deploying multiple NATs in multiple subnets.
+|Automatic HA within an availability zone, and can be placed in multiple AZs.
+|===

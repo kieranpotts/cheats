@@ -55,25 +55,32 @@
 == AWS global infrastructure
 
 * link:./infrastructure/responsibility.adoc[Shared responsibility model]
+* link:./infrastructure/public-private-spaces.adoc[Public and private spaces]
 * link:./infrastructure/regions-zones.adoc[Regions and zones]
 * link:./infrastructure/network.adoc[AWS global network]
-* link:./infrastructure/outposts.adoc[Outposts]
 * link:./infrastructure/cloudfront.adoc[CloudFront]
 * link:./infrastructure/global-accelerator.adoc[Global Accelerator]
 
 == Networking
 
-This section describes how to build out the following architecture step-by-step:
+* link:./networking/vpc.adoc[Virtual Private Clouds (VPCs)]
+* link:./networking/cidr.adoc[CIDR range]
+* link:./networking/subnets.adoc[Subnets]
+* link:./networking/resources.adoc[Resources]
+* link:./networking/ip-addresses.adoc[IP addresses]
+* link:./networking/internet-gateways.adoc[Internet gateways]
+* link:./networking/route-tables.adoc[Route tables]
+* link:./networking/nat-gateways.adoc[NAT gateways]
+* link:./networking/nacls.adoc[NACLs]
+* link:./networking/security-groups.adoc[Security groups]
+* link:./networking/vpc-peering.adoc[VPC peering]
+* link:./networking/transit-gateways.adoc[Transit gateways]
 
-image::./_/aws-networking.png[]
+== Hybrid clouds
 
-1. link:./networking/vpc.adoc[Virtual Private Clouds (VPCs)]
-2. link:./networking/subnets.adoc[Subnets]
-3. link:./networking/resources.adoc[Resources]
-4. link:./networking/gateways.adoc[Gateways]
-5. link:./networking/route-tables.adoc[Route tables]
-6. link:./networking/nat-gateways.adoc[NAT gateways]
-7. link:./networking/nacls-security-groups.adoc[NACLs and security groups]
+* link:./hybrid/outposts.adoc[Outposts]
+* link:./hybrid/managed-vpn.adoc[Managed VPN]
+* link:./hybrid/direct-connect.adoc[Direct Connect]
 
 == Compute
 

@@ -9,8 +9,6 @@ To use DRS, in AWS we need to create a couple of different types of subnets in o
 * Staging area subnets
 * Recovery subnets
 
-// TODO: Add diagram.
-
 *AWS Replication Agents* are installed on your servers, with direct access to your disk drives. The *Replication Servers* are actually EC2 instances. We have continuous block-level replication from the downstream replication agents to the upstream replication servers.
 
 Initially, the replicated data is stored in a low-cost *staging area*. This is used to maintain the replicated data until it is needed for recovery. During a DR event, the systems are fully restored into AWS servers. The recovery subnets are used for this purpose.

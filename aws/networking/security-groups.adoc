@@ -1,0 +1,35 @@
+= Security groups
+
+A NACL protects a subnet, but once a communication gets through the NACL, you have *security groups* that protect the individual resources within the subnet.
+
+A security group is a virtual firewall that controls the traffic to and from your instances. It is a set of rules that filter traffic based on IP protocol, port, and source/destination IP address.
+
+Security groups are assigned at the instance level. Every EC2 instance gets associated with a security group. A security group may encapsulate two or more instances, and those instances may even be distributed across multiple subnets. Thus, security groups can be applied to _any instance_ in _any subnet_.
+
+image::../_/aws-networking-8.drawio.svg[]
+
+Strictly speaking, security groups are not attached to instances, but rather are attached to the *Elastic Network Interface (ENI)* of the adapters that connect to the instances.
+
+Unlike a NACL, a security group is stateful. If some traffic is allowed through by an inbound rule, its going to remember that state and allow the response out.
+
+.Security groups versus Network ACLs
+****
+|===
+|Security group |NACL
+
+|Applied at the instance (interface) level.
+|Operate at the subnet level.
+
+|Will filter traffic _between_ instances in the same subnet.
+|Only filter _into_ and _out_ from the subnet.
+
+|Must be explicitly applied to individual instances.
+|Automatically applied to all instances within a subnet.
+
+|Stateful. Return traffic is automatically allowed.
+|Stateless. Return traffic must be explicitly allowed.
+
+|Evaluates _all_ rules before allowing traffic (so every rule has an opportunity to override prior ones).
+|Processes rules in order and stops at the first ALLOW or DENY rules that matches.
+|===
+****

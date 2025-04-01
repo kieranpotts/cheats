@@ -17,7 +17,7 @@ Content from the origin gets cached around the world. You have control over whic
 
 Origins, regional edge caches, and edge locations, are connected together by the AWS Global Network.
 
-Users get routed to their nearest edge location. The only path on the public Internet is from the user to the edge location. Everything else is in Amazon's private global network.
+Users get routed to their nearest edge location. The only path on the public internet is from the user to the edge location. Everything else is in Amazon's private global network.
 
 CloudFront can deliver both static and dynamic content, and it automatically optimized delivery based on the content type. It even supports live streaming and video-on-demand.
 

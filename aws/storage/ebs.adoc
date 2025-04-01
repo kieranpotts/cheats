@@ -1,7 +1,5 @@
 = Elastic Block Store (EBS)
 
-// TODO: Diagram
-
 *Elastic Block Store (EBS)* is a high-performance block storage service used by EC2 instances. EBS volumes are used as the primary storage for EC2 instances, and they are also known as *instance volumes* for this reason.
 
 EBS volumes are attached over the network, but they appear to the OS within an EC2 instance as a local drive.
@@ -16,8 +14,6 @@ EBS supports multiple volume types, including SSD and HDD. SSD is a good choice 
 
 == Instance store volumes
 
-// TODO: Diagram
-
 *Instance store volumes* are a special category of EBS volume in which the volumes are _physically attached_ to the host EC2 instance. These are physical devices, a bit like a flash USB drive.
 
 Instance store volumes are *ephemeral* storage, meaning they are temporary and will be lost if the instance is stopped or terminated. They are not replicated or backed up automatically. If the power is lost to the host instance, the data on the instance store volumes will be lost.
@@ -29,8 +25,6 @@ Instance store volumes can be a good choice for temporary data, such as caches o
 Instance store volumes are available only on certain instance types, and they are not available in all regions.
 
 == EBS snapshots
-
-// TODO: Diagram
 
 You can create point-in-time backups of your EBS volumes, called *snapshots*.
 
