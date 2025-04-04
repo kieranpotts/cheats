@@ -3,3 +3,5 @@
 An *AWS Managed VPN* is another solution to support *hybrid clouds*. It sets up a *virtual private network (VPN)* connection between on-premises networks and AWS.
 
 Connections are made over the public internet, though encrypted. If this is not desirable, for security or performance reasons, you can use *AWS Direct Connect* instead.
+
+The AWS VPN is relatively easy to set up and manage, but it has less security and performance than Direct Connect, and more limited access to AWS services.

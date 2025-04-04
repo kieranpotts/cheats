@@ -6,6 +6,8 @@ Subnets are used to increase the security and efficiency of network communicatio
 
 Subnets are created within a VPC. VPCs span multiple availability zones — the two or three AZs of its region — but each subnet within a VPC must be mapped to exactly one of those availability zones.
 
+image::../_/vpc-subnet-az.drawio.svg[]
+
 For each subnet that you create within a VPC, you give the subnet a name, choose an availability zone, and specify the subnet's IPv4 CIDR block, which must be a subset of the IPv4 CIDR range of the parent VPC.
 
 image::../_/create-subnet.png[]

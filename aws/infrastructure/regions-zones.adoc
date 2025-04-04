@@ -2,11 +2,13 @@
 
 *AWS regions* are geographical areas around the world.
 
-Each region has multiple, isolated locations known as *availability zones (AZs)*. There are usually three AZs per regions (some regions have more). The AZs within a region are physically isolated from one another, but they are geographically close together and connected through low latency networks — so latency between AZs in each region is low.
+Each region has multiple, isolated locations known as *availability zones (AZs)*. There are usually three AZs per regions (some have two, and some regions have more than three). The AZs within a region are physically isolated from one another, but they are geographically close enough together to provide very low latency between AZs in the same region.
 
 Regions are further apart and, although they are connected by the AWS global network, latency between regions is higher than between AZs in the same region.
 
 Each availability zone is made up of one or more *data centers*, where a data center is a single physical facility that houses servers, storage, and networking equipment.
+
+The location(s) for each AZ in a region is chosen by AWS to have different _risk profiles_. So, each data center is on different power grids, has different flood profiles, and so on. Therefore, it is unlikely that a single event will take out all the availability zones within a region — this is good for resilience.
 
 Each AZ has redundant power sources, so if one power source fails, the other power sources should take over. There is also plenty of redundant network bandwidth, both within and between availability zones.
 

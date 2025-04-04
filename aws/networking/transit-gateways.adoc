@@ -2,13 +2,35 @@
 
 A *transit gateway (TGW)* is another type of networking device. It is useful where you want to connect lots and lots of VPCs, and perhaps even on-premises networks, without needing to explicitly configure all of the possible individual routes.
 
-A transit gateway is a *network transit hub* that interconnects VPs and on-premises networks.
+A transit gateway is a *network transit hub* that interconnects VPs and on-premises networks. It is a newer, and more centralized, solution than *VPC peering*, which can be used to achieve the same end goal.
 
 image::../_/transit-gateway.drawio.svg[]
 
-TGW's can be attached to:
+TGW is a managed, distributed routing service that you deploy into an AWS region, and you can then attach VPCs from that same region to the TGW (though the VPCs can be in different AWS accounts). You can allow any-to-any communication through a TGW, or isolate particular VPCs to allow them only to talk to each other.
 
-* VPNs
-* Direct Connect gateways
-* Third-party appliances
-* TGWs in other regions and AWS accounts
+Besides VPNs in the same region, TGWs can also be used to connect to on-premises networks (via *Direct Connect* gateways), and even to other TGWs in different regions or AWS accounts — which is how hybrid, cross-region, and cross-account VPC networks can be established using transit gateways.
+
+TGWs are easier to manage than VPC peering. VPC route tables have a single entry to the TGW, and then then TGW has its own route table which manages the connections between VPCs. As with VPC peering, intra-VPC communication is private, using private IP connectivity, but the routing rules are now centrally managed by the TGW.
+
+.VPC peering versus transit gateway
+****
+|===
+|- |VPC peering |Transit gateway
+
+|VPC limit
+|125 peerings
+|5,000 attachments
+
+|Bandwidth limit
+|N/A (intra-region)
+|50Gbps per VPC attachment
+
+|Management model
+|Decentralized
+|Centralized
+
+|Pricing model
+|Data transfer
+|Data transfer + attachment
+|===
+****

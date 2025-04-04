@@ -64,7 +64,8 @@
 == Networking
 
 * link:./networking/vpc.adoc[Virtual Private Clouds (VPCs)]
-* link:./networking/cidr.adoc[CIDR range]
+* link:./networking/vpc-dns-options.adoc[VPC DNS options]
+* link:./networking/cidr-range.adoc[CIDR range]
 * link:./networking/subnets.adoc[Subnets]
 * link:./networking/resources.adoc[Resources]
 * link:./networking/ip-addresses.adoc[IP addresses]

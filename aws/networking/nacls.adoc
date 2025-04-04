@@ -10,9 +10,11 @@ A NACL is *stateless*, so if you allow some traffic in to the subnet, it doesn't
 
 NACLS do not screen traffic _between_ resources inside a subnet. They only screen traffic _to_ and _from_ the subnet (ie. ingress and egress traffic).
 
-Most people leave the NACL in its default configuration, which is to allow all traffic in and all traffic out. Often, that's sufficient security, because you already have routes and security groups.
+Most people leave the NACL in its default configuration, which is to allow all traffic in and all traffic out. Often, that's sufficient security, because *route tables* and *security groups* between them do sufficient screening of network traffic for most use cases.
 
-One thing people do use NACLs for is to block an IP address at the subnet level. That's a good use case for NACLs. But normally you just leave the defaults, but it's there as an added layer of protection if you need it.
+Security groups are proper firewalls, while NACLs are _just_ network control lists, rather than true firewall systems. NACLs really should be used only for coarse-grained decisions about which IP addresses are denied, and which are allowed, at the subnet level. They're really only intended to be used around the edges of networks.
+
+NACLs should be relatively short; if you find your NACLs have grown, with lots of complex rules around ports and IP addresses, you're probably using NACLs incorrectly for firewall purposes. Better to use security groups for that. In most use cases, the default configuration for NACLs can be left as-is.
 
 .Stateful versus stateless firewalls
 ****

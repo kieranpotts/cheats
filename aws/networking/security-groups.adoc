@@ -12,16 +12,25 @@ Strictly speaking, security groups are not attached to instances, but rather are
 
 Unlike a NACL, a security group is stateful. If some traffic is allowed through by an inbound rule, its going to remember that state and allow the response out.
 
+A common pattern for security groups is to have one security group for the "frontend" web servers, one for the "backend" application servers, and perhaps also another for the database servers. The frontend security group would allow traffic on `0.0.0.0/0` (meaning everything). But for the backend security group you might add a rule that says: "Only allow communication from the WebServerSecurityGroup."
+
+image::../_/security-groups.drawio.svg[]
+
+This is an important feature of security groups: you can explicitly allow traffic from other security groups by referencing those other security groups by their unique ID. This means, at scale, we don't have the complexity of managing growing numbers of IP addresses in our firewall configurations.
+
 .Security groups versus Network ACLs
 ****
 |===
 |Security group |NACL
 
-|Applied at the instance (interface) level.
+|Applied at the instance level.
 |Operate at the subnet level.
 
-|Will filter traffic _between_ instances in the same subnet.
-|Only filter _into_ and _out_ from the subnet.
+|Applies only to instances explicitly associated with the security group.
+|Automatically applies to all instances launched into the associated subnets.
+
+|Will filter traffic _between_ instances in the same subnet, if those instances are in different security groups.
+|Only filters traffic _into_ and _out_ from the subnet.
 
 |Must be explicitly applied to individual instances.
 |Automatically applied to all instances within a subnet.
@@ -29,7 +38,15 @@ Unlike a NACL, a security group is stateful. If some traffic is allowed through 
 |Stateful. Return traffic is automatically allowed.
 |Stateless. Return traffic must be explicitly allowed.
 
+|Supports ALLOW rules only.
+|Supports ALLOW and DENY rules.
+
 |Evaluates _all_ rules before allowing traffic (so every rule has an opportunity to override prior ones).
-|Processes rules in order and stops at the first ALLOW or DENY rules that matches.
+|Processes rules in order and stops at the first ALLOW or DENY rules that matches the request.
 |===
+
+[NOTE]
+======
+Neither security groups nor NACLs will filter traffic to or from link-local addresses (`169.254.0.0/16` or AWS-reserved IPv4 addresses (these are the first four IPv4 addresses of the subnet, one ofw which is allocated to the VPC's DNS server).
+======
 ****

@@ -8,6 +8,14 @@ VPC peering can be used to connect VPCs in different regions, and even in differ
 
 For this to work, each VPC must have a separate block of IP addresses. This is why it is important for CIDR ranges to not overlap with one another.
 
-VPC connections are not transitive (ie. you can't route traffic to one VPC via another VPC, it must be direct). So if you want to create a mesh of connections between a group of VPCs, each individual VPC-to-VPC connection must be configured independently. In this use case, a *transit gateway* might be more convenient.
+Establishing a VPC peering is a decentralized process. There is no central location from which you can manage all the VPC peering in your network. Rather, a new peering is initiated by a request from one VPC to another VPC. An owner of a VPC makes a decision to initiate a request to peer with another VPC, and the owner of the VPC must then make a decision whether to accept or reject the request.
+
+The final step is to update the routing tables on each side of the peering, to allow the traffic to flow between them. All communication in VPC peering happens privately, using private IP connectivity.
+
+VPC connections are not transitive (ie. you can't route traffic to one VPC via another VPC, it must be direct). VPC peering is a one-to-one relationship. So if you want to create a mesh of connections between a group of VPCs, each individual VPC-to-VPC connection must be configured independently. 
+
+Managing VPC peering can get very messy the more peerings you require. Every time you add one more VPC, the number of peerings increases exponentially, if you want to achieve any-to-any communicaton between all the VPCs in the network. Eventually, you might even reach the physical limit of the number of peerings a single VPC can have — which is 125.
 
 image::../_/vpc-peering-mesh.drawio.svg[]
+
+In this use case, a *transit gateway* might be more convenient.

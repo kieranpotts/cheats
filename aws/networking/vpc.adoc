@@ -1,11 +1,13 @@
 = Virtual Private Clouds (VPCs)
 
-A *Virtual Private Cloud (VPC)* is like a private network to isolate a group of resources that sit within it. Each VPC is isolated from other VPCs, even those that span the same availability zones in the same region.
+A *Virtual Private Cloud (VPC)* is like a private network to isolate a group of resources that sit within it. Each VPC is isolated from other VPCs, even those that span the same *availability zones (AZs)* in the same region.
 
 A VPC is analogous to having your own data center, but in the cloud. A VPC is a private network in a specific region that is logically separated from other networks in the same region. Because of the logical separation, you can configure and manage a VPC however you like. You have complete control over the virtual networking environment within a VPC, including its IP address range, subnets, route tables, network gateways, and security settings.
 
+You get a default VPC as soon as you create a new AWS account.
+
 Any resources you launch into a VPC will be visible only to your AWS account by default. Resources launched in different VPCs under the same account will be hidden from each other — unless you explicitly configure them to communicate with each other. This is the primary purpose of VPCs: to created logically-isolated groups of resources.
 
-A VPC is region-specific, meaning it is created within a single AWS region. A VPC will span all the availability zones within the same region (there's usually two or three) — in effect, spanning multiple data centers that are geographically close together. This allows resources to be distributed across multiple AZs, adding redundancy to your architecture to achieve high availability and fault tolerance (if one AZ goes down, you can failover to resources in other AZs in the same region). Distributing load across multiple AZs also allows for better resource balancing and scaling.
+A VPC is region-specific, meaning it is created within a single AWS region. A VPC will span all the availability zones (AZs) within the same region (there's usually two or three) — in effect, spanning multiple data centers that are geographically close together. This allows resources to be distributed across multiple AZs, adding redundancy to your architecture to achieve high availability and fault tolerance (if one AZ goes down, you can failover to resources in other AZs in the same region). Distributing load across multiple AZs also allows for better resource balancing and scaling.
 
 You can create multiple VPCs in a region, up to a maximum of five.

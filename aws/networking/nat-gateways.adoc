@@ -76,7 +76,9 @@ image::../_/aws-networking-6.drawio.svg[]
 
 In summary, NAT gateways are always launched into public subnets with the purpose of creating a bridge from resources in private subnets to the internet gateway (IGW). The NAT gateway "translates" (ie. forwards) connections on to the IGW.
 
-A NAT gateway allows resources to reach out to the internet, but disallows incoming traffic from the internet. If you needed a mechanism to direct traffic _to_ an instance in a private subnet, you would use a load balancer.
+A NAT gateway allows resources to reach out to the internet, but disallows incoming traffic from the internet. A NAT gateway is a one-way valve. Use cases for NAT gateways include downloading and installing OS and software patches, fetching data from remote repositories, and making API calls to external services.
+
+If you needed a mechanism to direct traffic _to_ an instance in a private subnet, you would use a load balancer for that purpose.
 
 == NAT instances
 
