@@ -7,3 +7,11 @@
 == Knowledge Center
 
 The *AWS Knowledge Center* is a collection of articles and tutorials that provide answers to common questions and use cases. The content is based on frequently asked questions that AWS receives from its customers.
+
+== Prescriptive Guidance
+
+*https://aws.amazon.com/prescriptive-guidance/[AWS Prescriptive Guidance]* is a collection of resources from AWS technology experts and partners focused on helping customers to accelerate cloud adoption.
+
+== Workshops
+
+*https://workshops.aws/[AWS Workshops]* is a collection of self-paced, hands-on workshops that help you learn about AWS services and solutions.
