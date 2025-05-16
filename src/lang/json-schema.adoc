@@ -84,3 +84,11 @@ There are limits to the values that can be used for coordinates. The values cann
   }
 }
 ----
+
+There are man other good examples on the JSON Schema website: https://json-schema.org/learn/miscellaneous-examples
+
+== Other resources
+
+* The official JSON Schema website has a https://tour.json-schema.org/[Tour of JSON Schema] that provides an interactive interface to learn the basics of JSON Schema.
+
+* The https://www.learnjsonschema.com/2020-12/[Learn JSON Schema] website provides excellent documentation for JSON Schema – much more accessible than the official specifications.
