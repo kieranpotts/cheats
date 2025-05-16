@@ -86,6 +86,10 @@ more complex than utility software!
 
 * link:./src/lib/laravel.adoc[Laravel]
 
+=== Languages
+
+* link:./src/lang/json-schema.adoc[JSON Schema]
+
 ''''
 
 Copyright © 2020-present Kieran Potts, link:./LICENSE.txt[CC0 license]
