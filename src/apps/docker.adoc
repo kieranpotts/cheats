@@ -47,7 +47,7 @@ The `RUN` instruction executes a command in the container. This is used to run c
 
 Finally, the `CMD` instruction specifies the command to run when the container starts.
 
-The `docker build` command will tell Docker to read the Dockerfile and build a container from it, eg.:
+The `docker build` command will tell Docker to read the Dockerfile and build a container image from it, eg.:
 
 ----
 docker build -t btop-image .
@@ -61,6 +61,12 @@ Once the container is built, to execute it we use the `docker run` command, eg:
 
 ----
 docker run -rm -it btop-image
+----
+
+To run the container in detached mode, use the `-d` flag. This will run the container in the background and return the container ID.
+
+----
+docker run -rm -d btop-image
 ----
 
 Use the `-rm` flag for tell Docker to throw away any old containers previously built from the specified image. The `-it` flag is used to run the container in interactive mode.
@@ -105,7 +111,7 @@ CMD ["npm", "start"]
 
 * `docker run -d <image-name>(:<tag>)`: Run a container from an image in the background (detached mode).
 
-* `docker run -rm <image-name>(:<tag>)`: By default, `docker run` creates a fresh container from the specified version tag. This means you can end up with lots of unused containers lying around if you do not explicitly delete them later. Using the `-rm` option on the `run` command will automatically remove any existing containers built from the specified image. If you want to start a container that was previously created then stopped, use `docker start <container-id>` instead.
+* `docker run --rm <image-name>(:<tag>)`: By default, `docker run` creates a fresh container from the specified version tag. This means you can end up with lots of unused containers lying around if you do not explicitly delete them later. Using the `--rm` option on the `run` command will automatically remove any existing containers built from the specified image. If you want to start a container that was previously created then stopped, use `docker start <container-id>` instead.
 
 * `docker run -it <image-name>(:<tag>)`: Run the container in interactive mode, which allows you to interact with the container's shell.
 
