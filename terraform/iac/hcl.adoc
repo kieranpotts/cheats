@@ -20,8 +20,8 @@ resource "aws_instance" "web_server" {
   instance_type = "t2.micro"
 
   tags = {
-    Name = "WebServer"
-    Environment = "Production"
+    Name = "WebServer" # Inline comment.
+    Environment = "Production" // Alternative comment syntax.
   }
 }
 

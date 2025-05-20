@@ -10,7 +10,9 @@ The file should be treated as sensitive data, as it may contain secrets, such as
 
 When you run `terraform apply`, Terraform uses this file to detect what changes need to be made to your infrastructure to reach the desired state as defined in your infrastructure-as-code files. Thus, Terraform can compute the difference between the current and desired configuration, and apply only the minimal changes necessary to reach the desired state.
 
-Terraform also uses this file to record dependency relationships between resources, which helps it compute the correct sequencing of operations when creating or modifying resources.
+Terraform also uses this file to record dependency relationships between resources, which helps it compute the correct sequencing of operations when creating or modifying resources. (Otherwise Terraform will try to `apply` changes in parallel.)
+
+By maintaining this state file, Terraform can manage your infrastructure efficiently. For example, the `terraform apply` operation becomes idempotent, meaning that you can run it multiple times and Terraform will only change what's necessary to change since the last time it was run.
 
 .Example terraform.tfsate
 [source,json]
