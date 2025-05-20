@@ -1,0 +1,41 @@
+= HashiCorp Configuration Language (HCL)
+
+All `*.tf` files are written in HCL, which is a domain-specific language designed for describing infrastructure resources in a declarative manner.
+
+HCL is designed to be human-readable and editable.
+
+Terraform configurations can also be written in JSON, but HCL is generally preferred because it is more concise and easier to read. It is specifically designed for describing infrastructure resources, making it a better fit for Terraform's use case.
+
+.Basic structure and syntax
+[source]
+----
+# Provider configuration
+provider "aws" {
+  region = "us-west-2"
+}
+
+# Resource definition
+resource "aws_instance" "web_server" {
+  ami           = "ami-0c55b159cbfafe1f0"
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = "WebServer"
+    Environment = "Production"
+  }
+}
+
+# Data source
+data "aws_vpc" "default" {
+  default = true
+}
+
+# Module usage
+module "vpc" {
+  source = "terraform-aws-modules/vpc/aws"
+  version = "3.14.0"
+
+  name = "my-vpc"
+  cidr = "10.0.0.0/16"
+}
+----

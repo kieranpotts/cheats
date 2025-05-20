@@ -1,0 +1,100 @@
+= Variables
+
+In Terraform, there are two main files involved in setting input variables: `variables.tf` and `terraform.tfvars`.
+
+The `variables.tf` file is used to declare variables and set their default values. In contains `variable` blocks that define the name, description, type, and default value of each variable. This file is normally committed to version control, as it serves as documentation for the variables used in the Terraform configuration.
+
+The terraform.tfvars file is used to assign values to the variables declared in `variables.tf`. This file is often excluded from version control, as it may contain sensitive data.
+
+Variables are accessed from `*.tf` files via the `var.{name}` syntax. For example, if you have a variable named `vpc_cidr` declared in `variables.tf`, you can reference it in your infrastructure-as-code files via `var.vpc_cidr`.
+
+In summary:
+
+* Required variables are specified in `variables.tf`.
+* The variables are assigned values in `terraform.tfvars`.
+* The values are accessed in the Terraform configuration via `var.{name}`.
+
+This separation makes it easier to maintain a strict variable interface, and easier to change implementations across environments.
+
+== variables.tf
+
+The `variables.tf` file defines the structure and metadata of input variables. It contains:
+
+* Variable names and types
+* Descriptions
+* Validation rules
+* Constraint settings
+* Default values (optional)
+
+.Example
+[source]
+----
+variable "vpc_cidr" {
+  description = "Value of the CIDR range for the VPC"
+  type        = string
+  default     = "10.0.0.0/16"
+}
+
+variable "vpc_name" {
+  description = "Value of the name for the VPC"
+  type        = string
+  default     = "MyTestVPC"
+}
+
+variable "subnet_cidr" {
+  description = "Value of the subnet cidr for the VPC"
+  type        = string
+  default     = "10.0.1.0/24"
+}
+
+variable "subnet_name" {
+  description = "Value of the subnet name for the VPC"
+  type        = string
+  default     = "MyTestSubnet"
+}
+
+variable "igw_name" {
+  description = "Value of the Internet Gateway for the VPC"
+  type        = string
+  default     = "MyTestIGW"
+}
+
+variable "ec2_ami" {
+  description = "Value of the AMI ID for the EC2 instance"
+  type        = string
+  default     = "ami-03c6b308140d10488"
+}
+
+variable "ec2_name" {
+  description = "Value fo the Name for the EC2 instance"
+  type        = string
+  default     = "MyTestEC2"
+}
+----
+
+== terraform.tfvars
+
+The `terraform.tfvars` file provides actual values for the variables defined in `variables.tf`. This file contains:
+
+* Simple variable assignments
+* Environment-specific settings
+* Credential values
+
+.Example
+[source]
+----
+## VPC
+vpc_cidr = "10.0.0.0/16"
+vpc_name = "MyTestVPC"
+
+## Public Subnet
+subnet_cidr = "10.0.1.0/24"
+subnet_name = "MyTestSubnet"
+
+## Internet Gateway
+igw_name = "MyTestIGW"
+
+## EC2 Instance
+ec2_ami = "ami-03c6b308140d10488"
+ec2_name = "MyTestEC2"
+----

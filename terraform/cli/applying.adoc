@@ -1,0 +1,12 @@
+= Applying
+
+Run `terraform apply` to apply the changes to your infrastructure.
+
+When applying, you can override any default values for variables – declared via `variables.tf` or `terraform.tfvars` – and used within the Terraform files, eg.:
+
+[source]
+----
+$ terraform apply -var "instance_name="MyNewNameEC2"
+----
+
+If you have more than a few variables to set, then better to create a file called `terraform.tfvars` and set the variables there – that's the purpose of this file.

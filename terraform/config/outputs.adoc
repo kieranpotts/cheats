@@ -1,0 +1,30 @@
+= Outputs
+
+Often, you want Terraform to output some data someplace, so you can review it later. This is particularly important when Terraform is run in a pipeline. For example, you might want to know the IP addresses of newly created services, so you can ping them.
+
+You define outputs in an `output.tf` file. Example:
+
+[source]
+----
+output "instance_id" {
+  description = "ID of the EC2 instance"
+  value       = aws_instance.app_instance.id
+}
+
+output "instance_public_ip" {
+  description = "Public IP address of the EC2 instance"
+  value       = aws_instance.app_instance.public_ip
+}
+----
+
+The values will be captured and printed to the standard output when `terraform apply` is run:
+
+[source]
+----
+Outputs:
+
+instance_id = "i-07bca4e61ccba1542"
+instance_public_ip = "52.56.205.129"
+----
+
+If you want to see the outputs from the last `apply` operation, run `terraform output`.

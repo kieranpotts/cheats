@@ -1,0 +1,5 @@
+= Planning
+
+Run `terraform plan` to see what changes are required to update your infrastructure to match the desired state, as specified in your infrastructure-as-code.
+
+The changes will not be applied until you run `terraform apply`.
