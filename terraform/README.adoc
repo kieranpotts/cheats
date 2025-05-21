@@ -31,6 +31,7 @@ See the `examples` directory for working examples of Terraform configs for vario
 * link:./iac/aws/security-groups.adoc[Security groups]
 * link:./iac/aws/elastic-ip.adoc[Elastic IPs]
 * link:./iac/aws/dependencies.adoc[Dependencies]
+* link:./iac/aws/secrets.adoc[Secrets]
 
 === GCP
 

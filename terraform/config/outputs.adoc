@@ -128,3 +128,17 @@ instances_ids = [
 ----
 
 If you want to see the outputs from the last `apply` operation, run `terraform output`.
+
+== Secrets
+
+Secrets should be marked as sensitive in output. This means the value will not be displayed in the console output when running `terraform apply`. This is a good practice for sensitive information like passwords.
+
+[source]
+----
+output "rds_password" {
+  value     = data.aws_ssm_parameter.rds_password.value
+  sensitive = true
+}
+----
+
+However, secrets such as resource passwords will always be printed to the `terraform.tfstate` file, regardless of whether the data is marked as sensitive. Therefore, it is important to ensure that the state file is stored securely and access is restricted to authorized personnel only.
