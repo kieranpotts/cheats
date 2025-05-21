@@ -1,0 +1,12 @@
+= Arguments
+
+In HCL, an _argument_ is a variable assignment.
+
+[source]
+----
+image_id = "ami-0c55b159cbfafe1f0"
+----
+
+The part before the `=` sign is the _argument name_ and the part after the `=` sign is the _argument value_. Many arguments accept arbitrary expressions, which allow the vale to be generated from other values programmatically.
+
+Arguments are used to configure the behavior of a block. What values are allowed can vary depending on the block type.

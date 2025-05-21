@@ -1,0 +1,76 @@
+= Blocks
+
+In HCL, a _block_ is a container for content.
+
+Every block has a _type_, which is the keyword that opens the block. The following block it of type `resource`:
+
+[source]
+----
+resource "aws_instance" "web_server" {
+  ami           = "ami-0c55b159cbfafe1f0" # Amazon Linux 2
+  instance_type = "t3.micro"
+
+  network_interface {
+    // ...
+  }
+}
+----
+
+The values after the type, but before the opening brace, are _labels_. The number of labels, and their semantics, vary depending on the block type. In the example above, there are two labels: "aws_instance" and "web server". The first label is specific to the AWS Provider and it specifies the type of the resource to create. The second label is an arbitrary name for the resource, which is used to refer to the resource in other parts of the configuration.
+
+You can create multiple instances of the same block type and differentiate them by giving each instance a unique name.
+
+After the block type keyword and any labels, the block body is delimited by the `{` and `}` characters. Within the block body, further arguments (aka. variable assignments) and blocks may be nested.
+
+== Dynamic blocks
+
+Imagine you need to specify twenty different ingress rules for a security group. You could write them all out as static `ingress` blocks, but better to use a dynamic block to generate them programmatically. Example:
+
+[source]
+----
+resource "aws_default_vpc" "default" {} # This need to be added since AWS Provider v4.29+ to get VPC id
+
+resource "aws_security_group" "web" {
+  name        = "Dynamic-Blocks-SG"
+  description = "Security Group built using dynamic blocks"
+  vpc_id      = aws_default_vpc.default.id
+
+  dynamic "ingress" {
+    for_each = ["80", "8080", "443", "1000", "8443"]
+    content {
+      description = "Allow port HTTP"
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+
+  dynamic "ingress" {
+    for_each = ["8000", "9000", "7000", "1000"]
+    content {
+      description = "Allow port UDP"
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "udp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+
+  ingress {
+    description = "Allow port SSH"
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]
+  }
+
+  egress {
+    description = "Allow ALL ports"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+----
