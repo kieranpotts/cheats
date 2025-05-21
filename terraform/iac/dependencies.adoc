@@ -1,0 +1,93 @@
+= Dependencies
+
+By default, Terraform will try to infer dependencies between resources, determining the order in which changes are applied. Otherwise, Terraform will try to create resources in parallel.
+
+You can use the configuration to control the sequencing of changes.
+
+In the following example, we have three servers, and one security group that is applied to all of the servers.
+
+[source]
+----
+provider "aws" {
+  region = "eu-central-1"
+}
+
+resource "aws_default_vpc" "default" {}
+
+resource "aws_instance" "my_server_web" {
+  ami                    = "ami-0bd39c806c2335b95"
+  instance_type          = "t3.micro"
+  vpc_security_group_ids = [aws_security_group.general.id]
+  tags                   = { Name = "Server-Web" }
+}
+
+resource "aws_instance" "my_server_app" {
+  ami                    = "ami-0bd39c806c2335b95"
+  instance_type          = "t3.micro"
+  vpc_security_group_ids = [aws_security_group.general.id]
+  tags                   = { Name = "Server-App" }
+}
+
+resource "aws_instance" "my_server_db" {
+  ami                    = "ami-0bd39c806c2335b95"
+  instance_type          = "t3.micro"
+  vpc_security_group_ids = [aws_security_group.general.id]
+  tags                   = { Name = "Server-DB" }
+}
+
+resource "aws_security_group" "general" {
+  name   = "My Security Group"
+  vpc_id = aws_default_vpc.default.id
+
+  dynamic "ingress" {
+    for_each = ["80", "443", "22", "3389"]
+    content {
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "My SecurityGroup"
+  }
+}
+----
+
+The only implicit dependencies is between each of the three resources and the security group. Because the security group is referenced from all of the server resources, Terraform will redeploy the security group before deploying any updates to the servers.
+
+Terraform will try to deploy updates to the servers in parallel. If we want to control the order in which the servers are deployed, we can use the `depends_on` argument to define explicit dependencies.
+
+The following changes will ensure that the database server is deployed first, followed by the application server, and finally the web server.
+
+[source]
+----
+resource "aws_instance" "my_server_web" {
+  // ...
+
+  depends_on = [
+    aws_instance.my_server_db,
+    aws_instance.my_server_app
+  ]
+}
+
+resource "aws_instance" "my_server_app" {
+  // ...
+
+  depends_on = [aws_instance.my_server_db]
+}
+
+resource "aws_instance" "my_server_db" {
+  // ...
+}
+----
+
+Destruction of resources will happen in the reverse order.
