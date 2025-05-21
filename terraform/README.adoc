@@ -33,6 +33,7 @@ See the `examples` directory for working examples of Terraform configs for vario
 * link:./iac/aws/dependencies.adoc[Dependencies]
 * link:./iac/aws/secrets.adoc[Secrets]
 * link:./iac/aws/data-sources.adoc[Data sources]
+* link:./iac/aws/high-availability.adoc[High availability configurations]
 
 === GCP
 
