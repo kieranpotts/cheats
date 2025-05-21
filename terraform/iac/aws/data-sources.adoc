@@ -1,0 +1,140 @@
+= AWS: Data sources
+
+Data sources is a feature to fetch data about AWS resources – which may or may not be managed by Terraform. This is useful for referencing existing resources, such as VPCs, subnets, and security groups.
+
+[source]
+----
+provider "aws" {
+  // ...
+}
+
+/* Get the current region. This might be defined in the
+provider block, above. Or it may be specified via an environment
+variable, eg. `export AWS_DEFAULT_REGION="us-west-1". This
+block doesn't require any arguments. */
+data "aws_region" "current" {}
+
+/* Example usage: */
+output "region_name" {
+  value = data.aws_region.current.name
+}
+output "region_description" {
+  value = data.aws_region.current.description
+}
+
+/* This tells you your AWS account ID. */
+data "aws_caller_identity" "current" {}
+
+/* Example usage: */
+output "account_id" {
+  value = data.aws_caller_identity.current.account_id
+}
+
+/* This gives you a list of all availability zones in use. */
+data "aws_availability_zones" "working" {}
+
+/* Example usage: */
+output "availability_zones" {
+  value = data.aws_availability_zones.working.names
+}
+
+/* You can get all VPCs in use: */
+data "aws_vpcs" "vpcs" {}
+
+/* Example usage: */
+output "all_vpc_ids" {
+  value = data.aws_vpcs.vpcs.ids
+}
+
+/* This block retrieves the VPC with the tag "Name" set to "PROD".
+Any arguments in this block are basically used as search parameters. */
+data "aws_vpc" "prod" {
+  tags = {
+    Name = "PROD"
+  }
+}
+----
+
+A common use case is to fetch data about a specific resource, as in the example above, and then use that data to do things with the resource. In the examples below, we define subnets for the VPC in the AZs we have retrieved via the data source blocks, above.
+
+[source]
+----
+resource "aws_subnet" "subnet1" {
+  vpc_id            = data.aws_vpc.prod.id
+  availability_zone = data.aws_availability_zones.working.names[0]
+  cidr_block        = "10.0.1.0/24"
+
+  tags = {
+    Name = "Subnet-1"
+    Info = "AZ: ${data.aws_availability_zones.working.names[0]} in Region: ${data.aws_region.current.description}"
+  }
+}
+
+resource "aws_subnet" "subnet2" {
+  vpc_id            = data.aws_vpc.prod.id
+  availability_zone = data.aws_availability_zones.working.names[1]
+  cidr_block        = "10.0.2.0/24"
+
+  tags = {
+    Name = "Subnet-2"
+    Info = "AZ: ${data.aws_availability_zones.working.names[1]} in Region: ${data.aws_region.current.description}"
+  }
+}
+----
+
+Another use case for data sources is to dynamically update resources to the latest images (AMIs), rather than relying on maintaining hard-coded values. Examples:
+
+[source]
+----
+data "aws_ami" "latest_ubuntu20" {
+  /* These are all filters to find the image we want.
+  The owner is taken from the AWS console – it is the owner
+  of the target image we want. */
+  owners      = ["099720109477"]
+  most_recent = true
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+  }
+}
+
+data "aws_ami" "latest_amazonlinux" {
+  owners      = ["137112412989"]
+  most_recent = true
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+}
+
+data "aws_ami" "latest_windowserver2019" {
+  owners      = ["801119661308"]
+  most_recent = true
+  filter {
+    name   = "name"
+    values = ["Windows_Server-2019-English-Full-Base-*"]
+  }
+}
+----
+
+Usage examples:
+
+[source]
+----
+resource "aws_instance" "server_ubuntu" {
+  ami           = data.aws_ami.latest_ubuntu20.id
+  instance_type = "t3.micro"
+}
+
+
+resource "aws_instance" "server_amazon" {
+  ami           = data.aws_ami.latest_amazonlinux.id
+  instance_type = "t3.micro"
+}
+
+
+resource "aws_instance" "server_windows" {
+  ami           = data.aws_ami.latest_windowserver2019.id
+  instance_type = "t3.micro"
+}
+----
