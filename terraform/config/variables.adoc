@@ -100,3 +100,117 @@ igw_name = "MyTestIGW"
 ec2_ami = "ami-03c6b308140d10488"
 ec2_name = "MyTestEC2"
 ----
+
+== Default values
+
+If a variable does not have a default value, and if no value is assigned to it in `terraform.tfvars`, Terraform will prompt for a value when the configuration is applied using `terraform apply`.
+
+It is RECOMMENDED that all variables have default values. This allows the configuration to be used without requiring any input from the user. This also makes it easier to automate deployment to different environments (eg. to test and staging environments).
+
+== Advanced variable usage
+
+To replace this list of ports:
+
+[source]
+----
+dynamic "ingress" {
+  for_each = ["80", "443"]
+  content {
+    // ...
+  }
+}
+----
+
+Declare a variable, and assign a value:
+
+[source]
+----
+variable "port_list" {
+  description = "List of Ports to open for our WebServer"
+  type        = list(any)
+  default     = ["80", "443"]
+}
+----
+
+Then we can use the variable in the `for_each` statement:
+
+[source]
+----
+dynamic "ingress" {
+  for_each = var.port_list
+  content {
+    // ...
+  }
+}
+----
+
+Variable values can also be maps, allowing for things like tags to be extracted to variables:
+
+.main.tf
+[source]
+----
+resource "aws_eip" "web" {
+  instance = aws_instance.web.id
+  tags     = var.tags
+}
+----
+
+.variables.tf
+[source]
+----
+variable "tags" {
+  description = "Tags to Apply to Resources"
+  type        = map(any)
+  default = {
+    Name = "EIP for WebServer"
+    Environment = "Test"
+    Owner = "K Potts"
+  }
+}
+----
+
+You can also extend maps using the `merge` function. This is useful for adding tags to resources without having to modify the original map.
+
+.main.tf
+[source]
+----
+resource "aws_eip" "web" {
+  instance = aws_instance.web.id
+  tags     = merge(var.tags, {
+    Name = "EIP for WebServer in environment ${var.tags["Environment"]}"
+  })
+}
+----
+
+The above example also demonstrates how you can inject the values of variables into string values, using the `${var}` syntax. This is useful for creating dynamic values based on the values of other variables.
+
+== Secrets
+
+Variables that hold secrets should be marked as sensitive. This prevents Terraform from displaying the values in the console output. (It does not stop secrets leaking into the Terraform state file, however.)
+
+[source]
+----
+variable "key_pair" {
+  description = "SSH Key pair name to ingest into EC2"
+  type        = string
+  default     = "CanadaKey"
+  sensitive   = true
+}
+----
+
+== Validation
+
+Validation blocks can be nested in variable block. Each validation block defines a condition that assigned values must meet. If the condition is not met, an error message is displayed and `terraform apply` will not run.
+
+[source]
+----
+variable "password" {
+  description = "Please Enter Password lenght of 10 characters!"
+  type        = string
+  sensitive   = true
+  validation {
+    condition     = length(var.password) == 10
+    error_message = "Your Password must be 10 characted exactly!!!"
+  }
+}
+----
