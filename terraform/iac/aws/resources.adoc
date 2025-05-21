@@ -1,0 +1,199 @@
+= AWS: Resources
+
+A minimal definition for a resource that will run a web server on an EC2 instance.
+
+.main.tf
+[source]
+----
+resource "aws_instance" "web_server" {
+  ami           = "ami-0c55b159cbfafe1f0" # Amazon Linux 2
+  instance_type = "t3.micro"
+}
+----
+
+The "aws_instance" resource type refers to an EC2 instance. The "web_server" bit can be whatever value we want to identify the resource in the rest of your infrastructure-as-code artifacts.
+
+== Tags
+
+Optionally, tags may be added to resources. Tags are key-value pairs that can be used to identify and organize resources.
+
+.main.tf
+[source]
+----
+resource "aws_instance" "web_server" {
+  ami           = "ami-0c55b159cbfafe1f0" # Amazon Linux 2
+  instance_type = "t3.micro"
+
+  tags = {
+    Name = var.ec2_name
+  }
+}
+----
+
+Amazon Machine Image (AMI) codes can be found at https://console.aws.amazon.com/ec2/. These values are another good candidate to extract to variables.
+
+.terraform.tfvars
+[source]
+----
+## EC2 Instance
+ec2_ami = "ami-0c55b159cbfafe1f0"
+ec2_name = "MyTestEC2"
+----
+
+.main.tf
+[source]
+----
+resource "aws_instance" "web_server" {
+  ami           = var.ec2_ami
+  instance_type = "t3.micro"
+
+  tags = {
+    Name = var.ec2_name
+  }
+}
+----
+
+== Security groups
+
+All resources should be added to at least one security group. Security groups are referenced via their IDs.
+
+.main.tf
+[source]
+----
+resource "aws_instance" "web_server" {
+  ami           = "ami-0c55b159cbfafe1f0" # Amazon Linux 2
+  instance_type = "t3.micro"
+
+  vpc_security_group_ids = [aws_security_group.web_sg.id]
+}
+----
+
+== Public IP address assignment
+
+By default, EC2 instances are assigned a private IP address. If you want to assign a public IP address, you must set the `associate_public_ip_address` argument to `true`.
+
+.main.tf
+[source]
+----
+resource "aws_instance" "web_server" {
+  ami           = "ami-0c55b159cbfafe1f0" # Amazon Linux 2
+  instance_type = "t3.micro"
+
+  vpc_security_group_ids = [aws_security_group.web_sg.id]
+  associate_public_ip_address = true
+}
+----
+
+== User data
+
+User data is a script that runs when an instance is launched. This example installs a web server and creates a simple HTML page with the instance's private IP address; it shows how to use heredoc syntax to define multi-line scripts.
+
+.main.tf
+[source]
+----
+resource "aws_instance" "web_server" {
+  ami           = "ami-0c55b159cbfafe1f0" # Amazon Linux 2
+  instance_type = "t3.micro"
+
+  vpc_security_group_ids = [aws_security_group.web_sg.id]
+
+  user_data = <<<EOF
+#!/bin/bash
+
+yum update -y
+yum install -y httpd
+
+MYIP=`curl http://169.254.169.254/latest/meta-data/local-ipv4`
+echo "<h2>Web server with private IP: $MYIP</h2>" > /var/www/html/index.html
+
+service httpd start
+chkconfig httpd on
+
+EOF
+}
+----
+
+Alternatively, rather than inlining user data scripts, you can load them from separate files. Note the inclusion of the `user_data_replace_on_change` argument – this is required.
+
+.main.tf
+[source]
+----
+resource "aws_instance" "web_server" {
+  ami           = "ami-0c55b159cbfafe1f0" # Amazon Linux 2
+  instance_type = "t3.micro"
+
+  vpc_security_group_ids = [aws_security_group.web_sg.id]
+
+  user_data                   = file("user_data.sh")
+  user_data_replace_on_change = true
+}
+----
+
+.user_data.sh
+[source,bash]
+----
+#!/bin/bash
+
+yum -y update
+yum -y install httpd
+
+MYIP=`curl http://169.254.169.254/latest/meta-data/local-ipv4`
+echo "<h2>WebServer with PrivateIP: $MYIP</h2>" > /var/www/html/index.html
+
+service httpd start
+chkconfig httpd on
+
+----
+
+Alternatively, template files can be used. This is useful if you want to use variables in the user data script.
+
+The `file()` function is swapped for `templatefile()`. It is not required to use the `.tpl` file extension for template files.
+
+.main.tf
+[source]
+----
+resource "aws_instance" "web_server" {
+  ami           = "ami-0c55b159cbfafe1f0" # Amazon Linux 2
+  instance_type = "t3.micro"
+
+  vpc_security_group_ids = [aws_security_group.web_sg.id]
+
+  user_data = templatefile("user_data.sh.tpl", {
+    f_name = "John"
+    l_name = "Doe"
+    friends = ["John", "Joe", "Jane"]
+  })
+  user_data_replace_on_change = true
+}
+----
+
+.user_data.sh.tpl
+[source,bash]
+----
+#!/bin/bash
+
+yum -y update
+yum -y install httpd
+
+cat <<EOF > /var/www/html/index.html
+<html>
+  <head>
+    <title>My Web Server</title>
+  </head>
+  <body>
+    <h1>My Web Server</h1>
+    <p>My name is ${f_name} ${l_name}</p>
+    <p>My friends are:</p>
+    <ul>
+    %{ for name in friends ~ }
+      <li>${name}</li>
+    %{ endfor ~ }
+    </ul>
+  </body>
+</html>
+EOF
+
+service httpd start
+chkconfig httpd on
+
+----

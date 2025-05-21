@@ -1,0 +1,47 @@
+= AWS: Provider
+
+For AWS, the provider name is "aws".
+
+The "region" argument is required.
+
+[source]
+----
+provider "aws" {
+  region = "eu-west-2"
+}
+----
+
+Access credentials are required. These MAY be hard-coded or injected from environment variables.
+
+[source]
+----
+provider "aws" {
+  region = "eu-west-2"
+
+  access_key = "AKIA..."
+  secret_key = "yvDpm..."
+}
+----
+
+However, hard-coding credentials is NOT recommended. Instead, credentials SHOULD be set in profiles, which are configured in `~/.aws/credentials` (or the equivalent for other providers).
+
+In the following example, the credentials are loaded from the "default" profile.
+
+[source]
+----
+provider "aws" {
+  profile = "default"
+  region = "eu-west-2"
+}
+----
+
+.~/.aws/credentials
+[source]
+----
+[default]
+aws_access_key_id = AKIA...
+aws_secret_access_key = yvDpm...
+----
+
+Further configuration options for the AWS provider can be found in the official documentation:
+https://registry.terraform.io/providers/hashicorp/aws/latest/docs

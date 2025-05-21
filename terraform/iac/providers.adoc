@@ -13,26 +13,7 @@ provider "aws" {
 }
 ----
 
-Developers SHOULD NOT hard-code credentials in Terraform files. Instead, credentials SHOULD be set in profiles, which are configured in `~/.aws/credentials` (or the equivalent for other providers).
-
-In the following example, the credentials are loaded from the "default" profile.
-
-[source]
-----
-provider "aws" {
-  profile = "default"
-  region = "eu-west-2"
-}
-----
-
-.~/.aws/credentials
-[source]
-----
-[default]
-aws_access_key_id = AKIA...
-aws_secret_access_key = yvDpm...
-----
+Developers SHOULD NOT hard-code access credentials in Terraform files. See the examples for individual cloud providers for more information.
 
 To configure providers, follow the relevant documentation in the Terraform registry. The documentation for the AWS provider is here:
-
 https://registry.terraform.io/providers/hashicorp/aws/latest/docs

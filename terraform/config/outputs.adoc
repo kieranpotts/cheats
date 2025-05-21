@@ -2,7 +2,7 @@
 
 Often, you want Terraform to output some data someplace, so you can review it later. This is particularly important when Terraform is run in a pipeline. For example, you might want to know the IP addresses of newly created services, so you can ping them.
 
-You define outputs in an `output.tf` file. Example:
+Outputs are typically defined in an `output.tf` file. Example:
 
 [source]
 ----

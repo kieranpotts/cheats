@@ -16,6 +16,8 @@ In summary:
 
 This separation makes it easier to maintain a strict variable interface, and easier to change implementations across environments.
 
+It is RECOMMENDED to define variables for all values that are likely to change between environments, and between deployments to the same environment.
+
 == variables.tf
 
 The `variables.tf` file defines the structure and metadata of input variables. It contains:
@@ -26,7 +28,7 @@ The `variables.tf` file defines the structure and metadata of input variables. I
 * Constraint settings
 * Default values (optional)
 
-.Example
+.variables.tf
 [source]
 ----
 variable "vpc_cidr" {
@@ -80,7 +82,7 @@ The `terraform.tfvars` file provides actual values for the variables defined in 
 * Environment-specific settings
 * Credential values
 
-.Example
+.terraform.tfvars
 [source]
 ----
 ## VPC

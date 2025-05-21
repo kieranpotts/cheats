@@ -1,0 +1,83 @@
+= AWS: Security groups
+
+Security groups are virtual firewalls that control inbound and outbound traffic to AWS resources.
+
+In Terraform, they are typically defined in the same file as the resources they are associated with. This is because security groups are often created and modified alongside the resources they protect. But this is optional – you may define all security groups centrally, in a single file.
+
+The following security group allows all inbound HTTP and HTTPS traffic, and all outbound traffic (on any protocol). This is a common configuration for web servers.
+
+.main.tf
+[source]
+----
+resource "aws_default_vpc" "default" {}
+
+# Allow HTTP/S traffic
+resource "aws_security_group" "web_sg" {
+  name        = "web_sg"
+
+  vpc_id      = aws_default_vpc.default.id
+
+  # Incoming traffic rule - allow HTTP.
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Incoming traffic rule - allow HTTPS.
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Outgoing traffic rule - allow everything.
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = -1
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+----
+
+Notice the inclusion of the `vpc_id` argument. This is required since AWS provider v4.29. The VPC ID is the ID of the default VPC, which is created automatically in each AWS region. The `aws_default_vpc` resource, which references the default VPC, is needed to retrieve the VPC ID.
+
+It is RECOMMENDED to provide descriptions for security groups, and each rule within them. This is not required, but it removes the necessity for inline comments and the descriptions are displayed in the AWS console. The descriptions are also useful for auditing purposes.
+
+.main.tf
+[source]
+----
+resource "aws_security_group" "web_sg" {
+  name        = "web_sg"
+  description = "Allow HTTP/S traffic"
+
+  vpc_id      = aws_default_vpc.default.id
+
+  ingress {
+    description = "Allow HTTP traffic"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    description = "Allow HTTPS traffic"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Allow all outbound traffic"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+----
