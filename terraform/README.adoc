@@ -28,6 +28,11 @@ See the `examples` directory for working examples of Terraform configs for vario
 * link:./iac/aws/resources.adoc[Resources]
 * link:./iac/aws/security-groups.adoc[Security groups]
 
+=== GCP
+
+* link:./iac/gcp/provider.adoc[Provider]
+* link:./iac/gcp/resources.adoc[Resources]
+
 == CLI and workflow
 
 * link:./cli/initializing.adoc[Initializing]

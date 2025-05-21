@@ -2,7 +2,7 @@
 
 Whenever you create a new Terraform config, you need to run `terraform init` from the directory containing the config files.
 
-This "initializes the backend", which is to say it downloads and enabled the plugins (binary files) necessary to interact with your infrastructure provider.
+This "initializes the back-end", which is to say it downloads and enabled the plugins (binary files) necessary to interact with your infrastructure provider.
 
 [source,cli]
 ----
