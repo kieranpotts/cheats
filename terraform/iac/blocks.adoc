@@ -57,6 +57,8 @@ resource "aws_security_group" "web" {
     }
   }
 
+  /* Non-dynamic blocks: */
+
   ingress {
     description = "Allow port SSH"
     from_port   = 22
