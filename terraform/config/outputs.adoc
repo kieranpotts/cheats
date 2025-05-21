@@ -2,20 +2,114 @@
 
 Often, you want Terraform to output some data someplace, so you can review it later. This is particularly important when Terraform is run in a pipeline. For example, you might want to know the IP addresses of newly created services, so you can ping them.
 
-Outputs are typically defined in an `output.tf` file. Example:
+The following configuration defines three compute instances and one security group on AWS:
 
 [source]
 ----
-output "instance_id" {
-  description = "ID of the EC2 instance"
-  value       = aws_instance.app_instance.id
+provider "aws" {
+  region = "eu-central-1"
 }
 
-output "instance_public_ip" {
-  description = "Public IP address of the EC2 instance"
-  value       = aws_instance.app_instance.public_ip
+resource "aws_default_vpc" "default" {}
+
+resource "aws_instance" "my_server_web" {
+  ami                    = "ami-0bd39c806c2335b95"
+  instance_type          = "t3.micro"
+  vpc_security_group_ids = [aws_security_group.general.id]
+}
+
+resource "aws_instance" "my_server_app" {
+  ami                    = "ami-0bd39c806c2335b95"
+  instance_type          = "t3.micro"
+  vpc_security_group_ids = [aws_security_group.general.id]
+}
+
+resource "aws_instance" "my_server_db" {
+  ami                    = "ami-0bd39c806c2335b95"
+  instance_type          = "t3.micro"
+  vpc_security_group_ids = [aws_security_group.general.id]
+}
+
+resource "aws_security_group" "general" {
+  name   = "My Security Group"
+  vpc_id = aws_default_vpc.default.id
+
+  dynamic "ingress" {
+    for_each = ["80", "443", "22", "3389"]
+    content {
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 ----
+
+The following defines some useful outputs for the above configuration:
+
+[source]
+----
+/* Print the security group ID */
+output "my_securitygroup_id" {
+  /* The description is optional, and is only for documentation */
+  description = "Security Group ID for my servers"
+
+  /* The actual value to be printed: */
+  value       = aws_security_group.general.id
+}
+
+/* Print the private IP address of each instance. */
+output "web_private_ip" {
+  value = aws_instance.my_server_web.private_ip
+}
+output "app_private_ip" {
+  value = aws_instance.my_server_app.private_ip
+}
+output "db_private_ip" {
+  value = aws_instance.my_server_db.private_ip
+}
+
+/* The output value can also be a list or map.
+This prints a list of instance IDs. */
+output "instances_ids" {
+  value = [
+    aws_instance.my_server_web.id,
+    aws_instance.my_server_app.id,
+    aws_instance.my_server_db.id
+  ]
+}
+----
+
+Available attributes are documented in the Terraform registry.
+
+You can print out everything about a resource — all "general" information, not just specific attributes. This is useful for debugging.
+
+[source]
+----
+output "my_securitygroup_all_details" {
+  description = "All the details of my Security Group"
+  value       = aws_security_group.general
+}
+----
+
+You can also print literal values, if you need:
+
+[source]
+----
+output "my_output" {
+  value = "Hello, world!"
+}
+----
+
+A common convention is to define outputs in a file named `output.tf` file.
 
 The values will be captured and printed to the standard output when `terraform apply` is run:
 
@@ -23,8 +117,14 @@ The values will be captured and printed to the standard output when `terraform a
 ----
 Outputs:
 
-instance_id = "i-07bca4e61ccba1542"
-instance_public_ip = "52.56.205.129"
+web_private_ip = 172.31.8.193
+app_private_ip = 172.31.11.28
+db_private_ip = 172.31.12.05
+instances_ids = [
+  "i-0a1234567890abcdef",
+  "i-0b1234567890abcdef",
+  "i-0c1234567890abcdef"
+]
 ----
 
 If you want to see the outputs from the last `apply` operation, run `terraform output`.
