@@ -101,11 +101,58 @@ ec2_ami = "ami-03c6b308140d10488"
 ec2_name = "MyTestEC2"
 ----
 
-== Default values
+You MAY change the name of the `terraform.tfvars` file to something else. Terraform will automatically import variables from any file with the naming convention `*.auto.tfvars` or `*.auto.tfvars.json`.
+
+Sometimes you don't want Terraform to automatically import variables. Instead, you want to explicitly specify the file to use. This is done using the `-var-file` command-line option.
+
+----
+$ terraform apply -var-file="staging.tfvars"
+----
+
+This can be useful for separating environment-specific variables from the main/default configuration.
+
+== Command-line input
 
 If a variable does not have a default value, and if no value is assigned to it in `terraform.tfvars`, Terraform will prompt for a value when the configuration is applied using `terraform apply`.
 
-It is RECOMMENDED that all variables have default values. This allows the configuration to be used without requiring any input from the user. This also makes it easier to automate deployment to different environments (eg. to test and staging environments).
+Alternatively, users can explicitly input required values using the `-var` command-line option.
+
+----
+$ terraform apply -var="password=abcdefghik"
+----
+
+Variables inputted via the command line will override any values set in `terraform.tfvars`, which in turn overrides any default values set in `variables.tf`.
+
+== Environment variables
+
+An alternative way for users to set variable values is to use environment variables.
+
+This is particularly useful for setting sensitive values, such as passwords or API keys, without exposing them in the command line or in the `terraform.tfvars` file.
+
+Environment variables with the `TF_VAR_` prefix will be automatically picked up and the values "auto-filled" by Terraform. The following example shows how to set the `password` variable using an environment variable:
+
+----
+export TF_VAR_password=abcdefghik
+----
+
+== Default values
+
+It is RECOMMENDED that all variables have default values.
+
+This allows the configuration to be used without requiring any command-line input from the user.
+
+Having default values for everything also makes it easier to automate deployment to different environments (eg. to test and staging environments).
+
+== Variable precedence
+
+Terraform loads variables in the following order. Later sources will override and extend earlier sources.
+
+* Default values set in `variables.tf`.
+* Environment variables.
+* The `terraform.tfvars` file, if present.
+* The `terraform.tfvars.json` file, if present.
+* Any `*.auto.tfvars` or `*.auto.tfvars.json` files, if present, in the lexical order of their file names.
+* Any `-var` or `-var-file` command-line options specified on the command line.
 
 == Advanced variable usage
 
@@ -205,12 +252,95 @@ Validation blocks can be nested in variable block. Each validation block defines
 [source]
 ----
 variable "password" {
-  description = "Please Enter Password lenght of 10 characters!"
+  description = "Please Enter Password length of 10 characters!"
   type        = string
   sensitive   = true
   validation {
     condition     = length(var.password) == 10
-    error_message = "Your Password must be 10 characted exactly!!!"
+    error_message = "Your password must be 10 characters exactly"
   }
 }
 ----
+
+== Local variables
+
+Local variables are a way to assign a value to a variable that is only used within the scope of the module it is defined in. This is useful for creating temporary variables that are not intended to be passed to other modules or resources.
+
+Consider the following example:
+
+[source]
+----
+data "aws_region" "current" {}
+data "aws_availability_zones" "available" {}
+
+resource "aws_vpc" "main" {
+  cidr_block = var.vpc_cidr
+  tags = merge(var.tags, {
+    Name = var.vpc_name
+    Description = "This resource is in ${data.aws_region.current.description} and consists of ${length(data.aws_availability_zones.available.names)} availability zones"
+  })
+}
+----
+
+The value of the `Description` tag is a good candidate for a local variable.
+
+[source]
+----
+data "aws_region" "current" {}
+data "aws_availability_zones" "available" {}
+
+locals {
+  Description = "This resource is in ${data.aws_region.current.description} and consists of ${length(data.aws_availability_zones.available.names)} availability zones"
+}
+
+resource "aws_vpc" "main" {
+  cidr_block = var.vpc_cidr
+  tags = merge(var.tags, {
+    Name = var.vpc_name
+    Description = local.Description
+  })
+}
+----
+
+You could even break this down further:
+
+
+[source]
+----
+data "aws_region" "current" {}
+data "aws_availability_zones" "available" {}
+
+locals {
+  Number_of_AZs   = length(data.aws_availability_zones.available.names)
+  Names_of_AZs    = join(",", data.aws_availability_zones.available.names)
+  Description     = "This resource is in ${data.aws_region.current.description} and consists of ${local.Number_of_AZs} AZs"
+}
+
+resource "aws_vpc" "main" {
+  cidr_block = var.vpc_cidr
+  tags = merge(var.tags, {
+    Name = var.vpc_name
+    Region_Info = local.Description
+    AZ_Names    = local.Names_of_AZs
+  })
+}
+----
+
+Multiple `locals` blocks can be defined in each module. Values themselves can be maps, and this is useful for defining tags and other things that exist as map structures.
+
+[source]
+----
+locals {
+  tags = {
+    Description = "..."
+  }
+}
+
+resource "aws_vpc" "main" {
+  cidr_block = var.vpc_cidr
+  tags = merge(var.tags, local.tags {
+    // Any additional tags...
+  })
+}
+----
+
