@@ -5,6 +5,7 @@ Cheat sheets and study notes for various tools, technologies, and languages.
 == Contents
 
 * link:./src/apps/aws[AWS]
+* link:./src/apps/github-actions[GitHub Actions]
 * link:./src/apps/go[Go]
 * link:./src/apps/java[Java]
 * link:./src/apps/kubernetes[Kubernetes]
