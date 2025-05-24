@@ -1,4 +1,4 @@
-= Organizations
+= AWS Organizations
 
 It is a common pattern in large organizations to have multiple AWS accounts, each with its own root user. This is often done to separate environments, such as production from development, or to separate different business units or departments.
 

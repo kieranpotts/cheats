@@ -1,6 +1,6 @@
-= DynamoDB
+= AWS DynamoDB
 
-*Amazon DynamoDB* is a fully-managed, serverless, NoSQL database services with *in-memory performance*, *low latency* (in milliseconds), *high I/O*, and both dynamic *auto-scaling* or manual *push-button scaling* with no downtime. It can be very cost effective for many storage use cases.
+*DynamoDB* is a fully-managed, serverless, NoSQL database services with *in-memory performance*, *low latency* (in milliseconds), *high I/O*, and both dynamic *auto-scaling* or manual *push-button scaling* with no downtime. It can be very cost effective for many storage use cases.
 
 DynamoDB can be used as both a *key-value store* and as a *document database*. The core components are:
 

@@ -1,4 +1,4 @@
-= CIDR range
+= AWS networking: CIDR range
 
 When you sign up for a new AWS account, a default VPC will be created automatically for your account. Typically, the IPv4 CIDR range of the default VPC will be `172.31.0.0/16`.
 

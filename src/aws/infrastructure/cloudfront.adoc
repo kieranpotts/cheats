@@ -1,4 +1,4 @@
-= CloudFront
+= AWS CloudFront
 
 *CloudFront* is a key part of the AWS global infrastructure.
 

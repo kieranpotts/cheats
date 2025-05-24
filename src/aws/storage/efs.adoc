@@ -1,4 +1,4 @@
-= Elastic File System (EFS)
+= AWS Elastic File System (EFS)
 
 The AWS *Elastic File System (EFS)* is a shared (networked) file system. EFS can be used with Linux instances only. That's because the protocol uses is NFS, which is supported only by Linux.
 

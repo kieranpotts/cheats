@@ -1,4 +1,4 @@
-= Subnets
+= AWS networking: Subnets
 
 Within a VPC you will have isolated networks called *subnets*. A subset is a defined range of network IP addresses — an *IP space* — within a VPC's CIDR range.
 

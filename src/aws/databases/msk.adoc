@@ -1,4 +1,4 @@
-= Managed Streaming for Kafka (MSK)
+= AWS Managed Streaming for Kafka (MSK)
 
 *Amazon MSK* is a fully-managed service that enables you to build and run applications that use Apache Kafka to process streaming data. This service is used for ingesting and processing streaming data in real-time.
 

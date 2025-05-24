@@ -1,4 +1,4 @@
-= Directory services
+= AWS directory services
 
 AWS offers a suite of different products for hosting or connecting to directory services. The options are:
 

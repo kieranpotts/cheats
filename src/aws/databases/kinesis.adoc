@@ -1,6 +1,6 @@
-= Kinesis
+= AWS Kinesis
 
-*Amazon Kinesis* is actually made up of lots of different services that are all related to *streaming data* use cases. Example use cases include:
+*Kinesis* is actually made up of lots of different services that are all related to *streaming data* use cases. Example use cases include:
 
 * Purchases from online stores.
 * Stock prices.

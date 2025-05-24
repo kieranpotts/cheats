@@ -1,4 +1,4 @@
-= MemoryDB for Redis
+= AWS MemoryDB for Redis
 
 This is a Redis-compatible, durable, low-latency, in-memory database service.
 

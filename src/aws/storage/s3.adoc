@@ -1,4 +1,4 @@
-= Simple File Storage (S3)
+= AWS Simple File Storage (S3)
 
 S3 is AWS's object storage service. It is enormous scalable and durable. A single bucket can store an *unlimited amount of data* and an unlimited number of objects. Each individual object can be up to 5TB in size, with the largest object that can be uploaded in a single PUT request being 5GB.
 

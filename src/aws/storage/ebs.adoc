@@ -1,4 +1,4 @@
-= Elastic Block Store (EBS)
+= AWS Elastic Block Store (EBS)
 
 *Elastic Block Store (EBS)* is a high-performance block storage service used by EC2 instances. EBS volumes are used as the primary storage for EC2 instances, and they are also known as *instance volumes* for this reason.
 

@@ -1,4 +1,4 @@
-= Managed VPN
+= AWS Managed VPN
 
 An *AWS Managed VPN* is another solution to support *hybrid clouds*. It sets up a *virtual private network (VPN)* connection between on-premises networks and AWS.
 

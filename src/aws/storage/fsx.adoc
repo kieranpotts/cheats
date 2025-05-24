@@ -1,4 +1,4 @@
-= FSx
+= AWS FSx
 
 FSx provides fully-managed third-party file systems. Specifically, two types of file system are available:
 

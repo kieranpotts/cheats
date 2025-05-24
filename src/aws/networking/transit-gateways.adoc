@@ -1,4 +1,4 @@
-= Transit gateways
+= AWS networking: Transit gateways
 
 A *transit gateway (TGW)* is another type of networking device. It is useful where you want to connect lots and lots of VPCs, and perhaps even on-premises networks, without needing to explicitly configure all of the possible individual routes.
 

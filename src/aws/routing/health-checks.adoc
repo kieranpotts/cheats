@@ -1,4 +1,4 @@
-= Health checks
+= AWS: Health checks
 
 There are different types of health checks that are involved in routing, auto-scaling, and load balancing. The main ones are:
 

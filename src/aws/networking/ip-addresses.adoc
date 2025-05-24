@@ -1,4 +1,4 @@
-= IP addresses
+= AWS networking: IP addresses
 
 When we launch instances and other resources into VPC subnets, we assign them IP addresses.
 

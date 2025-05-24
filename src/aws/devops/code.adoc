@@ -1,4 +1,4 @@
-= Code* family
+= AWS Code* family
 
 The *AWS Code* family is a suite of CI/CD tools that help you automate the software release process. The tools in the *AWS Code* family are:
 

@@ -1,4 +1,4 @@
-= Access Logs
+= AWS access logs
 
 *Elastic Load Balancing Access Logs* capture detailed information about requests sent to a load balancer. These can be used to analyze traffic patterns and troubleshoot issues. You can use these logs to identify the requester, IP, request type, etc. Optionally, this information can be stored in S3.
 

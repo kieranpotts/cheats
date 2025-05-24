@@ -1,4 +1,4 @@
-= Elastic Beanstalk
+= AWS Elastic Beanstalk
 
 This is a managed *platform-as-a-service (PaaS)*, allowing you to deploy your applications to AWS by simply uploading your code and data.
 

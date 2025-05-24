@@ -1,4 +1,4 @@
-= Penetration testing
+= AWS: Rules governing penetration testing
 
 Penetration testing is the practice of testing your application's security by simulating an attack, with the aim of identifying vulnerabilities that could be exploited in a real attack. Pen testing is typically undertaken by security experts.
 

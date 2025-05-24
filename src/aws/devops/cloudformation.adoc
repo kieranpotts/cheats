@@ -1,4 +1,4 @@
-= CloudFormation
+= AWS CloudFormation
 
 *AWS CloudFormation* is an *Infrastructure-as-Code (IaC)* solution, similar to Terraform but it is proprietary to AWS.
 

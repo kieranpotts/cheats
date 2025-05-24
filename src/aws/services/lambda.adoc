@@ -1,4 +1,4 @@
-= Lambda
+= AWS Lambda
 
 *AWS Lambda* is a store of function. A function is evoked in in response to some kind of trigger, which is communicated via an event.
 

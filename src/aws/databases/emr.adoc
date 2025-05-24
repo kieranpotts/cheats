@@ -1,4 +1,4 @@
-= Elastic MapReduce (EMR)
+= AWS Elastic MapReduce (EMR)
 
 Hadoop is a framework for *big data* (ie. analytics on very large quantities of data). EMR is a managed implementation of Hadoop.
 

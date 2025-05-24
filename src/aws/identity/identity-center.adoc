@@ -1,4 +1,4 @@
-= IAM Identity Center
+= AWS IAM Identity Center
 
 While the *Identity and Access Management (IAM)* service is used to create *users*, *groups*, *roles*, and *policies*, the *IAM Identity Center* — which was previously known as the *AWS Single Sign-On (SSO)* service — serves a broader purpose. It is used for managing identities of all kinds — not limited to IAM users, but also federated identities from external identity providers (IdPs) for the purpose of Single Sign-On (SSO) access to multiple AWS accounts and third-party business applications.
 

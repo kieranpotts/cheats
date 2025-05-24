@@ -1,4 +1,4 @@
-= Storage categories
+= AWS storage categories
 
 There are three main categories of storage:
 

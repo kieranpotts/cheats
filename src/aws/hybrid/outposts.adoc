@@ -1,4 +1,4 @@
-= Outposts
+= AWS Outposts
 
 If you have a corporate data center, you can install a piece of hardware that connects it to the AWS cloud. This is called an *AWS Outpost*.
 

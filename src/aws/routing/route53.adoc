@@ -1,4 +1,4 @@
-= Route53
+= AWS Route53
 
 Route53 is AWS's DNS service. Features include:
 

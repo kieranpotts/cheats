@@ -1,4 +1,4 @@
-= API Gateway
+= AWS API Gateway
 
 *Amazon API Gateway* is a fully-managed service. It is like an API that sits in front of other APIs that are internal to AWS. The purpose of an API Gateway is to act as a "front door" to your services. It plays host to the public API of your services, and it routes the traffic that comes in from the internet to the appropriate backing services.
 

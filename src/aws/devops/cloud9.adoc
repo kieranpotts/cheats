@@ -1,4 +1,4 @@
-= Cloud9
+= AWS Cloud9
 
 *AWS Cloud9* is a *cloud IDE* used to write, run, and debug code.
 

@@ -1,4 +1,4 @@
-= Redshift
+= AWS Redshift
 
 *Amazon Redshift* is a fully-managed *data warehouse* solution for Online Analytics Processing (OLAP) use cases on very large volumes of aggregated data, stored in relational formats.
 

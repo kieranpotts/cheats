@@ -1,4 +1,4 @@
-= Global Accelerator
+= AWS Global Accelerator
 
 The *AWS Global Accelerator* is a tool to leverage more of the private *AWS Global Network*, and less of the public internet, to handle requests from users. This improves the performance of applications by reducing the latency and jitter associated with the public internet.
 

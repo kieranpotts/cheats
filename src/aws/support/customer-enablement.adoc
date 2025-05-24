@@ -1,4 +1,4 @@
-= Customer enablement services
+= AWS customer enablement services
 
 Customer enablement is a category of services in AWS that includes the following.
 

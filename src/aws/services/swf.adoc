@@ -1,4 +1,4 @@
-= Simple Workflow Services (SWF)
+= AWS Simple Workflow Services (SWF)
 
 This is an older service that, similar to Step Functions, supports the building of asynchronous workflows across distributed components. Use cases for SWF tend to be focused on human-enabled workflows, like order fulfillment, where people are involved in the process.
 

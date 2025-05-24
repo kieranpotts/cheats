@@ -1,4 +1,4 @@
-= Data Exchange
+= AWS Data Exchange
 
 *AWS Data Exchange* is used to subscribe to data feeds from third-party data providers/publishers — services like "apptopia" (for performance data on mobile apps) and "SimilarWeb" (for global website rankings).
 

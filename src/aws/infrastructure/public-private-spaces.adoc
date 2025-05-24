@@ -1,4 +1,4 @@
-= Public and private spaces
+= AWS public and private spaces
 
 In the AWS Cloud we say that some services are in the public space while others are in the private space.
 

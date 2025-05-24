@@ -1,4 +1,4 @@
-= Encryption
+= AWS: Encryption
 
 == Types of encryption
 

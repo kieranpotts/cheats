@@ -1,4 +1,4 @@
-= Batch
+= AWS Batch
 
 *AWS Batch* is a managed service to run *batch jobs*. A batch job is a unit of work, typically implemented as a shell script (or otherwise using a low-level programming language), executable, or a Docker image, and which requires quite a bit of compute power.
 

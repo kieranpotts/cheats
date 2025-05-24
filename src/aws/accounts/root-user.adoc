@@ -1,4 +1,4 @@
-= The root user
+= AWS: The root user
 
 The root user is created when you first sign up for a new AWS account.
 

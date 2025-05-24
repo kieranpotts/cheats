@@ -1,4 +1,4 @@
-= QLDB
+= AWS QLDB
 
 *Amazon QLDB* is a fully-managed *ledger database* for immutable change history.
 

@@ -1,4 +1,4 @@
-= Elastic Disaster Recovery service (DRS)
+= AWS Elastic Disaster Recovery service (DRS)
 
 This service is for *application recovery*, ie. to protect and recover critical business applications, quickly and at low cost.
 

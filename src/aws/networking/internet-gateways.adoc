@@ -1,4 +1,4 @@
-= Internet gateways
+= AWS networking: Internet gateways
 
 *Internet gateways* are attached to VPCs to provide a pathway between EC2 instances (and other resources) in public subnets and the internet.
 

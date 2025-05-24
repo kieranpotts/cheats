@@ -1,4 +1,4 @@
-= OpenSearch (formerly known as Elasticsearch)
+= AWS OpenSearch (formerly known as Elasticsearch)
 
 OpenSearch is a fully-managed (but not serverless), petabyte-scale, secure, highly available service to search, visualize, and analyze _text_ and _unstructured data_. It is based on the popular open source Elasticsearch (formerly ELK) software stack.
 

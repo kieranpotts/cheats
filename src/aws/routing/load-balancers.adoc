@@ -1,4 +1,4 @@
-= Load balancers
+= AWS: Load balancers
 
 *Amazon Elastic Load Balancing (ELB)* is a family of load balancing systems that are all about distributing load evenly between a range of different types of target resource.
 

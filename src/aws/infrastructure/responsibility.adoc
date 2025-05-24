@@ -1,4 +1,4 @@
-= Shared responsibility model
+= AWS shared responsibility model
 
 In using AWS infrastructure, responsibility for security is shared between AWS and the customer. This is known as the "shared responsibility model".
 

@@ -1,4 +1,4 @@
-= Aurora
+= AWS: Amazon Aurora
 
 *Amazon Aurora* is a proprietary database system developed by Amazon. It sits within the RDS family and is Amazon's fastest-growing cloud product.
 

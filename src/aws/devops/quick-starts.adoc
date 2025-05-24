@@ -1,4 +1,4 @@
-= Quick Starts
+= AWS Quick Starts
 
 *AWS Quick Starts* are built by AWS solutions architects and partners to help you deploy popular technologies on AWS, based on AWS best practices for security and high availability.
 

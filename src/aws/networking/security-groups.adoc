@@ -1,4 +1,4 @@
-= Security groups
+= AWS networking: Security groups
 
 A NACL protects a subnet, but once a communication gets through the NACL, you have *security groups* that protect the individual resources within the subnet.
 

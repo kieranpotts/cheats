@@ -1,4 +1,4 @@
-= Access keys
+= AWS: Access keys
 
 To access the web console, users will authenticate using their username and password.
 

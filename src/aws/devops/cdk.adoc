@@ -1,4 +1,4 @@
-= Cloud Development Kit (CDK)
+= AWS Cloud Development Kit (CDK)
 
 This is an open source *software development framework* that enables you to model your cloud resources using familiar programming languages: TypeScript, Python, Java, and .NET.
 

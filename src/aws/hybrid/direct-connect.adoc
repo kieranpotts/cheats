@@ -1,4 +1,4 @@
-= Direct Connect
+= AWS Direct Connect
 
 *AWS Direct Connect* enables *private connections* from on-premises data centers to AWS. This offers a dedicated physical connection from your data center into the AWS backbone.
 

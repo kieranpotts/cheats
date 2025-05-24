@@ -1,4 +1,4 @@
-= Network firewalls and DDoS protection
+= AWS: network firewalls and DDoS protection
 
 == Security Groups and NACLs
 

@@ -1,4 +1,4 @@
-= EventBridge
+= AWS EventBridge
 
 *Amazon EventBridge* is a serverless *event bus*. As with SNS and SQS, this service falls under the category of "integration services" that provide the communication links between loosely coupled components in distributed systems.
 

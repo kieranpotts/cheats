@@ -1,4 +1,4 @@
-= EC2
+= AWS Elastic Compute Cloud (EC2)
 
 EC2 is the *Elastic Compute Cloud* service from AWS. It provides resizable compute capacity in the cloud. It falls into the category of *Infrastructure-as-a-Service (IaaS)*. AWS manages the underlying infrastructure. Customers manage everything from the operating system upwards.
 

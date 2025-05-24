@@ -1,4 +1,4 @@
-= Identity and Access Management (IAM)
+= AWS Identity and Access Management (IAM)
 
 *Identity and Access Management (IAM)* is one of AWS's core service. It is a global service, which is to say it is not scoped to any particular AWS region.
 

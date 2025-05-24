@@ -1,4 +1,4 @@
-= Resources
+= AWS networking: Resources
 
 Resources are launched into subnets. When you launch a resource, you will need to specify the subnet you want it to be launched into.
 

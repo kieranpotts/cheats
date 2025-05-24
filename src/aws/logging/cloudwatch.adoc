@@ -1,4 +1,4 @@
-= CloudWatch Logs
+= AWS CloudWatch Logs
 
 * Gather application and system logs.
 * Define expiration policies.

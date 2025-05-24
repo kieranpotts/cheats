@@ -1,4 +1,4 @@
-= NAT gateways
+= AWS networking: NAT gateways
 
 In the previous steps, we launched an EC2 instance into a public subnet, and then connected the instance to the internet via an internet gateway. A more common pattern, for better security, is to launch instances into private subnets, and then launch NAT gateways or load balancers into the corresponding public subnet, which can then be used to set up connections between the private instances and the internet.
 

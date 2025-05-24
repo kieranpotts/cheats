@@ -1,4 +1,4 @@
-= Step Functions
+= AWS Step Functions
 
 *AWS Step Functions* is a service that coordinates the components of a distributed application. For example, a Step Function may check the output from a Lambda function and, depending on the result, run other functions or trigger other events.
 

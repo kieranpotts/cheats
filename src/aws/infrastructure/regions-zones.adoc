@@ -1,4 +1,4 @@
-= Regions and zones
+= AWS regions and zones
 
 *AWS regions* are geographical areas around the world.
 

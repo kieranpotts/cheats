@@ -1,4 +1,4 @@
-= Route tables
+= AWS networking: Route tables
 
 Subnets have *route tables* associated with them, which determine how traffic is routed within the subnet.
 

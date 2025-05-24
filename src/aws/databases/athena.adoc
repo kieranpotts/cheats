@@ -1,4 +1,4 @@
-= Athena
+= AWS Athena
 
 *AWS Athena* is a serverless service to run SQL queries against data stored in places like:
 

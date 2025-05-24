@@ -1,4 +1,4 @@
-= Storage Gateway
+= AWS Storage Gateway
 
 *AWS Storage Gateway* is used to connect on-premises applications into proprietary cloud storage using standard protocols. This is known as *hybrid storage*.
 

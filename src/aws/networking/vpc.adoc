@@ -1,4 +1,4 @@
-= Virtual Private Clouds (VPCs)
+= AWS networking: Virtual Private Clouds (VPCs)
 
 A *Virtual Private Cloud (VPC)* is like a private network to isolate a group of resources that sit within it. Each VPC is isolated from other VPCs, even those that span the same *availability zones (AZs)* in the same region.
 

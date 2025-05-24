@@ -1,4 +1,4 @@
-= Cognito
+= AWS Cognito
 
 Amazon *Cognito* is often used with web and mobile applications.
 

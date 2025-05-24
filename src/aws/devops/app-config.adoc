@@ -1,4 +1,4 @@
-= AppConfig
+= AWS AppConfig
 
 *AWS AppConfig* is a feature of *AWS Systems Manager* that allows you to create, manage, and deploy application configurations — the settings that control the behavior of your applications, and which allow you to adjust application behavior dynamically without deploying new code changes.
 

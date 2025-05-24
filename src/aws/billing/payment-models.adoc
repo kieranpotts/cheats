@@ -1,4 +1,4 @@
-= Payment models
+= AWS: Payment models
 
 By default, AWS uses a *pay-as-you-go* billing model. This provides lots of flexibility. You can easy adapt to changing business requirements, adapting your spend dynamically based on evolving needs rather than forecasts.
 

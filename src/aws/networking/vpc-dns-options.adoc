@@ -1,4 +1,4 @@
-= VPC DNS options
+= AWS networking: VPC DNS options
 
 AWS provides DNS services within VPCs, too. These services are switched on by default, although you can switch them off — and there are use cases where doing so can help to improve the security of your virtual private networks.
 

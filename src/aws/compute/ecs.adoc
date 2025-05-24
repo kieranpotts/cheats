@@ -1,4 +1,4 @@
-= Elastic Container Service (ECS)
+= AWS Elastic Container Service (ECS)
 
 AWS supports the use of Docker containers for deployment of applications.
 

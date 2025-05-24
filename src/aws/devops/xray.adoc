@@ -1,4 +1,4 @@
-= X-Ray
+= AWS X-Ray
 
 *AWS X-Ray* is used to debug distributed applications. For example, you can use this service to audit the latency between an instance and its database.
 

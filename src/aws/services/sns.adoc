@@ -1,4 +1,4 @@
-= Simple Notification Service (SNS)
+= AWS Simple Notification Service (SNS)
 
 While SQS is a pull-based integration service, SNS is more push-based, and it is more widely used for one-to-many communication patterns.
 

@@ -1,4 +1,4 @@
-= Health APIs and dashboards
+= AWS health APIs and dashboards
 
 Health API is an API to get health-related information about your resources.
 

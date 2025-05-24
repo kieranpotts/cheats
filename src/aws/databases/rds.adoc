@@ -1,4 +1,4 @@
-= RDS
+= AWS Relational Database Service (RDS)
 
 Amazon's *Relational Database Service (RDS)* is a managed relational database service used for Online Transaction Processing (OLTP) use cases. It is highly available, fault tolerant, and very scalable.
 

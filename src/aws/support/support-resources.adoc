@@ -1,4 +1,4 @@
-= Support resources
+= AWS support resources
 
 == Connect
 

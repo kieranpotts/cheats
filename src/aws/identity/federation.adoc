@@ -1,4 +1,4 @@
-= Federation
+= AWS: Federation
 
 *Federation* — aka. Federated Identity Management (FIM) — refers to the process of linking and trusting identities across multiple systems. Federation is what makes it possible for employees at a company to access their Google Workspace using their Azure AD credentials.
 

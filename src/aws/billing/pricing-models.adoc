@@ -1,4 +1,4 @@
-= Pricing models
+= AWS: Pricing models
 
 AWS pricing is based on three things:
 

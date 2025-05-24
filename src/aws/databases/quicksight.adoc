@@ -1,3 +1,3 @@
-= QuickSight
+= AWS QuickSight
 
 *Amazon QuickSight* is a *business intelligence (BI)* service. It is used to create and publish BI dashboards for ML-powered insights.

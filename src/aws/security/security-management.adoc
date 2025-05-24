@@ -1,4 +1,4 @@
-= Security management
+= AWS: Security management services
 
 The following services help you to manage security in your AWS environments.
 

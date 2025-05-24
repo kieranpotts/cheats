@@ -1,4 +1,4 @@
-= Serverless services
+= AWS serverless services
 
 Serverless services are services in which you don't manage the instances, OSes, or hardware. Therefore, you don't have to worry about availability, fault tolerance, capacity planning, or patching. All of this is handled automatically by the cloud service provider. You just deploy your code.
 

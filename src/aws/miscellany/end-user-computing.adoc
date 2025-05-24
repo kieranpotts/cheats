@@ -1,4 +1,4 @@
-= End-user computing
+= AWS end-user computing
 
 == Workspaces
 

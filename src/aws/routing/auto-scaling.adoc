@@ -1,4 +1,4 @@
-= Auto-scaling
+= AWS: Auto-scaling
 
 Auto-scaling is all about launching and terminating instances dynamically as demand changes — ie. horizontal scaling. It provides *elasticity* (ie. scaling out and in, to meet demand while minimizing costs), and *availability* (ie. replacing failed instances and providing just enough resources to maintaining a steady state).
 
