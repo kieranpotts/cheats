@@ -4,15 +4,15 @@ Cheat sheets and study notes for various tools, technologies, and languages.
 
 == Contents
 
-* link:./src/apps/aws[AWS]
-* link:./src/apps/github-actions[GitHub Actions]
-* link:./src/apps/go[Go]
-* link:./src/apps/java[Java]
-* link:./src/apps/kubernetes[Kubernetes]
-* link:./src/apps/react[React]
-* link:./src/apps/spring-framework[Spring Framework]
-* link:./src/apps/terraform[Terraform]
-* link:./src/apps/web-components[Web Components]
+* link:./src/aws[AWS]
+* link:./src/github-actions[GitHub Actions]
+* link:./src/go[Go]
+* link:./src/java[Java]
+* link:./src/kubernetes[Kubernetes]
+* link:./src/react[React]
+* link:./src/spring-framework[Spring Framework]
+* link:./src/terraform[Terraform]
+* link:./src/web-components[Web Components]
 
 ''''
 
