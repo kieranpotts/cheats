@@ -1,4 +1,4 @@
-= Benefits
+= Terraform: Benefits
 
 * *Multi-cloud*: Terraform is cloud-agnostic and can be used to manage resources in multiple cloud providers. By declaring your infrastructure as code in Terraform files, you can easily reproduce your infrastructure on another cloud provider, or even on-premises, reducing vendor lock-in.
 

@@ -1,4 +1,4 @@
-= Styling
+= Web Components: Styling
 
 There are several methods for styling web components. Each method has its own pros and cons.
 

@@ -1,4 +1,4 @@
-= Initializing
+= Terraform CLI: Initializing
 
 Whenever you create a new Terraform config, you need to run `terraform init` from the directory containing the config files.
 

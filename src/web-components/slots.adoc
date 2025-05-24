@@ -1,4 +1,4 @@
-= Slots
+= Web Components: Slots
 
 A shadow root can also include content from its containing document (or document fragment - ie. whatever is DOM is immediately "outside" of the shadow root).
 

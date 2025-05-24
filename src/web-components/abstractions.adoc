@@ -1,4 +1,4 @@
-= Abstractions
+= Web Components: Abstractions
 
 The web platform APIs used to create web components are low level and therefore fairly verbose. To create only simply components, web developers are responsible for all of these implementation details:
 

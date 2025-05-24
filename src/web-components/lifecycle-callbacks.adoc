@@ -1,4 +1,4 @@
-= Lifecycle callbacks
+= Web Components: Lifecycle callbacks
 
 Web components have lifecycle methods, also known as lifecycle callbacks. These methods are called at different stages of a component's lifecycle.
 

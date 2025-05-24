@@ -1,4 +1,4 @@
-= Props
+= React: Props
 
 In React, components can receive data from their parent components. This data is passed as props.
 

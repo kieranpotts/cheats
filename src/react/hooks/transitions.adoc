@@ -1,4 +1,4 @@
-= Transitions
+= React hooks: Transitions
 
 Imagine you have a React-driven web page that has two main views: Products, and About. When you click the navigation to the Products view, the view typically takes a second or two to load because of the sheer volume of data being fetched and rendered for that page.
 

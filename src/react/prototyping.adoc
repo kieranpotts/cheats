@@ -1,4 +1,4 @@
-= Prototyping React apps
+= React: Prototyping React apps
 
 React interfaces can be prototyped in static files without requiring a build step.
 

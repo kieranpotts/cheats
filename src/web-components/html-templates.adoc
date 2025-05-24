@@ -1,4 +1,4 @@
-= HTML templates
+= Web Components: HTML templates
 
 HTML templates are a mechanism for holding client-side markup and content that is not intended to be rendered when a page is loaded, but which may be subsequently copied-and-pasted into the rendered DOM (either the light DOM or a shadow DOM) using client-side JavaScript.
 

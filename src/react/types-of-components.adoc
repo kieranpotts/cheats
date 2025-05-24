@@ -1,4 +1,4 @@
-= Types of React components
+= React: Types of React components
 
 Since React was released in 2013, there have emerged lots of different ways to define components. This document covers the most common construction patterns for React components. Some of these are older patterns and are now deprecated or fully obsolete, but it's still useful to know about them.
 

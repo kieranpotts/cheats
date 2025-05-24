@@ -1,4 +1,4 @@
-= Custom elements
+= Web Components: Custom elements
 
 Web components are composed from three web platform APIs: custom elements, the shadow DOM, and HTML templates. Each of these APIs may be used independently, or combined (optionally with other web platform APIs) to create custom, reusable HTML components.
 

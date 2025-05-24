@@ -1,4 +1,4 @@
-= Dependency injection
+= Spring: Dependency injection
 
 == Beans
 

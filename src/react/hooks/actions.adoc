@@ -1,4 +1,4 @@
-= Actions
+= React hooks: Actions
 
 Actions are a new concept planned for release in React v19. This hook makes it easier to update state in response to form actions.
 

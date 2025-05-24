@@ -1,4 +1,4 @@
-= Customized built-in elements
+= Web Components: Customized built-in elements
 
 The most common way to make custom elements is to extend `HTMLElement`. Fully, these are known as _autonomous custom elements_. In HTML, they are identified by having unique custom tag names.
 

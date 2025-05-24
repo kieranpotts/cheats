@@ -1,4 +1,4 @@
-= Effects
+= React hooks: Effects
 
 If you loaded the following component in a web UI, you will see from the console that the component will re-render itself in an infinite loop.
 

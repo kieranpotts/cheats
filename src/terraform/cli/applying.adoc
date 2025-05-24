@@ -1,4 +1,4 @@
-= Applying
+= Terraform CLI: Applying
 
 Run `terraform apply` to apply the changes to your infrastructure.
 

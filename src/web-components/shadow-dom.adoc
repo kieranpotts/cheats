@@ -1,4 +1,4 @@
-= Shadow DOM
+= Web Components: Shadow DOM
 
 Prior to the introduction of the shadow DOM to the web platform, all CSS was scoped globally. The shadow DOM was introduced as a mechanism to allow web components to encapsulate their own styles without risk of pollution from the global CSS cascade.
 

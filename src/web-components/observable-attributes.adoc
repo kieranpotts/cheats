@@ -1,4 +1,4 @@
-= Observable attributes
+= Web Components: Observable attributes
 
 As with native HTML elements, the state of custom elements is typically reflected by what attributes are present, and the values of those attributes.
 

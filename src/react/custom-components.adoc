@@ -1,4 +1,4 @@
-= Custom components
+= React: Custom components
 
 At the simplest level, a React component is just a function that returns some JSX or other React elements. This actually works:
 

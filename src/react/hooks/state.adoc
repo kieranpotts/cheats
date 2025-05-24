@@ -1,4 +1,4 @@
-= State
+= React hooks: State
 
 The following component will render a button labelled "Add Item" and a list of items labelled "Thing 1" and "Thing 2". When the button is clicked, the original array will be updated with a new item – we can see that my inspecting the console log – but the new item will not be rendered in the list.
 
