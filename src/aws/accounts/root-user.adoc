@@ -7,9 +7,13 @@ The root user is the most privileged user in an AWS account, having access to al
 So, after first signing up, you should:
 
 * Set a very strong password for the root user.
+
 * Enable multi-factor authentication for the root user.
+
 * Make sure that the root user does not have any access keys (so restricting root access to the web console only).
+
 * Create an admin IAM user, and use it to administer the account instead.
+
 * Set alerts for root user activity.
 
 To access the AWS Management Console, it is better to do so using a dedicated IAM (Identity and Access Management) admin user, rather than the root user. Go to *Users* > *Add Users*. Enter a username and select the option to give the user access to the AWS Management Console. Choose *Create an IAM user* and set a password. On the *Set permissions* screen, select *Attach policies directly*, and choose *AdministratorAccess*.

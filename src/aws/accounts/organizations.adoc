@@ -1,6 +1,6 @@
 = Organizations
 
-It is a common pattern in large organizations to have multiple AWS accounts, each with its own root user. This is often done to separate environments, such as production and development, or to separate different business units or departments.
+It is a common pattern in large organizations to have multiple AWS accounts, each with its own root user. This is often done to separate environments, such as production from development, or to separate different business units or departments.
 
 *AWS Organizations* is a service that allows multiple AWS accounts to be managed under one umbrella. It allows the control of resources and permissions to be delegated to divisions or product/service areas within the organization.
 
