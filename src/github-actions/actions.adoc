@@ -1,4 +1,4 @@
-= Actions
+= GitHub Actions: Actions
 :toc: macro
 :toc-title: Contents
 

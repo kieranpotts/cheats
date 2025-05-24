@@ -1,4 +1,4 @@
-= `kubectl`
+= Kubernetes: `kubectl`
 
 The Kubernetes API Server endpoint is how you will communicate with the master
 server. There's a multi-platform tool called `kubectl` that you use to control

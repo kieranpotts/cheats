@@ -1,4 +1,4 @@
-= Outputs
+= GitHub Actions: Outputs
 :toc: macro
 :toc-title: Contents
 

@@ -1,4 +1,4 @@
-= Contexts
+= GitHub Actions: Contexts
 
 Contexts are predefined variables that give you access to information about
 workflow runs, your own variables and secrets, the runner environment, and

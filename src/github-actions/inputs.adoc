@@ -1,4 +1,4 @@
-= Inputs
+= GitHub Actions: Inputs
 
 Inputs enable us to request specific information from the caller of the workflow
 or action, and use this information at runtime.

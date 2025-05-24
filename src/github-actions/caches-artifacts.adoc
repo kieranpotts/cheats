@@ -1,4 +1,4 @@
-= Caches and artifacts
+= GitHub Actions: Caches and artifacts
 :toc: macro
 :toc-title: Contents
 

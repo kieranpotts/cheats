@@ -1,4 +1,4 @@
-= Environments
+= GitHub Actions: Environments
 
 Environments are a powerful feature that allow you to configure and manage
 deployment targets, such as production, staging, or development. They provide a

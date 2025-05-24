@@ -1,4 +1,4 @@
-= Runners
+= GitHub Actions: Runners
 :toc: macro
 :toc-title: Contents
 

@@ -1,4 +1,4 @@
-= Expressions
+= GitHub Actions: Expressions
 
 Expressions can be used within workflow files to dynamically evaluate and
 manipulate data at runtime, so creating more flexible and intelligent automation.

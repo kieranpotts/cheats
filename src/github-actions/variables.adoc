@@ -1,4 +1,4 @@
-= Variables, environment variables, and secrets
+= GitHub Actions: Variables, environment variables, and secrets
 :toc: macro
 :toc-title: Contents
 

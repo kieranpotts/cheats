@@ -1,4 +1,4 @@
-= Workflows
+= GitHub Actions: Workflows
 :toc: macro
 :toc-title: Contents
 

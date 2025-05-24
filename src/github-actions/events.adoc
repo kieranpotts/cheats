@@ -1,4 +1,4 @@
-= Events
+= GitHub Actions: Events
 :toc: macro
 :toc-title: Contents
 

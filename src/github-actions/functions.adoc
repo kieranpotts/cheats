@@ -1,4 +1,4 @@
-= Functions
+= GitHub Actions: Functions
 
 Via link:./expressions.adoc[expressions], runners dynamically inject various
 functions into workflows, allowing for querying of information about the

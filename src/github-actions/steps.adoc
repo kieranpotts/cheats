@@ -1,4 +1,4 @@
-= Steps
+= GitHub Actions: Steps
 :toc: macro
 :toc-title: Contents
 
