@@ -2,8 +2,6 @@
 
 Web components are a set of web platform APIs that allow you to create custom, reusable HTML elements using the native capabilities of web browsers.
 
-== Contents
-
 * link:./custom-elements.adoc[Custom elements]
 * link:./shadow-dom.adoc[Shadow DOM]
 * link:./html-templates.adoc[HTML templates]

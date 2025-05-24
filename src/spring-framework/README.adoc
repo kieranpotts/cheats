@@ -1,7 +1,5 @@
 = Spring Framework and Spring Boot
 
-== Contents
-
 * link:./annotations.adoc[Annotations]
 * link:./application-configuration.adoc[Application configuration]
 * link:./dependency-injection.adoc[Dependency injection]

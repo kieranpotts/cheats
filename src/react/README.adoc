@@ -5,8 +5,6 @@
 Most code examples in this documentation is correct for React v17. Some documentation notes differences in React v18 and extensions that are coming to React v19.
 ======
 
-== Contents
-
 * link:./basics.adoc[React basics]
 * link:./production-builds.adoc[Production builds]
 * link:./prototyping.adoc[Prototyping React apps]
