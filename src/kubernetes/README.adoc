@@ -1,10 +1,4 @@
 = Kubernetes
 
-Kubernetes is an open-source container orchestration platform that automates the
-deployment, scaling, and management of containerized applications. It was
-originally developed by Google.
-
-image::./_/k8s-cluster.png[]
-
-Setting up a K8s cluster is a bit of work, but most public cloud providers
-automate the process.
+* link:./overview.adoc[Overview]
+* link:./kubectl.adoc[`kubectl`]
