@@ -1,0 +1,24 @@
+= Go: Compiling and running
+
+Run a program without compiling it first:
+
+[source,sh]
+----
+$ go run main.go
+----
+
+Compile a program:
+
+[source,sh]
+----
+$ go run main.go
+$ ls
+main   main.go
+----
+
+Run the compiled program:
+
+[source,sh]
+----
+$ ./main
+----

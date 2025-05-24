@@ -1,3 +1,7 @@
+= Go: Code examples
+
+[source,go]
+----
 /*
 A package in Go is a bit like namespaces in PHP or modules in Ruby.
 */
@@ -40,3 +44,4 @@ func main() {
 		fmt.Printf(greeting, words[rand.Intn(len(words))])
 	}
 }
+----
