@@ -8,5 +8,5 @@ Cheat sheets and study notes for various tools, technologies, and languages.
 
 ''''
 
-My personal documentation and learning notes for various languages and tools.
+Copyright © 2020-present Kieran Potts, link:./LICENSE.txt[CC0 license]
 
