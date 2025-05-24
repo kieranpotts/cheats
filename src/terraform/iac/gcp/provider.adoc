@@ -1,4 +1,4 @@
-= GCP: Provider
+= Terraform - GCP: Provider
 
 For GCP, the provider name is "google".
 

@@ -4,7 +4,7 @@
 
 Beans are the fundamental building blocks of a Spring application, and form the basis of the dependency injection system.
 
-A bean is an object that is instantiated, assembled, and manages throughout its life cycle by the Spring IoC (Inversion of Control) container.
+A bean is an object that is instantiated, assembled, and manages throughout its lifecycle by the Spring IoC (Inversion of Control) container.
 
 A bean can be defined using Java annotations:
 

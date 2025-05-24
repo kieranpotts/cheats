@@ -1,4 +1,4 @@
-= Dependencies
+= Terraform: Dependencies
 
 By default, Terraform will try to infer dependencies between resources, determining the order in which changes are applied. Otherwise, Terraform will try to create resources in parallel.
 

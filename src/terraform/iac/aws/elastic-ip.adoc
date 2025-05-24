@@ -1,4 +1,4 @@
-= Elastic IPs
+= Terraform - AWS: Elastic IPs
 
 The following is a simple configuration for an EC2 instance.
 

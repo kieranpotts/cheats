@@ -1,30 +1,19 @@
 = Go: Concurrency and parallelism
 
-Concurrency and parallelism are both solutions to the problem of running
-multiple tasks at the same time, but the solve the problem in different ways:
+Concurrency and parallelism are both solutions to the problem of running multiple tasks at the same time, but the solve the problem in different ways:
 
-* Concurrency: two or more threads are making progress, but both are not
-  running at the same time.
+* Concurrency: two or more threads are making progress, but both are not running at the same time.
 * Parallelism: two or more threads are executing simultaneously.
 
-Parallelism requires multiple CPU cores, while concurrency can be achieved on a
-single core. If you run a concurrent program on a single core, the threads will
-take turns executing, while on multiple cores, they can run at the same time
-(ie. in parallel).
+Parallelism requires multiple CPU cores, while concurrency can be achieved on a single core. If you run a concurrent program on a single core, the threads will take turns executing, while on multiple cores, they can run at the same time (ie. in parallel).
 
 == Goroutines
 
-Go has been designed with concurrency in mind. In Go, concurrency is achieved
-through goroutines, which are lightweight threads managed by the Go runtime.
-Goroutines are not really OS threads, but rather are "lightweight threads of
-execution" that are multiplexed onto a smaller number of OS threads.
+Go has been designed with concurrency in mind. In Go, concurrency is achieved through goroutines, which are lightweight threads managed by the Go runtime. Goroutines are not really OS threads, but rather are "lightweight threads of execution" that are multiplexed onto a smaller number of OS threads.
 
-Goroutines use the same address space, so they share the same memory. This means
-you have to be careful about how your synchronize data that is shared by
-multiple goroutines.
+Goroutines use the same address space, so they share the same memory. This means you have to be careful about how your synchronize data that is shared by multiple goroutines.
 
-To create a goroutine, you simply use the `go` keyword followed by a function
-call:
+To create a goroutine, you simply use the `go` keyword followed by a function call:
 
 [source,go]
 ----
@@ -48,9 +37,7 @@ func main() {
 }
 ----
 
-The `go` keyword starts a new goroutine in a non-blocking way, so the
-execution of the main thread immediately continues to the `say("hello")` call.
-So you will get a seemingly random output like this:
+The `go` keyword starts a new goroutine in a non-blocking way, so the execution of the main thread immediately continues to the `say("hello")` call. So you will get a seemingly random output like this:
 
 [source,sh]
 ----
@@ -68,9 +55,7 @@ world
 hello
 ----
 
-It is possible for goroutines to finish _after_ the main thread has executed. To
-make sure that the main thread waits for the goroutines to finish, you can use
-the `sync.WaitGroup` type from the `sync` package.
+It is possible for goroutines to finish _after_ the main thread has executed. To make sure that the main thread waits for the goroutines to finish, you can use the `sync.WaitGroup` type from the `sync` package.
 
 [source,go]
 ----
@@ -107,31 +92,21 @@ func main() {
 }
 ----
 
-This solution is useful to make sure you always do things like close file
-handles.
+This solution is useful to make sure you always do things like close file handles.
 
 == Channels
 
-A great way to provide synchronization between goroutines is to use channels.
-Channels are a powerful feature in Go that allow goroutines to communicate with
-each other and synchronize their execution.
+A great way to provide synchronization between goroutines is to use channels. Channels are a powerful feature in Go that allow goroutines to communicate with each other and synchronize their execution.
 
-You can think of channels as pipes or queues that connect goroutines. You send
-and receive messages through channels.
+You can think of channels as pipes or queues that connect goroutines. You send and receive messages through channels.
 
-In Go, channels are first-class citizens; a channel is a type. And channels
-themselves are typed, meaning you can specify what type of data can be sent
-through them.
+In Go, channels are first-class citizens; a channel is a type. And channels themselves are typed, meaning you can specify what type of data can be sent through them.
 
-Channels can be bi-directional (can send and receive) or uni-directional
-(send-only or receive-only).
+Channels can be bi-directional (can send and receive) or uni-directional (send-only or receive-only).
 
-By default, sending or receiving data on a channel is a blocking operation.
-So if a Goroutine is waiting to receive something through a channel, it will
-just pause and wait until it gets what it needs.
+By default, sending or receiving data on a channel is a blocking operation. So if a Goroutine is waiting to receive something through a channel, it will just pause and wait until it gets what it needs.
 
-Channels can be buffered or unbuffered. A buffered channel allows you to set a
-size limit of values that can be sent.
+Channels can be buffered or unbuffered. A buffered channel allows you to set a size limit of values that can be sent.
 
 To create a channel, first declare its type:
 
@@ -147,9 +122,7 @@ Then create the channel using the `make` keyword:
 messenger = make(chan string)
 ----
 
-To send a value on a channel, use the `<-` operator, with the arrow pointing in
-the direction of the data flow. In this case, we're passing the string value
-into the `messenger` channel:
+To send a value on a channel, use the `<-` operator, with the arrow pointing in the direction of the data flow. In this case, we're passing the string value into the `messenger` channel:
 
 [source,go]
 ----
@@ -167,9 +140,7 @@ Go will work out that `message` is of type `string`, in this case.
 
 == Worker pool pattern
 
-This is an example of a worker pool pattern implementation, a common pattern
-in Go and concurrent programming in general. A worker pool simply allows you
-to execute the same function concurrently.
+This is an example of a worker pool pattern implementation, a common pattern in Go and concurrent programming in general. A worker pool simply allows you to execute the same function concurrently.
 
 [source,go]
 ----

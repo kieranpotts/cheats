@@ -2,26 +2,16 @@
 
 [IMPORTANT]
 ======
-This documentation is up-to-date with React v17. React v18 introduced a new
-hook called `useActionState` that makes it much easier to work with forms
-in React.
+This documentation is up-to-date with React v17. React v18 introduced a new hook called `useActionState` that makes it much easier to work with forms in React.
 ======
 
 Working with native forms forms is one React's weak points.
 
-Traditionally, to dynamically send form data to a server, you would listen to
-a form's `submit` event, prevent the default action, capture the values of
-all the form's inputs, and send the data to an HTTP endpoint. In React, it
-is better practice to dynamically track the state of form inputs, syncing
-the values of the inputs with the state of the React components that wrap them
-– literally on every keystroke as the user enters data.
+Traditionally, to dynamically send form data to a server, you would listen to a form's `submit` event, prevent the default action, capture the values of all the form's inputs, and send the data to an HTTP endpoint. In React, it is better practice to dynamically track the state of form inputs, syncing the values of the inputs with the state of the React components that wrap them – literally on every keystroke as the user enters data.
 
-This concept is known as *controlled components* in React. It is the
-recommended way to work with forms in React.
+This concept is known as *controlled components* in React. It is the recommended way to work with forms in React.
 
-There are several steps to creating a controlled component. The first step
-is to synchronize component state with changes to the values of native form
-elements:
+There are several steps to creating a controlled component. The first step is to synchronize component state with changes to the values of native form elements:
 
 [source,jsx]
 ----
@@ -63,22 +53,13 @@ export default function Form() {
 }
 ----
 
-This is good design. We can easily add new inputs to this form by simply syncing
-the inputs' `name` attributes with the keys in our state object where we want to
-store the associated values.
+This is good design. We can easily add new inputs to this form by simply syncing the inputs' `name` attributes with the keys in our state object where we want to store the associated values.
 
-But these are not yet controlled components. In simple terms, a controlled
-component is a React component that renders a form element and controls what
-happens in that form on subsequent user input. The idea is that the React
-component state should be the single source of truth for _all_ data, including
-form data.
+But these are not yet controlled components. In simple terms, a controlled component is a React component that renders a form element and controls what happens in that form on subsequent user input. The idea is that the React component state should be the single source of truth for _all_ data, including form data.
 
-At the moment we have two sources of truth: the native form data, and the React
-component state.
+At the moment we have two sources of truth: the native form data, and the React component state.
 
-To fix this, and make the component state the source of truth, it is a simple
-matter of setting the `value` attribute of the form inputs to the corresponding
-values in the component state:
+To fix this, and make the component state the source of truth, it is a simple matter of setting the `value` attribute of the form inputs to the corresponding values in the component state:
 
 [source,jsx]
 ----
@@ -122,17 +103,11 @@ export default function Form() {
 }
 ----
 
-There is no change in the behavior of the form, but conceptually the form is
-now "controlled" by the React component. We can mutate the component state
-in other ways, and the form rendering will be updated to reflect those changes.
+There is no change in the behavior of the form, but conceptually the form is now "controlled" by the React component. We can mutate the component state in other ways, and the form rendering will be updated to reflect those changes.
 
-If you don't set this up correctly, React may warn about there existing
-uncontrolled components.
+If you don't set this up correctly, React may warn about there existing uncontrolled components.
 
-HTML forms have other types of input controls, such as radios and checkboxes,
-that need some special handling. The following code demonstrates handling of
-all the different types of form elements, and also how to handle form
-submission:
+HTML forms have other types of input controls, such as radios and checkboxes, that need some special handling. The following code demonstrates handling of all the different types of form elements, and also how to handle form submission:
 
 [source,jsx]
 ----

@@ -1,4 +1,4 @@
-= AWS: Resources
+= Terraform - AWS: Resources
 
 A minimal definition for a resource that will run a web server on an EC2 instance.
 

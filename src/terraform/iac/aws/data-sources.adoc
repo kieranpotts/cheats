@@ -1,4 +1,4 @@
-= AWS: Data sources
+= Terraform - AWS: Data sources
 
 Data sources is a feature to fetch data about AWS resources – which may or may not be managed by Terraform. This is useful for referencing existing resources, such as VPCs, subnets, and security groups.
 

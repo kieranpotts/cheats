@@ -57,13 +57,13 @@ S3 also offers a number of archive storage classes, known as *S3 Glacier*. While
 
 Glacier-specific features include Object Lock and Vault Lock. *Object Lock* stores objects in a write-once-read-many (WORM) state, which prevents the objects from bring deleted or overwritten for a fixed time, or indefinitely. *Vault Lock* can also be used to enforce the WORM model, but with the addition that once the policy is enforced you can lock down the policy, preventing future edits. In effect, the whole object store is locked down. These are good features to enforce data retention compliance requirements.
 
-== S3 life cycle management
+== S3 lifecycle management
 
 S3 buckets can be transitioned to different storage classes. Generally, you can only transition a bucket to a lower-cost storage class, eg. from S3 Standard to S3 Standard-IA, and not the other way around.
 
-You can use *life cycle management* to set conditions under which buckets should be automatically transitioned to other storage classes.
+You can use *lifecycle management* to set conditions under which buckets should be automatically transitioned to other storage classes.
 
-Life cycle management can also be used to define when objects should be automatically expired/deleted from a bucket.
+Lifecycle management can also be used to define when objects should be automatically expired/deleted from a bucket.
 
 == S3 versioning
 

@@ -1,11 +1,8 @@
 = Props
 
-In React, components can receive data from their parent components. This data is
-passed as props.
+In React, components can receive data from their parent components. This data is passed as props.
 
-The following example shows four instances of a `Contact` component, each of
-which receives different data via props – which are the equivalent of attributes
-in native HTML elements.
+The following example shows four instances of a `Contact` component, each of which receives different data via props – which are the equivalent of attributes in native HTML elements.
 
 [source,jsx]
 ----
@@ -63,8 +60,7 @@ export default function Contact(props) {
 }
 ----
 
-Alternatively, the props can be destructured in the function signature,
-into individual variables:
+Alternatively, the props can be destructured in the function signature, into individual variables:
 
 [source,jsx]
 ----
@@ -88,18 +84,12 @@ export default function Contact({img, name, phone, email}) {
 
 [TIP]
 ======
-It is RECOMMENDED to stick with a single `props` object. This will make it easier
-to distinguish between props and other local variables you may define within
-the scope of the component. It also makes it a little easier to extend components
-with additional props in the future.
+It is RECOMMENDED to stick with a single `props` object. This will make it easier to distinguish between props and other local variables you may define within the scope of the component. It also makes it a little easier to extend components with additional props in the future.
 
-On the other hand, one of the advantages of destructing the props in the
-function signature is that it makes it easier to see what props are being used
-by the component.
+On the other hand, one of the advantages of destructing the props in the function signature is that it makes it easier to see what props are being used by the component.
 ======
 
-Another common pattern, for complex components that require a lot of props, like
-this…
+Another common pattern, for complex components that require a lot of props, like this…
 
 [source,jsx]
 ----
@@ -133,11 +123,9 @@ const cards = data.map(item => {
 })
 ----
 
-This pattern can work particularly well with TypeScript, where you can define
-the shape of the `item` object using an interface.
+This pattern can work particularly well with TypeScript, where you can define the shape of the `item` object using an interface.
 
-Alternatively, you can use the spread operator to pass all the properties of the
-`item` object as individual props, like this:
+Alternatively, you can use the spread operator to pass all the properties of the `item` object as individual props, like this:
 
 [source,jsx]
 ----
@@ -151,19 +139,11 @@ const cards = data.map(item => {
 })
 ----
 
-This requires not changes to the `Card` component itself, but only changes to
-the calling code. All the properties of the `item` object will be passed as
-props, but any props that are not used by the component will simply be ignored -
-there is no harm in passing extra props.
+This requires not changes to the `Card` component itself, but only changes to the calling code. All the properties of the `item` object will be passed as props, but any props that are not used by the component will simply be ignored - there is no harm in passing extra props.
 
 ''''
 
-The main difference between props and attributes is that React supports _any_
-JS data type to be passed as prop values, while HTML attributes are limited to
-strings. Where non-string values are passed as props, the value needs to be
-enclosed in curly braces, so that React can evaluate the expression. Whatever
-value the JS expression resolves to will be the value that is passed to the
-prop.
+The main difference between props and attributes is that React supports _any_ JS data type to be passed as prop values, while HTML attributes are limited to strings. Where non-string values are passed as props, the value needs to be enclosed in curly braces, so that React can evaluate the expression. Whatever value the JS expression resolves to will be the value that is passed to the prop.
 
 [source,jsx]
 ----

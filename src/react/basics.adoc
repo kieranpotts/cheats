@@ -1,8 +1,6 @@
 = React basics
 
-JSX is a syntax extension for JavaScript that looks similar to HTML, with a
-few key differences. It gets compiled to a plain JavaScript object, which you
-can see by simply console logging it.
+JSX is a syntax extension for JavaScript that looks similar to HTML, with a few key differences. It gets compiled to a plain JavaScript object, which you can see by simply console logging it.
 
 [source,jsx]
 ----
@@ -24,9 +22,7 @@ ReactDOM.render(
 )
 ----
 
-The `ReactDOM` API changed in React v18, and the `render` method is now
-deprecated. We MUST use the new `createRoot` method instead. The path to the
-`ReactDOM` import is also different.
+The `ReactDOM` API changed in React v18, and the `render` method is now deprecated. We MUST use the new `createRoot` method instead. The path to the `ReactDOM` import is also different.
 
 .index.js
 [source,js]

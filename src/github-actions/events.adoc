@@ -9,19 +9,15 @@ toc::[]
 
 == Overview
 
-link:./workflows.adoc[Workflows] are triggered by events. The events that trigger
-the execution of a workflow are configured via the `on` attribute in the
-workflow's YAML config.
+link:./workflows.adoc[Workflows] are triggered by events. The events that trigger the execution of a workflow are configured via the `on` attribute in the workflow's YAML config.
 
-GitHub Actions has 35+ event triggers, which can be broadly divided into three
-categories:
+GitHub Actions has 35+ event triggers, which can be broadly divided into three categories:
 
 * *Repository events*
   ** `push`: triggered when someone pushes to the repository.
   ** `issues`: triggered by a variety of events related to issues.
   ** `pull_request`: triggered by a variety of events related to pull requests.
-  ** `pull_request_review`: triggered by a variety of events related to PR
-    reviews, eg. submitting, editing, deleting.
+  ** `pull_request_review`: triggered by a variety of events related to PR reviews, eg. submitting, editing, deleting.
   ** `fork`: triggered when a repository is forked.
   ** …
 
@@ -32,17 +28,11 @@ categories:
 
 * *Scheduled*: Runs as a cron job.
 
-All the possible events that can be used to trigger workflows are
-{link-docs-events}[documented here].
+All the possible events that can be used to trigger workflows are {link-docs-events}[documented here].
 
-You can specify single events like `on: push`, an array of events like
-`on: [push, pull_request]`, or an event-configuration map that restricts the
-execution of a workflow to specific files, tags, or branch changes.
+You can specify single events like `on: push`, an array of events like `on: [push, pull_request]`, or an event-configuration map that restricts the execution of a workflow to specific files, tags, or branch changes.
 
-If you specify multiple events, only one of those events needs to occur to
-trigger your workflow. If multiple triggering events for your workflow occur at
-the same time, multiple workflow runs will be triggered at the same time (and
-run in parallel).
+If you specify multiple events, only one of those events needs to occur to trigger your workflow. If multiple triggering events for your workflow occur at the same time, multiple workflow runs will be triggered at the same time (and run in parallel).
 
 [source,yaml]
 ----
@@ -61,8 +51,7 @@ on:
 
 == Event filters and action types
 
-Adding event filters and action types allows you to precisely control when
-your actions run. Example:
+Adding event filters and action types allows you to precisely control when your actions run. Example:
 
 [source,yaml]
 ----
@@ -82,10 +71,7 @@ on:
       - created
 ----
 
-In the above example, the `push` and `pull_request` events are configured with
-*event filters*, which specify more precise conditions under which the workflow
-will be triggered by those events. For these events, the filters are the names
-of branches. Other filters available for the `push` event include:
+In the above example, the `push` and `pull_request` events are configured with *event filters*, which specify more precise conditions under which the workflow will be triggered by those events. For these events, the filters are the names of branches. Other filters available for the `push` event include:
 
 * `branches`
 * `branches_ignore`
@@ -94,11 +80,7 @@ of branches. Other filters available for the `push` event include:
 * `paths`
 * `paths_ignore`
 
-As well as events filters, there are also *activity types*, which are another
-way of fine-tuning a workflow's triggers. Types are specified using the `type`
-or `types` attributes. If you do not specify the activity types then a workflow
-run will be triggered for all the activity types for the event. For example,
-the `pull_request` event can be restricted to the following activity types:
+As well as events filters, there are also *activity types*, which are another way of fine-tuning a workflow's triggers. Types are specified using the `type` or `types` attributes. If you do not specify the activity types then a workflow run will be triggered for all the activity types for the event. For example, the `pull_request` event can be restricted to the following activity types:
 
 * `opened`
 * `synchronize` (when a new commit is pushed to the HEAD of the PR)
@@ -120,12 +102,9 @@ on:
       - 'releases/**'
 ----
 
-In the above example, the workflow will run whenever a new PR is opened against
-the `main` branch or a release branch, or when the PR is subsequently updated
-(ie. its HEAD commit is changed, eg. through new commits being pushed).
+In the above example, the workflow will run whenever a new PR is opened against the `main` branch or a release branch, or when the PR is subsequently updated (ie. its HEAD commit is changed, eg. through new commits being pushed).
 
-For some events, it is possible to restrict workflow runs to specific files
-or directories that have been modified, using the `paths` filter:
+For some events, it is possible to restrict workflow runs to specific files or directories that have been modified, using the `paths` filter:
 
 [source,yaml]
 ----
@@ -168,8 +147,7 @@ jobs:
         run: echo "Run this step every time"
 ----
 
-Schedules are defined in UTC times using {link-posix-cron-syntax}[POSIX cron
-syntax].
+Schedules are defined in UTC times using {link-posix-cron-syntax}[POSIX cron syntax].
 
 [source,txt]
 ----
@@ -187,8 +165,7 @@ syntax].
 
 == Manual triggers
 
-Workflows can be triggered manually using the GitHub UI, GitHub REST API, or the
-GitHub CLI:
+Workflows can be triggered manually using the GitHub UI, GitHub REST API, or the GitHub CLI:
 
 [source,sh]
 ----
@@ -198,9 +175,7 @@ gh workflow run greet.yml \
   -F data=@myfile.txt
 ----
 
-The workflow MUST be configured to run on the `workflow_dispatch` event. This
-is what allows the workflow to be triggered manually, rather than automatically
-in response to another system event.
+The workflow MUST be configured to run on the `workflow_dispatch` event. This is what allows the workflow to be triggered manually, rather than automatically in response to another system event.
 
 [source,yaml]
 ----
@@ -223,19 +198,13 @@ on:
 
 == Workflow calls
 
-Workflows can be called from other workflows. This requires the called workflow
-to have the `workflow_call` event trigger. See link:./workflows.adoc[workflows]
-for more information on workflow calls.
+Workflows can be called from other workflows. This requires the called workflow to have the `workflow_call` event trigger. See link:./workflows.adoc[workflows] for more information on workflow calls.
 
 == Webhooks
 
-Many of the listed GitHub workflow triggers are for *webhook events*. A
-webhook is a public facing URL – part of the GitHub REST API – that can be
-called to trigger events from external sources.
+Many of the listed GitHub workflow triggers are for *webhook events*. A webhook is a public facing URL – part of the GitHub REST API – that can be called to trigger events from external sources.
 
-To define webhook events, you use the `repository_dispatch` event. Optionally
-you can declare "types", which are like event names that can be subsequently
-inputted via the HTTP endpoint.
+To define webhook events, you use the `repository_dispatch` event. Optionally you can declare "types", which are like event names that can be subsequently inputted via the HTTP endpoint.
 
 [source,yaml]
 ----
@@ -244,8 +213,7 @@ on:
     types: [opened, deleted]
 ----
 
-For webhook events, you get to choose the activity types that are relevant to
-the event – ie. these can be whatever you want them to be.
+For webhook events, you get to choose the activity types that are relevant to the event – ie. these can be whatever you want them to be.
 
 When you make the request to the webhook you MUST:
 

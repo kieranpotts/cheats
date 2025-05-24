@@ -2,9 +2,7 @@
 
 [NOTE]
 ======
-Most code examples in this documentation is correct for React v17. Some
-documentation notes differences in React v18 and extensions that are coming
-to React v19.
+Most code examples in this documentation is correct for React v17. Some documentation notes differences in React v18 and extensions that are coming to React v19.
 ======
 
 == Contents

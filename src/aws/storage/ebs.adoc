@@ -38,7 +38,7 @@ When you take an EC2 backup, you are creating an EBS snapshot. Amazon Machine Im
 
 == Data Lifecycle Manager (DLM)
 
-The *Data Lifecycle Manager (DLM)* is a service that automates the creation, retention, and deletion of EBS snapshots. It is a good way to manage the life cycle of your EBS snapshots and ensure that you are not retaining unnecessary snapshots that could incur costs or have implications for data retention compliance.
+The *Data Lifecycle Manager (DLM)* is a service that automates the creation, retention, and deletion of EBS snapshots. It is a good way to manage the lifecycle of your EBS snapshots and ensure that you are not retaining unnecessary snapshots that could incur costs or have implications for data retention compliance.
 
 You can also use DLM to create standardized AMIs that are refreshed at regular intervals.
 

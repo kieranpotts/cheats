@@ -1,4 +1,4 @@
-= Blocks
+= Terraform: Blocks
 
 In HCL, a _block_ is a container for content.
 

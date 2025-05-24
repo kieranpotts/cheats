@@ -4,52 +4,36 @@
 
 toc::[]
 
-You can define configuration variables, environment variables, and secrets in
-your workflows, to customize and parameterize each workflow's behavior. Use
-cases for variables include:
+You can define configuration variables, environment variables, and secrets in your workflows, to customize and parameterize each workflow's behavior. Use cases for variables include:
 
 * Accessing sensitive information securely.
-* Defining parameters or configuration settings to dynamically control workflow
-  behavior.
+* Defining parameters or configuration settings to dynamically control workflow behavior.
 * Sharing information between workflow steps or jobs.
 
 == Secrets
 
 [IMPORTANT]
 ======
-Even in private repositories, you SHOULD NOT expose sensitive information in
-workflow files. GitHub Secrets is a secure place to store sensitive information
-that your workflows need. Secrets are available within workflow files via the
-`secrets` context.
+Even in private repositories, you SHOULD NOT expose sensitive information in workflow files. GitHub Secrets is a secure place to store sensitive information that your workflows need. Secrets are available within workflow files via the `secrets` context.
 ======
 
-Secrets are encrypted variables that allow you to pass sensitive information
-to your GitHub Actions workflows.
+Secrets are encrypted variables that allow you to pass sensitive information to your GitHub Actions workflows.
 
 Secrets can be defined at three levels:
 
-* *Organization-level secrets*: to share secrets between multiple repositories;
-  you can use policies to control which repositories can use organization
-  secrets; updating organization secrets propagates the change to all shared
-  repositories.
+* *Organization-level secrets*: to share secrets between multiple repositories; you can use policies to control which repositories can use organization secrets; updating organization secrets propagates the change to all shared repositories.
 
-* *Repository-level secrets*: secrets that are shared across all workflow
-  environments for a single repository.
+* *Repository-level secrets*: secrets that are shared across all workflow environments for a single repository.
 
-* *Environment-level secrets*: secrets that are specific to a single workflow;
-  you can enable required reviewers to approve changes to environment secrets.
+* *Environment-level secrets*: secrets that are specific to a single workflow; you can enable required reviewers to approve changes to environment secrets.
 
 Lower-level secrets override higher-level secrets.
 
-Secret names MUST contain only alphanumeric characters and underscores. Secret
-names MUST NOT start with number, and names MUST NOT started with the `GITHUB_`
-prefix, which is reserved.
+Secret names MUST contain only alphanumeric characters and underscores. Secret names MUST NOT start with number, and names MUST NOT started with the `GITHUB_` prefix, which is reserved.
 
-Names are case-insensitive, and they must be unique at the level they are at
-which they are declared.
+Names are case-insensitive, and they must be unique at the level they are at which they are declared.
 
-Secrets can be set via the GitHub web UI or the `gh` CLI tool. To set
-repository-level secrets:
+Secrets can be set via the GitHub web UI or the `gh` CLI tool. To set repository-level secrets:
 
 [source,sh]
 ----
@@ -91,8 +75,7 @@ gh secret set --org ORG_NAME SECRET_NAME --repos repo1-name,repo2-name
 gh secret list --org ORG_NAME
 ----
 
-Secrets are accessed via the secrets context, eg. `${{ secrets.MY_SECRET }}`.
-You can pass them into any step's shell commands or reused actions. Example:
+Secrets are accessed via the secrets context, eg. `${{ secrets.MY_SECRET }}`. You can pass them into any step's shell commands or reused actions. Example:
 
 [source,yaml]
 ----
@@ -137,25 +120,19 @@ jobs:
 
 There are a handful of special secrets that the GitHub Actions runners look for:
 
-* `ACTION_RUNNER_DEBUG`: Set to `true` at the repository level to enable
-  diagnostic logging for runners.
+* `ACTION_RUNNER_DEBUG`: Set to `true` at the repository level to enable diagnostic logging for runners.
 
-* `ACTIONS_STEP_DEBUG`: Set to `true` at the repository level to enable
-  diagnostic logging for steps.
+* `ACTIONS_STEP_DEBUG`: Set to `true` at the repository level to enable diagnostic logging for steps.
 
-Diagnostic logging provides additional debug logging from a workflow, which can
-be useful to diagnose issues with a workflow. Additional debug logging can be
-enabled for runs and steps.
+Diagnostic logging provides additional debug logging from a workflow, which can be useful to diagnose issues with a workflow. Additional debug logging can be enabled for runs and steps.
 
 == Configuration variables
 
-Configuration variables are variables that allow you to access non-sensitive
-information in your GitHub Actions workflows.
+Configuration variables are variables that allow you to access non-sensitive information in your GitHub Actions workflows.
 
 Variables are accessed via the `vars` context, eg. `${{ vars.MY_VAR }}`.
 
-As with secrets, variables can be set at multiple levels, with the lower-level
-ones overrides higher-level variables where there are name collisions:
+As with secrets, variables can be set at multiple levels, with the lower-level ones overrides higher-level variables where there are name collisions:
 
 * Organization-level variables
 * Repository-level variables
@@ -189,11 +166,7 @@ gh variable set MY_VAR --org ORG_NAME --repos repo1-name,repo2-name
 
 === Default env vars
 
-GitHub sets LOTS of environment variables by default, which are all available
-from every step in every workflow – but only via the runner that is executing
-the job, so in effect the env vars are available only from the `run` attribute.
-The default env vars are case-sensitive, and they refer to configuration values
-for the system and the current user.
+GitHub sets LOTS of environment variables by default, which are all available from every step in every workflow – but only via the runner that is executing the job, so in effect the env vars are available only from the `run` attribute. The default env vars are case-sensitive, and they refer to configuration values for the system and the current user.
 
 Commonly-used default env vars include:
 
@@ -210,11 +183,7 @@ jobs:
       - run: echo "Deploying to production server on branch $GITHUB_REF"
 ----
 
-While env vars are only available via the runner, you can also access some
-environment information via _contexts_, and these are more widely available, eg.
-you can use them in conditionals. In the following example, the `github.ref`
-context is used to check the branch that triggered the workflow. Subsequently,
-the env var `$GITHUB_REF` is used to log the same branch name in the runner.
+While env vars are only available via the runner, you can also access some environment information via _contexts_, and these are more widely available, eg. you can use them in conditionals. In the following example, the `github.ref` context is used to check the branch that triggered the workflow. Subsequently, the env var `$GITHUB_REF` is used to log the same branch name in the runner.
 
 [source,yaml]
 ----
@@ -230,15 +199,10 @@ jobs:
 
 [TIP]
 ======
-It is RECOMMENDED to use the default env vars to reference the runner's
-filesystem, rather than using hard-coded file paths.
+It is RECOMMENDED to use the default env vars to reference the runner's filesystem, rather than using hard-coded file paths.
 ======
 
-`GITHUB_TOKEN` is a special environment variable that is automatically set
-at the start of each workflow job. You can use the `GITHUB_TOKEN` to
-authenticate with the `gh` CLI tool. Simply assign `secrets.GITHUB_TOKEN` to
-a new env var called `GH_TOKEN`, which `gh` will automatically read and use
-for authentication.
+`GITHUB_TOKEN` is a special environment variable that is automatically set at the start of each workflow job. You can use the `GITHUB_TOKEN` to authenticate with the `gh` CLI tool. Simply assign `secrets.GITHUB_TOKEN` to a new env var called `GH_TOKEN`, which `gh` will automatically read and use for authentication.
 
 [source,yaml]
 ----
@@ -264,11 +228,7 @@ You can also use `${{ secrets.GITHUB_TOKEN }}` with GitHub's REST API.
 
 === Custom env vars
 
-You can define custom env vars inline within your workflows. To create a custom
-env var, you define it in your workflow file using the `env` attribute. The
-following example shows env vars set at the workflow level, job level, and step
-level. As with default env vars, custom env vars are case-sensitive, thus
-`$Your_Name` does not reference the same value as `$YOUR_NAME`.
+You can define custom env vars inline within your workflows. To create a custom env var, you define it in your workflow file using the `env` attribute. The following example shows env vars set at the workflow level, job level, and step level. As with default env vars, custom env vars are case-sensitive, thus `$Your_Name` does not reference the same value as `$YOUR_NAME`.
 
 [source,yaml]
 ----
@@ -292,8 +252,7 @@ jobs:
           Your_Name: Mona
 ----
 
-Configuration variables and secrets can be used to set your custom
-environment variables at runtime:
+Configuration variables and secrets can be used to set your custom environment variables at runtime:
 
 [source,yaml]
 ----
@@ -314,9 +273,7 @@ jobs:
           fi
 ----
 
-As with default env vars, you can access custom env vars from `run` scripts
-using the normal Unix `$` prefix. You can also use the `env` context to access
-custom env vars, which is more useful in conditional expressions.
+As with default env vars, you can access custom env vars from `run` scripts using the normal Unix `$` prefix. You can also use the `env` context to access custom env vars, which is more useful in conditional expressions.
 
 [source,yaml]
 ----
@@ -341,10 +298,7 @@ jobs:
           YOUR_NAME: Mona
 ----
 
-You can also  dynamically set env vars during the execution of your workflows,
-using the `GITHUB_ENV` special environment variable. This is useful for passing
-values between steps, dynamically adjusting behavior based on runtime results,
-or configuring tools and scripts executed by your workflow.
+You can also  dynamically set env vars during the execution of your workflows, using the `GITHUB_ENV` special environment variable. This is useful for passing values between steps, dynamically adjusting behavior based on runtime results, or configuring tools and scripts executed by your workflow.
 
 [source,yaml]
 ----

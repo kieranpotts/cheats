@@ -1,7 +1,6 @@
 = DOM event listeners
 
-React provides a declarative way to attach event listeners to DOM elements. The
-framework supports a subset of native DOM events.
+React provides a declarative way to attach event listeners to DOM elements. The framework supports a subset of native DOM events.
 
 [source,jsx]
 ----

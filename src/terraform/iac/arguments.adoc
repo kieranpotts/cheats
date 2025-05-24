@@ -1,4 +1,4 @@
-= Arguments
+= Terraform: Arguments
 
 In HCL, an _argument_ is a variable assignment.
 

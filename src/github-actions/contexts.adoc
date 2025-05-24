@@ -1,13 +1,8 @@
 = GitHub Actions: Contexts
 
-Contexts are predefined variables that give you access to information about
-workflow runs, your own variables and secrets, the runner environment, and
-outputs and outcomes from jobs and steps.
+Contexts are predefined variables that give you access to information about workflow runs, your own variables and secrets, the runner environment, and outputs and outcomes from jobs and steps.
 
-Each context is an object that contains properties that can be strings or other
-objects. Context data is available throughout workflow files. You typically
-access them via expression syntax, `${{ }}` (though sometimes this is not
-required).
+Each context is an object that contains properties that can be strings or other objects. Context data is available throughout workflow files. You typically access them via expression syntax, `${{ }}` (though sometimes this is not required).
 
 The following example shows use of a context called `secrets`:
 

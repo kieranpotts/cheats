@@ -9,30 +9,17 @@ toc::[]
 
 == Overview
 
-A GitHub workflow is a process that you set up in your repository to automate
-software development life cycle tasks.
+A GitHub workflow is a process that you set up in your repository to automate software development lifecycle tasks.
 
-Workflows are scoped to repositories and are configured in YAML files in the
-`./.github/workflows` directory of the repository. A repository may have
-multiple workflows; each will be configured via a single YAML file.
+Workflows are scoped to repositories and are configured in YAML files in the `./.github/workflows` directory of the repository. A repository may have multiple workflows; each will be configured via a single YAML file.
 
-The {link-docs-workflow-syntax}[workflow syntax is documented here], and GitHub
-also has a {link-example-workflows}[repo of example workflows] you can use to
-get started.
+The {link-docs-workflow-syntax}[workflow syntax is documented here], and GitHub also has a {link-example-workflows}[repo of example workflows] you can use to get started.
 
 == Reusable workflows
 
-A reusable workflow is simply a workflow that can be called from another
-workflow. This feature allows you to create modular, shareable workflow
-components that can be used across multiple repositories and workflows
-within an organization. Often, this is a better solutions to reducing
-duplication and complexity in workflows than extracting out to
-link:./actions.adoc[actions].
+A reusable workflow is simply a workflow that can be called from another workflow. This feature allows you to create modular, shareable workflow components that can be used across multiple repositories and workflows within an organization. Often, this is a better solutions to reducing duplication and complexity in workflows than extracting out to link:./actions.adoc[actions].
 
-Making a workflow reusable is a simple matter of giving it the `workflow_call`
-event trigger. Inputs and secrets may be passed to reusable workflows, and
-outputs can be captured from them. These are all specified as properties
-of the `workflow_call` event:
+Making a workflow reusable is a simple matter of giving it the `workflow_call` event trigger. Inputs and secrets may be passed to reusable workflows, and outputs can be captured from them. These are all specified as properties of the `workflow_call` event:
 
 .Reusable workflow
 [source,yaml]
@@ -52,10 +39,7 @@ on:
 
 Otherwise, reusable workflows are written in the same way as regular workflows.
 
-To call a reusable workflow from a normal workflow, use the `uses` property.
-Unlike actions, reusable workflows are called from a job, rather than from
-a step. The `with` and `secrets` properties are used to pass inputs and secrets
-respectively.
+To call a reusable workflow from a normal workflow, use the `uses` property. Unlike actions, reusable workflows are called from a job, rather than from a step. The `with` and `secrets` properties are used to pass inputs and secrets respectively.
 
 .Caller workflow
 [source,yaml]
@@ -69,17 +53,9 @@ jobs:
       auth-token: ${{ secrets.GH_PAT }}
 ----
 
-(This example represents a classic use case for reusable workflows: to deploy to
-different environments while ensuring a similar deployment process for all
-environments.)
+(This example represents a classic use case for reusable workflows: to deploy to different environments while ensuring a similar deployment process for all environments.)
 
-You can also capture outputs from a reusable workflow and use them in the caller
-workflow. The process is similar to using outputs between different dependent
-jobs in the same workflow, but here you also have to specify the outputs under
-the `outputs` keyword in the `workflow_call` event definition, as wells as in
-the output from jobs within the reusable workflow. The job passes its outputs
-up to the workflow, and then the `workflow_call` event passes them out to the
-caller.
+You can also capture outputs from a reusable workflow and use them in the caller workflow. The process is similar to using outputs between different dependent jobs in the same workflow, but here you also have to specify the outputs under the `outputs` keyword in the `workflow_call` event definition, as wells as in the output from jobs within the reusable workflow. The job passes its outputs up to the workflow, and then the `workflow_call` event passes them out to the caller.
 
 .Reusable workflow
 [source,yaml]
@@ -103,10 +79,7 @@ jobs:
           echo "my-output=my-value" >> "$GITHUB_OUTPUT"
 ----
 
-The below example shows how workflows can consume outputs from reusable
-workflows. Notice how you need to wait for the job that uses the reusable
-workflow to complete before you can access its outputs. You do this in the
-normal way: using `needs` to define dependencies between jobs:
+The below example shows how workflows can consume outputs from reusable workflows. Notice how you need to wait for the job that uses the reusable workflow to complete before you can access its outputs. You do this in the normal way: using `needs` to define dependencies between jobs:
 
 .Caller workflow
 [source,yaml]
@@ -121,27 +94,18 @@ jobs:
       - run: echo ${{ needs.call-reusable-workflow.outputs.my-output }}
 ----
 
-It is actually possible to nest workflows, so a workflow can call a reusable
-workflow which can call a reusable workflow… but only up to four levels of
-nesting is supported.
+It is actually possible to nest workflows, so a workflow can call a reusable workflow which can call a reusable workflow… but only up to four levels of nesting is supported.
 
 == Workflow templates
 
-Workflow templates are available on Enterprise accounts. They allow you to
-create workflows that can be reused across multiple repositories in your
-organization. The purpose is to ensure that automation is reused, and used
-consistently, across an organization.
+Workflow templates are available on Enterprise accounts. They allow you to create workflows that can be reused across multiple repositories in your organization. The purpose is to ensure that automation is reused, and used consistently, across an organization.
 
-Workflow templates are defined in a repository called `.github`, in a
-sub-directory called `workflow-templates`. There are two parts to a workflow
-template:
+Workflow templates are defined in a repository called `.github`, in a sub-directory called `workflow-templates`. There are two parts to a workflow template:
 
 1.  Create a YAML workflow file.
-2.  Create a JSON metadata file that describes how the template should be
-    presented to users when they are creating a workflow.
+2.  Create a JSON metadata file that describes how the template should be presented to users when they are creating a workflow.
 
-The metadata file MUST have the same name as the workflow template file. But
-instead of the `.y(a)ml` extension, it MUST be appended with `.properties.json`.
+The metadata file MUST have the same name as the workflow template file. But instead of the `.y(a)ml` extension, it MUST be appended with `.properties.json`.
 
 .Example workflow template
 [source,yaml]
@@ -165,9 +129,7 @@ jobs:
         run: echo Hello from Octo Organization
 ----
 
-Notice the `$default-branch` variable. This is a placeholder. When a workflow is
-created from this template, this placeholder will be replaced with the name of
-the repository's default branch.
+Notice the `$default-branch` variable. This is a placeholder. When a workflow is created from this template, this placeholder will be replaced with the name of the repository's default branch.
 
 .Example metadata file
 [source,json]
@@ -212,43 +174,29 @@ the repository's default branch.
 | No
 |===
 
-To create a new workflow based on an existing workflow template, go to the
-*Actions* tab, select *New workflow*, and then search for the template
-under the section titled *Workflows created by <organization name>*.
+To create a new workflow based on an existing workflow template, go to the *Actions* tab, select *New workflow*, and then search for the template under the section titled *Workflows created by <organization name>*.
 
 == Managing concurrency
 
-GiHub Actions' concurrency management feature allows you to control and limit
-the number of jobs or workflows that can run simultaneously. This is useful to
-prevent job conflicts and resource contention, especially in multi-job workflows.
+GiHub Actions' concurrency management feature allows you to control and limit the number of jobs or workflows that can run simultaneously. This is useful to prevent job conflicts and resource contention, especially in multi-job workflows.
 
-Concurrency is controlled using the `concurrency` property in your workflow
-YAML files. This property is used to define *concurrency groups*. The value of
-the `concurrency` property can be any string or expression. When more than one
-workflow or job is part of the same concurrency group, only one instance of
-that workflow or job will run at a time. If other runs are triggered, those
-will be queued to run after the current-running one completes.
+Concurrency is controlled using the `concurrency` property in your workflow YAML files. This property is used to define *concurrency groups*. The value of the `concurrency` property can be any string or expression. When more than one workflow or job is part of the same concurrency group, only one instance of that workflow or job will run at a time. If other runs are triggered, those will be queued to run after the current-running one completes.
 
-It is also possible to cancel any currently running job or workflow in the same
-concurrency group using the `cancel-in-progress: true` option. (You will
-typically want to disable the `cancel-in-progress` option for deployments.)
+It is also possible to cancel any currently running job or workflow in the same concurrency group using the `cancel-in-progress: true` option. (You will typically want to disable the `cancel-in-progress` option for deployments.)
 
 [NOTE]
 ======
 * Concurrency group names are case-insensitive.
 
-* Ordering is not guaranteed for jobs or runs using concurrency groups; they
-  are handled in the order they are processed.
+* Ordering is not guaranteed for jobs or runs using concurrency groups; they are handled in the order they are processed.
 
-* Concurrency groups MUST be unique across all workflows, to prevent cancelling
-  runs in the wrong workflows.
+* Concurrency groups MUST be unique across all workflows, to prevent cancelling runs in the wrong workflows.
 
 ======
 
 == Disabling workflows
 
-Workflows can be temporarily disabled via the GitHub UI, without having to
-delete the workflow configuration file from the default branch.
+Workflows can be temporarily disabled via the GitHub UI, without having to delete the workflow configuration file from the default branch.
 
 You can also cancel workflow runs that are in progress, also via the GitHub UI.
 

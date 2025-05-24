@@ -1,4 +1,4 @@
-= AWS: VPCs, subnets, and route tables
+= Terraform - AWS: VPCs, subnets, and route tables
 
 As an absolute minimum, a default VPC must be defined. This is required to create subnets and security group, which cross-references the VPCs to which they belong.
 

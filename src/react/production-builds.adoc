@@ -15,13 +15,9 @@
 </html>
 ----
 
-Install the "react" and "react-dom" packages as production dependencies. Then
-import `React` from the "react" package and `ReactDOM` from the "react-dom"
-package in your JSX files.
+Install the "react" and "react-dom" packages as production dependencies. Then import `React` from the "react" package and `ReactDOM` from the "react-dom" package in your JSX files.
 
-Even though `React` is not explicitly used in the following example, it will
-be once the file is compiled. It is this API that is used to create React
-components from JSX syntax.
+Even though `React` is not explicitly used in the following example, it will be once the file is compiled. It is this API that is used to create React components from JSX syntax.
 
 .index.jsx
 [source,jsx]
@@ -43,9 +39,7 @@ const navbar = (
 ReactDOM.render(navbar, document.getElementById("root"))
 ----
 
-From React v17, the explicit import of `React` is no longer required. And
-the `ReactDOM` API changed in React v18. So the above code will need to be
-refactored as follows:
+From React v17, the explicit import of `React` is no longer required. And the `ReactDOM` API changed in React v18. So the above code will need to be refactored as follows:
 
 .index.jsx
 [source,jsx]
@@ -69,10 +63,7 @@ root.render(navbar)
 
 == Building with Vite
 
-Vite is recommended for production builds. Internally it uses a transpiler
-(esbuild, rather than Babel) to convert JSX to JavaScript, and it also does
-bundling to create optimized for production builds. Vite also comes with a
-development server that supports hot module reloading.
+Vite is recommended for production builds. Internally it uses a transpiler (esbuild, rather than Babel) to convert JSX to JavaScript, and it also does bundling to create optimized for production builds. Vite also comes with a development server that supports hot module reloading.
 
 To scaffold a new Vite project, run:
 
@@ -81,12 +72,9 @@ To scaffold a new Vite project, run:
 $ npm init vite@latest
 ----
 
-Then follow the prompts to create a new project. Select "react" as the
-framework when prompted.
+Then follow the prompts to create a new project. Select "react" as the framework when prompted.
 
-Vite requires some subtle changes to how you compose React components.
-For example, any images referenced in JSX must be imported at the top of the
-file, so the bundler knows where to source the images from.
+Vite requires some subtle changes to how you compose React components. For example, any images referenced in JSX must be imported at the top of the file, so the bundler knows where to source the images from.
 
 [source,jsx]
 ----

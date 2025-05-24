@@ -1,4 +1,4 @@
-= HashiCorp Configuration Language (HCL)
+= Terraform: HashiCorp Configuration Language (HCL)
 
 All `*.tf` files are written in HCL, which is a domain-specific language designed for describing infrastructure resources in a declarative manner.
 

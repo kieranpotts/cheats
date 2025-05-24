@@ -14,11 +14,9 @@ Each step may be a shell command or a reference to an link:./actions.adoc[action
 
 == Conditionals
 
-As with link:./jobs.adoc[jobs], execution of individual steps can be made
-conditional.
+As with link:./jobs.adoc[jobs], execution of individual steps can be made conditional.
 
-By default, the standard execution for steps within a job is for downstream steps
-to be executed only if the upstream steps succeed.
+By default, the standard execution for steps within a job is for downstream steps to be executed only if the upstream steps succeed.
 
 In the following example, if step2 fails, step3 will not execute:
 
@@ -35,9 +33,7 @@ jobs:
         run: echo "Step 3"
 ----
 
-If we wanted to always run `step3` even if prior steps fail, we can use
-`!cancelled()`. Now, step3 will always be run, even if step1 or step2 fails
-(but not if the whole workflow is cancelled):
+If we wanted to always run `step3` even if prior steps fail, we can use `!cancelled()`. Now, step3 will always be run, even if step1 or step2 fails (but not if the whole workflow is cancelled):
 
 [source,yaml]
 ----
@@ -50,14 +46,9 @@ jobs:
         if: ${{ !cancelled() }}
 ----
 
-The `if` attribute can be used to make a step conditional. The step will only run
-if the expression evaluates to `true`. The `${{ }}` expression syntax MAY be
-omitted in most cases, but it is RECOMMENDED to keep it, wrapping all
-expressions for clarity and consistency.
+The `if` attribute can be used to make a step conditional. The step will only run if the expression evaluates to `true`. The `${{ }}` expression syntax MAY be omitted in most cases, but it is RECOMMENDED to keep it, wrapping all expressions for clarity and consistency.
 
-Contexts are commonly used in conditional expressions. In the following
-example, the build and test step will run only when the workflow is triggered
-by a push event:
+Contexts are commonly used in conditional expressions. In the following example, the build and test step will run only when the workflow is triggered by a push event:
 
 [source,yaml]
 ----
@@ -73,8 +64,7 @@ jobs:
         echo "Building and testing..."
 ----
 
-In the following example, the deployment will happen only when the push event
-occurs on the `main` branch:
+In the following example, the deployment will happen only when the push event occurs on the `main` branch:
 
 [source,yaml]
 ----
@@ -106,8 +96,7 @@ For documentation on creating custom actions, see link:./actions.adoc[Actions].
 
 == Running shell commands in steps
 
-The simplest type of workflows consist of steps that use the `run` attribute
-to define shell commands, which will be run directly in the runner.
+The simplest type of workflows consist of steps that use the `run` attribute to define shell commands, which will be run directly in the runner.
 
 Example:
 
@@ -138,8 +127,7 @@ steps:
       echo "Message 3"
 ----
 
-For anything more complex than a few lines of code, it is RECOMMENDED to
-extract the script to a standalone `.sh` file and reference it from `run`:
+For anything more complex than a few lines of code, it is RECOMMENDED to extract the script to a standalone `.sh` file and reference it from `run`:
 
 [source,yaml]
 ----
@@ -152,8 +140,7 @@ jobs:
         shell: bash
 ----
 
-Optionally, you can specify an alternative working directory for all external
-scripts:
+Optionally, you can specify an alternative working directory for all external scripts:
 
 [source,yaml]
 ----
@@ -169,9 +156,7 @@ jobs:
         shell: bash
 ----
 
-A common pattern is to use scripts as reusable actions that are relevant only
-to the current repository, and a convention is to store these scripts in
-`./.github/scripts`.
+A common pattern is to use scripts as reusable actions that are relevant only to the current repository, and a convention is to store these scripts in `./.github/scripts`.
 
 [source,yaml]
 ----
@@ -220,9 +205,7 @@ steps:
 
 === Logging
 
-To enable step debug logging, set the `ACTIONS_STEP_DEBUG` secret or variable
-to `true` in the repository that contains the workflow. (If both the secret and
-variable are set, the value of the secret takes precedence over the variable.)
+To enable step debug logging, set the `ACTIONS_STEP_DEBUG` secret or variable to `true` in the repository that contains the workflow. (If both the secret and variable are set, the value of the secret takes precedence over the variable.)
 
 [source,yaml]
 ----
@@ -244,8 +227,7 @@ steps:
       echo "::endgroup::"
 ----
 
-You can mask values in logs, preventing sensitive information from appearing
-there:
+You can mask values in logs, preventing sensitive information from appearing there:
 
 [source,yaml]
 ----
@@ -263,7 +245,4 @@ steps:
     run: echo "::error::This is an error message"
 ----
 
-The `::` syntax is called a *workflow command*, and it is a way of communicating
-with the runner to print formatted lines of text code to the console log.
-Workflow commands can be used within shell commands executed directly from
-workflow steps or via actions.
+The `::` syntax is called a *workflow command*, and it is a way of communicating with the runner to print formatted lines of text code to the console log. Workflow commands can be used within shell commands executed directly from workflow steps or via actions.

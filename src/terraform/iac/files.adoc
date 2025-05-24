@@ -1,4 +1,4 @@
-= Files
+= Terraform: Files
 
 While you can organize your infrastructure-as-code however you like, common practice is to include the following files:
 

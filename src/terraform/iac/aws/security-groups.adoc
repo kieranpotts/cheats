@@ -1,4 +1,4 @@
-= AWS: Security groups
+= Terraform - AWS: Security groups
 
 Security groups are virtual firewalls that control inbound and outbound traffic to AWS resources.
 

@@ -1,9 +1,6 @@
 = GitHub Actions
 
-GitHub Actions is a CI/CD pipeline directly integrated with GitHub repositories.
-It can be used to automate workflows, such as building, testing, and deploying,
-based on triggers such as push, pull request, or issue creation. Workflows can
-also be triggered manually or run on a schedule.
+GitHub Actions is a CI/CD pipeline directly integrated with GitHub repositories. It can be used to automate workflows, such as building, testing, and deploying, based on triggers such as push, pull request, or issue creation. Workflows can also be triggered manually or run on a schedule.
 
 ****
 *Example GitHub Actions workflows are configured in this repository.*
@@ -28,11 +25,7 @@ The main components of GitHub Actions are:
 
 In simple terms:
 
-A *workflow* is a discrete automated process, defined in a YAML config file in
-a repository. Workflow *runs* are triggered by *events*. Each workflow has at
-least one *job*. A job is executed in a *runner*, – a runtime environment – and
-consists of a number of *steps*. Steps execute custom commands, or they reuse
-existing *actions*, which can be thought of as shareable packaged commands.
+A *workflow* is a discrete automated process, defined in a YAML config file in a repository. Workflow *runs* are triggered by *events*. Each workflow has at least one *job*. A job is executed in a *runner*, – a runtime environment – and consists of a number of *steps*. Steps execute custom commands, or they reuse existing *actions*, which can be thought of as shareable packaged commands.
 
 [source,txt]
 ----

@@ -1,4 +1,4 @@
-= GCP: Resources
+= Terraform - GCP: Resources
 
 .Simple example of a GCP resource
 [source]

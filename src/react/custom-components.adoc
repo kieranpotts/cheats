@@ -1,7 +1,6 @@
 = Custom components
 
-At the simplest level, a React component is just a function that returns some
-JSX or other React elements. This actually works:
+At the simplest level, a React component is just a function that returns some JSX or other React elements. This actually works:
 
 [source,jsx]
 ----
@@ -14,9 +13,7 @@ function myComponent() {
 ReactDOM.render(myComponent(), document.getElementById("root"))
 ----
 
-More conventionally, components are named using PascalCase, and instead of
-explicitly calling the function, we pass a JSX-representation of the
-component to `ReactDOM.render`:
+More conventionally, components are named using PascalCase, and instead of explicitly calling the function, we pass a JSX-representation of the component to `ReactDOM.render`:
 
 [source,jsx]
 ----
@@ -29,8 +26,7 @@ function MyComponent() {
 ReactDOM.render(<MyComponent />, document.getElementById("root"))
 ----
 
-This is all you need to create a full-page React app. Here's a complete
-page rendered as a single React component:
+This is all you need to create a full-page React app. Here's a complete page rendered as a single React component:
 
 [source,jsx]
 ----
@@ -54,8 +50,7 @@ function Page() {
 ReactDOM.render(<Page />, document.getElementById("root"))
 ----
 
-But the real power of React comes from being able to _compose_ complex user
-interfaces from lots of small, reusable components.
+But the real power of React comes from being able to _compose_ complex user interfaces from lots of small, reusable components.
 
 [source,jsx]
 ----
@@ -98,8 +93,7 @@ function Page() {
 ReactDOM.render(<Page />, document.getElementById("root"))
 ----
 
-Components SHOULD be extracted out into separate files, and imported into the
-other components that depend on them:
+Components SHOULD be extracted out into separate files, and imported into the other components that depend on them:
 
 [source,jsx]
 ----

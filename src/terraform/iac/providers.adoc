@@ -1,4 +1,4 @@
-= Providers
+= Terraform: Providers
 
 Providers are a logical abstraction of an upstream API that exposes certain resources, such as web services or databases. Providers are typically cloud service providers such as AWS, Azure, or GCP, or they may be services such as Kubernetes.
 

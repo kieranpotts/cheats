@@ -76,7 +76,7 @@ You pay for:
 * *Storage class*, eg. Standard or IA.
 * *Storage quantity*: the data volume store in your buckets on a per-GB basis.
 * *Number of requests*, eg. GET, PUT, POST, LIST, COPY.
-* *Life cycle transition requests*, ie. moving data between storage classes.
+* *Lifecycle transition requests*, ie. moving data between storage classes.
 * *Data transfer* our of an S3 region is charged.
 * *Retrievals and Requests* for some storage classes like Glacier.
 

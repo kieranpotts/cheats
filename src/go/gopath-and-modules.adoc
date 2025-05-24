@@ -1,7 +1,6 @@
 = Go: GOPATH and modules
 
-Initially, Go required you to put all your Go projects in the same location on
-your local filesystem, determined by the `GOPATH` environment variable.
+Initially, Go required you to put all your Go projects in the same location on your local filesystem, determined by the `GOPATH` environment variable.
 
 [source,sh]
 ----
@@ -21,14 +20,8 @@ Examples:
 /home/kieran/go/src/github.com/golang/go
 ----
 
-The go-get tool, used for dependency management, depended on use of the GOPATH
-and this project structure. But not everyone liked this approach, and there
-emerged a number of open source tools that managed Go dependencies differently.
+The go-get tool, used for dependency management, depended on use of the GOPATH and this project structure. But not everyone liked this approach, and there emerged a number of open source tools that managed Go dependencies differently.
 
-The dependency management system was therefore changed in Go v1.13, with the
-introduction of Go modules. Go modules allow you to manage dependencies on a
-per-project basis, without the need for a global `GOPATH`. Thus, Go projects
-(modules) can live anywhere on disk and package management is now integrated
-directly into the Go toolchain (no more need for external tools).
+The dependency management system was therefore changed in Go v1.13, with the introduction of Go modules. Go modules allow you to manage dependencies on a per-project basis, without the need for a global `GOPATH`. Thus, Go projects (modules) can live anywhere on disk and package management is now integrated directly into the Go toolchain (no more need for external tools).
 
 Go modules require proper use of semantic versioning.

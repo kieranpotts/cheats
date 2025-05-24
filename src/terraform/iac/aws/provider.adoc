@@ -1,4 +1,4 @@
-= AWS: Provider
+= Terraform - AWS: Provider
 
 For AWS, the provider name is "aws".
 
