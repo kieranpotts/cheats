@@ -1,0 +1,82 @@
+= Fail2Ban
+
+Fail2Ban is a security tool to protect against dictionary attacks. It will automatically blacklist clients by their IP address, preventing them from accessing a server after too many failed attempts. It works by monitoring system logs, looking for symptoms of automated attacks based on rules that you configure. It will automatically add new rules to iptables (a firewall system), blocking the IP addresses of suspected attackers, either for a set amount of time or permanently.
+
+Fail2Ban is primarily focused on protecting against malicious SSH access, but it can be used to monitor other services too, including HTTP and SMTP. Fail2Ban can also be configured to send email alerts when an attack is suspected.
+
+To install Fail2Ban on Debian-based systems:
+
+[source]
+----
+sudo apt-get install fail2ban
+----
+
+Fail2Ban uses a cascading configuration system: `.conf` files contain the default settings, while `.local` files extend and override the defaults. So, any configuration changes should generally be done in `.local` files.
+
+Fail2Ban's configuration files are stored in the `/etc/fail2ban` directory. In there you will find a file called `fail2ban.conf`. This file configures Fail2Ban logging, defines the socket used to communicate with the Fail2Ban daemon, and sets the location of the PID file that identifies the process ID of the program. The default settings are pretty good and probably won't need changing. If you do want to adjust these settings, do so in a `.local` clone.
+
+[source]
+----
+cd /etc/fail2ban
+sudo cp fail2ban.conf fail2ban.local
+sudo nvim fail2ban.local
+----
+
+There's another configuration file called `jail.conf`. This sets the criteria by which suspected brute-force attacks are identified, and it determines the jail terms of banned clients. You will probably want to make changes to the default jail settings. Again, first create a `.local` clone of the master `.conf` file, and make your changes there.
+
+[source]
+----
+cd /etc/fail2ban
+sudo cp jail.conf jail.local
+sudo nvim jail.local
+---
+
+Set the backend property to "systemd".
+
+----
+backend = systemd
+----
+
+The main settings to pay attention to are `maxretry`, `findtime` and `bantime`. The `maxretry` setting determines how many invalid login attempts can be made from any one IP address before that IP address is blacklisted. The `findtime` setting determines the number of seconds in which `maxtries` are allowed. The `bantime` setting determines the length of time in seconds for which an IP address remains blacklisted; a negative number makes the ban permanent.
+
+----
+bantime  = 86400 # 1 day
+findtime = 3600  # 1 hour
+maxretry = 3
+----
+
+If you want to be alerted by email whenever a client is banned, use the following settings:
+
+* `destemail`: The email address where you would like to receive the emails.
+
+* `sender`: The "from" email address that Fail2Ban will use when it sends emails. It does not need to be a real, working email address.
+
+Example:
+
+----
+destemail = hostmaster@example.com
+sender    = no-reply@your.hostname.net
+----
+
+NOTE: A local mail server, such as sendmail, is required for these settings to be effective.
+
+The action setting defines what actions occur when a client is banned.
+
+* `%(action_)s`: Bans the client.
+
+* `%(action_mw)s`: Bans the client and sends an email with a WHOIS report.
+
+* `%(action_mwl)s`: Bans the client and sends an email with a WHOIS report plus all relevant lines from the log file.
+
+Example:
+
+----
+action = %(action_mw)s
+----
+
+Restart the service for the configuration changes to take effect.
+
+[source]
+----
+sudo service fail2ban restart
+----
