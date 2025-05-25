@@ -1,0 +1,199 @@
+= SSL/TLS
+
+== OpenSSL
+
+OpenSSL is an open source implementation of the SSL and TLS protocols.
+
+=== Install OpenSSL
+
+Most flavours of Linux have OpenSSL installed by default. If not:
+
+.Debian/Ubuntu
+[source]
+----
+sudo apt-get install openssl
+----
+
+.RedHat/CentOS
+[source]
+----
+yum install openssl
+----
+
+=== Create self-signed certificates
+
+SSL certificates are used to encrypt traffic between a client (eg. a web browser) and a server (eg. an HTTP server). In production environments, SSL certificates will be purchased from recognized third parties, known as the root or intermediate authority, to say that your SSL certificate is both valid and legitimately used by its owners.
+
+In development environments that are not accessible publicly, you can instead create a self-signed certificate, which you can configure your local computer to recognize and accept as being a valid certificate. The steps are:
+
+1. Create a private key.
+2. Create a certificate signing request (CSR).
+3. Create a self-signed certificate using the private key and CSR.
+
+NOTE: When you purchase an SSL certificate from a third party certificate signing authority, the third party does the last step.
+
+Create a directory to store your SSL certificates. By convention, these go in `/etc/ssl` or in a subdirectory of the HTTP server that will use the certificates:
+
+[source]
+----
+# Apache:
+sudo mkdir /etc/apache2/ssl
+
+# Or:
+sudo mkdir /etc/httpd/ssl
+
+# Nginx:
+sudo mkdir /etc/nginx/ssl
+----
+
+Create a private key:
+
+[source]
+----
+# Create a 2048 bit private key
+# Change your -out filepath as needed
+sudo openssl genrsa -out "/etc/<web-server>/ssl/example.key" 2048
+----
+
+Generate the certificate signing request (CSR), using the private key:
+
+[source]
+----
+sudo openssl req -new -key "/etc/<web-server>/ssl/example.key" \
+  -out "/etc/<web-server>/ssl/example.csr"
+----
+
+You will be asked a series of questions. The `Common Name` option is the most important. It must match the domain name you will use the certificate for. If you use the `www` subdomain`, this must be included in the `Common Name`.
+
+For self-signed certificates, you can skip the `Organizational Unit Name` and `Email Address` options.
+
+DO NOT provide a challenge password. This is only something needed by certificate authorities (if you're purchasing a certificate) in case you need to regenerate a certificate.
+
+Two files, `example.key` and `example.csr` will have been created. You now use these files to create the self-signed certificate:
+
+[source]
+----
+sudo openssl x509 -req -days 365 -in "/etc/<web-server>/ssl/example.csr" \
+  -signkey "/etc/<web-server>/ssl/example.key"  \
+  -out "/etc/<web-server>/ssl/example.crt"
+----
+
+Explanation:
+
+* `sudo openssl x509` create an SSL certificate following x509 specification.
+* `-req` states we're generating (requesting) a certificate.
+* `-days 365` make the certificate valid for one year.
+* `-in "/etc/<web-server>/ssl/example.csr"` is the path to the CSR.
+* `-signkey "/etc/<web-server>/ssl/example.key"` is the path to the private key.
+* `-out "/etc/<web-server>/ssl/example.crt"` is the output path for the certificate.
+
+== Wildcard certificates
+
+Use the following Bash script to create a certificate for a wildcard subdomain:
+
+[source,bash]
+----
+#!/usr/bin/env bash
+
+# Specify where we will install the certs.
+SSL_DIR="/etc/ssl/example.com"
+
+# Set the wildcarded domain
+# we want to use
+DOMAIN="*.example.com"
+
+# A blank passphrase
+PASSPHRASE=""
+
+# Set our CSR variables
+SUBJ="
+C=US
+ST=Connecticut
+O=
+localityName=New Haven
+commonName=$DOMAIN
+organizationalUnitName=
+emailAddress=
+"
+
+# Create our SSL directory
+# in case it doesn't exist
+sudo mkdir -p "$SSL_DIR"
+
+# Generate our Private Key, CSR and Certificate
+sudo openssl genrsa -out "$SSL_DIR/example.com.key" 2048
+sudo openssl req -new -subj "$(echo -n "$SUBJ" | tr "\n" "/")" -key "$SSL_DIR/example.com.key" -out "$SSL_DIR/example.com.csr" -passin pass:$PASSPHRASE
+sudo openssl x509 -req -days 365 -in "$SSL_DIR/example.com.csr" -signkey "$SSL_DIR/example.com.key" -out "$SSL_DIR/example.com.crt"
+----
+
+=== Apache setup
+
+Make sure that `mod_ssl` is enabled. On Debian/Ubuntu:
+
+[source]
+----
+sudo a2enmod ssl
+sudo service apache2 restart
+----
+
+Next, modify your VirtualHost definition to accept HTTPS traffic on port 443.
+
+[source]
+----
+<VirtualHost *:443>
+  ServerName example.local
+
+  DocumentRoot /var/www
+
+  SSLEngine on
+
+  SSLCertificateFile  /etc/apache2/ssl/example.com.crt
+  SSLCertificateKeyFile /etc/apache2/ssl/example.com.key
+
+  # And the rest ...
+</VirtualHost>
+----
+
+Reload the configuration:
+
+[source]
+----
+sudo service apache2 reload
+----
+
+== Nginx setup
+
+In the relevant configuration file in `/etc/nginx/sites-available/*`:
+
+[source]
+----
+server {
+  listen 443 ssl;
+
+  server_name example.local;
+  root /var/www;
+
+  ssl on;
+  ssl_certificate     /etc/nginx/ssl/example.com.crt;
+  ssl_certificate_key /etc/nginx/ssl/example.com.key;
+
+  // And the rest ...
+}
+----
+
+Reload the configuration:
+
+[source]
+----
+$ sudo service nginx reload
+----
+
+=== Command-line tools
+
+To interact with your insecure local application via `curl` and `wget`, for example, you will need to tell the tools to ignore the certificate verification.
+
+[source]
+----
+curl --insecure https://myapp.local
+wget --no-check-certificate https://myapp.local/somefile
+----
