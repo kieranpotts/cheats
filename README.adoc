@@ -13,6 +13,7 @@ Cheat sheets and study notes for various tools, technologies, and languages.
 * link:./src/intellij[IntelliJ IDEA]
 * link:./src/iptables[iptables]
 * link:./src/java[Java]
+* link:./src/json-schema[JSON Schema]
 * link:./src/kubernetes[Kubernetes]
 * link:./src/react[React]
 * link:./src/spring-framework[Spring Framework]

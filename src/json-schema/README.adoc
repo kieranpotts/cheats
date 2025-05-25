@@ -1,0 +1,94 @@
+= JSON Schema
+
+JSON Schema is a schema language for describing the structure of JSON data. It is used to validate the structure of JSON documents, ensuring that they conform to a specified format.
+
+Early drafts of the JSON Schema specifications (Draft 00 to Draft 04) were https://datatracker.ietf.org/doc/html/draft-zyp-json-schema-04[specified by the IETF]. The current version of JSON Schema is https://json-schema.org/draft/2020-12[Draft 2020-12], which is maintained by community volunteers with sponsorship via https://opencollective.com/json-schema[Open Collective].
+
+This document is correct for JSON Schema Draft 2020-12.
+
+== Media type
+
+The media type for JSON Schema documents is `application/schema+json`.
+
+== Property keywords
+
+* `$schema`: A URI that identifies the JSON Schema version. This is a meta-schema that describes the structure of JSON Schema documents (a schema for a schema is a "meta-schema"). For Draft 2020-12, the value of this property is `https://json-schema.org/draft-2020-12/schema`.
+
+* `$id`: A URI that serves as a unique identifier for the schema. This identifier can be used to reference the schema from other schema documents.
+
+* `title`: A human-friendly name for the schema. Typically, the schema would succinctly describe the type of data that the schema describes.
+
+* `description`: A longer, human-friendly description of the schema, providing more context and information.
+
+* `type`: Defines the type of data, eg. `object`, `array`, `string`, etc.
+
+* `properties`: Defines the properties of an object.
+
+* `required`: An array of property names that are required in the object.
+
+* `items`: Defines the items in an array.
+
+* `minItems`: The minimum number of items that the array must contain.
+
+* `uniqueItems`: A boolean that indicates whether all items in an array must be unique.
+
+* `minimum`: Defines the minimum acceptable value for a numeric data type.
+
+== Base schema
+
+[source,json]
+----
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/product.schema.json",
+  "title": "Record of Employee",
+  "description": "This document records the details of an employee",
+  "type": "object"
+}
+----
+
+== Example schema
+
+The following JavaScript object describes geographical coordinates:
+
+[source,json]
+----
+{
+  "latitude": 58.858093,
+  "longitude": 22.294694
+}
+----
+
+There are limits to the values that can be used for coordinates. The values cannot be more than 90 degrees or less than -90 degrees. A JSON schema that defines these constraints is shown below:
+
+[source,json]
+----
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/geographical-location.schema.json",
+  "title": "Longitude and Latitude Values",
+  "description": "A geographical coordinate.",
+  "type": "object",
+  "required": [ "latitude", "longitude" ],
+  "properties": {
+    "latitude": {
+      "type": "number",
+      "minimum": -90,
+      "maximum": 90
+    },
+    "longitude": {
+      "type": "number",
+      "minimum": -180,
+      "maximum": 180
+    }
+  }
+}
+----
+
+There are man other good examples on the JSON Schema website: https://json-schema.org/learn/miscellaneous-examples
+
+== Other resources
+
+* The official JSON Schema website has a https://tour.json-schema.org/[Tour of JSON Schema] that provides an interactive interface to learn the basics of JSON Schema. There's also a tutorial on https://json-schema.org/learn/getting-started-step-by-step[creating your first schema], which is another good resource for beginners.
+
+* The https://www.learnjsonschema.com/2020-12/[Learn JSON Schema] website provides excellent documentation for JSON Schema – much more accessible than the official specifications.
