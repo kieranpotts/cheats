@@ -31,6 +31,7 @@ Cheat sheets and study notes for various tools, technologies, and languages.
 * link:./src/ssl-tls[SSL/TLS]
 * link:./src/terraform[Terraform]
 * link:./src/tmux[tmux]
+* link:./src/unix[Unix]
 * link:./src/utilities[Utilities]
 * link:./src/web-components[Web Components]
 * link:./src/xdebug[Xdebug]

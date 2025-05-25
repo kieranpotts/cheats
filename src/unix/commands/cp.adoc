@@ -1,0 +1,15 @@
+= cp
+
+The `cp` command stands for copy and is used to copy one file to another. The following command copies the file `.profile` to `.profile.bak`. If the destination file already exists, its previous contents will be erased.
+
+[source]
+----
+cp .profile .profile.bak
+----
+
+Files can be copied to another directory. The following command copies all files in the current directory to `/usr/tmp`:
+
+[source]
+----
+cp * /usr/tmp
+----

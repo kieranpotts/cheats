@@ -1,0 +1,95 @@
+= Unix permissions
+
+== Types of permissions
+
+Unix was designed to allow more than one user to access the system at the same time. To make possible this multi-user design, it was necessary to have a method to protect users from each other. Filesystem permissions are the solution. Permissions are the "rights" to act on a file or directory.
+
+The basic rights are:
+
+* *Read*: Allows the contents of a file or directory to be viewed.
+* *Write*: Allows modification of a file, or the adding or deleting of files within a directory.
+* *Execute*: Allows execution of a program or script.
+
+Groups are useful for allowing multiple independent users to collaborate on and share files, with the same group of permissions on the files.
+
+== Reading permissions
+
+Running the command `ls -l` will list the files and directories in the current path. Each entry in the list will look something like this:
+
+----
+-rwxr-xr-x 1 root root 31660 Jan 30 13:51 file
+----
+
+The first column, which is made up of 10 characters, represents the permissions on the file or directory.
+
+The first character indicates the filesystem entity type. `-` means an ordinary file, `d` means directory, `s` means a special file, and `l` means a symbolic link.
+
+The remaining block of characters is made up of three groups of three characters each. The three groups represent:
+
+* The Unix user who owns the entity.
+* The Unix group assigned to manage the entity.
+* All other Unix users.
+
+Every file and directory has an owner, who is a Unix user. It also has a primary group, members of which are granted their own set of permissions.
+
+In each permissions group, the characters available are:
+
+* In the first column, `r` for read access or `-` for no read access.
+* In the second column, `w` for write permissions or `-` for no write permissions.
+* In the third column, `x` for execute privileges or `-` for no execute privileges.
+
+A user with read permission can view the contents of a text file, or list the contents of a directory. Without write permission, though, the user can't modify the file, or create, rename, move, or delete files within the directory on which the permission is set. Execute permission on a directory allows the permitted users to enter that directory with `cd`; execute permission on a file — a shell script, perhaps — means the user can run the file as a program.
+
+For example, `-rwxr-xr--` means:
+
+* The entity is a file.
+* The user who owns the file has full read, write and execute permissions on the file.
+* Members of the group have read and execute privileges, but they can't delete or write changes to the file.
+* Everyone else can read the contents of the file.
+
+== Bitmasks
+
+Filesystem object permissions can also be represented by octal bitmasks. This format is less intuitive but worth understanding; it is frequently cited in community forums, documentation and literature.
+
+A three-digit number encapsulates all the permissions of a file or directory. Each digit is the sum of three numbers:
+
+* 4 represents read permissions.
+* 2 represents write permissions.
+* 1 represents execute permissions.
+
+The relevant numbers are added together to give a unique total. For example, a total of 6 can be calculated only from 4 (read permission) and 2 (write permission).
+
+You set separate permissions for the owner, the group, and all other users, in that order. So you will provide a three-digit number in which each digit is no higher than 7.
+
+* `rwxrwxrwx` = `777`: Read, write and execute permissions for all users.
+
+* `rwxr-xr-x` = `755`: Read and execute permissions for all users; the owner also has write permissions.
+
+* `rwxr-x---` = `750`: Read and execute permissions for the owner and group; the file's owner also has write permission; the file is hidden from all other users.
+
+* `rwx------` = `700`: Read, write and execute permissions for the file's owner only; no access for any other user.
+
+* `rw-rw-rw-` = `666`: Read and write permissions for all users; no execute permissions for anyone.
+
+* `rw-rw-r--` = `664`: Read and write permissions for the owner and the group; read-only permission for all others.
+
+* `rw-rw----` = `660`: Read and write permissions for the owner and the group; no world permissions.
+
+* `rw-r--r--` = `644`: Read and write permissions for the owner; read-only permissions for all other users.
+
+* `rw-r-----` = `640`: Read and write permissions for the owner, read-only permissions for the group; no permissions for others.
+
+* `rw-------` = `600`: Read and write permissions for the owner; no permissions for anyone else.
+
+* `r--------` = `400`: Read permissions for the owner; no permissions for anyone else.
+
+To get the numerical `chmod` value of a filesystem object:
+
+[source]
+----
+stat --format '%a' <file>
+----
+
+== Changing permissions
+
+The `chmod` (change mode) command is used to change permissions on one or more filesystem objects. See link:./commands/chmod.adoc[chmod].

@@ -1,0 +1,31 @@
+= chown
+
+The `chown` command can be used to change the ownership of a file.
+
+To change the owner to root:
+
+[source]
+----
+chown root <file>
+----
+
+Change the ownership for all files in the current directory:
+
+[source]
+----
+chown <username>:<groupname> *
+----
+
+Recursively change the ownership of all files and directories in the current directory.
+
+[source]
+----
+chown -R <username>:<groupname> *
+----
+
+Change the ownership for the current directory:
+
+[source]
+----
+chown <username>:<groupname> .
+----

@@ -1,0 +1,81 @@
+= chmod
+
+In Unix and Unix-like operating systems, `chmod` is the system call that is used to change the link:../permissions.adoc[access permissions] of filesystem objects (files and directories).
+
+== Changing permissions
+
+Only the owner of a file or directory can change the file or directory's permissions. This is done from the command line with the `chmod` command, which stands for "change mode".
+
+There are two different syntaxes that can be used with `chmod`. The easiest is class-operator-mode syntax. In this mode you specify, respectively:
+
+* Which permissions you want to change.
+* What change you want to make.
+* What kind of permissions will be affected.
+
+The class is represented by one or more of the characters `u`, `g`, `o` and `a`, meaning the user (u, aka the owner), the group (g), others (o), and all (a) of the above.
+
+The permissions are the familiar `r`, `w` and `x`. The two are joined by an operator, `+`, `-` or `=`, which respectively add the specified permission to the class, remove it, or allow the class exactly the permissions (no more, no less).
+
+Examples:
+
+* `chmod u+x <file>` adds execute permission for the owner of the file.
+* `chmod a+x <file>` adds execute permission for all users.
+* `chmod a-x <file>` removes execute permission for all users.
+* `chmod g-x <file>` removes execute permission for the file's group.
+* `chmod a=x <file>` gives all users execute permission; all other permissions are removed.
+* `chmod o=rx <file>` sets other users' permissions to read and execute; writepermission is removed.
+* `chmod ug+x <file>` adds execute permission for the owner and the group.
+
+The `chmod` command also accepts the bitmask syntax as input. Examples:
+
+* `chmod 111 <file>` gives everyone execute permission.
+* `chmod 754 <file>` gives full permissions to the owner; the group can't write; others can only read.
+
+****
+To hang permissions on all files matching a pattern, you could do something like:
+
+[source]
+----
+find . -name "*.sh" -exec chmod +x {} \;
+----
+****
+
+== Additional file permissions
+
+In addition to the most common read/write/execute file permissions, there are some additional permission modes that are used more rarely.
+
+The sticky bit, or `+t` mode, is particularly useful in multi-user situations. This mode means that only the owner (or root) can delete the filesystem object, regardless of which users have write access to it. This is useful when a file or directory is owned by a group through which a large number of users share write access, but where you don't want any of those users to be able to delete any of the files.
+
+To change the sticky bit, you need to be either root or the file owner. (The root user will always be able to delete files regardless of the status of the sticky bit.)
+
+[source]
+----
+chmod +t /root/sticky.txt
+----
+
+To remove the sticky bit from a file, use the `-t` option.
+
+The setuid (set user identity) bit, or `+s` mode, allows users with permissions to execute a file to do so as the owner. For instance, if the file `/usr/bin/reload` was owned by the root user and the `hostmaster` group, members of the `hostmaster` group could run the `reload` program as if they were the root user.
+
+[source]
+----
+chmod g+s /usr/bin/reload
+----
+
+IMPORTANT: This may pose potential security risks in some cases, and executables should be carefully evaluated before receiving the `+s` flag.
+
+The effect of the `+s` mode on a directory is somewhat different. Files created in `+s` directories receive the ownership of that directory's user and group, rather than the ownership of the user that created the file and their default group.
+
+To apply the setuid (set user identity) bit on a directory, use the following command:
+
+[source]
+----
+chmod o+s /var/doc-store/
+----
+
+And to apply the setgid (set group identity) bit on a directory, use the following command:
+
+[source]
+----
+chmod g+s /var/doc-store/
+----

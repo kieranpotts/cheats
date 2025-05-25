@@ -1,0 +1,105 @@
+= grep
+
+`grep` is a command line utility for searching plain text files and data sets using regular expressions.
+
+== Basic search
+
+The following example will print out each line in the file `science.txt` containing the word "science" (case sensitive).
+
+[source]
+----
+grep science science.txt
+----
+
+Search for "needle" in the Linux passwd file:
+
+[source]
+----
+grep 'needle' /etc/passwd
+----
+
+To return entries in the system log that are related to cron tasks:
+
+[source]
+----
+grep CRON /var/log/syslog
+----
+
+To ignore upper/lower case distinctions, use the `-i` switch:
+
+[source]
+----
+grep -i science science.txt
+----
+
+To search for a phrase or pattern, enclose it in single quotes:
+
+[source]
+----
+grep 'spinning top' science.txt
+----
+
+To search only for whole words:
+
+[source]
+----
+grep -w 'word1|word2' /path/to/file
+----
+
+Use `-r` or `-R` to search all text files in a directory recursively:
+
+[source]
+----
+grep -r 'example.com' /etc/httpd/
+----
+
+== Other flags
+
+Prefix the output with the line number of the match:
+
+[source]
+----
+grep -n 'root' /etc/passwd
+----
+
+Count the number of matching lines:
+
+[source]
+----
+grep -c 'word' /path/to/file
+----
+
+The `-v` option inverts the matches, which means it matches only those lines that do _not_ match the expression:
+
+[source]
+----
+grep -v 'exclude' /path/to/file
+----
+
+`--include`: eg. search through only those files that have `.c` or `.h` extensions:
+
+[source]
+----
+grep --include=\*.{c,h} -rnw '/path/to/somewhere/' -e "pattern"
+----
+
+`--exclude`: eg. exclude searching all files ending with the `.o` extension:
+
+[source]
+----
+grep --exclude=*.o -rnw '/path/to/somewhere/' -e "pattern"
+----
+
+Exclude a particular directory with the `--exclude-dir` parameter. Example, exclude the directories `dir1/`, `dir2/` and all directories matching `*.dst/`:
+
+[source]
+----
+grep --exclude-dir={dir1,dir2,*.dst} -rnw '/path/to/somewhere/' -e "pattern"
+----
+
+Render the output in pretty colors:
+
+[source]
+----
+grep --color 'root' /etc/passwd
+----
