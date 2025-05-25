@@ -1,0 +1,15 @@
+= GitHub
+
+== GitHub Container Registry
+
+Tag and push an image to the GitHub Container Registry:
+
+[source,bash]
+----
+echo $GITHUB_TOKEN | docker login ghcr.io -u USERNAME --password-stdin
+
+docker tag IMAGE_ID ghcr.io/OWNER/IMAGE_NAME:latest
+
+docker push ghcr.io/OWNER/IMAGE_NAME:latest
+----
+
