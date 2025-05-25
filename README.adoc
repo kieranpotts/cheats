@@ -17,6 +17,7 @@ Cheat sheets and study notes for various tools, technologies, and languages.
 * link:./src/kubernetes[Kubernetes]
 * link:./src/monit[Monit]
 * link:./src/munin[Munin]
+* link:./src/nginx[Nginx]
 * link:./src/react[React]
 * link:./src/spring-framework[Spring Framework]
 * link:./src/terraform[Terraform]
