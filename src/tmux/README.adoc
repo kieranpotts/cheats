@@ -1,0 +1,126 @@
+= tmux
+
+There are three main components to tmux:
+
+* sessions
+* windows
+* panes
+
+A session is a collection of windows, and each window is a collection of panes. You can have multiple sessions running at the same time, and each session can have multiple windows, each with multiple panes.
+
+== External commands
+
+The following commands are typically run outside of a tmux session.
+
+[source,sh]
+----
+# Launch a new tmux session.
+tmux
+
+# Launch tmux and attach to the most recent session.
+tmux a
+tmux attach
+
+# List all current sessions.
+tmux ls
+tmux list-sessions
+
+# Create a new session with a name.
+tmux new -s <session-name>
+
+# Attach to a session by its name or index ("target").
+tmux attach -t <session-name>
+
+# Kill the most recent session.
+tmux kill-session
+
+# Kill a session by its name or index.
+tmux kill-session -t <session-name>
+
+# Kill all servers - ie. everything running in tmux!
+tmux kill-server
+----
+
+== Internal commands
+
+Once inside a tmux session, commands are prefixed with `C-b` (ie. `Ctrl-b`) by default. It means that running any command within tmux requires first typing the prefix. It is possible to change the default config via the `~/.tmux.conf` file, but you need to choose a key combination that does not conflict with any other key combinations used by the terminal or other programs running within the current tmux session.
+
+Thus, to split the current pane into two horizontally, you will hold down the `Ctrl` key and press `b`, then release both keys and type `"` (ie `Shift-2` on UK keyboards).
+
+[Attributes]
+|===
+|Command key |Description
+
+|`"`
+|Split pane horizontally.
+
+|`%`
+|Split pane vertically.
+
+|`arrow key`
+|Move between panes.
+
+|`PgUp`|`PgDown`
+|Scroll within current pane.
+
+|`c`
+|Create a new window.
+
+|`n`
+|Move to the next window.
+
+|`p`
+|Move to the previous window.
+
+|`,`
+|Rename the current window.
+
+|`w`
+|List all sessions, windows and panes, and toggle between them.
+
+|`d`
+|Detach from the current session.
+
+|`x`
+|Kill the current pane.
+
+|`&`
+|Kill the current window.
+|===
+
+=== Session controls
+
+To detach from a session, type `Ctrl+b d`. This closes tmux but keeps the session running in the background. To reattach to the session, type `tmux a` at the shell prompt.
+
+Detaching from a session does not close it. Your tmux session, with all its windows and panes, will continue to run in the background. To list all sessions, type `tmux list-sessions` or `tmux ls`.
+
+The easiest was to kill whole running sessions is to use `tmux kill-session -t <session-name>` from outside a tmux session. From inside a tmux session, you can kill the current session – closing all its windows and panes – by pressing the prefix `Ctrl-b` then typing `:kill-session` and press `Enter`. Alternatively, just `exit` from each pane individually until there are non left.
+
+=== Pane controls
+
+Type `Ctrl-b "` to split the current pane in two, horizontally, or `Ctrl-b %` to split it vertically.
+
+There are also preselected layouts, five of them. Type `Ctrl-b` as always, then `Alt` and `1` to `5`, depending on the layout you want.
+
+To navigate between panes, you can type `Ctrl-b` and then rapidly use arrow keys to move between adjacent panes. You have to do this quickly, else the `Ctrl-b` state times out.
+
+Another option is to type `Ctrl-b q`, which will briefly reveal the indexes of each pane, and then quickly type the number of the pane you want to jump to. For example, to move to pane 1, type `Ctrl-b q 1`.
+
+Panes can be resized. Press `Ctrl-b`, then press and hold down `Ctrl` while you use arrow keys to resize the current pane. Use the `Alt` key instead of `Ctrl` to resize in bigger increments. Release the `Ctrl` or `Alt` key when you're done.
+
+To exit from a single pane in tmux, you can either press `Ctrl-d` or type `exit` at the prompt.
+
+Another way to kill panes is to use `Ctrl-b` and then type `x`. This will prompt you to confirm the action. Press `y` to confirm and `n` to cancel. You can also do this from the pane selection mode, by typing `Ctrl-b w` and then using arrow keys to select the pane you want to close. Then, instead of typing `Enter` to select the pane, instead type `Ctrl-b x` to kill it.
+
+=== Copy mode
+
+To enter copy mode, type `Ctrl+b [`, then use the arrow keys to navigate to the place in the text where you want to start copying. Then press the space key to start selecting, use the arrow keys to select all the text you want, then press `Enter` to put the selected text into your copy buffer. To paste the text, type `Ctrl+b ]`.
+
+Type `q` to exit copy mode.
+
+Alternatively, add the following to your `~/.tmux.conf` file to enable mouse support, which makes it easier to copy text using the mouse:
+
+[source,sh]
+----
+set -g mouse on
+----
