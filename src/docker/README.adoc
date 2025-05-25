@@ -11,7 +11,7 @@ The Dockerfile is a text file that contains a set of instructions for building a
 * `docker build`: Builds a Docker image from a Dockerfile.
 * `docker run`: Runs a Docker container from an image.
 
-image::../_/docker-build-run.drawio.svg[]
+image::./_/docker-build-run.drawio.svg[]
 
 .Example Dockerfile
 [source,Dockerfile]
