@@ -5,6 +5,7 @@ Cheat sheets and study notes for various tools, technologies, and languages.
 == Contents
 
 * link:./src/aws[AWS]
+* link:./src/bash[Bash]
 * link:./src/docker[Docker]
 * link:./src/fail2ban[Fail2Ban]
 * link:./src/github-actions[GitHub Actions]
