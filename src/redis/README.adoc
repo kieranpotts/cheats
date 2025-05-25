@@ -1,0 +1,84 @@
+= Redis
+
+Redis is an open source in-memory key/value data store.
+
+== Installation
+
+The following instructions are correct for Ubuntu 18.04 and requires a non-root user with `sudo` privileges, and a basic firewall to have been configured.
+
+[source]
+----
+sudo apt update
+sudo apt install redis-server
+----
+
+Open the Redis configuration file for editing.
+
+[source]
+----
+sudo nvim /etc/redis/redis.conf
+----
+
+Inside the file, find the `supervised` directive. This directive allows you to declare an init system to manage Redis as a service, providing you with more control over its operation. The `supervised` directive is set to `no` by default. Since Ubuntu uses the systemd init system, change this to `systemd`.
+
+[source]
+----
+supervised systemd
+----
+
+Restart Redis.
+
+[source]
+----
+sudo systemctl restart redis.service
+----
+
+To check that Redis is running:
+
+[source]
+----
+sudo systemctl status redis
+----
+
+== Configuration
+
+Redis has several commands, via the `redis-cli` utility, that allow you to change the server's configuration on the fly. (The following examples are correct for Redis Server v4 and Ubuntu v18.04). Other Redis interfaces, such as link:https://github.com/IBM-Cloud/redli[Redli], are available as alternatives to `redis-cli`.
+
+The `config set` command allows you to reconfigure Redis at runtime without having to restart the service. It uses the following syntax:
+
+----
+127.0.0.1:6379> config set parameter value
+----
+
+For example, if you wanted to change the name of the database dump file that Redis produces with the `save` command:
+
+----
+127.0.0.1:6379> config set "dbfilename" "new_file.rdb"
+----
+
+If the configuration change is valid, the command will return `OK`, otherwise it will return an error.
+
+The `config set` commands will only alter the Redis server's behavior for the duration of the current session. To make the changes permanent, you need to run `config rewrite`:
+
+----
+127.0.0.1:6379> config rewrite
+----
+
+This will write the runtime configuration changes to `/etc/redis/redis.conf`. Alternatively, you can edit that file directly. (Not every parameter in `redis.conf` can be changed with the `config set` operation. For example, you cannot change the authentication password defined by the `requirepass` parameter.)
+
+IMPORTANT: Using `config set` is considered dangerous. It may cause your Redis server to behave in unexpected way, so you should test your changes in an isolated environment before running these commands in a production environment.
+
+To read the current configuration of a Redis server, run the `config get` command. It takes a single argument, but it accepts a glob pattern which you can use to query multiple configuration parameters.
+
+----
+127.0.0.1:6379> config get repl*
+----
+
+You can also return all of the configuration parameters using `config get *`.
+
+== Clear cache
+
+[source]
+----
+redis-cli flushall
+----
