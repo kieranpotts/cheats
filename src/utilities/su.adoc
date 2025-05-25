@@ -1,0 +1,32 @@
+= su
+
+Although `su` is not specified in the Single Unix Specification, it is distributed as part of the Linux kernel via the https://github.com/util-linux/util-linux[util-linux] package. The `su` command is also available on other Unix-like operating systems.
+
+----
+$ su <user>
+----
+
+If you run the command `su` with no parameters at all, it will assume you are trying to become the superuser or root account, equivalent to `su root`.
+
+By default, your current environment is passed to the new shell, unless you specify an alternative user after a hyphen character. In this case, `su` creates an environment as though the given user had logged in directly.
+
+----
+$ su - [user]
+----
+
+Use the `-c` option to specify a command to be executed. If the command you want to run contains spaces, encapsulate the command in quotes.
+
+----
+$ su -c 'command options'
+----
+
+****
+`sudo` is another program that offers similar functionality to `su -c`.
+****
+
+The `whoami` command can be used to check which user you are working under in the current shell.
+
+----
+$ whoami
+root
+----

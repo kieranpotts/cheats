@@ -1,0 +1,67 @@
+= sudo ("super user do")
+
+The `sudo` program is commonly used to install, start and stop applications that require root privileges on Unix-like operating systems. The program is link:https://www.sudo.ws/[developed independently] from the Linux kernel or other operating systems, and is not specified in the Single Unix Specification. Nevertheless, it is widely pre-installed on Linux distros and other Unix and Unix-like systems, else it can be installed from most major package registries.
+
+----
+$ apt-get install sudo
+$ yum install sudo
+----
+
+****
+See also `su`, another program that offers similar functionality.
+****
+
+----
+$ sudo -l                   # List available commands.
+$ sudo <command>            # Run <command> as root.
+$ sudo -u root <command>    # Alternative way to run <command> as root.
+$ sudo -u <user> <command>  # Run <command> as <user>.
+----
+
+Example:
+
+----
+$ sudo /etc/mongodb start
+----
+
+When you execute a command with `sudo`, you will be asked to confirm your password. If the `sudo` configuration permits access, the command is executed.
+
+To switch to the superuser (root) account:
+
+----
+$ sudo su           # Switch to the root account.
+$ sudo su -         # Switch to root with root's environment.
+$ sudo su - <user>  # Switch to <user>'s account with <user>'s environment.
+----
+
+Another way to switch to another account is to use `sudo` with the `-s` option. The command `sudo -s` will start a shell as root. To start a shell as another user, provide the `-u` option.
+
+----
+$ sudo -s            # Start a shell as root.
+$ sudo -u root -s    # Alternative way to start a shell as root.
+$ sudo -u <user> -s  # Start a shell as <user>.
+----
+
+To check which account the current shell is running under:
+
+----
+$ whoami
+root
+----
+
+== Sudo configuration
+
+The `sudo` configuration is typically controlled by the system administrator and requires root access to change. To change the `sudo` configuration, use the command `visudo`. This starts the `vi` editor and opens the `/etc/sudoers` file. The `visudo` command itself has to be executed with root-level privileges, ie. `sudo visudo`.
+
+There are lots of options in the sudoers file, but the most important bit is the list of users and what commands each user can run:
+
+----
+user host=(users) [NOPASSWORD:]commands
+----
+
+Examples:
+
+----
+admin ALL=(ALL) NOPASSWORD:ALL
+robin servername=(root) /etc/init.d/apps
+----

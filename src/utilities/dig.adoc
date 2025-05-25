@@ -1,0 +1,6 @@
+= dig
+
+----
+$ dig <domain>    # Gets DNS information for domain.
+$ dig -x <host>   # Reverse lookup host.
+----

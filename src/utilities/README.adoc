@@ -1,0 +1,12 @@
+= Utilities
+
+I'm defining utility software as any simple computer program with only a command line interface and which specializes in a single discrete task.
+
+* link:./src/bindfs.adoc[bindfs]
+* link:./src/dig.adoc[dig]
+* link:./src/ping.adoc[ping]
+* link:./src/rsync.adoc[rsync]
+* link:./src/su.adoc[su]
+* link:./src/sudo.adoc[sudo]
+* link:./src/wget.adoc[wget]
+* link:./src/whois.adoc[whois]

@@ -1,0 +1,5 @@
+= whois
+
+----
+$ whois <domain>  # Gets whois information for domain.
+----

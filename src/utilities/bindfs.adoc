@@ -1,0 +1,80 @@
+= bindfs
+
+https://bindfs.org/[bindfs] is a tool that can mount a directory to another directory with altered permissions, such as read-only, non-executable, or shared. This is useful for providing access to files in a way that is different from the original.
+
+For example, `bindfs` can be used to manage permissions on files served by an HTTP server such as Apache, Nginx, or Lighttpd, where you want to give developers read and write access to application files, while the web server requires only read access. So, the problem to solve is:
+
+* Developers require read and write access to application files.
+* The web server requires to be able to read all application files.
+* The web server requires to be able to write some application files, eg. uploads.
+
+The common solution is to add developers to the same user group as the what the web server runs under, eg. `www-data`. This approach can be made to work, but it has some drawbacks:
+
+* When a developer creates a file, the file is owned by the developer, and thus might not be accessible to the web server process.
+
+* Multiple groups may need to be juggled if a single server hosts multiple applications, and individual developers need differing levels of access to each.
+
+Using `bindfs` provides a more robust solution. Developers access application source code via dedicated filesystem mountpoints placed in their own home directories. These mountpoints act as file permission filters. The actual application files are owned by the web server process (like `www-data`), but the files are presented to users as though they own them themselves.
+
+This is more robust because developers are not able to change the file permissions on the application files, though they can create and modify application files as necessary.
+
+The following instructions assume:
+
+* The developer user is `developer`.
+* The web server user is `www-data`.
+* The application root directory is `/srv/www/website`.
+
+----
+# Instal bindfs (Debian-based systems).
+$ sudo apt-get update
+$ sudo apt-get -y install bindfs
+
+# Creating the application mountpoint
+$ sudo mkdir -p /home/developer/www/website
+$ sudo chown -Rf developer:developer /home/developer/www
+$ sudo chmod -Rf 770 /home/developer/www
+----
+
+As root, edit the content of `/etc/fstab` and add this line:
+
+----
+bindfs#/srv/www/website /home/developer/www/website fuse force-user=developer,force-group=developer,create-for-user=www-data,create-for-group=www-data,create-with-perms=0770,chgrp-ignore,chown-ignore,chmod-ignore 0 0
+----
+
+Mount the application. (Subsequently, this will be done automatically on system load.)
+
+----
+$ sudo mount /home/developer/www/website
+----
+
+Test the implementation by creating a file in the application mountpoint.
+
+----
+# As root.
+$ su - developer
+----
+
+----
+# As developer.
+$ cd ~/www/website
+$ touch helloworld.txt
+$ ls -l helloworld.txt
+-rwxrwx--- 1 developer developer 0 sept. 10 17:15 helloworld.txt
+$ exit
+----
+
+----
+# As root.
+$ cd /srv/www/website
+$ ls -l helloworld.txt
+-rwxrwx--- 1 www-data www-data 0 sept. 10 17:15 helloworld.txt
+----
+
+The test file is owned by `www-data:www-data`, even though it was created as `developer:developer`.
+
+Finally, to restrict developers from direct access to the application source code, attribute the root directory to `www-data:www-data` and change the permissions so only the web server can enter the directory.
+
+----
+$ sudo chown www-data:www-data /srv/www
+$ sudo chmod 770 /srv/www
+----

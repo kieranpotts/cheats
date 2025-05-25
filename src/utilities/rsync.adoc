@@ -1,0 +1,189 @@
+= rsync
+
+`rsync` (Remote Sync) is an open source command line utility that provides fast, incremental file transfer from one host to another. It is "incremental" because it copies only the differences between the source and destination files, ie. what has changed since the last sync. It is widely used on Unix-based systems.
+
+== Installation
+
+----
+$ apt-get install rsync
+----
+
+== Basic Syntax
+
+The basic syntax is similar to `ssh`, `scp` and `cp`.
+
+----
+rsync <options> <source> <destination>
+----
+
+* `-v` = verbose output
+* `-r` = copies data recursively (but does not preserve timestamps and permission while transferring data)
+* `-a` = archive mode (allows copying files recursively and preserves symbolic links, file permissions, user and group ownerships and timestamps)
+* `-z` = compress file data
+* `-h` = human-readable (output numbers are rendered in a human-readable format)
+* `-d` = transfer directories without recursing
+* `-e` = specify "ssh" as remote shell
+
+By using the SSH protocol for file transfer, data will be transferred in a secured connection using encryption.
+
+== Sync a file on the local filesystem
+
+----
+$ rsync -zvh test.txt /home/test1/
+test.txt
+sent 87.76M bytes received 31 bytes 35.11M bytes/sec
+total size is 87.74M speedup is 1.00
+----
+
+== Sync a local directory to a remote host
+
+----
+$ rsync -avzh public_html/ root@10.11.12.13:/home/
+root@10.11.12.13's password:
+sending incremental file list
+public_html/
+public_html/cgi-bin
+public_html/index.php
+sent 72 bytes  received 30 bytes  140.80 bytes/sec
+total size is 1M  speedup is 1.00
+----
+
+== Sync a local file to a remote host over SSH
+
+----
+$ rsync -avzhe ssh public_html/ root@10.11.12.13:/home
+root@10.11.12.13's password:
+sending incremental file list
+public_html/
+sent 16.56M bytes  received 45 bytes  1.28M bytes/sec
+total size is 2M  speedup is 1.10
+----
+
+== Sync a remote directory to the local host
+
+----
+$ rsync -avzh root@10.11.12.13:/home/public_html /home/test/
+root@10.11.12.13's password:
+receiving incremental file list
+created directory /home/test
+public_html/
+public_html/cgi_bin
+public_html/cgi_bin/index.php
+sent 91 bytes  received 4.99M bytes  322.16K bytes/sec
+total size is 4.99M  speedup is 1.00
+----
+
+== Make a custom backup service
+
+You can roll your own simple backup service for your servers using rsync. Just set up some cron tasks to rsync directories over to a backup server on a regular basis.
+
+Open your crontab:
+
+----
+$ crontab -e
+----
+
+Example configuration:
+
+----
+@weekly rsync -r -a -e "ssh -l <your username on backup server> -p <ssh port number of backup server>" --delete /home/<your username> <hostname or ip address of backup server>:/path/to/some/directory/on/backup/server
+----
+
+== Flags
+
+=== `--include`
+
+The following example will sync only `*.php` files.
+
+----
+$ rsync -avzeh ssh --include '*php' --exclude '*' root@10.11.12.13:/home/public_html /root/public_html
+receiving incremental files list
+test.php
+test1.php
+----
+
+=== `--exclude`
+
+The following example will exclude `*.txt` files from the sync.
+
+----
+$ rsync -avze ssh --exclude '*txt' root@10.11.12.13:/home/public_html /root/public_html
+receiving incremental files list
+test.html
+test1.php
+----
+
+=== `--delete`
+
+Files that exist in the destination but not in the source directory will be deleted from the destination.
+
+----
+$ rsync -avzP --delete root@10.11.12.13:/home/test/public_html root/public_html
+root@10.11.12.13's password:
+receiving incremental file list
+deleting public_html/test/file1
+deleting public_html/test/file2
+deleting public_html/test/
+public_html/
+sent 28 bytes received 137 bytes 36.67 bytes/sec
+total size is 2M speedup is 2.00
+----
+
+=== `--remove-source-files`
+
+The source files will be automatically deleted, following successful transfer:
+
+----
+$ rsync --remove-source-files -zvh backup.tar /home/backups/
+backup.tar
+sent 14.71M bytes  received 31 bytes  4.20M bytes/sec
+total size is 16.18M  speedup is 1.10
+[root@localhost]# ll backup.tar
+ls: backup.tar: No such file or directory
+----
+
+=== `--progress`
+
+The `--progress` flag will add file transfer speed and times to the output.
+
+----
+$ rsync -avzeh ssh --progress /home/pkgs root@10.11.12.13:/root/pkgs
+root@10.11.12.13's password:
+sending incremental file list
+pkgs/
+pkgs/httpd-2.2.3-82.el5.centos.i386.rpm
+1.02M 100%        2.72MB/s        0:00:00 (xfer#1, to-check=3/5)
+pkgs/mod_ssl-2.2.3-82.el5.centos.i386.rpm
+99.04K 100%  241.19kB/s        0:00:00 (xfer#2, to-check=2/5)
+sent 4.99M bytes  received 92 bytes  475.56K bytes/sec
+total size is 4.99M  speedup is 1.00
+----
+
+=== `--max-size`
+
+The `--max-size` flag will specify the maximum size of individual files to be transferred. Use this option if you want to exclude big zip and tar files.
+
+----
+$ rsync -avze ssh --max-size = '100k' root@10.11.12.13:/home/public_html /root/public_html
+----
+
+=== `--bwlimit`
+
+Limit I/O bandwidth using the `--bwlimit` flag.
+
+----
+$ rsync --bwlimit=100 -avzhe ssh  /home/public_html root@10.11.12.13:/root/public_html
+root@10.11.12.13's password:
+sending incremental file list
+sent 508 bytes  received 18 bytes  81.09 bytes/sec
+total size is 43M  speedup is 145347.05
+----
+
+=== `--dry-run`
+
+----
+$ rsync --dry-run --remove-source-files -zvh backup.tar /home/pu
+backup.tar
+sent 35 bytes  received 15 bytes  100.00 bytes/sec
+total size is 16.18M  speedup is 323584.00 (DRY RUN)
+----
