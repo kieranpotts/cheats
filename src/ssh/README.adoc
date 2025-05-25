@@ -1,0 +1,120 @@
+= SSH
+
+== SSH key generation
+
+Use the following command to generate a 4096-bit RSA public/private key pair, with no passphrase (`-N`).
+
+[source]
+----
+ssh-keygen -t rsa -b 4096 -N "" -C "Optional description"
+----
+
+Install the public key on the server by copying the contents of the public key file (`~/.ssh/id_rsa.pub`) to the server's `~/.ssh/authorized_keys` file.
+
+The private key file should be stored at `~/.ssh/id_rsa` on the client machine, and never shared.
+
+== SSH hardening
+
+For better security, root access and password authentication should be disabled to web servers.
+
+****
+See also :./fail2ban.adoc[Fail2Ban], which can be used to protect against SSH brute-force attacks.
+****
+
+=== Disable root login
+
+Stopping anyone from being able to SSH into a Linux box as the root user is all that is needed to prevent the most common form of brute-force attack.
+
+Before you disable root access, be sure to create for yourself a limited user account with root-level privileges. Then SSH into the box using your limited user account, and elevate to root and edit the SSH configuration file in your favorite text editor:
+
+[source]
+----
+sudo su -
+nvim /etc/ssh/sshd_config
+----
+
+Find the `PermitRootLogin` setting and change its value to no.
+
+[source]
+----
+PermitRootLogin no
+----
+
+Save your changes.
+
+Restart the SSH service.
+
+[source]
+----
+systemctl restart sshd.service
+----
+
+Logout of your limited user account and try logging in again as root. It should fail with an "Access Denied" message.
+
+=== Disable password authentication
+
+Brute-force attacks are still possible with root access disabled, so for the ultimate security users should be required to use passphrase-protected private key files, in place of traditional passwords, when they SSH into the box.
+
+Implement the following steps for your own user account, then repeat these steps for every other user, using a unique public/private cryptographic key pair for each user.
+
+Login to your limited user account using an SSH client of your choice, then elevate your session to root:
+
+[source]
+----
+sudo su -
+----
+
+Navigate to the relevant user's home directory. Use the following command, replacing `<username>` with the correct username.
+
+[source]
+----
+cd /home/<username>
+----
+
+The combination of commands shown below will create a directory called `.ssh` in the user's home directory, add a blank file called `authorized_keys` to it, and set appropriate access permissions and ownership.
+
+[source]
+----
+mkdir .ssh
+touch .ssh/authorized_keys
+chmod 700 .ssh
+chmod 600 .ssh/authorized_keys
+chown -R <username>:<username> .ssh
+----
+
+Edit the newly-created `authorized_keys` file with a text editor.
+
+[source]
+----
+nvim .ssh/authorized_keys
+----
+
+Copy the contents of the user's public key into the `authorized_keys` file. (Multiple keys may be entered into this file. Start each key on a new line.)
+
+Save the `authorized_keys` file and logout of the server. Now try logging in again, using the private key to connect. You should see a message similar to "Authenticating with public key...", and then you will be prompted for the key's passphrase, if it requires one.
+
+You should now be logged in. If instead you see the message "Server refused our key", something is wrong will the configuration and you should repeat the steps above to resolve the issue. For now, you can still login with the user's normal password.
+
+When you've confirmed that all users can successfully login using their private key, then you can safely disable password authentication. After this step, all users MUST use their private key and passphrase for SSH access. They will use their password only to confirm root-level commands.
+
+With root privileges, open the SSH configuration file in a text editor.
+
+[source]
+----
+nvim /etc/ssh/sshd_config
+----
+
+Find the `PasswordAuthentication` setting and change its value to no. Check that the line is un-commented by removing the `#` in front of it, if there is one.
+
+----
+PasswordAuthentication no
+----
+
+Restart the SSH service.
+
+[source]
+----
+systemctl restart sshd.service
+----
+
+Log out of the server, and try logging in again to a limited user account using the user's standard password (do not submit the private key). It should fail with the message "No supported authentication methods available".
