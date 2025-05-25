@@ -1,0 +1,173 @@
+= Munin
+
+Munin produces nifty little graphics about nearly every aspect of your server (load average, memory usage, CPU usage, MySQL throughput, eth0 traffic, etc.) without much configuration. It is typically used to monitor the local system, but it can be configured to monitor multiple other servers, too.
+
+== Configuration
+
+Edit the Munin configuration file:
+
+[source]
+----
+nvim /etc/munin/munin.conf
+----
+
+Locate the following block:
+
+[source]
+----
+# a simple host tree
+[localhost]
+    address 127.0.0.1
+    use_node_name yes
+----
+
+Change `[localhost]` to match the server's hostname. This is how the server will be identified in Munin's HTML output.
+
+[source]
+----
+# a simple host tree
+[<hostname>]
+    address 127.0.0.1
+    use_node_name yes
+----
+
+Munin server statistics via an HTTP server. The stats page is protected with a username and password (using HTTP basic auth). In the next step we add a new user and password to the /etc/munin/munin-htpasswd file. The default user is "munin"; we'll use a different user name ("muninadmin") for a bit more security.
+
+[source]
+----
+htpasswd -cm /etc/munin/munin-htpasswd muninadmin
+----
+
+The command will add a new user with the name "muninadmin" and prompt twice for the new password.
+
+Create the system startup links for Munin and start it:
+
+[source]
+----
+systemctl enable munin-node.service
+systemctl start munin-node.service
+----
+
+== Configuring Apache
+
+An HTTP server is required to view the Munin statistics via its web interface. By default Munin creates an Apache configuration file for Munin at `/etc/httpd/conf.d/munin.conf`. We need to edit this file to add access permissions to our network.
+
+[source]
+----
+nvim /etc/httpd/conf.d/munin.conf
+----
+
+Find the `Directory` block and add the "Order" and "Allow" directives as below:
+
+[source]
+----
+<Directory /var/www/html/munin>
+    AuthUserFile /etc/munin/munin-htpasswd
+    AuthName "Munin"
+    AuthType Basic
+    require valid-user
+
+    Order Deny,Allow
+    Allow from all
+
+    # Rest of the config...
+</Directory>
+----
+
+This will allow the Munin web interface to be accessed from any web client. You could limit access to particular IP addresses, for added security. For example, to limit access to IPs in the sequence 127.0.0.1 192.168.1.0/24:
+
+[source]
+----
+Order Deny,Allow
+Deny from all
+Allow from 127.0.0.1 192.168.1.0/24
+----
+
+The Munin source files are installed at `/var/www/html/munin`. Set ownership of this directory as follows:
+
+[source]
+----
+chown -R munin:munin /var/www/html/munin/
+----
+
+Test that all of the Apache config changes are OK:
+
+[source]
+----
+sudo apachectl configtest
+----
+
+Tell Apache to reload the configuration files for these changes to take effect. Try to use the reload rather than the restart command, so that the server remains running. If reloading does not work, you will need to fully restart the Apache program.
+
+[source]
+----
+systemctl reload httpd.service
+----
+
+To access the Munin interface, which is served from `/var/www/html/munin`:
+
+[source]
+----
+http://<hostname>/munin
+----
+
+Wait approximately one hour to view Munin graphs in the web interface.
+
+== Enabling email notifications
+
+Built into Munin is a notification system that will contact you via email when things reach certain limits.
+
+There are two levels of issues in Munin: "warning" is for when things might go wrong, and "critical" is for when things really need attention. As these values are set arbitrarily it is up to you to decide what is a warning and what is a critical error.
+
+Open the Munin config file in a text editor:
+
+[source]
+----
+nvim /etc/munin/munin.conf
+----
+
+Create a contact as follows. In this example we're creating a contact called 'hostmaster', but the contact name can be anything you like.
+
+[source]
+----
+contact.hostmaster.command mail -s "Munin notification" hostmaster@example.com
+contact.hostmaster.always_send warning critical
+----
+
+The next step is to set up the threshold levels. Example:
+
+[source]
+----
+[<hostname>]
+    address 127.0.0.1
+    load.load.warning 10
+    load.load.critical 20
+    use_node_name yes
+----
+
+TIP: When you are trying out these values for the first time, set the threshold to an intentionally low value so that they will be triggered. This ensures that the correct values are being watched in Munin and that the alerts will work correctly. Increase the values to sensible levels when you are happy that things will work when they are needed.
+
+Restart the Munin configuration for the changes to take effect:
+
+[source]
+----
+systemctl restart munin-node.service
+----
+
+== Understanding the key Munin graphs
+
+* *Disk throughput per device*: Shows the amount of data being written or read from a disk. A disk will always be slower than memory when retrieving files, but a lot of disk reads can be a problem. For example, it could indicate that your database server doesn't have enough RAM and is therefore storing tables on the disk rather than in memory.
+
+* *Inode usage in percent*: Every file system has an index showing where every file is stored, what it's name is, and what the permissions of the file are. This has a physical limit, and when it gets full it means you can't create any more files, even if there is enough space on the disk. Keeping an eye on this value is therefore very important as it will quickly cripple or bring down your website.
+
+* *eth0 Traffic*: The amount of traffic passing through the eth0 interface. Useful for keeping an eye on the available bandwidth on a web host.
+
+* *Fork rate*: Processes are created by forking existing processes into multiple new processes. This indicates the rate at which new processes are created and can be an indication of a bottleneck if lots of processes are being created.
+
+* *Number of threads*: This is the total number of processes running on a system.
+
+* *CPU usage*: This indicates the usage of the CPU and is divided into multiple parts. For example, `iowait` shows the amount of time spent by processes for IO (e.g. disk access).
+
+* *Inode table usage*: This shows the total number of files that are open on a system. If this number increases suddenly then it might mean that there is a program on the system that is not closing files correctly.
+
+* *Load average*: This is a useful number that shows how much is trying to be run by the system. Numbers under 1.0 mean that there is enough resources to cope with the amount of work to be done. Numbers over 1.0 mean that the system is under high load and there are not enough system resources.
