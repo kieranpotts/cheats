@@ -9,6 +9,7 @@ Cheat sheets and study notes for various tools, technologies, and languages.
 * link:./src/fail2ban[Fail2Ban]
 * link:./src/github-actions[GitHub Actions]
 * link:./src/go[Go]
+* link:./src/htop[htop]
 * link:./src/java[Java]
 * link:./src/kubernetes[Kubernetes]
 * link:./src/react[React]
