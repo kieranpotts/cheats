@@ -1,0 +1,22 @@
+= Laravel
+
+== Artisan helper
+
+Place the following in your project root, then run `./artisan <options>` to execute CLI commands defined in your application.
+
+[source,php]
+----
+#!/usr/bin/env php
+<?php
+
+use Symfony\Component\Console\Input\ArgvInput;
+
+define('LARAVEL_START', microtime(true));
+
+require __DIR__.'/vendor/autoload.php';
+
+$status = (require_once __DIR__.'/bootstrap/app.php)
+   ->handleCommand(new ArgvInput);
+
+exit($status);
+----

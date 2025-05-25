@@ -15,6 +15,7 @@ Cheat sheets and study notes for various tools, technologies, and languages.
 * link:./src/java[Java]
 * link:./src/json-schema[JSON Schema]
 * link:./src/kubernetes[Kubernetes]
+* link:./src/laravel[Laravel]
 * link:./src/monit[Monit]
 * link:./src/munin[Munin]
 * link:./src/nginx[Nginx]
