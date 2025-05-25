@@ -1,0 +1,259 @@
+= PM2
+
+== Installation
+
+PM2 is available from the NPM package registry. It needs to be installed globally to allow any Node application to be managed by it.
+
+[source]
+----
+npm install -g pm2
+----
+
+== Running PM2
+
+It is recommended that a dedicated system user account be created to run PM2. This minimizes the amount of damage a hacker could do if a vulnerability in PM2 is exploited. If PM2 were running as root when it was compromised, the hacker could obtain root-level privileges to the rest of the machine.
+
+TIP: Run important processes in unprivileged user contexts.
+
+== Application controls
+
+=== Start applications
+
+[source]
+----
+pm2 start api.js --name "api"
+pm2 start web.js --name "website"
+----
+
+PM2 can manage processes for applications written in other languages, too.
+
+[source]
+----
+pm2 start main.pl
+pm2 start main.coffee
+pm2 start main.php
+pm2 start main.py
+pm2 start main.sh
+pm2 start main.rb
+----
+
+By default the interpreter is determined by the following file extensions:
+
+|===
+|Extension |Language |Interpreter
+
+|`.sh`
+|Bash
+|`bash`
+
+|`.py`
+|Python
+|`python`
+
+|`.rb`
+|Ruby
+|`ruby`
+
+|`.coffee`
+|CoffeeScript
+|`coffee`
+
+|`.php`
+|PHP
+|`php`
+
+|`.pl`
+|Perl
+|`perl`
+
+|`.js`
+|Node
+|`node`
+|===
+
+If the file extension differs, you will need to specify the interpreter:
+
+[source]
+----
+pm2 start main --interpreter=node
+----
+
+To execute binary code:
+
+[source]
+----
+pm2 start ./binary-app
+----
+
+=== Stop applications
+
+[source]
+----
+pm2 stop api
+pm2 stop website
+----
+
+=== Restart applications
+
+[source]
+----
+pm2 restart api
+pm2 restart website
+----
+
+=== Memory limits
+
+Applications can be started and restarted with a memory limit.
+
+[source]
+----
+pm2 start big-array.js --max-memory-restart 20M
+----
+
+Units can be `K` (Kilobyte), `M` (Megabyte) and `G` (Gigabyte). Examples:
+
+* `50K`
+* `50M`
+* `1G`
+
+=== Delete processes
+
+These commands remove processes from the process list. Deleted processes cannot be restarted.
+
+[source]
+----
+pm2 delete api
+pm2 delete website
+----
+
+=== List processes
+
+[source]
+----
+pm2 list|ls|l|status
+----
+
+By default, processes are listed by name in ascending ordered. To change the sort order:
+
+[source]
+----
+pm2 list --sort [name|id|pid|memory|cpu|status|uptime][:asc|desc]
+----
+
+To get more details about a specific process:
+
+[source]
+----
+pm2 show 0
+----
+
+== Restart and reload
+
+Use `pm2 restart <app-name>` to restart a specific app.
+
+The `pm2 reload` command achieves the same result but is used in a different context. To achieve zero downtime when restarting an app, you need to use `pm2 reload` command on an app running in "cluster mode". To start an app in cluster mode, use this command:
+
+[source]
+----
+pm2 start <app-name> -i 1
+----
+
+This will spawn a child process in cluster mode. Later, you can reload this app by using the following command:
+
+[source]
+----
+pm2 reload <app_name>
+----
+
+Now PM2 will attempt to reload your process without any downtime. If due to some reason, PM2 can't reload the app, it'll fallback to a standard `restart`.
+
+== Daemonizing
+
+`pm2 startup` will create an init script. This means apps can be kept running indefinitely, auto-restarting after crashes and machine restarts.
+
+`pm2 save` takes a snapshot of currently-running Node applications (running under the current Unix user). You can then restore those applications later using `pm2 resurrect`. This means you don't have to manually restart each application when you restart `pm2` (such as machine reboot).
+
+== Monitoring
+
+`pm2 monit` is a monitoring tool giving you real-time insight about CPU usage, memory usage and loop delay for application processes managed by PM2.
+
+`pm2 logs (<app>)` retrospectively shows you the log output of all apps running under PM2, or for a specific app. Run `pm2 flush` to wipe all log data, freeing up disk space.
+
+The `pm2-logrotate` module can be installed to automatically rotate logs and prevent them from growing indefinitely.
+
+[source]
+----
+pm2 install pm2-logrotate
+----
+
+== Configuration files
+
+PM2 allows processes to be defined in configuration files. Three file formats are supported: JavaScript, JSON and YAML. PM2's process configuration files are called "ecosystem files".
+
+To generate a sample process file:
+
+[source]
+----
+pm2 ecosystem
+----
+
+Output:
+
+[source,js]
+----
+// ecosystem.config.js
+module.exports = {
+  apps : [
+    {
+      name: "app",
+      script: "./app.js",
+      env: {
+        NODE_ENV: "development",
+      },
+      env_production: {
+        NODE_ENV: "production",
+      }
+    }
+  ]
+}
+----
+
+Once configured, the state of all processes can be controlled simultaneously by referring to the configuration file rather than the process name.
+
+[source]
+----
+pm2 [start|restart|stop|delete] ecosystem.config.js
+----
+
+To control a single process, by the name it is given in the ecosystem configuration:
+
+[source]
+----
+pm2 [start|restart|stop|delete] ecosystem.config.js --only worker
+----
+
+You can change the name of the file, but it must be suffixed `.config.js`.
+
+Refer to the documentation for details of all the available configuration attributes: https://pm2.keymetrics.io/docs/usage/application-declaration/
+
+[TIP]
+======
+Since PM2 v2.4.0, you can `stop`/`restart`/`delete` multiple processes in a single command using regex patterns to match process names.
+
+----
+pm2 restart /app-[1,2]/
+----
+======
+
+== Programmatic API
+
+[source,js]
+----
+pm2.start({
+  name: "main",
+  script: "main.js",
+  max_memory_restart : "20M"
+}, (err, proc) => {
+  // Processing
+})
+----
