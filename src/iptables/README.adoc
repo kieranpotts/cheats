@@ -1,0 +1,110 @@
+= iptables
+
+An `iptables` firewall blocks incoming and outgoing connections except for the ones that we explicitly approve, based on rules.
+
+Check your server's default firewall rules:
+
+[source]
+----
+sudo iptables -L
+----
+
+Examine the output. If you haven't implemented any firewall rules yet, you should see an empty ruleset, as shown below:
+
+[source]
+----
+Chain INPUT (policy ACCEPT)
+target     prot opt source               destination
+
+Chain FORWARD (policy ACCEPT)
+target     prot opt source               destination
+
+Chain OUTPUT (policy ACCEPT)
+target     prot opt source               destination
+----
+
+Create a file to hold your firewall rules:
+
+[source]
+----
+sudo nvim /etc/iptables.firewall.rules
+----
+
+The following rules will allow traffic to the following services and ports: HTTP (80), HTTPS (443), SSH (22), and ping. All other ports will be blocked.
+
+[source]
+----
+*filter
+
+# Allow all loopback (lo0) traffic and drop all traffic to 127/8 that doesn't use lo0.
+-A INPUT -i lo -j ACCEPT
+-A INPUT -d 127.0.0.0/8 -j REJECT
+
+# Accept all established inbound connections.
+-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+
+# Allow all outbound traffic.
+-A OUTPUT -j ACCEPT
+
+# Allow HTTP and HTTPS connections from anywhere.
+-A INPUT -p tcp --dport 80 -j ACCEPT
+-A INPUT -p tcp --dport 443 -j ACCEPT
+
+# Allow ports 8080 and 8090 for testing.
+-A INPUT -p tcp --dport 8080:8090 -j ACCEPT
+
+# Allow SSH connections but only on the non-standard port 50 as per sshd_config.
+-A INPUT -p tcp -m state --state NEW --dport 50 -j ACCEPT
+
+# Allow ping.
+-A INPUT -p icmp --icmp-type echo-request -j ACCEPT
+
+# Log iptables denied calls.
+-A INPUT -m limit --limit 5/min -j LOG --log-prefix "iptables denied: " --log-l$
+
+# Reject all other and traffic.
+-A INPUT -j REJECT
+-A FORWARD -j REJECT
+
+COMMIT
+----
+
+Save the changes to the firewall rules file by pressing `Ctrl+X Y`.
+
+Activate the firewall rules :
+
+[source]
+----
+sudo iptables-restore < /etc/iptables.firewall.rules
+----
+
+Check the rules:
+
+[source]
+----
+sudo iptables -L
+----
+
+Check that the output matches what you expect.
+
+Next, you need to ensure that the firewall rules are activated every time you restart your machine.
+
+[source]
+----
+sudo nvim /etc/network/if-pre-up.d/firewall
+----
+
+Copy and paste the following lines:
+
+[source]
+----
+#!/bin/sh
+/sbin/iptables-restore < /etc/iptables.firewall.rules
+----
+
+Type `Ctrl+X Y` to save the script. Set the script's permissions:
+
+[source]
+----
+sudo chmod +x /etc/network/if-pre-up.d/firewall
+----

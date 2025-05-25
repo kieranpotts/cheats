@@ -11,6 +11,7 @@ Cheat sheets and study notes for various tools, technologies, and languages.
 * link:./src/go[Go]
 * link:./src/htop[htop]
 * link:./src/intellij[IntelliJ IDEA]
+* link:./src/iptables[iptables]
 * link:./src/java[Java]
 * link:./src/kubernetes[Kubernetes]
 * link:./src/react[React]
