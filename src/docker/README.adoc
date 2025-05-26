@@ -746,7 +746,7 @@ docker compose up -d
 
 === `run`
 
-Add the following script in the root directory of your project, replacing `<username>` and `<name>` with the appropriate values:
+Add the following script in the root directory of your project:
 
 .`run`
 [source,bash]
@@ -778,4 +778,22 @@ And a further shortcut to update dependencies using Composer:
 #!/usr/bin/env bash
 
 ./composer install
+----
+
+== `start`
+
+The following script starts a container and keeps it running in the background indefinitely -
+like a daemon process. `/bin/sh -c "sleep infinity"` is run inside the container. This keeps the
+container running indefinitely by executing a shell that sleeps forever. This setup is useful for
+creating a persistent environment in which you can execute one-off commands (eg. build steps)
+quickly.
+
+.`start`
+[source,sh]
+----
+#!/bin/sh
+
+IMAGE=<image-name>
+
+exec docker run -d --rm --name <container-name> -i -t -v $PWD:/data "$IMAGE" /bin/sh -c "sleep infinity"
 ----
