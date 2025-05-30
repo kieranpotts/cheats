@@ -10,23 +10,5 @@
     /* EditorConfig — .editorconfig file support. */
     "editorconfig.editorconfig",
 
-    /* Java language support. */
-    "redhat.java",
-
-    /* Java debugger. */
-    "vscjava.vscode-java-debug",
-
-    /* Maven for Java. */
-    "vscjava.vscode-maven",
-
-    /* Java test runner. */
-    "vscjava.vscode-java-test",
-
-    /* Java project manager. */
-    "vscjava.vscode-java-dependency",
-
-    /* Terraform */
-    "hashicorp.terraform",
-
   ]
 }
