@@ -2,6 +2,8 @@
 
 Providers are a logical abstraction of an upstream API that exposes certain resources, such as web services or databases. Providers are typically cloud service providers such as AWS, Azure, or GCP, or they may be services such as Kubernetes.
 
+Terraform providers are plugins that are available from the https://registry.terraform.io/[Terraform Registry].
+
 Providers are configured in Terraform files in "provider blocks", eg.:
 
 [source]

@@ -1,0 +1,163 @@
+= Terraform CLI: Provisioners
+
+Provisioners are used to execute scripts on a local or remote machine as part of resource creation or destruction. Provisioners can be used to bootstrap a resource, cleanup before destroy, run configuration management, etc.
+
+The most common provisioner is the `local-exec` provisioner, which (simply) allows you to execute local commands – within the Terraform server running on your machine. The `remote-exec` provisioner allows you to execute commands on a remote machine that's managed by Terraform.
+
+The use of provisioners is discouraged in Terraform. Using provisioners should be a _last resort_ when there is no other way to do something.
+
+== `local-exec` provisioner
+
+If you want to run some commands on your local Terraform server, you need to create a "null resource" and use the `local-exec` provisioner.
+
+[source,hcl]
+----
+resource "null_resource" "command1" {
+  provisioner "local-exec" {
+    command = "echo Hello, World!"
+  }
+}
+----
+
+The `command` argument can be any shell command that you would normally run in your terminal. Using the `local-exec` provisioner, the command is executed on the machine where Terraform is running, not on the remote machines that Terraform is managing.
+
+For the following example, when you run `terraform apply`, the command will be executed, and the output will be written to the `log.txt` file in the current directory.
+
+[source,hcl]
+----
+resource "null_resource" "command1" {
+  provisioner "local-exec" {
+    command = "echo Terraform START: $(date) >> log.txt"
+  }
+}
+----
+
+The following example will ping www.google.com five times.
+
+[source,hcl]
+----
+resource "null_resource" "command2" {
+  provisioner "local-exec" {
+    command = "ping -c 5 www.google.com"
+  }
+}
+----
+
+The following example executes a Python command. Notice the user of the `interpreter` argument to specify the Python interpreter and the `-c` flag (to run a command directly rather than run a script).
+
+[source,hcl]
+----
+resource "null_resource" "command3" {
+  provisioner "local-exec" {
+    interpreter = ["python", "-c"]
+    command     = "print('Hello World from Python!')"
+  }
+}
+----
+
+The following example shows how to pass environment variables to the shell command executed by the `local-exec` provisioner.
+
+[source,hcl]
+----
+resource "null_resource" "command4" {
+  provisioner "local-exec" {
+    command = "echo $NAME1 $NAME2 $NAME3 >> log.txt"
+    environment = {
+      NAME1 = "John"
+      NAME2 = "Mark"
+      NAME3 = "Donald"
+    }
+  }
+}
+----
+
+You can also execute local commands as part of the creation of a resource. For example, the following example creates an AWS EC2 instance and then executes a local command that appends the private IP address of the instance to a log file.
+
+This example also demonstrates how to use the `depends_on` argument to ensure that the local command is executed only after the EC2 instance has been created – and in this case we've also made it dependent on the previous `null_resource` commands being run first.
+
+[source,hcl]
+----
+resource "aws_instance" "myserver" {
+  ami           = "ami-0c9bfc21ac5bf10eb"
+  instance_type = "t3.nano"
+
+  provisioner "local-exec" {
+    command = "echo ${aws_instance.myserver.private_ip} >> log.txt"
+  }
+}
+
+resource "null_resource" "command5" {
+  provisioner "local-exec" {
+    command = "echo Terraform FINISH: $(date) >> log.txt"
+  }
+  depends_on = [
+    null_resource.command1,
+    null_resource.command2,
+    null_resource.command3,
+    null_resource.command4,
+    aws_instance.myserver
+  ]
+}
+----
+
+[IMPORTANT]
+======
+Local commands will be executed on `terraform apply` only if there are resources to be created or updated. If there are no changes to the resources, the local commands will not be executed.
+======
+
+== `remote-exec` provisioner
+
+The following example shows how to use the `remote-exec` provisioner to execute commands on a remote machine. In this case, we are creating an AWS EC2 instance and then executing a series of commands on that instance using SSH. The commands are defined as a list of strings in the `inline` argument of the `remote-exec` provisioner.
+
+The SSH connection is established using the `connection` block, which specifies the type of connection (SSH), the user, the host (the public IP of the instance), and the private key to use for authentication. The `my-key-ca-central-1.pem` file is the private key, stored locally.
+
+[source,hcl]
+----
+provider "aws" {
+  region = "ca-central-1"
+}
+
+resource "aws_default_vpc" "default" {}
+
+resource "aws_instance" "myserver" {
+  ami                    = "ami-0c9bfc21ac5bf10eb"
+  instance_type          = "t3.nano"
+  vpc_security_group_ids = [aws_security_group.web.id]
+  key_name               = "my-key-ca-central-1"
+
+  provisioner "remote-exec" {
+    inline = [
+      "mkdir /home/ec2-user/terraform",
+      "cd /home/ec2-user/terraform",
+      "touch hello.txt",
+      "echo 'Terraform was here...' > terraform.txt"
+    ]
+    connection {
+      type        = "ssh"
+      user        = "ec2-user"
+      host        = self.public_ip // Same as: `aws_instance.myserver.public_ip`
+      private_key = file("my-key-ca-central-1.pem")
+    }
+  }
+}
+
+resource "aws_security_group" "web" {
+  name   = "My-SecurityGroup"
+  vpc_id = aws_default_vpc.default.id
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    description = "Allow ALL ports"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+----
+
+More commonly, it will be adequate to use user data to execute commands on a remote machine when it is created. However, there may be cases where you need to run commands _after_ the machine is created, such as when you need to install software or configure the machine in a specific way. Or perhaps you want to execute commands on _another_ remote machine when the current machine definition is applied. These are good use cases for the `remote-exec` provisioner.

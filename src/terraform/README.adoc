@@ -46,3 +46,4 @@ See the `examples` directory for working examples of Terraform configs for vario
 * link:./cli/planning.adoc[Planning]
 * link:./cli/applying.adoc[Applying]
 * link:./cli/destroying.adoc[Destroying]
+* link:./cli/provisioners.adoc[Provisioners]
