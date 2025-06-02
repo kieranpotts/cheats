@@ -22,6 +22,9 @@ See the `examples` directory for working examples of Terraform configs for vario
 * link:./iac/blocks.adoc[Blocks]
 * link:./iac/arguments.adoc[Arguments]
 * link:./iac/providers.adoc[Providers]
+* link:./iac/resources.adoc[Resources]
+* link:./iac/dependencies.adoc[Dependencies]
+* link:./iac/provisioners.adoc[Provisioners]
 
 === AWS
 
@@ -30,7 +33,6 @@ See the `examples` directory for working examples of Terraform configs for vario
 * link:./iac/aws/resources.adoc[Resources]
 * link:./iac/aws/security-groups.adoc[Security groups]
 * link:./iac/aws/elastic-ip.adoc[Elastic IPs]
-* link:./iac/aws/dependencies.adoc[Dependencies]
 * link:./iac/aws/secrets.adoc[Secrets]
 * link:./iac/aws/data-sources.adoc[Data sources]
 * link:./iac/aws/high-availability.adoc[High availability configurations]
@@ -46,4 +48,3 @@ See the `examples` directory for working examples of Terraform configs for vario
 * link:./cli/planning.adoc[Planning]
 * link:./cli/applying.adoc[Applying]
 * link:./cli/destroying.adoc[Destroying]
-* link:./cli/provisioners.adoc[Provisioners]
