@@ -5,7 +5,7 @@ As an absolute minimum, a default VPC must be defined. This is required to creat
 == VPCs
 
 .main.tf
-[source]
+[source,hcl]
 ----
 resource "aws_default_vpc" "default" {}
 ----
@@ -13,7 +13,7 @@ resource "aws_default_vpc" "default" {}
 The default VPC is created automatically in each AWS region, but it still must be explicitly referenced in the Terraform config. This is necessary to retrieve the VPC ID, which is required for security groups and subnets.
 
 .main.tf
-[source]
+[source,hcl]
 ----
 resource "aws_security_group" "app_sg" {
   name   = "HTTP"
@@ -32,7 +32,7 @@ resource "aws_security_group" "app_sg" {
 More commonly, rather than using the default VPC, a custom VPC is created. This is done by defining a `aws_vpc` resource. The VPC is created in the region specified in the provider block. CIDR ranges should be defined for custom VPCs, and tags may be applied to VPCs.
 
 .main.tf
-[source]
+[source,hcl]
 ----
 resource "aws_vpc" "my_test_vpc" {
   cidr_block = "10.0.0.0/16"
@@ -46,7 +46,6 @@ resource "aws_vpc" "my_test_vpc" {
 CIDR ranges and tags are good candidates to extract from infrastructure configuration to variables.
 
 .terraform.tfvars
-[source]
 ----
 ## VPC
 vpc_cidr = "10.0.0.0/16"
@@ -54,7 +53,7 @@ vpc_name = "MyTestVPC"
 ----
 
 .main.tf
-[source]
+[source,hcl]
 ----
 resource "aws_vpc" "my_test_vpc" {
   cidr_block = var.vpc_cidr
@@ -70,7 +69,6 @@ resource "aws_vpc" "my_test_vpc" {
 Subnets are created within VPCs.
 
 .terraform.tfvars
-[source]
 ----
 ## Public Subnet
 subnet_cidr = "10.0.1.0/24"
@@ -78,7 +76,7 @@ subnet_name = "MyTestSubnet"
 ----
 
 .main.tf
-[source]
+[source,hcl]
 ----
 resource "aws_subnet" "my_test_subnet" {
   vpc_id = aws_vpc.my_test_vpc.id
@@ -95,14 +93,13 @@ resource "aws_subnet" "my_test_subnet" {
 An Internet Gateway (IGW) is required to route traffic from public subnets to and from the Internet.
 
 .terraform.tfvars
-[source]
 ----
 ## Internet Gateway
 igw_name = "MyTestIGW"
 ----
 
 .main.tf
-[source]
+[source,hcl]
 ----
 resource "aws_internet_gateway" "my_ig" {
   vpc_id = aws_vpc.my_test_vpc.id
@@ -118,7 +115,7 @@ resource "aws_internet_gateway" "my_ig" {
 Route tables are added to VPCs to define how traffic is routed. The following configuration routes all traffic to the Internet Gateway. Here, the route table is assigned the same name tag as the IGW.
 
 .main.tf
-[source]
+[source,hcl]
 ----
 resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.my_test_vpc.id
@@ -137,7 +134,7 @@ resource "aws_route_table" "public_rt" {
 To complete the configuration, the route table must be associated with the subnet. This is done by creating a `aws_route_table_association` resource, which maps a subnet to a route table.
 
 .main.tf
-[source]
+[source,hcl]
 ----
 resource "aws_route_table_association" "public_1_rt_assoc" {
   subnet_id      = aws_subnet.my_test_subnet.id

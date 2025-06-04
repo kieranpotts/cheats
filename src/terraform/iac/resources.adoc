@@ -5,6 +5,7 @@ To configure resources, it is RECOMMENDED to follow the documentation and exampl
 https://registry.terraform.io/providers/hashicorp/aws/latest/docs
 
 .Example
+[source,hcl]
 ----
 resource "aws_instance" "my_resource_name" {
   ami           = "ami-0c55b159cbfafe1f0"

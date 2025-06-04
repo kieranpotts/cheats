@@ -6,7 +6,7 @@ Terraform providers are plugins that are available from the https://registry.ter
 
 Providers are configured in Terraform files in "provider blocks", eg.:
 
-[source]
+[source,hcl]
 ----
 provider "aws" {
   region = "eu-west-2"

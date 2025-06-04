@@ -2,7 +2,7 @@
 
 Data sources is a feature to fetch data about AWS resources – which may or may not be managed by Terraform. This is useful for referencing existing resources, such as VPCs, subnets, and security groups.
 
-[source]
+[source,hcl]
 ----
 provider "aws" {
   // ...
@@ -57,7 +57,7 @@ data "aws_vpc" "prod" {
 
 A common use case is to fetch data about a specific resource, as in the example above, and then use that data to do things with the resource. In the examples below, we define subnets for the VPC in the AZs we have retrieved via the data source blocks, above.
 
-[source]
+[source,hcl]
 ----
 resource "aws_subnet" "subnet1" {
   vpc_id            = data.aws_vpc.prod.id
@@ -84,7 +84,7 @@ resource "aws_subnet" "subnet2" {
 
 Another use case for data sources is to dynamically update resources to the latest images (AMIs), rather than relying on maintaining hard-coded values. Examples:
 
-[source]
+[source,hcl]
 ----
 data "aws_ami" "latest_ubuntu20" {
   /* These are all filters to find the image we want.
@@ -119,19 +119,17 @@ data "aws_ami" "latest_windowserver2019" {
 
 Usage examples:
 
-[source]
+[source,hcl]
 ----
 resource "aws_instance" "server_ubuntu" {
   ami           = data.aws_ami.latest_ubuntu20.id
   instance_type = "t3.micro"
 }
 
-
 resource "aws_instance" "server_amazon" {
   ami           = data.aws_ami.latest_amazonlinux.id
   instance_type = "t3.micro"
 }
-
 
 resource "aws_instance" "server_windows" {
   ami           = data.aws_ami.latest_windowserver2019.id

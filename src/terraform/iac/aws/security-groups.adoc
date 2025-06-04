@@ -7,7 +7,7 @@ In Terraform, they are typically defined in the same file as the resources they 
 The following security group allows all inbound HTTP and HTTPS traffic, and all outbound traffic (on any protocol). This is a common configuration for web servers.
 
 .main.tf
-[source]
+[source,hcl]
 ----
 resource "aws_default_vpc" "default" {}
 
@@ -48,7 +48,7 @@ Notice the inclusion of the `vpc_id` argument. This is required since AWS provid
 It is RECOMMENDED to provide descriptions for security groups, and each rule within them. This is not required, but it removes the necessity for inline comments and the descriptions are displayed in the AWS console. The descriptions are also useful for auditing purposes.
 
 .main.tf
-[source]
+[source,hcl]
 ----
 resource "aws_security_group" "web_sg" {
   name        = "web_sg"

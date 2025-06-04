@@ -6,7 +6,7 @@ You can use the configuration to control the sequencing of changes.
 
 In the following example, we have three servers, and one security group that is applied to all of the servers.
 
-[source]
+[source,hcl]
 ----
 provider "aws" {
   region = "eu-central-1"
@@ -68,7 +68,7 @@ Terraform will try to deploy updates to the servers in parallel. If we want to c
 
 The following changes will ensure that the database server is deployed first, followed by the application server, and finally the web server.
 
-[source]
+[source,hcl]
 ----
 resource "aws_instance" "my_server_web" {
   // ...

@@ -1,7 +1,7 @@
 = Terraform - GCP: Resources
 
 .Simple example of a GCP resource
-[source]
+[source,hcl]
 ----
 resource "google_compute_instance" "my_server" {
   name         = "my-gcp-server"
@@ -27,7 +27,7 @@ resource "google_compute_instance" "my_server" {
 The following example creates an Apache web server running on Ubuntu.
 
 .Web server example
-[source]
+[source,hcl]
 ----
 resource "google_project_service" "api" {
   /* Enable two APIs: Compute Engine and Cloud Resource Manager. */

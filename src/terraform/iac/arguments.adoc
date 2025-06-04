@@ -2,7 +2,6 @@
 
 In HCL, an _argument_ is a variable assignment.
 
-[source]
 ----
 image_id = "ami-0c55b159cbfafe1f0"
 ----

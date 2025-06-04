@@ -98,7 +98,6 @@ resource "aws_instance" "my_server" {
 
 In Terraform HCL code, conditional expressions are like ternary operators in other programming languages. The syntax is:
 
-[source,hcl]
 ----
 value = (condition) ? true_value : false_value
 ----

@@ -165,7 +165,6 @@ resource "aws_instance" "my_server" {
 
 Using `lookup` with a default fallback value is good practice if the configuration depends on an environment variable, or other variable that is not guaranteed to be valid as it is defined outside of the scope of the Terraform configuration.
 
-[source,hcl]
 ----
 # Will return null if key_name does not exist:
 value = var.map_name["key_name"]

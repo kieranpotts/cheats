@@ -11,7 +11,7 @@ The following four parameters are required:
 
 These parameters may be set in the provider block, or they may be set as environment variables in the environment in which Terraform is run.
 
-[source]
+[source,hcl]
 ----
 provider "google" {
   credentials = file("gcp-creds.json") // export GCLOUD_KEYFILE_JSON="gcp-creds.json"
@@ -24,7 +24,7 @@ provider "google" {
 The credentials file can be created in the GCP console.
 
 .gcp-creds.json example
-[source]
+[source,json]
 ----
 {
   "type": "service_account",

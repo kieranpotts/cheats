@@ -4,7 +4,7 @@ For AWS, the provider name is "aws".
 
 The "region" argument is required.
 
-[source]
+[source,hcl]
 ----
 provider "aws" {
   region = "eu-west-2"
@@ -13,7 +13,7 @@ provider "aws" {
 
 Access credentials are required. These MAY be hard-coded or injected from environment variables.
 
-[source]
+[source,hcl]
 ----
 provider "aws" {
   region = "eu-west-2"
@@ -27,7 +27,7 @@ However, hard-coding credentials is NOT recommended. Instead, credentials SHOULD
 
 In the following example, the credentials are loaded from the "default" profile.
 
-[source]
+[source,hcl]
 ----
 provider "aws" {
   profile = "default"
@@ -36,7 +36,6 @@ provider "aws" {
 ----
 
 .~/.aws/credentials
-[source]
 ----
 [default]
 aws_access_key_id = AKIA...

@@ -4,7 +4,7 @@ Often, you want Terraform to output some data someplace, so you can review it la
 
 The following configuration defines three compute instances and one security group on AWS:
 
-[source]
+[source,hcl]
 ----
 provider "aws" {
   region = "eu-central-1"
@@ -55,7 +55,7 @@ resource "aws_security_group" "general" {
 
 The following defines some useful outputs for the above configuration:
 
-[source]
+[source,hcl]
 ----
 /* Print the security group ID */
 output "my_securitygroup_id" {
@@ -92,7 +92,7 @@ Available attributes are documented in the Terraform registry.
 
 You can print out everything about a resource — all "general" information, not just specific attributes. This is useful for debugging.
 
-[source]
+[source,hcl]
 ----
 output "my_securitygroup_all_details" {
   description = "All the details of my Security Group"
@@ -102,7 +102,7 @@ output "my_securitygroup_all_details" {
 
 You can also print literal values, if you need:
 
-[source]
+[source,hcl]
 ----
 output "my_output" {
   value = "Hello, world!"
@@ -113,7 +113,6 @@ A common convention is to define outputs in a file named `output.tf` file.
 
 The values will be captured and printed to the standard output when `terraform apply` is run:
 
-[source]
 ----
 Outputs:
 
@@ -133,7 +132,7 @@ If you want to see the outputs from the last `apply` operation, run `terraform o
 
 Secrets should be marked as sensitive in output. This means the value will not be displayed in the console output when running `terraform apply`. This is a good practice for sensitive information like passwords.
 
-[source]
+[source,hcl]
 ----
 output "rds_password" {
   value     = data.aws_ssm_parameter.rds_password.value

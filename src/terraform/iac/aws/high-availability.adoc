@@ -12,7 +12,7 @@ We'll configure a HA web cluster into the default VPC in the `ca-central-1` regi
 
 Here's some initial configuration to define the provider, region, and to create a reference to the default VPC (which already exists).
 
-[source]
+[source,hcl]
 ----
 provider "aws" {
   region = "ca-central-1"
@@ -23,14 +23,14 @@ resource "aws_default_vpc" "default" {}
 
 We need to get data on the AZs in this region.
 
-[source]
+[source,hcl]
 ----
 data "aws_availability_zones" "working" {}
 ----
 
 Next, we want to get the latest AMI for Amazon Linux.
 
-[source]
+[source,hcl]
 ----
 data "aws_ami" "latest_amazon_linux" {
   owners      = ["137112412989"]
@@ -44,12 +44,12 @@ data "aws_ami" "latest_amazon_linux" {
 
 Next, we need to create a security group, which will be used for the web servers and load balancer.
 
-[source]
+[source,hcl]
 ----
 resource "aws_security_group" "web" {
   name   = "Web Security Group"
   vpc_id = aws_default_vpc.default.id
-  
+
   dynamic "ingress" {
     for_each = ["80", "443"]
     content {
@@ -59,7 +59,7 @@ resource "aws_security_group" "web" {
       cidr_blocks = ["0.0.0.0/0"]
     }
   }
-  
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -71,7 +71,7 @@ resource "aws_security_group" "web" {
 
 Next, we will define the launch configuration. This will be used to create the web servers in the auto scaling group. The launch configuration will use the latest Amazon Linux AMI, and will use a user data script to install and configure the web server.
 
-[source]
+[source,hcl]
 ----
 resource "aws_launch_configuration" "web" {
   /* Note: we define only a prefix for the name. The suffix will be
@@ -80,11 +80,11 @@ resource "aws_launch_configuration" "web" {
 
   image_id        = data.aws_ami.latest_amazon_linux.id
   instance_type   = "t3.micro"
-  
+
   security_groups = [aws_security_group.web.id]
   user_data       = file("user_data.sh")
 
-  /* We want blue-green deployments, so this life-cycle 
+  /* We want blue-green deployments, so this life-cycle
   configuration is required. *.
   lifecycle {
     create_before_destroy = true
@@ -93,7 +93,7 @@ resource "aws_launch_configuration" "web" {
 ----
 
 .user_data.sh
-[source]
+[source,bash]
 ----
 #!/bin/bash
 yum -y update
@@ -118,23 +118,23 @@ chkconfig httpd on
 
 Next, we configure an auto-scaling group.
 
-[source]
+[source,hcl]
 ----
 resource "aws_autoscaling_group" "web" {
-  /* The name of the ASG will be the same as the launch configuration 
+  /* The name of the ASG will be the same as the launch configuration
   name, plus the ASG- prefix. */
   name                 = "ASG-${aws_launch_configuration.web.name}"
 
   launch_configuration = aws_launch_configuration.web.name
-  
+
   /* Always run three servers. */
   min_size             = 3
   max_size             = 3
   min_elb_capacity     = 3
-  
+
   /* Use the load balancer to do health checks. */
   health_check_type    = "ELB"
-  
+
   /* (Defined below.) */
   vpc_zone_identifier  = [aws_default_subnet.default_az1.id, aws_default_subnet.default_az2.id]
   load_balancers       = [aws_elb.web.name]
@@ -159,7 +159,7 @@ resource "aws_autoscaling_group" "web" {
 
 Next, we configure a classic load balancer resource.
 
-[source]
+[source,hcl]
 ----
 resource "aws_elb" "web" {
   name               = "WebServer-HighlyAvailable-ELB"
@@ -168,14 +168,14 @@ resource "aws_elb" "web" {
   availability_zones = [data.aws_availability_zones.working.names[0], data.aws_availability_zones.working.names[1]]
 
   security_groups    = [aws_security_group.web.id]
-  
+
   listener {
     lb_port           = 80
     lb_protocol       = "http"
     instance_port     = 80
     instance_protocol = "http"
   }
-  
+
   health_check {
     healthy_threshold   = 2
     unhealthy_threshold = 2
@@ -183,7 +183,7 @@ resource "aws_elb" "web" {
     target              = "HTTP:80/"
     interval            = 10
   }
-  
+
   tags = {
     Name  = "WebServer-HighlyAvailable-ELB"
   }
@@ -192,7 +192,7 @@ resource "aws_elb" "web" {
 
 Finally, we need to create references to the default subnets in the two availability zones. These resources already exist - we're just "adopting" them into our Terraform configuration.
 
-[source]
+[source,hcl]
 ----
 resource "aws_default_subnet" "default_az1" {
   availability_zone = data.aws_availability_zones.working.names[0]
@@ -205,7 +205,7 @@ resource "aws_default_subnet" "default_az2" {
 
 Finally, we need to output the load balancer DNS name, so we can access it via a web browser.
 
-[source]
+[source,hcl]
 ----
 output "web_loadbalancer_url" {
   value = aws_elb.web.dns_name
@@ -218,7 +218,7 @@ To use Launch Templates instead of Launch Configurations (which is an older syst
 
 We replace the "aws_launch_configuration" resource with an "aws_launch_template" resource:
 
-[source]
+[source,hcl]
 ----
 resource "aws_launch_template" "web" {
   name                   = "WebServer-Highly-Available-LT"
@@ -231,15 +231,15 @@ resource "aws_launch_template" "web" {
 
 There are some changes required to the ASG:
 
-[source]
+[source,hcl]
 ----
 resource "aws_autoscaling_group" "web" {
   name                = "WebServer-Highly-Available-ASG-Ver-${aws_launch_template.web.latest_version}"
-  
+
   min_size            = 2
   max_size            = 2
   min_elb_capacity    = 2
-  
+
   health_check_type   = "ELB"
 
   vpc_zone_identifier = [aws_default_subnet.default_az1.id, aws_default_subnet.default_az2.id]

@@ -9,7 +9,6 @@ It is RECOMMENDED to always run `terraform plan` before running `terraform apply
 
 When applying, you can override any default values for variables – declared via `variables.tf` or `terraform.tfvars` – and used within the Terraform files, eg.:
 
-[source]
 ----
 $ terraform apply -var "instance_name="MyNewNameEC2"
 ----

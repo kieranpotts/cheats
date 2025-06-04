@@ -7,7 +7,7 @@ HCL is designed to be human-readable and editable.
 Terraform configurations can also be written in JSON, but HCL is generally preferred because it is more concise and easier to read. It is specifically designed for describing infrastructure resources, making it a better fit for Terraform's use case.
 
 .Basic structure and syntax
-[source]
+[source,hcl]
 ----
 # Provider configuration
 provider "aws" {
