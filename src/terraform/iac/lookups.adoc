@@ -1,0 +1,175 @@
+= Terraform: Lookups
+
+Another way to avoid hard-coded values in Terraform is to use the `lookup` function. This dynamically retrieves values from maps or lists, making your Terraform configuration more flexible and reusable.
+
+In the following example, we want to use `lookup` to dynamically generate the list of allowed ingress ports based on the environment.
+
+.main.tf
+[source,hcl]
+----
+provider "aws" {
+  region = "us-west-2"
+}
+
+data "aws_region" "current" {}
+
+resource "aws_default_vpc" "default" {}
+
+resource "aws_instance" "my_server" {
+  ami                    = "ami-12345678"
+  instance_type          = "t3.micro"
+  vpc_security_group_ids = [aws_security_group.my_server.id]
+
+  root_block_device {
+    volume_size = 10
+    encrypted   = (var.env == "prod") ? true : false # Conditional encryption based on environment
+  }
+
+  dynamic "ebs_block_device" {
+    for_each = var.env == "prod" ? [true] : []
+    content {
+      device_name = "/dev/sdb"
+      volume_size = 40
+      encrypted   = true
+    }
+  }
+
+  volume_tags = { Name = "Disk-${var.env}" }
+  tags        = { Name = "Server-${var.env}" }
+}
+
+resource "aws_security_group" "my_server" {
+  name   = "My Server Security Group"
+  vpc_id = aws_default_vpc.default.id
+
+  dynamic "ingress" {
+    for_each = ["22", "80", "443"] # Example of hard-coded ports
+    content {
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+----
+
+To do that, we define two lists: one list of ports to open in production, and another list of ports to be allowed in all other environments.
+
+
+.variables.tf
+[source,hcl]
+----
+variable "allow_port" {
+  default = {
+    prod = ["80", "443"] # Ports to open in production
+    rest = ["80", "443", "8080", "22"] # Port to open in other environments
+  }
+}
+----
+
+We can now swap the hard-coded list of ports for a dynamic lookup based on the environment variable. If the name of the environment matches one of the keys in the `allow_port` map, it will use that list; otherwise, it will default to the "rest" list in the same map.
+
+.main.tf
+[source,hcl]
+----
+resource "aws_security_group" "my_server" {
+  name   = "My Server Security Group"
+  vpc_id = aws_default_vpc.default.id
+
+  dynamic "ingress" {
+    # lookup(<map>, <key>, <default>)
+    for_each = lookup(var.allow_port, var.env, var.allow_port["rest"])
+    content {
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+----
+
+Next, we want to replace the hard-coded AMI IDs and instance types with dynamic values based on the region and environment respectively. This allows us to customize our infrastructure based on the target environment and region.
+
+To start, we create variables that map environments to instance types, and regions to AMI IDS:
+
+.variables.tf
+[source,hcl]
+----
+variable "server_size_by_env" {
+  description = "My instance types per environment"
+  default = {
+    prod       = "t3.large"
+    staging    = "t3.medium"
+    dev        = "t3.small"
+    my_default = "t3.nano"
+  }
+}
+
+variable "ami_id_per_region" {
+  description = "My AMI IDs per region"
+  default = {
+    "us-west-2"  = "ami-0e472933a1395e172"
+    "us-west-1"  = "ami-08d9a394ac1c2994c"
+    "eu-west-1"  = "ami-0ce1e3f77cd41957e"
+    "ap-south-1" = "ami-08f63db601b82ff5f"
+  }
+}
+----
+
+To dynamically inject the AMI ID, we can use a simple map lookup, passing the current region (made available via a data attribute) as the key.
+
+For the instance type, we can use the `lookup` function to retrieve the value based on the environment variable, with a default value if the environment is not found in the map.
+
+.main.tf
+[source,hcl]
+----
+data "aws_region" "current" {}
+
+resource "aws_instance" "my_server" {
+  ami                    = var.ami_id_per_region[data.aws_region.current.name]
+  instance_type          = lookup(var.server_size_by_env, var.env, var.server_size_by_env["my_default"])
+  vpc_security_group_ids = [aws_security_group.my_server.id]
+
+  root_block_device {
+    volume_size = 10
+    encrypted   = (var.env == "prod") ? true : false
+  }
+
+  dynamic "ebs_block_device" {
+    for_each = var.env == "prod" ? [true] : []
+    content {
+      device_name = "/dev/sdb"
+      volume_size = 40
+      encrypted   = true
+    }
+  }
+
+  volume_tags = { Name = "Disk-${var.env}" }
+  tags        = { Name = "Server-${var.env}" }
+}
+----
+
+Using `lookup` with a default fallback value is good practice if the configuration depends on an environment variable, or other variable that is not guaranteed to be valid as it is defined outside of the scope of the Terraform configuration.
+
+[source,hcl]
+----
+# Will return null if key_name does not exist:
+value = var.map_name["key_name"]
+
+# Will return "default_value" if key_name does not exist:
+value = lookup(var.map_name, "key_name", "default_value")
+----

@@ -1,0 +1,110 @@
+= Terraform: Conditions
+
+Conditions in Terraform allow you to dynamically retrieve values. This makes your Terraform configuration more dynamic, and less static and hard-coded. This means you can create configurations that adapt to different environments or other conditions, and which are more reusable generally.
+
+.main.tf
+[source,hcl]
+----
+provider "aws" {
+  region = "us-west-2"
+}
+
+data "aws_region" "current" {}
+
+resource "aws_default_vpc" "default" {}
+
+resource "aws_instance" "my_server" {
+  ami                    = "ami-12345678" # Hard-coded AMI ID
+  instance_type          = "t3.micro" # Hard-coded instance type
+  vpc_security_group_ids = [aws_security_group.my_server.id]
+
+  root_block_device {
+    volume_size = 10
+    encrypted   = true # Hard-coded encryption
+  }
+
+  dynamic "ebs_block_device" {
+    device_name = "/dev/sdb"
+    volume_size = 40
+    encrypted   = true # Hard-coded encryption
+  }
+
+  volume_tags = { Name = "Disk-${var.env}" }
+  tags        = { Name = "Server-${var.env}" }
+}
+
+resource "aws_security_group" "my_server" {
+  name   = "My Server Security Group"
+  vpc_id = aws_default_vpc.default.id
+
+  dynamic "ingress" {
+    for_each = ["22", "80", "443"] # Example of hard-coded ports
+    content {
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+----
+
+To implement dynamic lookups and conditions, we first need to extract some of the hard-coded values into variables.
+
+Let's start by defining the target environment:
+
+.variables.tf
+[source,hcl]
+----
+variable "env" {
+  default = "test" // Or "prod", "staging", "dev", etc.
+}
+----
+
+Now, we can enable encryption for the root block device based on the environment. For example, we can encrypt the root volume only in production. And we can add an additional EBS block device that is only created in production (and is always encrypted) – this is achieved using a dynamic content block.
+
+.main.tf
+[source,hcl]
+----
+resource "aws_instance" "my_server" {
+  ami                    = "ami-12345678"
+  instance_type          = "t3.micro"
+  vpc_security_group_ids = [aws_security_group.my_server.id]
+
+  root_block_device {
+    volume_size = 10
+    encrypted   = (var.env == "prod") ? true : false # Conditional encryption based on environment
+  }
+
+  dynamic "ebs_block_device" {
+    for_each = var.env == "prod" ? [true] : []
+    content {
+      device_name = "/dev/sdb"
+      volume_size = 40
+      encrypted   = true
+    }
+  }
+
+  volume_tags = { Name = "Disk-${var.env}" }
+  tags        = { Name = "Server-${var.env}" }
+}
+----
+
+In Terraform HCL code, conditional expressions are like ternary operators in other programming languages. The syntax is:
+
+[source,hcl]
+----
+value = (condition) ? true_value : false_value
+----
+
+The brackets around the condition are optional, but they help with readability. The supported operators are:
+
+* Equality: `==`, `!=`
+* Comparison: `<`, `<=`, `>`, `>=`
+* Boolean logic: `&&`, `||`, unary `!`
