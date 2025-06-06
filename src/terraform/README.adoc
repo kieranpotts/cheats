@@ -27,6 +27,7 @@ See the `examples` directory for working examples of Terraform configs for vario
 * link:./iac/provisioners.adoc[Provisioners]
 * link:./iac/conditions.adoc[Conditions]
 * link:./iac/lookups.adoc[Lookups]
+* link:./iac/loops.adoc[Loops]
 
 === AWS
 

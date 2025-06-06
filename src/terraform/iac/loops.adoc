@@ -1,0 +1,406 @@
+= Terraform: Loops
+
+Terraform supports a few loop constructs.
+
+== Loops using resource counts
+
+Looks are particularly useful for creating multiple instances of a resource. The `count` argument allows you to specify how many instances of a resource to create.
+
+[source,hcl]
+----
+resource "aws_instance" "servers" {
+  count         = 4
+  ami           = "ami-0e472933a1395e172"
+  instance_type = "t3.micro"
+  tags = {
+    Name  = "Server Number ${count.index + 1}"
+  }
+}
+----
+
+The `count` argument can be used with any Terraform resource.
+
+The `count.index` variable is available within the resource block and represents the current index of the resource being created, starting from 0.
+
+By dynamically generating the `count` value from a variable, you can conditionally provision resources based on the value of that variable:
+
+[source,hcl]
+----
+variable "create_bastion" {
+  description = "Provision Bastion Server YES/NO"
+  default     = "NO"
+}
+
+resource "aws_instance" "bastion_server" {
+  count         = var.create_bastion == "YES" ? 1 : 0
+  ami           = "ami-0e472933a1395e172"
+  instance_type = "t3.micro"
+}
+----
+
+To output the instance IDs and public IP addresses of the created instances, you can define output blocks like this:
+
+[source,hcl]
+----
+output "instance_ids" {
+  value = aws_instance.servers[*].id
+}
+
+output "instance_public_ips" {
+  value = aws_instance.servers[*].public_ip
+}
+
+output "bastion_public_ip" {
+  value = var.create_bastion == "YES" ? aws_instance.bastion_server[0].public_ip : null
+}
+----
+
+Notice the conditional expression used in the `bastion_public_ip` output. This is necessary because `aws_instance.bastion_server[0] ` may not exist, and if it doesn't Terraform will throw an error on the `terraform apply` command.
+
+The following example creates multiple IAM users using a list of usernames defined in a variable. The ARNs of all the created users are outputted.
+
+[source,hcl]
+----
+variable "aws_users" {
+  description = "List of IAM Users to create"
+  default = [
+    "denis@example.com",
+    "krisa@example.com",
+    "kevin@example.com",
+    "jessy@example.com",
+    "robby@example.com",
+    "katie@example.com",
+    "laura@example.com",
+    "josef@example.com"
+  ]
+}
+
+/* Note the use of the `length` and `element` functions used here. This is a common pattern
+in Terraform to iterate over a list of items and dynamically creating a resource for each. */
+resource "aws_iam_user" "user" {
+  count = length(var.aws_users)
+  name  = element(var.aws_users, count.index)
+}
+
+output "iam_users_arn" {
+  value = aws_iam_user.user[*].arn
+}
+----
+
+But there's a problem with this approach: if you remove a user from the list, Terraform will destroy the _last user in the list_ (even if that's not the one you removed from the list) and it will try to reassign email addresses to the remaining users. This is because, if you delete Kevin from the list, it just means Jessy moves up to index 2, previously occupied by Kevin.
+
+So, indexed lists are really only good for configuring multiple instances of a resource that is essentially the same. If you need to manage resources individually (like you do with users), you MUST NOT build those resources from a list. Better to use a set or a map – see below.
+
+== Loops using `for_each`
+
+We want to modify the following example to provision multiple AWS IAM users.
+
+.main.tf
+[source,hcl]
+----
+provider "aws" {
+  region = "us-west-2"
+}
+
+resource "aws_iam_user" "user" {
+  name     = "xxxxx@example.com"
+}
+----
+
+We start by creating a variable that contains a list of usernames that we want to use to create IAM users.
+
+.variables.tf
+[source,hcl]
+----
+variable "aws_users" {
+  description = "List of IAM Users to create"
+  default = [
+    "denis@example.com",
+    "krisa@example.com",
+    "kevin@example.com",
+    "jessy@example.com",
+    "robby@example.com",
+    "laura@example.com",
+    "katie@example.com",
+    "josef@example.com"
+  ]
+}
+----
+
+Now we can add a `for_each` argument to the `aws_iam_user` resource block to create a user for each item in the list.
+
+.main.tf
+[source,hcl]
+----
+provider "aws" {
+  region = "us-west-2"
+}
+
+resource "aws_iam_user" "user" {
+  for_each = toset(var.aws_users)
+  name     = each.value
+}
+----
+
+The `toset` function is used to convert the list of usernames into a set, which is required by the `for_each` argument. The `each.value` variable represents the current item in the `for_each` iteration.
+
+Sets are unordered collections of unique items. Unlike lists, sets are not indexed, but are keyed (like maps). The `toset` function sets the value also as the key. Sets are a safer choice than lists when you want to manage users (or other resources) individually. For example, if you deleted "katie@example.com" from the list, and ran `terraform apply`, only one IAM user would be removed and no other user resources would be mutated.
+
+To print the ARNs of all the created users, we can define an output block like this:
+
+.output.tf
+[source,hcl]
+----
+output "user_arns" {
+  value = values(aws_iam_user.user)[*].arn
+}
+----
+
+The `toset` function can also take a hard-coded list of values, which is useful for creating multiple instances of a resource with basically the same configuration. For example, if we want to create three servers in different environments (Dev, Staging, Prod), we can do it like this:
+
+.main.tf
+[source,hcl]
+----
+resource "aws_instance" "my_server" {
+  for_each      = toset(["Dev", "Staging", "Prod"])
+  ami           = "ami-0e472933a1395e172"
+  instance_type = "t3.micro"
+  tags = {
+    Name  = "Server-${each.value}"
+  }
+}
+----
+
+To output the ID of a particular instance:
+
+.output.tf
+[source,hcl]
+----
+output "prod_instance_id" {
+  value = aws_instance.my_server["Prod"].id
+}
+----
+
+Or to print the instance IDs and public IPs of all the created servers:
+
+.output.tf
+[source,hcl]
+----
+output "instances_ids" {
+  value = values(aws_instance.my_server)[*].id
+}
+
+output "instances_public_ips" {
+  value = values(aws_instance.my_server)[*].public_ip
+}
+----
+
+If you want to provide multiple attributes for each instance, you can use a map, instead of a set, to define the configuration for each server.
+
+First, extract the configuration of the servers into a variable.
+
+.variables.tf
+[source,hcl]
+----
+variable "servers_settings" {
+  type = map(any)
+  default = {
+    web = {
+      ami           = "ami-0e472933a1395e172"
+      instance_size = "t3.small"
+      root_disksize = 20
+      encrypted     = true
+    }
+    app = {
+      ami           = "ami-07dd19a7900a1f049"
+      instance_size = "t3.micro"
+      root_disksize = 10
+      encrypted     = false
+    }
+  }
+}
+----
+
+Then use the `for_each` argument to create an instance for each server defined in the variable. The `each.value` variable will contain the configuration for the current server, and you can access its attributes using the keys defined in the map.
+
+.main.tf
+[source,hcl]
+----
+resource "aws_instance" "server" {
+  for_each      = var.servers_settings
+
+  ami           = each.value["ami"]
+  instance_type = each.value["instance_size"]
+
+  root_block_device {
+    volume_size = each.value["root_disksize"]
+    encrypted   = each.value["encrypted"]
+  }
+
+  volume_tags = {
+    Name = "Disk-${each.key}"
+  }
+  tags = {
+    Name  = "Server-${each.key}"
+  }
+}
+----
+
+`for_each` can also be used to conditionally create resources based on the value of a variable – as an alternative to using `count` (see above). For example, if you want to create a bastion server only if a certain variable is set to "YES", you can do it like this:
+
+.variables.tf
+[source,hcl]
+----
+variable "create_bastion" {
+  description = "Provision Bastion Server YES/NO"
+  default     = "NO"
+}
+----
+
+.main.tf
+[source,hcl]
+----
+resource "aws_instance" "bastion_server" {
+  for_each      = var.create_bastion == "YES" ? toset(["bastion"]) : []
+  ami           = "ami-0e472933a1395e172"
+  instance_type = "t3.micro"
+  tags = {
+    Name  = "Bastion Server"
+  }
+}
+----
+
+.outputs.tf
+[source,hcl]
+----
+output "bastion_public_ip" {
+  value = var.create_bastion == "YES" ? aws_instance.bastion_server["bastion"].public_ip : null
+}
+----
+
+== Loops using `for in`
+
+You can use the `for in` expression to create a new list or map, but you cannot use it to create resources directly. It is useful for defining maps from which resources are created, or for defining outputs.
+
+Consider the following example, which creates some users and instances using loops:
+
+.main.tf
+[source,hcl]
+----
+provider "aws" {
+  region = "us-west-2"
+}
+
+
+resource "aws_iam_user" "user" {
+  for_each = toset(var.aws_users)
+  name     = each.value
+}
+
+resource "aws_instance" "my_server" {
+  count         = 4
+  ami           = "ami-0e472933a1395e172"
+  instance_type = "t3.micro"
+  tags = {
+    Name  = "Server-${count.index + 1}"
+  }
+}
+----
+
+.variables.tf
+[source,hcl]
+----
+variable "aws_users" {
+  description = "List of IAM Users to create"
+  default = [
+    "denis@example.com",
+    "krisa@example.com",
+    "kevin@example.com",
+    "jessy@example.com",
+    "robby@example.com",
+    "laura@example.com",
+    "katie@example.com",
+    "josef@example.com",
+  ]
+}
+----
+
+The following example shows how to use the `for in` expression to output some full sentences about the created users and instances.
+
+.outputs.tf
+[source,hcl]
+----
+output "server_id_ip" {
+  value = [
+    for x in aws_instance.my_server :
+    "Server with ID ${x.id} has public IP ${x.public_ip}"
+  ]
+}
+----
+
+.CLI output
+----
+server_id_ip = [
+  "Server with ID i-0a1b2c3d4e5f6g7h8 has public IP 34.223.41.105",
+  "Server with ID i-0a1b2c3d4e5f6g7h9 has public IP 34.222.188.250",
+  "Server with ID i-0a1b2c3d4e5f6g7h10 has public IP 44.234.62.23",
+  "Server with ID i-0a1b2c3d4e5f6g7h11 has public IP 44.234.153.247",
+]
+----
+
+.outputs.tf
+[source,hcl]
+----
+output "users_unique_id_arn" {
+  value = [
+    for user in aws_iam_user.user :
+    "UserID ${user.unique_id} has ARN ${user.arn}"
+  ]
+}
+----
+
+.CLI output
+----
+users_unique_id_arn = [
+  "UserID AIDA4BML4S5345K74HQFF has ARN arn:aws:iam::123456789012:user/denis@example.com",
+  "UserID AIDA4BML4STWW4AYKHLUW has ARN arn:aws:iam::123456789012:user/krisa@example.com",
+  // ...
+]
+----
+
+This next example creates a map of server IDs to their public IP addresses.
+
+.outputs.tf
+[source,hcl]
+----
+output "server_id_ip_map" {
+  value = {
+    for x in aws_instance.my_server :
+    x.id => x.public_ip // "i-12412412414435" = "15.33.77.104"
+  }
+}
+----
+
+.CLI output
+----
+server_id_ip_map = {
+  "i-0a1b2c3d4e5f6g7h8" = "34.223.41.105",
+  "i-0a1b2c3d4e5f6g7h9" = "34.222.188.250",
+  "i-0a1b2c3d4e5f6g7h10" = "44.234.62.23"",
+  "i-0a1b2c3d4e5f6g7h11" = "44.234.153.247",
+]
+----
+
+The following example creates a map of user unique IDs to their names, but only for users whose names are shorter than 7 characters. This demonstrates how to use a conditional expression within a `for in` loop to filter the data assigned to a map.
+
+.outputs.tf
+[source,hcl]
+----
+output "users_unique_id_name_custom" {
+  value = {
+    for user in aws_iam_user.user :
+    user.unique_id => user.name // "AIDA4BML4S5345K74HQFF" : "denis@example.com"
+    if length(user.name) < 7
+  }
+}
+----
