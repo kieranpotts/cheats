@@ -40,6 +40,7 @@ See the `examples` directory for working examples of Terraform configs for vario
 * link:./iac/aws/data-sources.adoc[Data sources]
 * link:./iac/aws/high-availability.adoc[High availability configurations]
 * link:./iac/aws/multi-region-deployments.adoc[Multi-region deployments]
+* link:./iac/aws/multi-account-deployments.adoc[Multi-account deployments]
 
 === GCP
 

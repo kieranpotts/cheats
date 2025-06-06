@@ -1,0 +1,73 @@
+= Terraform - AWS: Multi-account deployments
+
+The following configuration demonstrates how to deploy resources across multiple AWS accounts using Terraform.
+
+In this case, different accounts are used for development and production environments.
+
+[source,hcl]
+----
+provider "aws" {
+  region = "ca-central-1"
+}
+
+provider "aws" {
+  region = "us-west-2"
+  alias  = "DEV"
+
+  assume_role {
+    role_arn = "arn:aws:iam::639130796919:role/TerraformRole"
+  }
+}
+
+provider "aws" {
+  region = "ca-central-1"
+  alias  = "PROD"
+
+  assume_role {
+    role_arn = "arn:aws:iam::032823347814:role/TerraformRole"
+  }
+}
+----
+
+[IMPORTANT]
+======
+It is RECOMMENDED to create a dedicated IAM role _in each AWS account_ for Terraform to use. This role should have the necessary permissions to create and manage resources in that account.
+======
+
+The `assume_role` block in the provider configuration allows Terraform to assume the role when deploying resources. Since each role is scoped to a specific account, we can configure Terraform to assume different roles to deploy resources across multiple accounts.
+
+What we want to do is replicate this VPC, which will be deployed to the main ("master") account, in the two other accounts:
+
+[source,hcl]
+----
+resource "aws_vpc" "master_vpc" {
+  cidr_block = "10.0.0.0/16"
+
+  tags = {
+    Name = "Master VPC"
+  }
+}
+----
+
+All we do, simply, is create additional resource blocks with a `provider` argument.
+
+[source,hcl]
+----
+resource "aws_vpc" "dev_vpc" {
+  provider   = aws.DEV
+  cidr_block = "10.0.0.0/16"
+
+  tags = {
+    Name = "Dev VPC"
+  }
+}
+
+resource "aws_vpc" "prod_vpc" {
+  provider   = aws.PROD
+  cidr_block = "10.0.0.0/16"
+
+  tags = {
+    Name = "Prod VPC"
+  }
+}
+----
