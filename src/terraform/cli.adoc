@@ -56,3 +56,120 @@ Do this whenever you have finished using resources, so you don't get charged for
 
 Obviously, this is a destructive operation, so be careful when running it!
 
+== Taint
+
+`terraform taint` marks a resource as "tainted", which means that it will be destroyed and recreated the next time you run `terraform apply`, regardless of whether the configuration for the resource has changed or not.
+
+This is super helpful when you want to force a resource to be recreated, for example if you think it is in a bad state or has become corrupted, without having to change its configuration.
+
+For example, to mark the following resource as tainted:
+
+[source,hcl]
+----
+resource "aws_instance" "node2" {
+  ami           = "ami-05655c267c89566dd"
+  instance_type = "t3.micro"
+}
+----
+
+Run:
+
+----
+$ terraform taint aws_instance.node2
+Resource instance aws_instance.node2 has been marked as tainted.
+----
+
+Run `terraform plan` to verify that the resource will be destroyed and recreated, before implementing the change with `terraform apply`.
+
+== Replace
+
+Another way to recreate a resource is to use `terraform apply -replace <resource-name>`, which will destroy the resource and create a new one with the same configuration.
+
+----
+$ terraform apply -replace aws_instance.node2
+----
+
+This will `apply` changes as normal, but it will also destroy and recreate the specified resource, regardless of whether its configuration has changed or not.
+
+You can also preview the changes that will be made by running `terraform plan -replace <resource-name>`.
+
+== Importing
+
+If you have existing infrastructure – whether provisioned manually or using some other tool – that you want to start managing with Terraform, you can use the `terraform import` command to import it into a Terraform configuration.
+
+You do need to start with some baseline Terraform configuration that defines the resource you want to import, but you don't need to specify any of the resource's attributes. Example:
+
+[source,hcl]
+----
+resource "aws_instance" "node2" {
+  /* No attributes needed here, just the resource type and its name. */
+}
+----
+
+Then run `terraform init` to initialize a Terraform project.
+
+----
+$ terraform init
+----
+
+Then run `terraform import` to import the existing resource into the Terraform state:
+
+----
+$ terraform import aws_instance.node2 i-1234567890abcdef0
+Import successful!
+----
+
+The arguments are:
+
+* The resource type and name, in the format `<resource-type>.<resource-name>`.
+* The instance ID, which is specific to the provider.
+
+Unfortunately, the import command does not automatically generate the resource's configuration in the `.tf` files (it only imports the resource's attributes into the state files). You will need to manually add the resource block to your Terraform configuration files, if you want to be able to `apply` changes to it in the future.
+
+[source,hcl]
+----
+resource "aws_instance" "node2" {
+  ami                    = "ami-07dd19a7900a1f049"
+  instance_type          = "t3.micro"
+  ebs_optimized          = true
+  tags = {
+    "Name"  = "K8s Cluster Node-2"
+  }
+}
+----
+
+Use `terraform plan` to see what mandatory attributes are missing from the resource block, and then add them to the configuration. Terraform already has the state of the resource, so it will tell you what the values of the required attributes should be.
+
+The Terraform documentation includes instructions to `terraform import` all types of resources of each providers – instances, VPCs, security groups, etc.
+
+== Alternative import method
+
+Since Terraform v1.5 you can import resources using `import` blocks in the `.tf` files. This is a more declarative way of importing resources, but it is still only semi-automatic like `terraform import`.
+
+[source,hcl]
+----
+import {
+  /* Import a Security Group */
+  from = "sg-12345678"
+  to   = aws_security_group.web_sg
+}
+----
+
+Then run:
+
+----
+$ terraform init
+$ terraform plan -generate-config-out=generated.tf
+----
+
+The second command will generate a new file called `generated.tf` that contains the configuration for the imported resource.
+
+.generated.tf
+[source,hcl]
+----
+resource "aws_security_group" "web_sg" {
+  /* Attributes. */
+}
+----
+
+You can then run `terraform apply` to apply the changes to the state file. You can then delete the `import` block from the `.tf` file, and reorganize your Terraform configuration as needed.
