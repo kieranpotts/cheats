@@ -1,0 +1,58 @@
+= Terraform: Refactoring
+
+Terraform configurations can soon get large and complex. If you find yourself managing hundreds of resources from a few large configuration files (or lots of small ones in a single directory), you may want to refactor your Terraform code into smaller, more manageable pieces.
+
+You want to be able to do this with changing your running infrastructure, which means maintaining a stable infrastructure state while you refactor your code.
+
+The following CLI commands support the refactoring process:
+
+* `terraform state show <resource-type>.<instance-name>` - prints the configuration of existing resources
+* `terraform state list` - lists all resources in the current state file (feed the values in this list to the `terraform state show` command to see their configuration)
+* `terraform state pull` - pulls the state file from the remote back-end and prints it to stdout (append ` > terraform.tfstate.backup` to save it to a file in Unix)
+* `terraform state rm` - removes a resource from the state file so it is no longer managed by Terraform (opposite of `terraform import`)
+* `terraform state mv` - moves a resource from one state file to another
+* `terraform state push` - pushes a loc (use with caution!)
+
+The `rm`, `mv` and `push` commands are potentially destructive – these commands mutates the state file. The `show`, `list` and `pull` commands are read-only and safe.
+
+Sometimes you want to rename resources, without actually destroying them and recreating them. For example, there is a typo in the name of the following resource. If we simply renamed it and ran `terraform apply`, it would destroy the existing resource and create a new one with the new name – in effect giving us a new Elastic Public IP address, but we want to keep the existing one.
+
+[source,hcl]
+----
+resource "aws_eip" "prod-ipp1" {}
+----
+
+This is a good use case for the `terraform state mv` command, which will rename the resource in the state file:
+
+----
+$ terraform state mv aws_eip.prod-ipp1 aws_eip.prod-ip-p1
+----
+
+If you run `terraform plan|apply` now, you will see there are no changes to be made.
+
+Another use case for the `terraform state` commands is to help you move resources into different state files. For example, imagine you had all your resources for both prod and test environments defined in a single `main.tf` file. You split them up into two separate `main.tf` files in different directories, `prod/` and `test/`.
+
+In the original directory, you want to "move out" the resources from the local state into a new state file. Example:
+
+----
+$ terraform state mv -state-out="terraform.tfstate" aws_eip.prod-ip1 aws_eip.prod-ip1
+----
+
+When you run this command, it will remove the `aws_eip.prod-ip1` resource from the current state file (which is in a remote back-end) and write it to a new local state file called `terraform.tfstate`.
+
+Repeat the above command for each production resource. Then you can simply move the generated `terraform.tfstate` file to the `prod/` directory. This file now contains the state of all the resources that are configured in the `prod/main.tf` file.
+
+[NOTE]
+======
+Each `state mv` operation will create backup of the previous version of the output state file.
+======
+
+Repeat for the remaining test resources.
+
+Now you need to `terraform init` in both directories. This will create a new remote state file for each environment, copying the existing state from the local `terraform.tfstate` file. (IMPORTANT: Each environment MUST have a different back-end state file.)
+
+If you've migrated the resource configuration correctly, `terraform plan` should show no changes to be made in either environment.
+
+There are other clever tricks you can with the `terraform state` commands. For example, if you have an existing `terraform.tfstate` file, you can move resources to it and then use `terraform state push terraform.tfstate` to push the state file to the remote back-end. Essentially, these commands allow you to refactor your Terraform code while maintaining a consistent state with your actual deployed infrastructure.
+
+Best practice is to refactor in small increments, moving resources one at a time, and always checking the `terraform plan` after each change to verify that the state remains consistent with the actual deployed infrastructure.

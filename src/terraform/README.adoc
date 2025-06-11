@@ -24,6 +24,7 @@ See the `examples` directory for working examples of Terraform configs for vario
 * link:./remote-state.adoc[Remote state and back-ends]
 * link:./modules.adoc[Modules]
 * link:./workspaces.adoc[Workspaces]
+* link:./refactoring.adoc[Refactoring]
 
 == Cloud service providers
 
