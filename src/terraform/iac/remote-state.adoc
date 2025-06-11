@@ -145,10 +145,10 @@ terraform {
   }
 }
 
-// This block gets data from the remote state file for the "network layer",
-// which we can then use to configure our resources. Notice how we are using
-// our outputs from the network layer's state file to get the VPC ID, public
-// subnet IDs, and VPC CIDR range.
+/* This block gets data from the remote state file for the "network layer",
+which we can then use to configure our resources. Notice how we are using
+our outputs from the network layer's state file to get the VPC ID, public
+subnet IDs, and VPC CIDR range. */
 data "terraform_remote_state" "network_layer" {
   backend = "s3"
   config = {
@@ -172,7 +172,7 @@ resource "aws_instance" "web_server" {
   instance_type          = "t3.micro"
   vpc_security_group_ids = [aws_security_group.webserver.id]
 
-  // Here we are using the remote state data to get the first public subnet ID.
+  /* Here we are using the remote state data to get the first public subnet ID. */
   subnet_id              = data.terraform_remote_state.network_layer.outputs.public_subnet_ids[0]
 
   user_data              = <<EOF
@@ -192,7 +192,7 @@ EOF
 resource "aws_security_group" "webserver" {
   name   = "WebServer Security Group"
 
-  // Here wer are using the remote state data to get the VPC ID.
+  /* Here wer are using the remote state data to get the VPC ID. */
   vpc_id = data.terraform_remote_state.network_layer.outputs.vpc_id
 
   ingress {
@@ -207,7 +207,7 @@ resource "aws_security_group" "webserver" {
     to_port     = 22
     protocol    = "tcp"
 
-    // Here we are using the remote state data to get the VPC CIDR range.
+    /* Here we are using the remote state data to get the VPC CIDR range. */
     cidr_blocks = [data.terraform_remote_state.network_layer.outputs.vpc_cidr]
   }
   egress {

@@ -22,7 +22,7 @@ resource "aws_instance" "my_server" {
 
   root_block_device {
     volume_size = 10
-    encrypted   = (var.env == "prod") ? true : false # Conditional encryption based on environment
+    encrypted   = (var.env == "prod") ? true : false // Conditional encryption based on environment
   }
 
   dynamic "ebs_block_device" {
@@ -43,7 +43,7 @@ resource "aws_security_group" "my_server" {
   vpc_id = aws_default_vpc.default.id
 
   dynamic "ingress" {
-    for_each = ["22", "80", "443"] # Example of hard-coded ports
+    for_each = ["22", "80", "443"] // Example of hard-coded ports
     content {
       from_port   = ingress.value
       to_port     = ingress.value
@@ -68,8 +68,8 @@ To do that, we define two lists: one list of ports to open in production, and an
 ----
 variable "allow_port" {
   default = {
-    prod = ["80", "443"] # Ports to open in production
-    rest = ["80", "443", "8080", "22"] # Port to open in other environments
+    prod = ["80", "443"] // Ports to open in production
+    rest = ["80", "443", "8080", "22"] // Port to open in other environments
   }
 }
 ----
@@ -84,7 +84,7 @@ resource "aws_security_group" "my_server" {
   vpc_id = aws_default_vpc.default.id
 
   dynamic "ingress" {
-    # lookup(<map>, <key>, <default>)
+    // lookup(<map>, <key>, <default>)
     for_each = lookup(var.allow_port, var.env, var.allow_port["rest"])
     content {
       from_port   = ingress.value
@@ -166,9 +166,9 @@ resource "aws_instance" "my_server" {
 Using `lookup` with a default fallback value is good practice if the configuration depends on an environment variable, or other variable that is not guaranteed to be valid as it is defined outside of the scope of the Terraform configuration.
 
 ----
-# Will return null if key_name does not exist:
+/* Will return null if key_name does not exist: */
 value = var.map_name["key_name"]
 
-# Will return "default_value" if key_name does not exist:
+/* Will return "default_value" if key_name does not exist: */
 value = lookup(var.map_name, "key_name", "default_value")
 ----

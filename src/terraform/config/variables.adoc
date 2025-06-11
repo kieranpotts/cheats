@@ -84,18 +84,18 @@ The `terraform.tfvars` file provides actual values for the variables defined in 
 
 .terraform.tfvars
 ----
-## VPC
+/* VPC */
 vpc_cidr = "10.0.0.0/16"
 vpc_name = "MyTestVPC"
 
-## Public Subnet
+/* Public Subnet */
 subnet_cidr = "10.0.1.0/24"
 subnet_name = "MyTestSubnet"
 
-## Internet Gateway
+/* Internet Gateway */
 igw_name = "MyTestIGW"
 
-## EC2 Instance
+/* EC2 Instance */
 ec2_ami = "ami-03c6b308140d10488"
 ec2_name = "MyTestEC2"
 ----
@@ -338,7 +338,7 @@ locals {
 resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr
   tags = merge(var.tags, local.tags {
-    // Any additional tags...
+    /* Any additional tags here */
   })
 }
 ----
