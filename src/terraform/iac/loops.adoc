@@ -87,6 +87,31 @@ output "iam_users_arn" {
 }
 ----
 
+****
+You don't always need to use `element()`. The following can be refactored…
+
+[source,hcl]
+----
+/* Associate the above route table with every public subnet. */
+resource "aws_route_table_association" "public_routes" {
+  count          = length(aws_subnet.public_subnets[*].id)
+  route_table_id = aws_route_table.public_subnets.id
+  subnet_id      = element(aws_subnet.public_subnets[*].id, count.index)
+}
+----
+
+… to…
+
+[source,hcl]
+----
+resource "aws_route_table_association" "public_routes" {
+  count          = length(aws_subnet.public_subnets[*].id)
+  route_table_id = aws_route_table.public_subnets.id
+  subnet_id      = aws_subnet.public_subnets[count.index].id
+}
+----
+****
+
 But there's a problem with this approach: if you remove a user from the list, Terraform will destroy the _last user in the list_ (even if that's not the one you removed from the list) and it will try to reassign email addresses to the remaining users. This is because, if you delete Kevin from the list, it just means Jessy moves up to index 2, previously occupied by Kevin.
 
 So, indexed lists are really only good for configuring multiple instances of a resource that is essentially the same. If you need to manage resources individually (like you do with users), you MUST NOT build those resources from a list. Better to use a set or a map – see below.

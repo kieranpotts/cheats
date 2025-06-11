@@ -1,0 +1,694 @@
+= Terraform: Modules
+
+In Terraform, modules are used to create reusable infrastructure configurations, so you can define a set of resources and create them – with variable parameters – in different contexts, without duplicating your Terraform config.
+
+For example, you might reuse the same module to recreate a production system in development and staging environments, or to deploy the same application in different regions or accounts.
+
+The following configuration creates network layer resources (VPC, subnets, route tables, NAT gateways) in AWS. It launches two public subnets and two private subnets, each in a different availability zone within the target region. The public subnets are connected to the internet via an single region-level Internet Gateway, while the private subnets use NAT Gateways (one in each AZ) for outbound internet access.
+
+.variables.tf
+[source,hcl]
+----
+/* This will be the name of the VPC. */
+variable "env" {
+  default = "prod"
+}
+
+/* VPC's CIDR block. */
+variable "vpc_cidr" {
+  default = "10.0.0.0/16"
+}
+
+variable "public_subnet_cidrs" {
+  default = [
+    "10.0.1.0/24",
+    "10.0.2.0/24",
+  ]
+}
+
+variable "private_subnet_cidrs" {
+  default = [
+    "10.0.11.0/24",
+    "10.0.22.0/24",
+  ]
+}
+
+/* Common tags that will be merged with custom tags for each resource. */
+variable "tags" {
+  default = {
+    Owner   = "Kieran Potts"
+    Project = "Aurora"
+  }
+}
+----
+
+.main.tf
+[source,hcl]
+----
+/**
+ * Terraform configuration for:
+ * - VPC
+ * - Internet Gateway
+ * - <X> Public Subnets
+ * - <X> Private Subnets
+ * - <X> NAT Gateways in Public Subnets to give Internet access from Private Subnets
+ */
+
+provider "aws" {
+  region = "eu-west-2"
+}
+
+/* Retrieve list of Availability Zones in this region. */
+data "aws_availability_zones" "available" {}
+
+/**
+ * VPC and Internet Gateway
+ */
+resource "aws_vpc" "main" {
+  cidr_block = var.vpc_cidr
+  tags       = merge(var.tags, { Name = "${var.env}-vpc" })
+}
+
+resource "aws_internet_gateway" "main" {
+  vpc_id = aws_vpc.main.id
+  tags   = merge(var.tags, { Name = "${var.env}-igw" })
+}
+
+/**
+ * Public Subnets and routing.
+ *
+ * This creates <X> Public Subnets (determined by number of Public Subnet CIDRs defined
+ * in `variables.tf`), launching each in a different Availability Zone in the region.
+ */
+resource "aws_subnet" "public_subnets" {
+  count                   = length(var.public_subnet_cidrs)
+  vpc_id                  = aws_vpc.main.id
+  cidr_block              = element(var.public_subnet_cidrs, count.index)
+  availability_zone       = data.aws_availability_zones.available.names[count.index]
+  map_public_ip_on_launch = true
+  tags                    = merge(var.tags, { Name = "${var.env}-public-${count.index + 1}" })
+}
+
+/* For public subnets, create a single route table that routes all
+traffic to the Internet Gateway. */
+resource "aws_route_table" "public_subnets" {
+  vpc_id = aws_vpc.main.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.main.id
+  }
+  tags = merge(var.tags, { Name = "${var.env}-route-public-subnets" })
+}
+
+/* Associate the above route table with every public subnet. */
+resource "aws_route_table_association" "public_routes" {
+  count          = length(aws_subnet.public_subnets[*].id)
+  route_table_id = aws_route_table.public_subnets.id
+  subnet_id      = aws_subnet.public_subnets[count.index].id
+}
+
+/**
+ * NAT Gateways and Elastic IPs
+ *
+ * Each NAT Gateway is associated with a public subnet and an Elastic IP.
+ * The NAT Gateways allow instances in the private subnets to access the internet.
+ */
+
+/* Create Elastic IPs, one for each private subnet. */
+resource "aws_eip" "nat" {
+  count  = length(var.private_subnet_cidrs)
+  domain ="vpc"
+  tags   = merge(var.tags, { Name = "${var.env}-nat-gw-${count.index + 1}" })
+}
+
+/* Create NAT Gateways, one for each public subnet, using the Elastic IPs created above. */
+resource "aws_nat_gateway" "nat" {
+  count         = length(var.private_subnet_cidrs)
+  allocation_id = aws_eip.nat[count.index].id
+  subnet_id     = aws_subnet.public_subnets[count.index].id
+  tags          = merge(var.tags, { Name = "${var.env}-nat-gw-${count.index + 1}" })
+}
+
+/**
+ * Private subnets and routing
+ */
+
+/* Create private subnets, one for each CIDR defined in `variables.tf`. */
+resource "aws_subnet" "private_subnets" {
+  count             = length(var.private_subnet_cidrs)
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = var.private_subnet_cidrs[count.index]
+  availability_zone = data.aws_availability_zones.available.names[count.index]
+  tags              = merge(var.tags, { Name = "${var.env}-private-${count.index + 1}" })
+}
+
+/* Create a private route table configuration, routing all traffic via the NAT Gateway
+launched into the public subnet in the same availability zone… */
+resource "aws_route_table" "private_subnets" {
+  count  = length(var.private_subnet_cidrs)
+  vpc_id = aws_vpc.main.id
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.nat[count.index].id
+  }
+  tags = merge(var.tags, { Name = "${var.env}-route-private-subnet-${count.index + 1}" })
+}
+
+/* … associate the private route table with each private subnet. */
+resource "aws_route_table_association" "private_routes" {
+  count          = length(aws_subnet.private_subnets[*].id)
+  route_table_id = aws_route_table.private_subnets[count.index].id
+  subnet_id      = aws_subnet.private_subnets[count.index].id
+}
+----
+
+.outputs.tf
+[source,hcl]
+----
+output "vpc_id" {
+  value = aws_vpc.main.id
+}
+
+output "vpc_cidr" {
+  value = aws_vpc.main.cidr_block
+}
+
+output "public_subnet_ids" {
+  value = aws_subnet.public_subnets[*].id
+}
+
+output "private_subnet_ids" {
+  value = aws_subnet.private_subnets[*].id
+}
+----
+
+To extend this configuration to launch an identical public/private subnet pair in a third availability zone, you would simply add a third CIDR block to the `public_subnet_cidrs` and `private_subnet_cidrs` variables in `variables.tf`.
+
+.variables.tf
+[source,hcl]
+----
+variable "public_subnet_cidrs" {
+  default = [
+    "10.0.1.0/24",
+    "10.0.2.0/24",
+    "10.0.3.0/24",
+  ]
+}
+
+variable "private_subnet_cidrs" {
+  default = [
+    "10.0.11.0/24",
+    "10.0.22.0/24",
+    "10.0.33.0/24",
+  ]
+}
+----
+
+So this is already an extensible configuration. But what if we wanted to replicate this entire network layer for other environments – dev, staging, etc.?
+
+We can use modules for that purpose.
+
+To move the above configuration into a module, we would create a new directory called `modules/<module-name>` and move the `variables.tf`, `main.tf`, and `outputs.tf` files into it. The only change that is required to make the above a valid module is to remove the `provider` block from `main.tf` – delete these three lines:
+
+[source,hcl]
+----
+provider "aws" {
+  region = "eu-west-2"
+}
+----
+
+Now you can call this module from another location on your filesystem.
+
+----
+.
+├─ modules
+│  ├─ <module-2>
+│  └─ <module-1>
+├─ project-a
+└─ project-b
+----
+
+In Project A, you might have a `main.tf` file that calls the module like this:
+
+.project-a/main.tf
+[source,hcl]
+----
+provider "aws" {
+  region = "eu-west-2"
+}
+
+module "my_vpc_default" {
+  source = "../modules/network-layer"
+}
+----
+
+The `provider` block is reinstated here. The `module` block is used to import modules from another location.
+
+Variables MAY be inputted to modules. These will override any defaults defined in `variable` blocks in the module itself:
+
+.project-a/main.tf
+[source,hcl]
+----
+module "my_vpc_staging" {
+  source               = "../modules/network-layer"
+  env                  = "staging"
+  vpc_cidr             = "10.100.0.0/16"
+  public_subnet_cidrs  = ["10.100.1.0/24", "10.100.2.0/24"]
+  private_subnet_cidrs = []
+}
+
+module "my_vpc_prod" {
+  source               = "../modules/network-layer"
+  env                  = "prod"
+  vpc_cidr             = "10.200.0.0/16"
+  public_subnet_cidrs  = ["10.200.1.0/24", "10.200.2.0/24", "10.200.3.0/24"]
+  private_subnet_cidrs = ["10.200.11.0/24", "10.200.22.0/24", "10.200.33.0/24"]
+
+  /* This will effectively override the default tags defined in the module – so now no default
+  tags will be merged into the resource-specific tags. */
+  tags = {}
+}
+----
+
+By default, outputs from modules will NOT be captured. If you want to capture outputs from a module, you effectively need to re-output them from the parent configuration:
+
+.project-a/outputs.tf
+[source,hcl]
+----
+output "my_vpc_id" {
+  value = module.my_vpc_default.vpc_id
+}
+
+output "my_vpc_cidr" {
+  value = module.my_vpc_default.vpc_cidr
+}
+
+output "my_public_subnet_ids" {
+  value = module.my_vpc_default.public_subnet_ids
+}
+
+output "my_private_subnet_ids" {
+  value = module.my_vpc_default.private_subnet_ids
+}
+----
+
+== Modules and loops
+
+We'll extend the above configuration with a second module, called `test-server`:
+
+----
+.
+├─ modules
+│  ├─ network-layer
+│  └─ test-server
+└─ project-a
+----
+
+Here's the code for the `test-server` module:
+
+.modules/test-server/variables.tf
+[source,hcl]
+----
+variable "name" {
+  default = "Dev"
+}
+
+variable "message" {
+  default = "HelloWorld"
+}
+
+variable "subnet_id" {}
+----
+
+The `main.tf` file provisions a simple web server into a specific subnet, specified by the `subnet_id` variable.
+
+.modules/test-server/main.tf
+[source,hcl]
+----
+data "aws_ami" "latest_amazon_linux" {
+  owners      = ["amazon"]
+  most_recent = true
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-hvm-*-x86_64-gp2"]
+  }
+}
+
+data "aws_subnet" "web" {
+  id = var.subnet_id
+}
+
+resource "aws_instance" "web_server" {
+  ami                    = data.aws_ami.latest_amazon_linux.id
+  instance_type          = "t3.micro"
+  vpc_security_group_ids = [aws_security_group.webserver.id]
+  subnet_id              = var.subnet_id
+  user_data              = <<EOF
+#!/bin/bash
+yum -y update
+yum -y install httpd
+myip=`curl http://169.254.169.254/latest/meta-data/local-ipv4`
+
+cat <<HTMLTEXT > /var/www/html/index.html
+<h2>
+${var.name} WebServer with IP: $myip <br>
+${var.name} WebServer in AZ: ${data.aws_subnet.web.availability_zone}<br>
+Message:</h2> ${var.message}
+HTMLTEXT
+
+service httpd start
+chkconfig httpd on
+EOF
+  tags = {
+    Name  = "${var.name}-WebServer-${var.subnet_id}"
+  }
+}
+
+resource "aws_security_group" "webserver" {
+  name_prefix = "${var.name} WebServer SG-"
+  vpc_id      = data.aws_subnet.web.vpc_id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name  = "${var.name}-web-server-sg"
+  }
+}
+----
+
+.modules/test-server/output.tf
+[source,hcl]
+----
+output "web_server_public_ip" {
+  value = aws_instance.web_server.public_ip
+}
+----
+
+Now let's create a new project, Project B, that uses both modules:
+
+----
+.
+├─ modules
+│  ├─ network-layer
+│  └─ test-server
+├─ project-a
+└─ project-b
+----
+
+The main configuration uses the `network-layer` module to create a VPC with public and private subnets across three availability zones, and then it uses the `test-server` module to launch a web server in one of the public subnets.
+
+.project-b/main.tf
+[source,hcl]
+----
+provider "aws" {
+  region = "eu-north-1"
+}
+
+module "vpc_prod" {
+  source               = "../modules/network-layer"
+  env                  = "prod"
+  vpc_cidr             = "10.200.0.0/16"
+  public_subnet_cidrs  = ["10.200.1.0/24", "10.200.2.0/24", "10.200.3.0/24"]
+  private_subnet_cidrs = ["10.200.11.0/24", "10.200.22.0/24", "10.200.33.0/24"]
+}
+
+module "server_standalone" {
+  source    = "../modules/test-server"
+  name      = "Standalone Test Server"
+  message   = "This is the standalone test server"
+  subnet_id = module.vpc_prod.public_subnet_ids[2]
+}
+----
+
+We output the public IP address of the standalone test server (which we can use to access the web server via a browser):
+
+.project-b/outputs.tf
+[source,hcl]
+----
+output "server_standalone_ip" {
+  value = module.server_standalone.web_server_public_ip
+}
+----
+
+You can use loops with modules. In the following example we'll create servers in every public subnet using a loop count.
+
+.project-b/main.tf
+[source,hcl]
+----
+provider "aws" {
+  region = "eu-north-1"
+}
+
+module "vpc_prod" {
+  source               = "../modules/network-layer"
+  env                  = "prod"
+  vpc_cidr             = "10.200.0.0/16"
+  public_subnet_cidrs  = ["10.200.1.0/24", "10.200.2.0/24", "10.200.3.0/24"]
+  private_subnet_cidrs = ["10.200.11.0/24", "10.200.22.0/24", "10.200.33.0/24"]
+}
+
+module "servers_loop_count" {
+  source    = "../modules/test-server"
+  count     = length(module.vpc_prod.public_subnet_ids)
+  name      = "Standalone Test Server"
+  message   = "Hello From server in Subnet ${module.vpc_prod.public_subnet_ids[count.index]} created by COUNT Loop"
+  subnet_id = module.vpc_prod.public_subnet_ids[count.index]
+}
+----
+
+.project-b/outputs.tf
+[source,hcl]
+----
+output "server_standalone_ip" {
+  value = module.server_standalone.web_server_public_ip
+}
+
+output "servers_loop_count_ips" {
+  value = module.servers_loop_count[*].web_server_public_ip
+}
+----
+
+Alternatively, you can use a `for_each` loop to achieve the same result.
+
+.modules/test-server/main.tf
+[source,hcl]
+----
+// ...
+
+module "servers_loop_foreach" {
+  source     = "../modules/test-server"
+  for_each   = toset(module.vpc_prod.public_subnet_ids)
+  name       = "Standalone Test Server"
+  message    = "Hello from server in Subnet ${each.value} created by FOR_EACH Loop"
+  subnet_id  = each.value
+}
+----
+
+.modules/test-server/outputs.tf
+[source,hcl]
+----
+// ...
+
+output "servers_loop_foreach_ips" {
+  value = values(module.servers_loop_foreach)[*].web_server_public_ip
+}
+----
+
+== Sharing modules
+
+Modules can be shared by uploading them to a hosted version control system (like GitHub) and then importing them into your Terraform configuration using the `source` argument in the `module` block.
+
+[source,hcl]
+----
+module "server_standalone" {
+
+  /* Local import */
+  source = "../path/to/module"
+
+  /* Import from GitHub (default branch) */
+  source  = "git@github.com:<user>/<repo>.git//<path>"
+
+  /* Import from GitHub (specific branch or tag) */
+  source  = "git@github.com:<user>/<repo>.git//<path>?ref=<branch|tag>"
+
+  // ...
+
+}
+----
+
+Public Terraform modules are available from GitHub and elsewhere. For example, https://github.com/terraform-aws-modules[Terraform AWS Modules] is a popular repository of reusable Terraform modules for AWS.
+
+== Advanced example: creating servers in multiple accounts/regions
+
+The following example demonstrates how to use modules to create servers in multiple AWS accounts and regions.
+
+Here's the baseline configuration for the accounts into which we want to launch instances:
+
+.main.tf
+[source,hcl]
+----
+/* Root account */
+provider "aws" {
+  region = "us-west-2"
+}
+
+/* DEV account */
+provider "aws" {
+  region = "us-west-1"
+  alias  = "DEV"
+
+  assume_role {
+    role_arn = "arn:aws:iam::639130796919:role/TerraformRole"
+  }
+}
+
+/* PROD account */
+provider "aws" {
+  region = "ca-central-1"
+  alias  = "PROD"
+
+  assume_role {
+    role_arn = "arn:aws:iam::032823347814:role/TerraformRole"
+  }
+}
+----
+
+Let's say we want to create three Ubuntu servers in each account. We'll create a module called `ubuntu-servers`, with the following contents:
+
+.modules/ubuntu-servers/main.tf
+.variables.tf
+[source,hcl]
+----
+/* Allows the instance type to be specified when calling the module. */
+
+variable "instance_type" {
+  default = "t3.micro"
+}
+----
+
+.modules/ubuntu-servers/variables.tf
+[source,hcl]
+----
+/* This first block is important. It defines the a list of aliases the module
+is required to receive for providers, inputted from the calling code. */
+
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      configuration_aliases = [
+        aws.root,
+        aws.prod,
+        aws.dev
+      ]
+    }
+  }
+}
+
+/* This next block is used to dynamically fetch the latest Ubuntu 20 AMI for each of our
+three "providers" (root, prod, dev). (The owner ID is the official Ubuntu account on AWS). */
+
+data "aws_ami" "latest_ubuntu20_root" {
+  provider    = aws.root
+  owners      = ["099720109477"]
+  most_recent = true
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+  }
+}
+
+data "aws_ami" "latest_ubuntu20_prod" {
+  provider    = aws.prod
+  owners      = ["099720109477"]
+  most_recent = true
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+  }
+}
+
+data "aws_ami" "latest_ubuntu20_dev" {
+  provider    = aws.dev
+  owners      = ["099720109477"]
+  most_recent = true
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+  }
+}
+
+/* This next block of code creates three EC2 instances, one in each provider (account/region). */
+
+resource "aws_instance" "server_root" {
+  provider      = aws.root
+  ami           = data.aws_ami.latest_ubuntu20_root.id
+  instance_type = var.instance_type
+  tags          = { Name = "Server-ROOT" }
+}
+
+resource "aws_instance" "server_prod" {
+  provider      = aws.prod
+  ami           = data.aws_ami.latest_ubuntu20_prod.id
+  instance_type = var.instance_type
+  tags          = { Name = "Server-PROD" }
+}
+
+resource "aws_instance" "server_dev" {
+  provider      = aws.dev
+  ami           = data.aws_ami.latest_ubuntu20_dev.id
+  instance_type = var.instance_type
+  tags          = { Name = "Server-DEV" }
+}
+----
+
+Now we can use the module from our main configuration file:
+
+.main.tf
+[source,hcl]
+----
+provider "aws" {
+  region = "us-west-2"
+}
+
+provider "aws" {
+  region = "us-west-1"
+  alias  = "DEV"
+  assume_role {
+    role_arn = "arn:aws:iam::639130796919:role/TerraformRole"
+  }
+}
+
+provider "aws" {
+  region = "ca-central-1"
+  alias  = "PROD"
+  assume_role {
+    role_arn = "arn:aws:iam::032823347814:role/TerraformRole"
+  }
+}
+
+module "servers" {
+  source        = "./ubuntu-servers"
+  instance_type = "t3.small"
+
+  /* This is how we meet the "required providers" constraint, defined in the module's config.
+  It maps names known to the module to the local provider configuration. */
+  providers = {
+    aws.root = aws
+    aws.prod = aws.PROD
+    aws.dev  = aws.DEV
+  }
+}
+----
