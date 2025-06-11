@@ -5,53 +5,43 @@
 See the `examples` directory for working examples of Terraform configs for various cloud providers.
 ======
 
-== About Terraform
+* link:./benefits.adoc[Benefits of Terraform]
+* link:./files.adoc[Files]
+* link:./hcl.adoc[HashiCorp Configuration Language (HCL)]
+* link:./cli.adoc[CLI and workflow]
+* link:./variables.adoc[Variables]
+* link:./outputs.adoc[Outputs]
+* link:./state.adoc[State]
+* link:./blocks.adoc[Blocks]
+* link:./arguments.adoc[Arguments]
+* link:./providers.adoc[Providers]
+* link:./resources.adoc[Resources]
+* link:./dependencies.adoc[Dependencies]
+* link:./provisioners.adoc[Provisioners]
+* link:./conditions.adoc[Conditions]
+* link:./lookups.adoc[Lookups]
+* link:./loops.adoc[Loops]
+* link:./remote-state.adoc[Remote state and back-ends]
+* link:./modules.adoc[Modules]
 
-* link:./about/benefits.adoc[Benefits of Terraform]
-
-== Config
-
-* link:./config/variables.adoc[Variables]
-* link:./config/outputs.adoc[Outputs]
-* link:./config/state.adoc[State]
-
-== Infrastructure as code (IaC)
-
-* link:./iac/hcl.adoc[HashiCorp Configuration Language (HCL)]
-* link:./iac/files.adoc[Files]
-* link:./iac/blocks.adoc[Blocks]
-* link:./iac/arguments.adoc[Arguments]
-* link:./iac/providers.adoc[Providers]
-* link:./iac/resources.adoc[Resources]
-* link:./iac/dependencies.adoc[Dependencies]
-* link:./iac/provisioners.adoc[Provisioners]
-* link:./iac/conditions.adoc[Conditions]
-* link:./iac/lookups.adoc[Lookups]
-* link:./iac/loops.adoc[Loops]
-* link:./iac/remote-state.adoc[Remote state and back-ends]
-* link:./iac/modules.adoc[Modules]
+== Cloud service providers
 
 === AWS
 
-* link:./iac/aws/provider.adoc[Provider]
-* link:./iac/aws/vpcs-subnets.adoc[VPCs, subnets, and route tables]
-* link:./iac/aws/resources.adoc[Resources]
-* link:./iac/aws/security-groups.adoc[Security groups]
-* link:./iac/aws/elastic-ip.adoc[Elastic IPs]
-* link:./iac/aws/secrets.adoc[Secrets]
-* link:./iac/aws/data-sources.adoc[Data sources]
-* link:./iac/aws/high-availability.adoc[High availability configurations]
-* link:./iac/aws/multi-region-deployments.adoc[Multi-region deployments]
-* link:./iac/aws/multi-account-deployments.adoc[Multi-account deployments]
+* link:./providers/aws/provider.adoc[Provider]
+* link:./providers/aws/vpcs-subnets.adoc[VPCs, subnets, and route tables]
+* link:./providers/aws/resources.adoc[Resources]
+* link:./providers/aws/security-groups.adoc[Security groups]
+* link:./providers/aws/elastic-ip.adoc[Elastic IPs]
+* link:./providers/aws/secrets.adoc[Secrets]
+* link:./providers/aws/data-sources.adoc[Data sources]
+* link:./providers/aws/high-availability.adoc[High availability configurations]
+* link:./providers/aws/multi-region-deployments.adoc[Multi-region deployments]
+* link:./providers/aws/multi-account-deployments.adoc[Multi-account deployments]
 
 === GCP
 
-* link:./iac/gcp/provider.adoc[Provider]
-* link:./iac/gcp/resources.adoc[Resources]
+* link:./providers/gcp/provider.adoc[Provider]
+* link:./providers/gcp/resources.adoc[Resources]
 
-== CLI and workflow
 
-* link:./cli/initializing.adoc[Initializing]
-* link:./cli/planning.adoc[Planning]
-* link:./cli/applying.adoc[Applying]
-* link:./cli/destroying.adoc[Destroying]

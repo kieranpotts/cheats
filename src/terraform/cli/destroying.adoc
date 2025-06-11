@@ -1,7 +1,0 @@
-= Terraform CLI: Destroying
-
-Running `terraform destroy` will destroy all of the infrastructure that is managed by the current Terraform config.
-
-Do this whenever you have finished using resources, so you don't get charged for them.
-
-Obviously, this is a destructive operation, so be careful when running it!

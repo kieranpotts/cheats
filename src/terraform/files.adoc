@@ -3,12 +3,12 @@
 While you can organize your infrastructure-as-code however you like, common practice is to include the following files:
 
 * `main.tf`: Primary configuration file.
-* `variables.tf`: Variable declarations.
+* `variables.tf`: Variable declarations, or inputs for modules.
 * `outputs.tf`: Output definitions.
 * `providers.tf`: Provider configuration (AWS, Azure, GCP, etc.).
 * `versions.tf`: Terraform version constraints and provider version requirements.
 
-Terraform will process all `.tf` files in a directory together as a single configuration, regardless of how you split the code across files. But the above structure is a common convention that offers a good starting point for most projects.
+Terraform will process all `.tf` files in a directory (excluding sub-directories) as a single configuration, regardless of how you split the code across files. But the above structure is a common convention that offers a good starting point for most projects.
 
 The following files are also commonly included in the root directory of a Terraform project:
 

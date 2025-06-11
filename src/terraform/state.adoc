@@ -14,7 +14,7 @@ Terraform also uses this file to record dependency relationships between resourc
 
 By maintaining this state file, Terraform can manage your infrastructure efficiently. For example, the `terraform apply` operation becomes idempotent, meaning that you can run it multiple times and Terraform will only change what's necessary to change since the last time it was run.
 
-.Example terraform.tfsate
+.Example terraform.tfstate
 [source,json]
 ----
 {
