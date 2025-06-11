@@ -128,6 +128,8 @@ instances_ids = [
 
 If you want to see the outputs from the last `apply` operation, run `terraform output`.
 
+It is important to create outputs from all Terraform executions. Outputs will be saved to the infrastructure state file (`terraform.tfstate`), and this data can be used by other tools such as CI/CD pipelines.
+
 == Secrets
 
 Secrets should be marked as sensitive in output. This means the value will not be displayed in the console output when running `terraform apply`. This is a good practice for sensitive information like passwords.
