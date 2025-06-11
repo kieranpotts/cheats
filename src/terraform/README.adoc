@@ -48,4 +48,7 @@ See the `examples` directory for working examples of Terraform configs for vario
 * link:./providers/gcp/provider.adoc[Provider]
 * link:./providers/gcp/resources.adoc[Resources]
 
+== Terraform services
 
+* link:./services/cloud.adoc[Terraform Cloud]
+* link:./services/enterprise.adoc[Terraform Enterprise]

@@ -1,0 +1,9 @@
+= Terraform Enterprise
+
+The main distributions of Terraform are:
+
+* Terraform CLI (open source)
+* Terraform Cloud (SaaS)
+* Terraform Enterprise (self-hosted version of Terraform Cloud)
+
+Terraform Enterprise includes all paid features of Terraform Cloud.

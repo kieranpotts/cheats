@@ -1,0 +1,21 @@
+= Terraform Cloud
+
+https://app.terraform.io/[Terraform Cloud] is another Terraform implementation – a SaaS application and an alternative to using the CLI.
+
+Terraform Cloud may be a good choice for large teams of cloud engineers.
+
+Features of Terraform Cloud include:
+
+* Remote execution of Terraform commands, so you don't need to install Terraform on your local machine.
+* Integration with version control systems like GitHub and GitLab (so you can do things like execute deployments from pull requests, say).
+* Integration with Slack, Email, and Webhooks for notifications of deployments and their changes.
+* Remote state can be stored in Terraform Cloud itself (though you may still use other back-ends like S3 if you prefer).
+* Terraform Cloud can also be used as a registry for your Terraform modules (as an alternative to use Git repositories).
+* Authorization and access controls: different levels of access for different users.
+* Cost estimation: estimate the cost of the infrastructure before applying it.
+
+Paid features include:
+
+* Sentinel policies: rules around who can deploy what.
+
+Cost estimation can be used in conjunction with sentinel policies to prevent deploying resources that would exceed a configured cost threshold.
