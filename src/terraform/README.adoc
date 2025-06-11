@@ -9,6 +9,7 @@ See the `examples` directory for working examples of Terraform configs for vario
 * link:./files.adoc[Files]
 * link:./hcl.adoc[HashiCorp Configuration Language (HCL)]
 * link:./cli.adoc[CLI and workflow]
+* link:./logs.adoc[Logs]
 * link:./variables.adoc[Variables]
 * link:./outputs.adoc[Outputs]
 * link:./state.adoc[State]
@@ -24,6 +25,7 @@ See the `examples` directory for working examples of Terraform configs for vario
 * link:./remote-state.adoc[Remote state and back-ends]
 * link:./modules.adoc[Modules]
 * link:./workspaces.adoc[Workspaces]
+* link:./importing.adoc[Importing]
 * link:./refactoring.adoc[Refactoring]
 
 == Cloud service providers

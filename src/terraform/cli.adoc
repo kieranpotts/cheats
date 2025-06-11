@@ -23,6 +23,12 @@ This generates a lock file called `.terraform.lock.hcl`. It is RECOMMENDED to co
 It is RECOMMENDED to always run `terraform init` before running any additional `terraform` commands, after pulling changes from source control.
 ======
 
+== Validating
+
+The `terraform validate` command checks the syntax and validity of your Terraform configuration files. For example, it will check that all required attributes are set, and all cross-referenced resources are defined.
+
+Planning and applying does this anyway, but it can be useful to run `terraform validate` incrementally as you make changes to your configuration files, to catch mistakes early.
+
 == Planning
 
 Run `terraform plan` to see what changes are required to update your infrastructure to match the desired state, as specified in your infrastructure-as-code.
@@ -47,6 +53,20 @@ $ terraform apply -var "instance_name="MyNewNameEC2"
 ----
 
 If you have more than a few variables to set, then better to create a file called `terraform.tfvars` and set the variables there – that's the purpose of this file.
+
+If there are changes to be made, `terraform apply` will prompt you to confirm the changes before proceeding. If you want to skip the confirmation prompt, you can use the `-auto-approve` option:
+
+----
+$ terraform apply -auto-approve
+----
+
+This can be useful in automated scripts or CI/CD pipelines.
+
+If you want to incrementally apply changes, you can use the `-target` option to specify a particular resource or module to apply changes to, rather than applying all changes at once.
+
+----
+$ terraform apply -target=aws_instance.node2
+----
 
 == Destroying
 
@@ -93,83 +113,16 @@ This will `apply` changes as normal, but it will also destroy and recreate the s
 
 You can also preview the changes that will be made by running `terraform plan -replace <resource-name>`.
 
-== Importing
+== Refresh
 
-If you have existing infrastructure – whether provisioned manually or using some other tool – that you want to start managing with Terraform, you can use the `terraform import` command to import it into a Terraform configuration.
+If you `apply` changes to your infrastructure, but then you make changes outside of Terraform (eg. manually in the cloud provider's console), there will be "drift" between the actual state of the infrastructure and the state that Terraform knows about.
 
-You do need to start with some baseline Terraform configuration that defines the resource you want to import, but you don't need to specify any of the resource's attributes. Example:
+To refresh Terraform's state file and bring it in line with the actual state of the infrastructure, you can use the `terraform refresh` command.
 
-[source,hcl]
-----
-resource "aws_instance" "node2" {
-  /* No attributes needed here, just the resource type and its name. */
-}
-----
+== Other useful CLI commands
 
-Then run `terraform init` to initialize a Terraform project.
+* `terraform fmt` – formats your Terraform files according to the standard style
+* `terraform output` – displays the outputs defined in your Terraform configuration
+* `terraform show` – displays the current configuration (with default values)
 
-----
-$ terraform init
-----
-
-Then run `terraform import` to import the existing resource into the Terraform state:
-
-----
-$ terraform import aws_instance.node2 i-1234567890abcdef0
-Import successful!
-----
-
-The arguments are:
-
-* The resource type and name, in the format `<resource-type>.<resource-name>`.
-* The instance ID, which is specific to the provider.
-
-Unfortunately, the import command does not automatically generate the resource's configuration in the `.tf` files (it only imports the resource's attributes into the state files). You will need to manually add the resource block to your Terraform configuration files, if you want to be able to `apply` changes to it in the future.
-
-[source,hcl]
-----
-resource "aws_instance" "node2" {
-  ami                    = "ami-07dd19a7900a1f049"
-  instance_type          = "t3.micro"
-  ebs_optimized          = true
-  tags = {
-    "Name"  = "K8s Cluster Node-2"
-  }
-}
-----
-
-Use `terraform plan` to see what mandatory attributes are missing from the resource block, and then add them to the configuration. Terraform already has the state of the resource, so it will tell you what the values of the required attributes should be.
-
-The Terraform documentation includes instructions to `terraform import` all types of resources of each providers – instances, VPCs, security groups, etc.
-
-== Alternative import method
-
-Since Terraform v1.5 you can import resources using `import` blocks in the `.tf` files. This is a more declarative way of importing resources, but it is still only semi-automatic like `terraform import`.
-
-[source,hcl]
-----
-import {
-  /* Import a Security Group */
-  from = "sg-12345678"
-  to   = aws_security_group.web_sg
-}
-----
-
-Then run:
-
-----
-$ terraform init
-$ terraform plan -generate-config-out=generated.tf
-----
-
-The second command will generate a new file called `generated.tf` that contains the configuration for the imported resource.
-
-.generated.tf
-[source,hcl]
-----
-resource "aws_security_group" "web_sg" {
-  /* Attributes. */
-}
-----
-
-You can then run `terraform apply` to apply the changes to the state file. You can then delete the `import` block from the `.tf` file, and reorganize your Terraform configuration as needed.
+Terraform has a lot of https://developer.hashicorp.com/terraform/language/functions[built-in functions] for manipulating data. To experiment with them, you can use the `terraform console` command, which opens an interactive console where you can evaluate expressions and see their results.
