@@ -1,10 +1,5 @@
 = Terraform
 
-[NOTE]
-======
-See the `examples` directory for working examples of Terraform configs for various cloud providers.
-======
-
 * link:./benefits.adoc[Benefits of Terraform]
 * link:./files.adoc[Files]
 * link:./hcl.adoc[HashiCorp Configuration Language (HCL)]
