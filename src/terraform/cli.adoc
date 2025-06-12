@@ -16,12 +16,14 @@ Initializing provider plugins...
 - Installing hashicorp/aws v4.53.0...
 ----
 
-This generates a lock file called `.terraform.lock.hcl`. It is RECOMMENDED to commit this to source control, which guarantees that everyone will install the exact same dependencies when they run `terraform init` at the same commit point.
+This generates a lock file called `.terraform.lock.hcl`. It is RECOMMENDED to commit this to source control, which guarantees that everyone will install the exact same dependencies (ie. the same versions of the cloud providers) when they run `terraform init` at the same commit point.
 
 [IMPORTANT]
 ======
 It is RECOMMENDED to always run `terraform init` before running any additional `terraform` commands, after pulling changes from source control.
 ======
+
+Use `terraform init -upgrade` to update the lock file and install the latest versions of your cloud providers.
 
 == Validating
 
