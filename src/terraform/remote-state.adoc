@@ -230,3 +230,25 @@ output "web_server_public_ip" {
   value = aws_instance.web_server.public_ip
 }
 ----
+
+== Lock files
+
+It is RECOMMENDED to use the `use_lockfile` option in the `terraform` block to enable lock files when using remote state. This is particularly important in team environments or when using CI/CD pipelines, as it prevents multiple users or processes from making changes to the state file at the same time, which could lead to corruption and inconsistent state.
+
+[source,hcl]
+----
+terraform {
+  backend "s3" {
+    bucket = "terraform-remote-state-abcdef"
+    key    = "network/terraform.tfstate"
+    region = "us-west-2"
+
+    /* Enable lock files to prevent concurrent state changes. */
+    use_lockfile = true 
+  }
+}
+----
+
+While the lock is applied (during a `terraform apply` operation) a file called `terraform.tfstate.tflock` will be created (ie. the same key name but with the `.tflock` extension) – you will see it appear briefly in the storage system.
+
+However, users can still override this by running `terraform apply -lock=false`, which will skip the lock file check. So, ultimately, the only protection against concurrent state changes is good access control to the remote state storage system, such as S3 bucket policies.
