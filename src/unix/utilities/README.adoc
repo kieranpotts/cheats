@@ -5,6 +5,7 @@ I'm defining utility software as any simple computer program with only a command
 * link:./bindfs.adoc[`bindfs`]
 * link:./dig.adoc[`dig`]
 * link:./duf.adoc[`duf`]
+* link:./mosh.adoc[`mosh`]
 * link:./ncdu.adoc[`ncdu`]
 * link:./ping.adoc[`ping`]
 * link:./rg.adoc[`rg` (ripgrep)]
