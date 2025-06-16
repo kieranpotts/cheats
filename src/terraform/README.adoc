@@ -1,5 +1,7 @@
 = Terraform
 
+* link:./about.adoc[About Terraform]
+* link:./comparisons.adoc[Comparisons with other tools]
 * link:./benefits.adoc[Benefits of Terraform]
 * link:./files.adoc[Files]
 * link:./hcl.adoc[HashiCorp Configuration Language (HCL)]
@@ -42,8 +44,3 @@
 
 * link:./providers/gcp/provider.adoc[Provider]
 * link:./providers/gcp/resources.adoc[Resources]
-
-== Terraform services
-
-* link:./services/cloud.adoc[Terraform Cloud]
-* link:./services/enterprise.adoc[Terraform Enterprise]

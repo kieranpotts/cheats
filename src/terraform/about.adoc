@@ -1,0 +1,41 @@
+= About Terraform
+
+Terraform is an infrastructure-as-code (IaC) tool created by San Francisco-based HashiCorp. It allows users to define and provision infrastructure using a declarative configuration language known as HashiCorp Configuration Language (HCL).
+
+Terraform is designed to manage both low-level cloud computing resources such as compute instances, storage, networking, and DNS. It can also be used to manage high-level components such as platform-as-a-service (PaaS) and software-as-a-service (SaaS) features.
+
+It does this by abstracting away the underlying imperative APIs of cloud providers. You install "providers", which are plugins that integrate Terraform with specific cloud platforms or services, such as AWS or Azure. HashiCorp maintains a registry of official and community-contributed providers.
+
+HCL configuration files may be decomposed into shareable modules, promoting reuse, collaboration, and easier maintainability. Terraform also supports remote state management, allowing distributed teams to collaborate on infrastructure changes without conflicts.
+
+== Terraform distributions
+
+The main distributions of Terraform are:
+
+* Terraform CLI - open source
+* Terraform Cloud - SaaS
+* Terraform Enterprise - self-hosted version of Terraform Cloud
+
+https://app.terraform.io/[Terraform Cloud] is a SaaS application that offers an alternative interface to the CLI. Terraform Cloud may be a good choice for large teams of cloud engineers in which multiple teams are managing the same infrastructure.
+
+Terraform Cloud has a comprehensive free tier that includes many features that are not available in the CLI:
+
+* Remote execution of Terraform commands, so you don't need to install Terraform on your local machine.
+* Integration with version control systems like GitHub and GitLab, so you can do things like execute deployments from pull requests.
+* Integration with Slack, Email, and Webhooks for notifications of deployments and their changes.
+* Remote state can be stored in Terraform Cloud itself (though you may still use other back-ends like S3 if you prefer).
+* Terraform Cloud can also be used as a registry for your Terraform modules (as an alternative to using Git repositories).
+* Authorization and access controls, so you can grant different levels of access for different users.
+* Terraform Cloud will estimate the cost of the infrastructure before applying it.
+
+The paid tier of Terraform Cloud include *sentinel policies*, which are rules that can be applied to your Terraform configurations to enforce compliance and governance. Sentinel policies can be used to restrict who can deploy what resources, ensuring that only authorized users can make changes to your infrastructure. Terraform Cloud's cost estimation tools can be used in conjunction with sentinel policies to prevent deploying resources that would exceed a configured cost threshold.
+
+Terraform Enterprise, which launched in 2019, includes all the free and paid features of Terraform Cloud.
+
+== Licensing
+
+Terraform CLI was previously free and open source software distribute under the terms of the Mozilla Public License (MPL) v2. In August 2022, HashiCorp switched all its open source projects, including Terraform, to the https://mariadb.com/bsl11/[Business Source License], which places restrictions on the commercial use of the software.
+
+== Forks
+
+The move to the Business Source License sparked the creation of the https://opentofu.org/[OpenTofu] fork. This is actively maintained under the stewardship of the Linux Foundation and aims to remain a drop-in replacement for the Terraform CLI.
