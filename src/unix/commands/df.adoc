@@ -3,3 +3,5 @@
 `df` – "disk free" – is a standard Unix shell command for reporting the amount of disk space used and available on file systems.
 
 See also link:./du.adoc[`du`], which reports the "disk usage" of files and directories.
+
+See also the link:../utilities/duf.adoc[`duf`] utility, which outputs drive usage statistics in a more user-friendly way.
