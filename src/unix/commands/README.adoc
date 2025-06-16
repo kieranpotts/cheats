@@ -57,9 +57,9 @@ See also the link:https://archive.org/details/unixtoolbox[Unix Toolbox] by Colin
 * `cmp` — Compare two files.
 * link:./cp.adoc[`cp`] — Copy files.
 * `dd` — Convert and copy a file.
-* `df` — Report free disk space.
+* link:./df.adoc[`df`] — Report free disk space.
 * `dirname` — Return the directory portion of a pathname.
-* `du` — Estimate file space usage.
+* link:./du.adoc[`du`] — Estimate file space usage.
 * `file` — Determine file type.
 * `find` — Find files.
 * `ln` — Link files.

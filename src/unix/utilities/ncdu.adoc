@@ -1,0 +1,6 @@
+= `ncdu`
+
+`ncdu` (NCurses Disk Usage) is a disk usage analyzer, serving a similar purpose to the link:../commands/du.adoc[`du`] command, but using a text-based user interface based on the ncurses programming library.
+
+* Website: https://dev.yorhel.nl/ncdu
+* Repository: git://g.blicky.net/ncdu.git
