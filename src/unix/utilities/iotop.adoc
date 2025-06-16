@@ -1,0 +1,3 @@
+= `iotop`
+
+`iotop` is a tool for monitoring disk I/O usage in real-time, via a top-like interface. It shows which processes are consuming the most disk I/O resources, making it useful for diagnosing performance issues related to disk activity.

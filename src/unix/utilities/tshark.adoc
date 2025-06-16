@@ -1,0 +1,5 @@
+= `tshark`
+
+TShark is a network protocol analyzer, which allows you to capture and analyze network traffic. It is a command-line version of Wireshark.
+
+https://termshark.io/[Termshark] is an interactive terminal UI for TShark, which provides a more user-friendly interface for analyzing network traffic in the terminal.

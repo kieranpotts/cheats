@@ -1,0 +1,3 @@
+= `watch`
+
+The `watch` utility is used to rerun a command at regular intervals – which you specify.

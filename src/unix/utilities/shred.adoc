@@ -1,0 +1,5 @@
+= `shred`
+
+`rm` does not actually remove a file, it just removes the reference to it in the filesystem ("unlinking"). The data is still there until it is overwritten by new data.
+
+`shred` overwrites the file with random data – over multiple passes – before deleting the link, making it much harder to recover the deleted data.

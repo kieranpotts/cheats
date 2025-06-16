@@ -1,6 +1,6 @@
 = `rsync`
 
-`rsync` (Remote Sync) is an open source command line utility that provides fast, incremental file transfer from one host to another. It is "incremental" because it copies only the differences between the source and destination files, ie. what has changed since the last sync. It is widely used on Unix-based systems.
+`rsync` – "remote sync" – is an open source command line utility that provides fast, incremental file transfer from one host to another. It is "incremental" because it copies only the differences between the source and destination files, ie. what has changed since the last sync. It can resume broken transfers. It is widely used on Unix-based systems.
 
 == Installation
 

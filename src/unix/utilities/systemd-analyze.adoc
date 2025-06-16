@@ -1,0 +1,7 @@
+= `systemd-analyze`
+
+https://www.commandlinux.com/man-page/man1/systemd-analyze.1.html[`systemd-analyze`] is a widely-available utility that can be used to analyze and debug the boot process of a system that uses `systemd` as its init system.
+
+`systemd-analyze blame` can be used to diagnose boot performance issues by showing how long each service took to start during boot.
+
+`systemd-analyze critical-chain` outputs the critical path of dependencies, helping to identify bottlenecks in sequential initialization.

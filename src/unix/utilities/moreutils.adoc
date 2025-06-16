@@ -1,0 +1,9 @@
+= `moreutils`
+
+https://joeyh.name/code/moreutils/[`moreutils`] is "a collection of the unix tools that nobody thought to write long ago when unix was young". Bundled utilities include:
+
+* `ts` adds timestamps to standard output.
+* `errno <code>` tells you what the error code means.
+* `ifdata` prints information about your network interfaces.
+* `vidir` can be used to edit directory names in your text editor.
+* `vipe` allows you to insert your text editor into a pipeline, allowing you to edit the data that is being piped between two programs.

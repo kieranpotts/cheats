@@ -1,0 +1,3 @@
+= `unp`
+
+Use https://github.com/mitsuhiko/unp[`unp`] to unpack any archive file, including 7zip (`.7z`), Bz2 (`.bz2`), Gzip (`.gz`), Zip (`.zip`) files, and tarballs (`.tar`, `.tar.gz`, `.tar.bz2`, etc.).

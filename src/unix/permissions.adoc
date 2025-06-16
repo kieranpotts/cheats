@@ -83,7 +83,7 @@ You set separate permissions for the owner, the group, and all other users, in t
 
 * `r--------` = `400`: Read permissions for the owner; no permissions for anyone else.
 
-To get the numerical `chmod` value of a filesystem object:
+To get the numerical `chmod` value of a filesystem object, use the `stat` utility (which is built-in to most Linux distros).
 
 [source]
 ----

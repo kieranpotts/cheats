@@ -1,0 +1,3 @@
+= `lazydocker`
+
+Lazydocker is a simple terminal UI for interacting with the Docker daemon.
