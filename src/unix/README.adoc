@@ -17,3 +17,4 @@
   ** link:./commands/mkdir.adoc[mkdir]
   ** link:./commands/mv.adoc[mv]
   ** link:./commands/rm.adoc[rm]
+* link:./utilities/README.adoc[Utilities]

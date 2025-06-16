@@ -1,0 +1,12 @@
+= Unix utilities
+
+I'm defining utility software as any simple computer program with only a command line interface and which specializes in a single discrete task. Many of these utilities are commonly shipped with Linux distributions (some like `su` being integrated into the Linux kernel) and other Unix-like operating systems, though they are not part of the Single Unix Specification (SUS).
+
+* link:./bindfs.adoc[bindfs]
+* link:./dig.adoc[dig]
+* link:./ping.adoc[ping]
+* link:./rsync.adoc[rsync]
+* link:./su.adoc[su]
+* link:./sudo.adoc[sudo]
+* link:./wget.adoc[wget]
+* link:./whois.adoc[whois]

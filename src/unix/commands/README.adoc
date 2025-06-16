@@ -2,155 +2,138 @@
 
 The following commands can be found on most Unix-like operating systems. These are "mandatory" commands as specified in the Single Unix Specification (SUS) – a family of standards for computer operating systems, compliance with which is required to qualify for using the "UNIX" trademark.
 
+See also link:../utilities/README.adoc[Unix utilities] for simple, single-purpose command line programs such as `ping`, `rsync`, and `wget`.
+
 See also the link:https://archive.org/details/unixtoolbox[Unix Toolbox] by Colin Barschel (archived).
 
 == Shell programming
 
-[source,sh]
-----
-bg      # Run a program in the background. See also fg.
-command # Execute a simple command.
-echo    # Write arguments to standard output.
-expr    # Evaluate arguments as an expression.
-false   # Return false value.
-fg      # Runs a program in the foreground. See also bg.
-getopts # Parse utility options.
-logger  # Log messages.
-printf  # Write formatted output.
-read    # Read a line from standard input.
-sh      # Shell, the standard command language interpreter.
-sleep   # Suspend execution for an interval.
-tee     # Duplicate the standard output.
-test    # Evaluate expression.
-true    # Return true value.
-xargs   # Construct argument lists and invoke utility.
-----
+* `bg` — Run a program in the background. See also fg.
+* `command` — Execute a simple command.
+* `echo` — Write arguments to standard output.
+* `expr` — Evaluate arguments as an expression.
+* `false` — Return false value.
+* `fg` — Runs a program in the foreground. See also bg.
+* `getopts` — Parse utility options.
+* `logger` — Log messages.
+* `printf` — Write formatted output.
+* `read` — Read a line from standard input.
+* `sh` — Shell, the standard command language interpreter.
+* `sleep` — Suspend execution for an interval.
+* `tee` — Duplicate the standard output.
+* `test` — Evaluate expression.
+* `true` — Return true value.
+* `xargs` — Construct argument lists and invoke utility.
 
 == Process management
 
-[source,sh]
-----
-at     # Execute commands at a later time.
-batch  # Schedule commands to be executed in a batch queue.
-kill   # Terminate or signal processes.
-nice   # Invoke a utility with an altered nice value.
-nohup  # Invoke a utility immune to hangups.
-ps     # Report process status.
-renice # Set nice values of running processes.
-time   # Time a simple command.
-wait   # Await process completion.
-----
+* `at` — Execute commands at a later time.
+* `batch` — Schedule commands to be executed in a batch queue.
+* `kill` — Terminate or signal processes.
+* `nice` — Invoke a utility with an altered nice value.
+* `nohup` — Invoke a utility immune to hangups.
+* `ps` — Report process status.
+* `renice` — Set nice values of running processes.
+* `time` — Time a simple command.
+* `wait` — Await process completion.
 
 == User management
 
-[source,sh]
-----
-id      # Return user identity.
-logname # Return the user's login name.
-newgrp  # Change to a new group.
-who     # Display a list of users currently on the system.
-write   # Write to another user's terminal.
-----
+* `id` — Return user identity.
+* `logname` — Return the user's login name.
+* `newgrp` — Change to a new group.
+* `who` — Display a list of users currently on the system.
+* `write` — Write to another user's terminal.
 
 == Filesystem commands
 
-[source,sh]
-----
-basename # Return non-directory portion of a pathname.
-cat      # Concatenate and print files.
-cd       # Change the working directory.
-chgrp    # Change the file group ownership.
-chmod    # Change the file modes/attributes/permissions.
-chown    # Change the file ownership.
-cksum    # Write the checksums and sizes.
-cmp      # Compare two files.
-cp       # Copy files.
-dd       # Convert and copy a file.
-df       # Report free disk space.
-dirname  # Return the directory portion of a pathname.
-du       # Estimate file space usage.
-file     # Determine file type.
-find     # Find files.
-ln       # Link files.
-ls       # List directory contents.
-mkdir    # Make directories.
-mkfifo   # Make FIFO special files.
-mv       # Move or rename files.
-pathchk  # Check pathnames.
-pwd      # Returns the "present working directory".
-rm       # Remove directory entries.
-rmdir    # Remove directories, if they are empty.
-touch    # Change file access and modification times.
-uudecode # Decode a binary file.
-uuencode # Encode a binary file.
-----
+* `basename` — Return non-directory portion of a pathname.
+* link:./cat.adoc[`cat`] — Concatenate and print files.
+* `cd` — Change the working directory.
+* link:./chgrp.adoc[`chgrp`] — Change the file group ownership.
+* link:./chmod.adoc[`chmod`] — Change the file modes/attributes/permissions.
+* link:./chown.adoc[`chown`] — Change the file ownership.
+* `cksum` — Write the checksums and sizes.
+* `cmp` — Compare two files.
+* link:./cp.adoc[`cp`] — Copy files.
+* `dd` — Convert and copy a file.
+* `df` — Report free disk space.
+* `dirname` — Return the directory portion of a pathname.
+* `du` — Estimate file space usage.
+* `file` — Determine file type.
+* `find` — Find files.
+* `ln` — Link files.
+* link:./ls.adoc[`ls`] — List directory contents.
+* link:./mkdir.adoc[`mkdir`] — Make directories.
+* `mkfifo` — Make FIFO special files.
+* link:./mv.adoc[`mv`] — Move or rename files.
+* `pathchk` — Check pathnames.
+* `pwd` — Returns the "present working directory".
+* link:./rm.adoc[`rm`] — Remove directory entries.
+* `rmdir` — Remove directories, if they are empty.
+* `touch` — Change file access and modification times.
+* `uudecode` — Decode a binary file.
+* `uuencode` — Encode a binary file.
 
 == Text processing
 
-[source,sh]
-----
-awk      # Pattern scanning and processing language.
-comm     # Select or reject lines common to two files.
-csplit   # Split files based on context.
-cut      # Cut out selected fields of each line of a file.
-diff     # Compare two files.
-ed       # The standard text editor.
-expand   # Convert tabs to spaces.
-fold     # Filter for folding lines.
-grep     # Search text for a pattern.
-head     # Copy the first part of files.
-iconv    # Codeset conversion.
-join     # Merges two sorted text files based on the presence of a common field.
-less     # Page through a text file.
-lp       # Send files to a printer.
-paste    # Merge corresponding or subsequent lines of files.
-patch    # Apply changes to files.
-pr       # Print files.
-sed      # Stream editor.
-sort     # Sort, merge or sequence check text files.
-tail     # Copy the last part of a file.
-tr       # Translate characters.
-tsort    # Topological sort.
-unexpand # Convert spaces to tabs.
-uniq     # Report or filter out repeated lines in a file.
-wc       # Line, word and byte or character count.
-----
+* `awk` — Pattern scanning and processing language.
+* `comm` — Select or reject lines common to two files.
+* `csplit` — Split files based on context.
+* `cut` — Cut out selected fields of each line of a file.
+* `diff` — Compare two files.
+* `ed` — The standard text editor.
+* `expand` — Convert tabs to spaces.
+* `fold` — Filter for folding lines.
+* link:./grep.adoc[`grep`] — Search text for a pattern.
+* link:./head-tail.adoc[`head`] — Copy the first part of files. Opposite to `tail`.
+* `iconv` — Codeset conversion.
+* `join` — Merges two sorted text files based on the presence of a common field.
+* link:./less.adoc[`less`] — Page through a text file.
+* link:./lp.adoc[`lp`] — Send files to a printer.
+* `paste` — Merge corresponding or subsequent lines of files.
+* `patch` — Apply changes to files.
+* `pr` — Print files.
+* `sed` — Stream editor.
+* `sort` — Sort, merge or sequence check text files.
+* link:./head-tail.adoc[`tail`] — Copy the last part of a file. Opposite to `head`.
+* `tr` — Translate characters.
+* `tsort` — Topological sort.
+* `unexpand` — Convert spaces to tabs.
+* `uniq` — Report or filter out repeated lines in a file.
+* `wc` — Line, word and byte or character count.
 
 == Other Unix commands
 
-[source,sh]
-----
-alias     # Define or display aliases.
-ar        # Create and maintain library archives.
-bc        # Arbitrary-precision arithmetic language.
-crontab   # Schedule periodic background work.
-date      # Display the current date and time.
-env       # Set the environment for command invocation.
-gencat    # Generate a formatted message catalog.
-getconf   # Get configuration values.
-hash      # hash database access method.
-locale    # Get locale-specific information.
-localedef # Define locale environment.
-m4        # Macro processor.
-malix     # Process messages.
-man       # Display system documentation.
-mesg      # Permit or deny messages.
-od        # Dump files in various formats.
-pax       # Portable archive interchange.
-split     # Split files into pieces.
-stty      # Set the options for a terminal.
-tabs      # Set terminal tabs.
-tput      # Change terminal characteristics.
-tty       # Return user's terminal name.
-umask     # Get or set file mode creation mask.
-unalias   # Remove alias definitions.
-uname     # Return system name.
-----
+* `alias` — Define or display aliases.
+* `ar` — Create and maintain library archives.
+* `bc` — Arbitrary-precision arithmetic language.
+* link:./crontab.adoc[`crontab`] — Schedule periodic background work.
+* `date` — Display the current date and time.
+* `env` — Set the environment for command invocation.
+* `gencat` — Generate a formatted message catalog.
+* `getconf` — Get configuration values.
+* `hash` — hash database access method.
+* `locale` — Get locale-specific information.
+* `localedef` — Define locale environment.
+* `m4` — Macro processor.
+* `malix` — Process messages.
+* `man` — Display system documentation.
+* `mesg` — Permit or deny messages.
+* `od` — Dump files in various formats.
+* `pax` — Portable archive interchange.
+* `split` — Split files into pieces.
+* `stty` — Set the options for a terminal.
+* `tabs` — Set terminal tabs.
+* `tput` — Change terminal characteristics.
+* `tty` — Return user's terminal name.
+* `umask` — Get or set file mode creation mask.
+* `unalias` — Remove alias definitions.
+* `uname` — Return system name.
 
 ****
 To find out more about any Unix command or program, view its man pages with the command `man <command>`. In addition, most commands accept the `--help` option, which will output a short summary of their available arguments.
 
-[source]
 ----
 grep --help
 ----

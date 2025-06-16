@@ -1,15 +1,13 @@
-= mv
+= `mv`
 
 The `mv` command is used to move or rename files. The following command renames the file `temp` to `temp2`.
 
-[source]
 ----
 mv temp temp2
 ----
 
 The same command can be used to move files to other directories.
 
-[source]
 ----
 mv temp /home/<username>/tmp
 ----

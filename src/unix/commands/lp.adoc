@@ -1,4 +1,4 @@
-= lp
+= `lp`
 
 The `lp` (line printer) command is used to obtain a hard copy printout of a file. By default, it will send the output to the system's default printer (usually, `oscps1`).
 

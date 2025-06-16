@@ -1,6 +1,6 @@
-= su
+= `su`
 
-Although `su` is not specified in the Single Unix Specification, it is distributed as part of the Linux kernel via the https://github.com/util-linux/util-linux[util-linux] package. The `su` command is also available on other Unix-like operating systems.
+Although `su` – which stands for "substitute user", or historically "superuser" – is not specified in the Single Unix Specification, it is distributed as part of the Linux kernel via the https://github.com/util-linux/util-linux[util-linux] package. The `su` command is also available on other Unix-like operating systems.
 
 ----
 $ su <user>

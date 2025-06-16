@@ -1,4 +1,4 @@
-= sudo ("super user do")
+= `sudo` ("super user do")
 
 The `sudo` program is commonly used to install, start and stop applications that require root privileges on Unix-like operating systems. The program is link:https://www.sudo.ws/[developed independently] from the Linux kernel or other operating systems, and is not specified in the Single Unix Specification. Nevertheless, it is widely pre-installed on Linux distros and other Unix and Unix-like systems, else it can be installed from most major package registries.
 

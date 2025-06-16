@@ -1,20 +1,17 @@
-= ls
+= `ls`
 
-[source]
 ----
 ls
 ----
 
 Use the `l` switch to show long-form output, and the `a` switch to include directories and hidden files in the list.
 
-[source]
 ----
 ls -la
 ----
 
 The `-h` switch makes the file sizes human-readable.
 
-[source]
 ----
 ls -lah
 ----

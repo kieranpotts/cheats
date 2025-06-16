@@ -1,9 +1,8 @@
-= cat
+= `cat`
 
 The `cat` command is used to combine files or to print the content of files to the screen. By default, the `cat` command sends its output to `stdout`.
 
 .Example: view the content of the `.profile` file
-[source]
 ----
 cat .profile
 ----
@@ -12,14 +11,12 @@ If the file is very large or is not a plain text file, `cat` will still try to o
 
 The `cat` utility can be used with the Unix shell's output redirection operators to join multiple files into a single one. The following command copies the contents of the files `input1` and `input2` to a file called `output`.
 
-[source]
 ----
 cat input1 input2 > output
 ----
 
 The `>>` operator is used for appending to the end of an existing file:
 
-[source]
 ----
 cat input >> output
 ----

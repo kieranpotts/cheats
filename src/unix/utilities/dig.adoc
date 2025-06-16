@@ -1,4 +1,4 @@
-= dig
+= `dig`
 
 ----
 $ dig <domain>    # Gets DNS information for domain.

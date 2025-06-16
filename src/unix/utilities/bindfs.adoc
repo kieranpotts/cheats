@@ -1,4 +1,4 @@
-= bindfs
+= `bindfs`
 
 https://bindfs.org/[bindfs] is a tool that can mount a directory to another directory with altered permissions, such as read-only, non-executable, or shared. This is useful for providing access to files in a way that is different from the original.
 

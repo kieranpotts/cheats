@@ -1,15 +1,13 @@
-= head/tail
+= `head`/`tail`
 
 The `head` command is used to view the first few lines of a file. It accepts a switch specifying the number of lines to view:
 
-[source]
 ----
 head -2 <file_name>
 ----
 
 The `tail` command is used to view the last few lines of a file. It also accepts a switch specifying the number of lines to view:
 
-[source]
 ----
 tail -2 <file_name>
 ----

@@ -1,8 +1,7 @@
-= chgrp
+= `chgrp`
 
 `chgrp` changes the group ownership of a file.
 
-[source]
 ----
 chgrp <group> <file>
 ----

@@ -1,4 +1,4 @@
-= chmod
+= `chmod`
 
 In Unix and Unix-like operating systems, `chmod` is the system call that is used to change the link:../permissions.adoc[access permissions] of filesystem objects (files and directories).
 
@@ -34,7 +34,6 @@ The `chmod` command also accepts the bitmask syntax as input. Examples:
 ****
 To hang permissions on all files matching a pattern, you could do something like:
 
-[source]
 ----
 find . -name "*.sh" -exec chmod +x {} \;
 ----
@@ -48,7 +47,6 @@ The sticky bit, or `+t` mode, is particularly useful in multi-user situations. T
 
 To change the sticky bit, you need to be either root or the file owner. (The root user will always be able to delete files regardless of the status of the sticky bit.)
 
-[source]
 ----
 chmod +t /root/sticky.txt
 ----
@@ -57,7 +55,6 @@ To remove the sticky bit from a file, use the `-t` option.
 
 The setuid (set user identity) bit, or `+s` mode, allows users with permissions to execute a file to do so as the owner. For instance, if the file `/usr/bin/reload` was owned by the root user and the `hostmaster` group, members of the `hostmaster` group could run the `reload` program as if they were the root user.
 
-[source]
 ----
 chmod g+s /usr/bin/reload
 ----
@@ -68,14 +65,12 @@ The effect of the `+s` mode on a directory is somewhat different. Files created 
 
 To apply the setuid (set user identity) bit on a directory, use the following command:
 
-[source]
 ----
 chmod o+s /var/doc-store/
 ----
 
 And to apply the setgid (set group identity) bit on a directory, use the following command:
 
-[source]
 ----
 chmod g+s /var/doc-store/
 ----

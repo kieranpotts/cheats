@@ -1,4 +1,4 @@
-= wget
+= `wget`
 
 ----
 $ wget <file>     # Downloads file.

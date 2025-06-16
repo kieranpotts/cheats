@@ -1,31 +1,27 @@
-= crontab
+= `crontab`
 
 == Create and modify cron jobs
 
 Switch to root user, or the user who you want to own the scheduled tasks:
 
-[source]
 ----
 sudo su -
 ----
 
 To display the list of existing cron jobs for the current user:
 
-[source]
 ----
 crontab -l
 ----
 
 To remove all of the user's cron jobs:
 
-[source]
 ----
 crontab -r
 ----
 
 To edit the user's existing cron jobs, or to create a new cron schedule:
 
-[source]
 ----
 crontab -e
 ----
@@ -34,7 +30,6 @@ This will open the user's cron job configuration in your default text editor.
 
 == Cron job syntax
 
-[source]
 ----
 MAILTO="hostmaster@example.com"
 
@@ -55,7 +50,6 @@ There must be a line break at the end of the command, ie. the file must end with
 
 If installing a system-wide crontab – in `/etc/crontab` or `/etc/cron.d` fragments – then you also need to append the command with a named user that will run it:
 
-[source]
 ----
 */5  08-17  *  *  1-5   <username> /home/<username>/tasks/example.sh >/dev/null 2>&1
 ----
