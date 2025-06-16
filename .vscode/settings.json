@@ -34,6 +34,11 @@
     "editor.rulers": [100],
     "editor.wordWrap": "bounded",
     "editor.wordWrapColumn": 100,
+
+    /* Enable auto-formatting for Asciidoc files. */
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
   },
   "[markdown]": {
     "editor.rulers": [100],
