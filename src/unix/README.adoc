@@ -1,6 +1,7 @@
 = Unix
 
 * link:./filesystem.adoc[Unix filesystem]
+* link:./users.adoc[Unix users]
 * link:./permissions.adoc[Unix permissions]
 * link:./commands/README.adoc[Unix commands]
 * link:./utilities/README.adoc[Unix utilities]
