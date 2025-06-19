@@ -60,7 +60,7 @@ Thus, to split the current pane into two horizontally, you will hold down the `C
 |`arrow key`
 |Move between panes.
 
-|`PgUp`|`PgDown`
+|`PgUp`/`PgDown`
 |Scroll within current pane.
 
 |`c`
