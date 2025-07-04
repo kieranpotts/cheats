@@ -19,6 +19,7 @@
 * link:./conditions.adoc[Conditions]
 * link:./lookups.adoc[Lookups]
 * link:./loops.adoc[Loops]
+* link:./functions.adoc[Functions]
 * link:./remote-state.adoc[Remote state and back-ends]
 * link:./modules.adoc[Modules]
 * link:./workspaces.adoc[Workspaces]
