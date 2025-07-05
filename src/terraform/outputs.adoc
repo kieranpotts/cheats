@@ -57,16 +57,16 @@ The following defines some useful outputs for the above configuration:
 
 [source,hcl]
 ----
-/* Print the security group ID */
+# Print the security group ID.
 output "my_securitygroup_id" {
-  /* The description is optional, and is only for documentation */
+  # The description is optional, and is only for documentation.
   description = "Security Group ID for my servers"
 
-  /* The actual value to be printed: */
+  # The actual value to be printed:
   value       = aws_security_group.general.id
 }
 
-/* Print the private IP address of each instance. */
+# Print the private IP address of each instance.
 output "web_private_ip" {
   value = aws_instance.my_server_web.private_ip
 }
@@ -77,8 +77,8 @@ output "db_private_ip" {
   value = aws_instance.my_server_db.private_ip
 }
 
-/* The output value can also be a list or map.
-This prints a list of instance IDs. */
+# The output value can also be a list or map.
+# This prints a list of instance IDs.
 output "instances_ids" {
   value = [
     aws_instance.my_server_web.id,
@@ -132,7 +132,7 @@ It is important to create outputs from all Terraform executions. Outputs will be
 
 == Secrets
 
-Secrets should be marked as sensitive in output. This means the value will not be displayed in the console output when running `terraform apply`. This is a good practice for sensitive information like passwords.
+Secrets should be marked as sensitive in output blocks. This means the value will not be displayed in the console output when running `terraform apply`. This is a good practice for sensitive information like passwords.
 
 [source,hcl]
 ----
@@ -142,4 +142,6 @@ output "rds_password" {
 }
 ----
 
-However, secrets such as resource passwords will always be printed to the `terraform.tfstate` file, regardless of whether the data is marked as sensitive. Therefore, it is important to ensure that the state file is stored securely and access is restricted to authorized personnel only.
+However, secrets such as resource passwords will always be captured in the `terraform.tfstate` file, regardless whether the data is marked as sensitive or not. Therefore, it is important to ensure that the state file is stored securely and access is restricted to authorized personnel only.
+
+For this reason it is RECOMMENDED to use a remote state back-end, such as S3 with encryption enabled, as a secure vault for central storage of the state file. In some circumstances, it MAY be okay to commit the state file to a private repository, using a tool such as https://git-secret.io/[git-secret], https://github.com/AGWA/git-crypt[git-crypt], https://github.com/elasticdog/transcrypt[transcript], or https://github.com/mozilla/sops[SOPS] to encrypt the state file at rest in the Git repository. State files MUST NOT be committed to public repositories.

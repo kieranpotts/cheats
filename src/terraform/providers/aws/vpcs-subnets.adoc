@@ -1,4 +1,4 @@
-= Terraform - AWS: VPCs, subnets, and route tables
+= Terraform: AWS - VPCs, subnets, and route tables
 
 As an absolute minimum, a default VPC must be defined. This is required to create subnets and security group, which cross-references the VPCs to which they belong.
 
@@ -47,7 +47,7 @@ CIDR ranges and tags are good candidates to extract from infrastructure configur
 
 .terraform.tfvars
 ----
-/* VPC */
+# VPC
 vpc_cidr = "10.0.0.0/16"
 vpc_name = "MyTestVPC"
 ----
@@ -70,7 +70,7 @@ Subnets are created within VPCs.
 
 .terraform.tfvars
 ----
-/* Public Subnet */
+# Public Subnet
 subnet_cidr = "10.0.1.0/24"
 subnet_name = "MyTestSubnet"
 ----
@@ -94,7 +94,7 @@ An Internet Gateway (IGW) is required to route traffic from public subnets to an
 
 .terraform.tfvars
 ----
-/* Internet Gateway */
+# Internet Gateway
 igw_name = "MyTestIGW"
 ----
 

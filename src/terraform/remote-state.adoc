@@ -2,15 +2,13 @@
 
 By default, when you `apply` a Terraform configuration, the state file is stored locally in the current working directory as `terraform.tfstate`. When you make subsequent changes to the configuration, Terraform will determine the changes required by comparing the new configuration with the existing local state file.
 
-Best practice is to store the state file remotely, so it can be shared among team members and also used in CI/CD pipelines.
+However, because secrets are stored in the state file, the state file SHOULD NOT be committed to source control (even if the repository is private).
 
-However, because secrets are store in the state file, the state file SHOULD NOT be committed to source control (even if the repository is private).
-
-To store your state files in other remote, secure locations, you configure an alternative https://developer.hashicorp.com/terraform/language/state/backends[back-end] (the default back-end is your local filesystem).
+Best practice is to store the state file remotely, so it can be shared among team members and also used in CI/CD pipelines. To store your state files in other remote, secure locations, you configure an alternative https://developer.hashicorp.com/terraform/language/state/backends[back-end] (the default back-end is your local filesystem).
 
 Options for backends include S3 and GCS (Google Cloud Storage) buckets.
 
-You can also use multiple state files, for example splitting your infrastructure into separate components which can be managed independently. This is particularly useful for large enterprise-scale infrastructures, or in any context in which different teams are responsible for different parts of the infrastructure. Alternatively you might want to split your infrastructure state by layers, such as separating the networking layer from the application layer – this is another common practice.
+With remote state management, you also have the option of using  multiple state files, for example splitting your infrastructure into separate components which can be managed independently. This is particularly useful for large enterprise-scale infrastructures, or in any context in which different teams are responsible for different parts of the infrastructure. Alternatively you might want to split your infrastructure state by layers, such as separating the networking layer from the application layer – this is another common practice.
 
 Back-ends are defined in the `terraform` block, in the `backend` sub-block. The following example shows how to configure a back-end for storing the state file in an S3 bucket. It also defines a VPC, and internet gateway attached to the VPC, two public subnets, and associating the same route table configuration (which routes all traffic to the internet gateway) to each subnet – all in the `eu-north-1` region.
 
@@ -49,11 +47,11 @@ data "aws_availability_zones" "available" {}
 
 terraform {
   backend "s3" {
-    bucket = "terraform-remote-state-abcdef" // Bucket where to save Terraform state
-    key    = "dev/network/terraform.tfstate" // Object name in the bucket to save Terraform state
-    region = "us-west-2"                     // Region where bucket created. This does NOT need
-                                             //   to match where the configured infrastructure is
-                                             //   deployed.
+    bucket = "terraform-remote-state-abcdef" # Bucket where to save Terraform state.
+    key    = "dev/network/terraform.tfstate" # Object name in the bucket to save Terraform state.
+    region = "us-west-2"                     # Region where bucket created. This does NOT need
+                                             #   to match where the configured infrastructure is
+                                             #   deployed.
   }
 }
 
@@ -139,16 +137,16 @@ provider "aws" {
 terraform {
   backend "s3" {
     bucket = "adv-it-terraform-remote-state"
-    key    = "dev/webserver/terraform.tfstate" // Different path than the state file
-                                               // for the network layer
+    key    = "dev/webserver/terraform.tfstate" # Different path than the state file
+                                               #   for the network layer.
     region = "us-west-2"
   }
 }
 
-/* This block gets data from the remote state file for the "network layer",
-which we can then use to configure our resources. Notice how we are using
-our outputs from the network layer's state file to get the VPC ID, public
-subnet IDs, and VPC CIDR range. */
+# This block gets data from the remote state file for the "network layer",
+# which we can then use to configure our resources. Notice how we are using
+# our outputs from the network layer's state file to get the VPC ID, public
+# subnet IDs, and VPC CIDR range.
 data "terraform_remote_state" "network_layer" {
   backend = "s3"
   config = {
@@ -172,7 +170,7 @@ resource "aws_instance" "web_server" {
   instance_type          = "t3.micro"
   vpc_security_group_ids = [aws_security_group.webserver.id]
 
-  /* Here we are using the remote state data to get the first public subnet ID. */
+  # Here we are using the remote state data to get the first public subnet ID.
   subnet_id              = data.terraform_remote_state.network_layer.outputs.public_subnet_ids[0]
 
   user_data              = <<EOF
@@ -192,7 +190,7 @@ EOF
 resource "aws_security_group" "webserver" {
   name   = "WebServer Security Group"
 
-  /* Here wer are using the remote state data to get the VPC ID. */
+  # Here wer are using the remote state data to get the VPC ID.
   vpc_id = data.terraform_remote_state.network_layer.outputs.vpc_id
 
   ingress {
@@ -207,7 +205,7 @@ resource "aws_security_group" "webserver" {
     to_port     = 22
     protocol    = "tcp"
 
-    /* Here we are using the remote state data to get the VPC CIDR range. */
+    # Here we are using the remote state data to get the VPC CIDR range.
     cidr_blocks = [data.terraform_remote_state.network_layer.outputs.vpc_cidr]
   }
   egress {
@@ -243,8 +241,8 @@ terraform {
     key    = "network/terraform.tfstate"
     region = "us-west-2"
 
-    /* Enable lock files to prevent concurrent state changes. */
-    use_lockfile = true 
+    # Enable lock files to prevent concurrent state changes.
+    use_lockfile = true
   }
 }
 ----

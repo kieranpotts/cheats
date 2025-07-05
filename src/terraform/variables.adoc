@@ -4,19 +4,19 @@ In Terraform, there are two main files involved in setting input variables: `var
 
 The `variables.tf` file is used to declare variables and set their default values. In contains `variable` blocks that define the name, description, type, and default value of each variable. This file is normally committed to version control, as it serves as documentation for the variables used in the Terraform configuration.
 
-The terraform.tfvars file is used to assign values to the variables declared in `variables.tf`. This file is often excluded from version control, as it may contain sensitive data.
+The `terraform.tfvars` file is used to assign values to the variables declared in `variables.tf`, as an alternative to inputting the variables via the command line. This file is often excluded from version control, as it may contain sensitive data.
 
-Variables are accessed from `*.tf` files via the `var.{name}` syntax. For example, if you have a variable named `vpc_cidr` declared in `variables.tf`, you can reference it in your infrastructure-as-code files via `var.vpc_cidr`.
+Variables are accessed in `*.tf` files via the `var.[name]` syntax. For example, if you have a variable named `vpc_cidr` declared in `variables.tf`, you can reference it in your infrastructure-as-code files via `var.vpc_cidr`.
 
 In summary:
 
-* Required variables are specified in `variables.tf`.
-* The variables are assigned values in `terraform.tfvars`.
-* The values are accessed in the Terraform configuration via `var.{name}`.
+* Variables are specified in `variables.tf`. Default values may be specified. Required input variables are given no default values.
+* Variables are optionally assigned values in `terraform.tfvars` and/or via command-line input.
+* The values are accessed in the Terraform configuration via `var.[name]`.
 
-This separation makes it easier to maintain a strict variable interface, and easier to change implementations across environments.
+This separation makes it easier to maintain a strict variable interface.
 
-It is RECOMMENDED to define variables for all values that are likely to change between environments, and between deployments to the same environment.
+It is RECOMMENDED to define variables for all values that are likely to change between environments, and between deployments to the same environment. If variables are well-designed, it will be easier to vary the infrastructure configure between environments and deployments.
 
 == variables.tf
 
@@ -84,18 +84,18 @@ The `terraform.tfvars` file provides actual values for the variables defined in 
 
 .terraform.tfvars
 ----
-/* VPC */
+# VPC.
 vpc_cidr = "10.0.0.0/16"
 vpc_name = "MyTestVPC"
 
-/* Public Subnet */
+# Public Subnet.
 subnet_cidr = "10.0.1.0/24"
 subnet_name = "MyTestSubnet"
 
-/* Internet Gateway */
+# Internet Gateway.
 igw_name = "MyTestIGW"
 
-/* EC2 Instance */
+# EC2 Instance.
 ec2_ami = "ami-03c6b308140d10488"
 ec2_name = "MyTestEC2"
 ----
@@ -215,7 +215,7 @@ variable "tags" {
 }
 ----
 
-You can also extend maps using the `merge` function. This is useful for adding tags to resources without having to modify the original map.
+You can also extend maps using the `merge()` function. This is useful for adding tags to resources without having to modify the original map.
 
 .main.tf
 [source,hcl]
@@ -261,9 +261,9 @@ variable "password" {
 }
 ----
 
-== Local variables
+== Local values
 
-Local variables are a way to assign a value to a variable that is only used within the scope of the module it is defined in. This is useful for creating temporary variables that are not intended to be passed to other modules or resources.
+Local values are a way to assign a value to a variable that is only used within the scope of the module it is defined in. This is useful for creating temporary values that are not intended to be passed to other modules or resources.
 
 Consider the following example:
 
@@ -303,7 +303,6 @@ resource "aws_vpc" "main" {
 
 You could even break this down further:
 
-
 [source,hcl]
 ----
 data "aws_region" "current" {}
@@ -338,8 +337,7 @@ locals {
 resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr
   tags = merge(var.tags, local.tags {
-    /* Any additional tags here */
+    # Any additional tags here.
   })
 }
 ----
-

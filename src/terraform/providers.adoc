@@ -17,5 +17,4 @@ provider "aws" {
 
 Developers SHOULD NOT hard-code access credentials in Terraform files. See the examples for individual cloud providers for more information.
 
-To configure providers, follow the relevant documentation in the Terraform registry. The documentation for the AWS provider is here:
-https://registry.terraform.io/providers/hashicorp/aws/latest/docs
+To configure providers, follow the relevant documentation in the Terraform registry. The documentation for the AWS provider is here: https://registry.terraform.io/providers/hashicorp/aws/latest/docs

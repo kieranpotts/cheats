@@ -7,7 +7,7 @@ Every block has a _type_, which is the keyword that opens the block. The followi
 [source,hcl]
 ----
 resource "aws_instance" "web_server" {
-  ami           = "ami-0c55b159cbfafe1f0" // Amazon Linux 2
+  ami           = "ami-0c55b159cbfafe1f0" # Amazon Linux 2.
   instance_type = "t3.micro"
 
   network_interface {
@@ -16,7 +16,7 @@ resource "aws_instance" "web_server" {
 }
 ----
 
-The values after the type, but before the opening brace, are _labels_. The number of labels, and their semantics, vary depending on the block type. In the example above, there are two labels: "aws_instance" and "web server". The first label is specific to the AWS Provider and it specifies the type of the resource to create. The second label is an arbitrary name for the resource, which is used to refer to the resource in other parts of the configuration.
+The values after the type, but before the opening brace, are _labels_. The number of labels, and their semantics, vary depending on the block type. In the example above, there are two labels: "aws_instance" and "web server". The first label is specific to the AWS provider and it specifies the type of the resource to create. The second label is an arbitrary name for the resource, which is used to refer to the resource in other parts of the configuration.
 
 You can create multiple instances of the same block type and differentiate them by giving each instance a unique name.
 
@@ -28,8 +28,9 @@ Imagine you need to specify twenty different ingress rules for a security group.
 
 [source,hcl]
 ----
-resource "aws_default_vpc" "default" {} // This need to be added since AWS Provider v4.29+
-                                        // to get VPC id
+# This need to be added since AWS Provider v4.29+
+# to get VPC ID.
+resource "aws_default_vpc" "default" {}
 
 resource "aws_security_group" "web" {
   name        = "Dynamic-Blocks-SG"
@@ -58,7 +59,7 @@ resource "aws_security_group" "web" {
     }
   }
 
-  /* Non-dynamic blocks: */
+  # Non-dynamic blocks:
 
   ingress {
     description = "Allow port SSH"

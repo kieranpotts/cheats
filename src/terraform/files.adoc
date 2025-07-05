@@ -2,17 +2,21 @@
 
 While you can organize your infrastructure-as-code however you like, common practice is to include the following files:
 
-* `main.tf`: Primary configuration file.
-* `variables.tf`: Variable declarations, or inputs for modules.
-* `outputs.tf`: Output definitions.
-* `providers.tf`: Provider configuration (AWS, Azure, GCP, etc.).
-* `versions.tf`: Terraform version constraints and provider version requirements.
+
+* `terraform.tf` — Contains a single `terraform` block that defines Terraform version constraints (`required_version`) and provider version requirements (`required_providers`).
+* `backend.tf` — Back-end configuration for remote state storage.
+* `providers.tf` — Cloud provider configuration (AWS, Azure, GCP, etc.).
+* `main.tf` — The project's main resources and data source blocks.
+* `variables.tf` — Variable blocks, in alphabetical order.
+* `locals.tf` — Local values.
+* `outputs.tf` — Output definitions, in alphabetical order.
+* `override.tf` or `*_override.tf` files — Override definitions.
 
 Terraform will process all `.tf` files in a directory (excluding sub-directories) as a single configuration, regardless of how you split the code across files. But the above structure is a common convention that offers a good starting point for most projects.
 
 The following files are also commonly included in the root directory of a Terraform project:
 
-* `terraform.tfvars`: Variable values (optional).
-* `terraform.tfstate`: Terraform state file (auto-generated but committed to source control).
-* `.terraform.lock.hcl`: Dependency lock file (auto-generated but committed to source control).
-* `.terraform/`: Directory containing Terraform's working files (auto-generated, excluded from source control).
+* `terraform.tfvars`: Variable values (optional file); MUST be excluded from source control if it contains sensitive information (an empty `terraform.tfvars.example` file MAY be committed for reference).
+* `terraform.tfstate`: Terraform state file (auto-generated; MUST be excluded from public code repositories, MAY be committed to private code repositories with encryption-at-rest).
+* `.terraform.lock.hcl`: Dependency lock file (auto-generated but SHOULD be committed to source control).
+* `.terraform/`: Directory containing Terraform's working files (auto-generated; MUST be excluded from source control).

@@ -1,4 +1,4 @@
-= Terraform - AWS: Provider
+= Terraform: AWS - Provider
 
 For AWS, the provider name is "aws".
 
@@ -36,6 +36,7 @@ provider "aws" {
 ----
 
 .~/.aws/credentials
+[source,ini]
 ----
 [default]
 aws_access_key_id = AKIA...

@@ -1,4 +1,4 @@
-= Terraform - AWS: Multi-account deployments
+= Terraform: AWS - Multi-account deployments
 
 The following configuration demonstrates how to deploy resources across multiple AWS accounts using Terraform.
 

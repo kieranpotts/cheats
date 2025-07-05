@@ -1,4 +1,4 @@
-= Terraform - AWS: Elastic IPs
+= Terraform: AWS - Elastic IPs
 
 The following is a simple configuration for an EC2 instance.
 
@@ -6,7 +6,7 @@ The following is a simple configuration for an EC2 instance.
 [source,hcl]
 ----
 resource "aws_instance" "web_server" {
-  ami           = "ami-0c55b159cbfafe1f0" // Amazon Linux 2
+  ami           = "ami-0c55b159cbfafe1f0" # Amazon Linux 2.
   instance_type = "t3.micro"
 
   vpc_security_group_ids = [aws_security_group.web_sg.id]
@@ -28,12 +28,12 @@ We can fix the second issue by assigning an Elastic IP address to the instance. 
 
 [source,hcl]
 ----
-/* Define an Elastic IP address with the name "web_server": */
+# Define an Elastic IP address with the name "web_server":
 resource "aws_eip" "web" {
-  /* This needs to be added in new versions of AWS Provider */
+  # This needs to be added in new versions of AWS Provider.
   domain   = "vpc"
 
-  /* Assign the Elastic IP address to the current "web_server" instance. */
+  # Assign the Elastic IP address to the current "web_server" instance.
   instance = aws_instance.web_server.id
 }
 

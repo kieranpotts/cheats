@@ -12,30 +12,28 @@ HCL configuration files may be decomposed into shareable modules, promoting reus
 
 The main distributions of Terraform are:
 
-* Terraform CLI - open source
-* Terraform Cloud - SaaS
-* Terraform Enterprise - self-hosted version of Terraform Cloud
+* Terraform Community Edition (colloquially: the Terraform CLI) - open source
+* HPC Terraform (formerly known as Terraform Cloud) - SaaS
+* Terraform Enterprise - self-hosted version of HPC Terraform
 
-https://app.terraform.io/[Terraform Cloud] is a SaaS application that offers an alternative interface to the CLI. Terraform Cloud may be a good choice for large teams of cloud engineers in which multiple teams are managing the same infrastructure.
+https://app.terraform.io/[HPC Terraform] is a SaaS application that offers an alternative interface to the CLI, plus extended functionality that is not available in the Community Edition. HPC Terraform may be a good choice for large organizations in which multiple teams have shared responsibility for managing the infrastructure.
 
-Terraform Cloud has a comprehensive free tier that includes many features that are not available in the CLI:
+HPC Terraform has a comprehensive free tier that includes many features that are not available in the CLI. Features include:
 
 * Remote execution of Terraform commands, so you don't need to install Terraform on your local machine.
 * Integration with version control systems like GitHub and GitLab, so you can do things like execute deployments from pull requests.
-* Integration with Slack, Email, and Webhooks for notifications of deployments and their changes.
-* Remote state can be stored in Terraform Cloud itself (though you may still use other back-ends like S3 if you prefer).
-* Terraform Cloud can also be used as a registry for your Terraform modules (as an alternative to using Git repositories).
+* Integration with Slack, email, and webhooks.
+* Remote state can be stored in HPC Terraform itself (though you are free to use other back-ends like S3 if you prefer).
+* HPC Terraform can also be used as a registry for your Terraform modules (as an alternative to using Git repositories).
 * Authorization and access controls, so you can grant different levels of access for different users.
-* Terraform Cloud will estimate the cost of the infrastructure before applying it.
+* HPC Terraform will estimate the cost of the infrastructure before applying it.
 
-The paid tier of Terraform Cloud include *sentinel policies*, which are rules that can be applied to your Terraform configurations to enforce compliance and governance. Sentinel policies can be used to restrict who can deploy what resources, ensuring that only authorized users can make changes to your infrastructure. Terraform Cloud's cost estimation tools can be used in conjunction with sentinel policies to prevent deploying resources that would exceed a configured cost threshold.
+The paid tier of HPC Terraform includes *sentinel policies*, which are rules that can be applied to your Terraform configurations to enforce compliance and governance. Sentinel policies can be used to restrict who can deploy what resources, ensuring that only authorized users can make changes to your infrastructure. HPC Terraform's cost estimation tools can be used in conjunction with sentinel policies to prevent deploying resources that would exceed a configured cost threshold.
 
-Terraform Enterprise, which launched in 2019, includes all the free and paid features of Terraform Cloud.
+Terraform Enterprise, which launched in 2019, includes all the free and paid features of HPC Terraform.
 
-== Licensing
+== Licensing and forks
 
-Terraform CLI was previously free and open source software distribute under the terms of the Mozilla Public License (MPL) v2. In August 2022, HashiCorp switched all its open source projects, including Terraform, to the https://mariadb.com/bsl11/[Business Source License], which places restrictions on the commercial use of the software.
+Terraform Community Edition was previously free and open source software distribute under the terms of the Mozilla Public License (MPL) v2. In August 2022, HashiCorp switched all its open source projects, including Terraform Community Edition, to the https://mariadb.com/bsl11/[Business Source License], which places restrictions on the commercial use of the software.
 
-== Forks
-
-The move to the Business Source License sparked the creation of the https://opentofu.org/[OpenTofu] fork. This is actively maintained under the stewardship of the Linux Foundation and aims to remain a drop-in replacement for the Terraform CLI.
+The move to the Business Source License sparked the creation of the https://opentofu.org/[OpenTofu] fork. This is actively maintained under the stewardship of the Linux Foundation and aims to remain a drop-in replacement for Terraform Community Edition, supporting fully its CLI and HCL syntax.

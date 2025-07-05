@@ -1,4 +1,4 @@
-= Terraform - GCP: Resources
+= Terraform: GCP - Resources
 
 .Simple example of a GCP resource
 [source,hcl]
@@ -9,16 +9,16 @@ resource "google_compute_instance" "my_server" {
 
   boot_disk {
     initialize_params {
-      /* Image to use for the VM. */
+      # Image to use for the VM.
       image = "debian-cloud/debian-10"
     }
   }
 
   network_interface {
-    /* This will enable a private IP address. */
+    # This will enable a private IP address.
     network = "default"
 
-    /* This will enable a public IP address. */
+    # This will enable a public IP address.
     access_config {}
   }
 }
@@ -30,7 +30,7 @@ The following example creates an Apache web server running on Ubuntu.
 [source,hcl]
 ----
 resource "google_project_service" "api" {
-  /* Enable two APIs: Compute Engine and Cloud Resource Manager. */
+  # Enable two APIs: Compute Engine and Cloud Resource Manager.
   for_each = toset([
     "cloudresourcemanager.googleapis.com",
     "compute.googleapis.com"
@@ -69,8 +69,8 @@ echo "<h2>WebServer on GCP Build by Terraform!<h2>"  >  /var/www/html/index.html
 systemctl restart apache2
 EOF
 
-  /* Specify that this resource depends on the API and firewall
-  resources, defined above. */
+  # Specify that this resource depends on the API and firewall
+  # resources, defined above.
   depends_on = [google_project_service.api, google_compute_firewall.web]
 }
 ----

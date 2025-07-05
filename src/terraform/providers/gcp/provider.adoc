@@ -1,4 +1,4 @@
-= Terraform - GCP: Provider
+= Terraform: GCP - Provider
 
 For GCP, the provider name is "google".
 
@@ -14,10 +14,10 @@ These parameters may be set in the provider block, or they may be set as environ
 [source,hcl]
 ----
 provider "google" {
-  credentials = file("gcp-creds.json") // export GCLOUD_KEYFILE_JSON="gcp-creds.json"
-  project     = "prod-123456"          // export GCLOUD_PROJECT="prod-123456"
-  region      = "us-west1"             // export GCLOUD_REGION="us-west1"
-  zone        = "us-west1-c"           // export GCLOUD_ZONE="us-west1-c"
+  credentials = file("gcp-creds.json") # export GCLOUD_KEYFILE_JSON="gcp-creds.json"
+  project     = "prod-123456"          # export GCLOUD_PROJECT="prod-123456"
+  region      = "us-west1"             # export GCLOUD_REGION="us-west1"
+  zone        = "us-west1-c"           # export GCLOUD_ZONE="us-west1-c"
 }
 ----
 

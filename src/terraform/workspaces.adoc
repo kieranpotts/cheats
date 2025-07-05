@@ -59,7 +59,6 @@ If you use workspaces, it is RECOMMENDED to include the workspace name in the re
 
 [source,hcl]
 ----
-
 resource "aws_instance" "web" {
   // ...
   tags = {

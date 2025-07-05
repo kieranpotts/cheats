@@ -1,4 +1,4 @@
-= Terraform - AWS: Security groups
+= Terraform: AWS - Security groups
 
 Security groups are virtual firewalls that control inbound and outbound traffic to AWS resources.
 
@@ -11,13 +11,13 @@ The following security group allows all inbound HTTP and HTTPS traffic, and all 
 ----
 resource "aws_default_vpc" "default" {}
 
-/* Allow HTTP/S traffic */
+# Allow HTTP/S traffic.
 resource "aws_security_group" "web_sg" {
   name        = "web_sg"
 
   vpc_id      = aws_default_vpc.default.id
 
-  /* Incoming traffic rule - allow HTTP. */
+  # Incoming traffic rule - allow HTTP.
   ingress {
     from_port   = 80
     to_port     = 80
@@ -25,7 +25,7 @@ resource "aws_security_group" "web_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  /* Incoming traffic rule - allow HTTPS. */
+  # Incoming traffic rule - allow HTTPS.
   ingress {
     from_port   = 443
     to_port     = 443
@@ -33,7 +33,7 @@ resource "aws_security_group" "web_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  /* Outgoing traffic rule - allow everything. */
+  # Outgoing traffic rule - allow everything.
   egress {
     from_port   = 0
     to_port     = 0

@@ -16,7 +16,7 @@ Initializing provider plugins...
 - Installing hashicorp/aws v4.53.0...
 ----
 
-This generates a lock file called `.terraform.lock.hcl`. It is RECOMMENDED to commit this to source control, which guarantees that everyone will install the exact same dependencies (ie. the same versions of the cloud providers) when they run `terraform init` at the same commit point.
+This generates a lock file called `.terraform.lock.hcl`. It is RECOMMENDED to commit this to source control, which guarantees that everyone will install the exact same dependencies (ie. the same versions of the cloud providers) when they run `terraform init` at the same revision.
 
 [IMPORTANT]
 ======
@@ -33,15 +33,15 @@ Planning and applying does this anyway, but it can be useful to run `terraform v
 
 == Planning
 
-Run `terraform plan` to see what changes are required to update your infrastructure to match the desired state, as specified in your infrastructure-as-code.
+Run `terraform plan` to see what changes are required to update your infrastructure to match the desired state, as specified in your infrastructure-as-code. This is called an *execution plan*.
 
-Pass an `-out` option to output the plan to a file.
+Pass an `-out` option to output the execution plan to a file.
 
 The changes will not be applied until you run `terraform apply`.
 
 == Applying
 
-Run `terraform apply` to apply the changes to your infrastructure.
+Run `terraform apply` to apply the execution plan to your infrastructure.
 
 [IMPORTANT]
 ======
@@ -54,15 +54,13 @@ When applying, you can override any default values for variables – declared vi
 $ terraform apply -var "instance_name="MyNewNameEC2"
 ----
 
-If you have more than a few variables to set, then better to create a file called `terraform.tfvars` and set the variables there – that's the purpose of this file.
+If you have more than a few variables to set, better to create a file called `terraform.tfvars` and set the variables there – that's the purpose of this file. You can still override some of those variables via command-line input.
 
-If there are changes to be made, `terraform apply` will prompt you to confirm the changes before proceeding. If you want to skip the confirmation prompt, you can use the `-auto-approve` option:
+If there are changes to be made, `terraform apply` will prompt you to confirm the changes before proceeding. If you want to skip the confirmation prompt, you can use the `-auto-approve` option. This can be useful in automated scripts or CI/CD pipelines.
 
 ----
 $ terraform apply -auto-approve
 ----
-
-This can be useful in automated scripts or CI/CD pipelines.
 
 If you want to incrementally apply changes, you can use the `-target` option to specify a particular resource or module to apply changes to, rather than applying all changes at once.
 
@@ -123,8 +121,8 @@ To refresh Terraform's state file and bring it in line with the actual state of 
 
 == Other useful CLI commands
 
-* `terraform fmt` – formats your Terraform files according to the standard style
-* `terraform output` – displays the outputs defined in your Terraform configuration
-* `terraform show` – displays the current configuration (with default values)
+* `terraform fmt` formats your Terraform files according to the standard style.
+* `terraform output` displays the outputs defined in your Terraform configuration, from the last `apply` run.
+* `terraform show` displays the current configuration (with default values).
 
 Terraform has a lot of https://developer.hashicorp.com/terraform/language/functions[built-in functions] for manipulating data. To experiment with them, you can use the `terraform console` command, which opens an interactive console where you can evaluate expressions and see their results.

@@ -1,4 +1,4 @@
-= Terraform - AWS: Data sources
+= Terraform: AWS - Data sources
 
 Data sources is a feature to fetch data about AWS resources – which may or may not be managed by Terraform. This is useful for referencing existing resources, such as VPCs, subnets, and security groups.
 
@@ -8,13 +8,13 @@ provider "aws" {
   // ...
 }
 
-/* Get the current region. This might be defined in the
-provider block, above. Or it may be specified via an environment
-variable, eg. `export AWS_DEFAULT_REGION="us-west-1". This
-block doesn't require any arguments. */
+# Get the current region. This might be defined in the
+# provider block, above. Or it may be specified via an environment
+# variable, eg. `export AWS_DEFAULT_REGION="us-west-1". This
+# block doesn't require any arguments.
 data "aws_region" "current" {}
 
-/* Example usage: */
+# Example usage:
 output "region_name" {
   value = data.aws_region.current.name
 }
@@ -22,32 +22,32 @@ output "region_description" {
   value = data.aws_region.current.description
 }
 
-/* This tells you your AWS account ID. */
+# This tells you your AWS account ID.
 data "aws_caller_identity" "current" {}
 
-/* Example usage: */
+# Example usage:
 output "account_id" {
   value = data.aws_caller_identity.current.account_id
 }
 
-/* This gives you a list of all availability zones in use. */
+# This gives you a list of all availability zones in use.
 data "aws_availability_zones" "working" {}
 
-/* Example usage: */
+# Example usage:
 output "availability_zones" {
   value = data.aws_availability_zones.working.names
 }
 
-/* You can get all VPCs in use: */
+# You can get all VPCs in use:
 data "aws_vpcs" "vpcs" {}
 
-/* Example usage: */
+# Example usage:
 output "all_vpc_ids" {
   value = data.aws_vpcs.vpcs.ids
 }
 
-/* This block retrieves the VPC with the tag "Name" set to "PROD".
-Any arguments in this block are basically used as search parameters. */
+# This block retrieves the VPC with the tag "Name" set to "PROD".
+# Any arguments in this block are basically used as search parameters.
 data "aws_vpc" "prod" {
   tags = {
     Name = "PROD"
@@ -87,9 +87,9 @@ Another use case for data sources is to dynamically update resources to the late
 [source,hcl]
 ----
 data "aws_ami" "latest_ubuntu20" {
-  /* These are all filters to find the image we want.
-  The owner is taken from the AWS console – it is the owner
-  of the target image we want. */
+  # These are all filters to find the image we want.
+  # The owner is taken from the AWS console – it is the owner
+  # of the target image we want.
   owners      = ["099720109477"]
   most_recent = true
   filter {

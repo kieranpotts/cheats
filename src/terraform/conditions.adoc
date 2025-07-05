@@ -14,19 +14,19 @@ data "aws_region" "current" {}
 resource "aws_default_vpc" "default" {}
 
 resource "aws_instance" "my_server" {
-  ami                    = "ami-12345678" // Hard-coded AMI ID
-  instance_type          = "t3.micro" // Hard-coded instance type
+  ami                    = "ami-12345678" # Hard-coded AMI ID.
+  instance_type          = "t3.micro" # Hard-coded instance type.
   vpc_security_group_ids = [aws_security_group.my_server.id]
 
   root_block_device {
     volume_size = 10
-    encrypted   = true // Hard-coded encryption
+    encrypted   = true # Hard-coded encryption.
   }
 
   dynamic "ebs_block_device" {
     device_name = "/dev/sdb"
     volume_size = 40
-    encrypted   = true // Hard-coded encryption
+    encrypted   = true # Hard-coded encryption.
   }
 
   volume_tags = { Name = "Disk-${var.env}" }
@@ -38,7 +38,7 @@ resource "aws_security_group" "my_server" {
   vpc_id = aws_default_vpc.default.id
 
   dynamic "ingress" {
-    for_each = ["22", "80", "443"] // Example of hard-coded ports
+    for_each = ["22", "80", "443"] # Example of hard-coded ports.
     content {
       from_port   = ingress.value
       to_port     = ingress.value
@@ -63,7 +63,7 @@ Let's start by defining the target environment:
 [source,hcl]
 ----
 variable "env" {
-  default = "test" // Or "prod", "staging", "dev", etc.
+  default = "test" # Or "prod", "staging", "dev", etc.
 }
 ----
 
@@ -79,7 +79,7 @@ resource "aws_instance" "my_server" {
 
   root_block_device {
     volume_size = 10
-    encrypted   = (var.env == "prod") ? true : false // Conditional encryption based on environment
+    encrypted   = (var.env == "prod") ? true : false # Conditional encryption based on environment.
   }
 
   dynamic "ebs_block_device" {
@@ -107,3 +107,27 @@ The brackets around the condition are optional, but they help with readability. 
 * Equality: `==`, `!=`
 * Comparison: `<`, `<=`, `>`, `>=`
 * Boolean logic: `&&`, `||`, unary `!`
+
+== `terraform.applying`
+
+https://developer.hashicorp.com/terraform/language/functions/terraform-applying[`terraform.applying`] is a symbol whose value is `true` while a `terraform apply` operation is in progress, and `false` otherwise.
+
+The main use case for `terraform.applying` is to conditionally change the behavior of your Terraform configuration based on whether you are running a plan or an apply operation. In the following example, Terraform uses your AWS read-only credentials when running a plan operation, but uses your write credentials when you run an apply operation.
+
+[source,hcl]
+----
+locals {
+  aws_read_role_arn  = "arn:aws:iam::XXXXX:role/terraform-read"
+  aws_write_role_arn = "arn:aws:iam::XXXXX:role/terraform-full"
+
+  role_arn = terraform.applying ? local.aws_write_role_arn : local.aws_read_role_arn
+}
+
+provider "aws" {
+  region = "us-west-2"
+
+  assume_role {
+    role_arn = local.role_arn
+  }
+}
+----

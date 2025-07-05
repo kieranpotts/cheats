@@ -1,8 +1,6 @@
 = Terraform: Resources
 
-To configure resources, it is RECOMMENDED to follow the documentation and examples given in the relevant section of the Terraform registry for the cloud provider. For the AWS provider, the documentation is here:
-
-https://registry.terraform.io/providers/hashicorp/aws/latest/docs
+To configure resources, it is RECOMMENDED to follow the documentation and examples given in the relevant section of the Terraform registry for the cloud provider. For the AWS provider, the documentation is here: https://registry.terraform.io/providers/hashicorp/aws/latest/docs
 
 .Example
 [source,hcl]

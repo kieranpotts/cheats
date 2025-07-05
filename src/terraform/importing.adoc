@@ -7,7 +7,7 @@ You do need to start with some baseline Terraform configuration that defines the
 [source,hcl]
 ----
 resource "aws_instance" "node2" {
-  /* No attributes needed here, just the resource type and its name. */
+  # No attributes needed here, just the resource type and its name.
 }
 ----
 
@@ -54,7 +54,7 @@ Since Terraform v1.5 you can import resources using `import` blocks in the `.tf`
 [source,hcl]
 ----
 import {
-  /* Import a Security Group */
+  # Import a security group.
   from = "sg-12345678"
   to   = aws_security_group.web_sg
 }
@@ -73,7 +73,7 @@ The second command will generate a new file called `generated.tf` that contains 
 [source,hcl]
 ----
 resource "aws_security_group" "web_sg" {
-  /* Attributes. */
+  # Attributes.
 }
 ----
 

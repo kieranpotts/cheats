@@ -135,7 +135,7 @@ resource "aws_instance" "myserver" {
     connection {
       type        = "ssh"
       user        = "ec2-user"
-      host        = self.public_ip // Same as: `aws_instance.myserver.public_ip`
+      host        = self.public_ip # Same as: `aws_instance.myserver.public_ip`
       private_key = file("my-key-ca-central-1.pem")
     }
   }

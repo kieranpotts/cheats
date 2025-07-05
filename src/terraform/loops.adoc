@@ -75,8 +75,8 @@ variable "aws_users" {
   ]
 }
 
-/* Note the use of the `length` and `element` functions used here. This is a common pattern
-in Terraform to iterate over a list of items and dynamically creating a resource for each. */
+# Note the use of the `length()` and `element()` functions used here. This is a common pattern
+# in Terraform to iterate over a list of items and dynamically creating a resource for each.
 resource "aws_iam_user" "user" {
   count = length(var.aws_users)
   name  = element(var.aws_users, count.index)
@@ -92,7 +92,7 @@ You don't always need to use `element()`. The following can be refactored…
 
 [source,hcl]
 ----
-/* Associate the above route table with every public subnet. */
+# Associate the above route table with every public subnet.
 resource "aws_route_table_association" "public_routes" {
   count          = length(aws_subnet.public_subnets[*].id)
   route_table_id = aws_route_table.public_subnets.id
@@ -100,7 +100,7 @@ resource "aws_route_table_association" "public_routes" {
 }
 ----
 
-… to…
+to…
 
 [source,hcl]
 ----
@@ -167,9 +167,9 @@ resource "aws_iam_user" "user" {
 }
 ----
 
-The `toset` function is used to convert the list of usernames into a set, which is required by the `for_each` argument. The `each.value` variable represents the current item in the `for_each` iteration.
+The `toset()` function is used to convert the list of usernames into a set, which is required by the `for_each` argument. The `each.value` variable represents the current item in the `for_each` iteration.
 
-Sets are unordered collections of unique items. Unlike lists, sets are not indexed, but are keyed (like maps). The `toset` function sets the value also as the key. Sets are a safer choice than lists when you want to manage users (or other resources) individually. For example, if you deleted "katie@example.com" from the list, and ran `terraform apply`, only one IAM user would be removed and no other user resources would be mutated.
+Sets are unordered collections of unique items. Unlike lists, sets are not indexed, but are keyed (like maps). The `toset()` function sets the value also as the key. Sets are a safer choice than lists when you want to manage users (or other resources) individually. For example, if you deleted "katie@example.com" from the list, and ran `terraform apply`, only one IAM user would be removed and no other user resources would be mutated.
 
 To print the ARNs of all the created users, we can define an output block like this:
 
@@ -181,7 +181,7 @@ output "user_arns" {
 }
 ----
 
-The `toset` function can also take a hard-coded list of values, which is useful for creating multiple instances of a resource with basically the same configuration. For example, if we want to create three servers in different environments (Dev, Staging, Prod), we can do it like this:
+The `toset()` function can also take a hard-coded list of values, which is useful for creating multiple instances of a resource with basically the same configuration. For example, if we want to create three servers in different environments (Dev, Staging, Prod), we can do it like this:
 
 .main.tf
 [source,hcl]
@@ -401,7 +401,7 @@ This next example creates a map of server IDs to their public IP addresses.
 output "server_id_ip_map" {
   value = {
     for x in aws_instance.my_server :
-    x.id => x.public_ip // "i-12412412414435" = "15.33.77.104"
+    x.id => x.public_ip # "i-12412412414435" = "15.33.77.104"
   }
 }
 ----
@@ -424,7 +424,7 @@ The following example creates a map of user unique IDs to their names, but only 
 output "users_unique_id_name_custom" {
   value = {
     for user in aws_iam_user.user :
-    user.unique_id => user.name // "AIDA4BML4S5345K74HQFF" : "denis@example.com"
+    user.unique_id => user.name # "AIDA4BML4S5345K74HQFF" : "denis@example.com"
     if length(user.name) < 7
   }
 }

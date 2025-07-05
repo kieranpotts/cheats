@@ -1,6 +1,6 @@
 = Terraform: Arguments
 
-In HCL, an _argument_ is a variable assignment.
+In HCL, an _argument_ is a variable assignment within a block.
 
 ----
 image_id = "ami-0c55b159cbfafe1f0"
