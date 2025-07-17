@@ -39,6 +39,11 @@
     "editor.formatOnPaste": true,
     "editor.formatOnSave": true,
     "editor.formatOnType": true,
+
+    /* Enable auto-fixes for Asciidoc files. */
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "always",
+    },
   },
   "[markdown]": {
     "editor.rulers": [100],
