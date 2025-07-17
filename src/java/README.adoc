@@ -2,6 +2,7 @@
 
 == Basics
 
+* link:./basics/platform.adoc[Overview of the Java platform]
 * link:./basics/compilation-execution.adoc[Compilation and execution]
 * link:./basics/jshell.adoc[JShell]
 * link:./basics/packages-namespaces.adoc[Packages and namespaces]
