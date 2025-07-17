@@ -1,0 +1,54 @@
+= Java: Final
+
+The `final` keyword can be used on classes, methods, and class variables (fields).
+
+You should always use the `final` keyword for values that are intended to be constants.
+
+[source,java]
+----
+public class FinalInJava {
+  public static void main(String[] args) {
+
+    /* Declare a final variable and assign a value. */
+    final int x = 10;
+
+    /* Compile error: cannot assign a value to final variable x */
+    x = 20;
+
+    /* Declare a final variable, but defer assigning its value.
+    You will be allowed to set the variable's value once only. */
+    final int y;
+    y = 20;
+
+    /* Compile error: cannot assign a value to final variable y */
+    y = 30;
+  }
+}
+----
+
+The `final` keyword can also be used to prevent class inheritance.
+
+[source,java]
+----
+final class Calculator {
+  public int add(int x, int y) {
+    return x + y;
+  }
+}
+
+/* Compile error - Calculator cannot be extended because it is final. */
+class AdvancedCalculator extends Calculator {
+   //  …
+}
+----
+
+Alternatively, a class can be kept open for extension but the `final` keyword can be used to prevent individual methods from being overridden via subclasses. This gives a bit more flexibility. Subclasses can still override non-final methods and add new methods.
+
+[source,java]
+----
+class Calculator {
+  public final int add(int x, int y) {
+    return x + y;
+  }
+}
+----

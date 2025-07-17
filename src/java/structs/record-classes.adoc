@@ -2,7 +2,7 @@
 
 In object-oriented programming there will be many use cases when you create *functional classes* that do some sort of processing. Service classes and utility classes fall into this category. But there will be times when you need to create pure *data classes*, which exist only to store data. These types of classes are often called *data carriers* or *data transfer objects* (DTOs).
 
-Example of a simple, immutable data entity type:
+The following code is an example of a simple, immutable data entity type:
 
 [source,java]
 ----
@@ -64,7 +64,7 @@ System.out.println(p1.equals(p2)); // true
 
 Likewise, implementation of the `toString()` method is necessary for a full implementation (it is called by methods such as `System.out.println()` and `String.valueOf()`).
 
-In Java since version 17, it is much, _much_ easier to create this kind of class using the `record` keyword. All you need to do is:
+Since Java 17, it is much, _much_ easier to create this kind of class using the `record` keyword. All you need to do is:
 
 [source,java]
 ----
@@ -86,9 +86,9 @@ record Person(String name, int age) {
 }
 ----
 
-NOTE: This is called a non-canonical constructor, because it does not have the same parameters as the canonical constructor, which is defined on the `record` line. To implement a non-canonical constructor, it is REQUIRED that the canonical constructor be called from within it. This can be done using `this()`.
+NOTE: This is called a *non-canonical constructor*, because it does not have the same parameters as the canonical constructor, which is defined on the `record` line. To implement a non-canonical constructor, it is REQUIRED that the canonical constructor be called from within it. This can be done using `this()`.
 
-You might also want to build in some validation to the constructor. For example, you could check that the `age` is a positive number. If it is not, you could throw an `IllegalArgumentException`. This is a good use case for a *compact canonical constructor*. Instead of the following:
+You might also want to build in some validation to the constructor. For example, you could check that `age` is a positive number. If it is not, you could throw an `IllegalArgumentException`. This is a good use case for a *compact canonical constructor*. Instead of the following…
 
 [source,java]
 ----
@@ -103,7 +103,7 @@ record Person(String name, int age) {
 }
 ----
 
-You can use the compact canonical constructor syntax instead. You're just adding the validation checks that you want to do. If no exceptions are thrown, Java will handle the assignments for you.
+… you can use the compact canonical constructor syntax instead. You're just adding the validation checks that you want to do. If no exceptions are thrown, Java will handle the assignments for you.
 
 [source,java]
 ----

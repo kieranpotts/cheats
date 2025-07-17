@@ -4,12 +4,13 @@
 ----
 public class ArithmeticOperatorsInJava {
   public static void main(String[] args) {
+
     int num1 = 7;
     int num2 = 5;
 
     /*
     ----------------------------------------------------------------------------
-    ADDING
+    Adding
     ----------------------------------------------------------------------------
     */
 
@@ -42,7 +43,7 @@ public class ArithmeticOperatorsInJava {
 
     /*
     ----------------------------------------------------------------------------
-    SUBTRACTING
+    Subtracting
     ----------------------------------------------------------------------------
     */
 
@@ -51,7 +52,7 @@ public class ArithmeticOperatorsInJava {
 
     /*
     ----------------------------------------------------------------------------
-    MULTIPLYING
+    Multiplying
     ----------------------------------------------------------------------------
     */
 
@@ -60,7 +61,7 @@ public class ArithmeticOperatorsInJava {
 
     /*
     ----------------------------------------------------------------------------
-    DIVIDING
+    Dividing
     ----------------------------------------------------------------------------
     */
 
@@ -69,7 +70,7 @@ public class ArithmeticOperatorsInJava {
 
     /*
     ----------------------------------------------------------------------------
-    MODULUS
+    Modulus
     ----------------------------------------------------------------------------
     */
 
@@ -101,13 +102,14 @@ public class ArithmeticOperatorsInJava {
     System.out.println(6 % 3); // 0
 
     /*
-    And you can use 10, 100, 1000, ectc.… as the second operand to extract the
+    And you can use 10, 100, 1000, etc.… as the second operand to extract the
     last one, two, three, etc.… digits from a number.
     */
 
     System.out.println(12345 % 10); // 5
     System.out.println(12345 % 100); // 45
     System.out.println(12345 % 1000); // 345
+
   }
 }
 ----

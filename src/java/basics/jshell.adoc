@@ -1,0 +1,19 @@
+= JShell
+
+JShell was introduced in Java 9. It is a Read-Eval-Print Loop (REPL) tool for Java, allowing you to quickly test snippets of Java code without needing to run a full compilation and execution cycle.
+
+To launch JShell, run this command in your terminal:
+
+[source,sh]
+----
+jshell
+----
+
+This will start the JShell interactive environment, where you can type Java code and see the results immediately.
+
+----
+jshell> System.out.println("Hello, JShell!");
+Hello, JShell!
+----
+
+To exit the JShell environment, type `/exit` or press `Ctrl+D`.

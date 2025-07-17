@@ -1,70 +1,94 @@
-= Java: `supper()`
+= Java: `super()`
+
+Java has a function called `super` that is used internally to call the parent class's constructor from a subclass.
+
+`super()` is automatically called by the compiler, even if it's not explicitly written.
+
+Although it is not explicit, every class in Java extends from Java's own `Object` class, which is the root of the class hierarchy. Therefore, `super()` is implicitly called in every constructor.
 
 [source,java]
 ----
-public class SuperSubConstructorsInJava {
-  public static void main(String a[]) {
-
-    /*
-    prints:
-    "Super" (super() calls the first constructor of Super)
-    "Sub-5" (output from the second constructor of Sub, with an int argument)
-    */
-
-    new Sub(5);
-  }
-}
-
-class Super { // extends Object
-  public Super() {
-
-    /*
-    Every class in Java extends from Object, even if not explicit.
-    Therefore `super()` is always called implicitly.
-    */
-
+class SuperClass { // extends Object
+  public SuperClass() {
+    /* Here, the constructor of Object is called, via an implicit execution of `super()`. */
     // super()
-    System.out.println("Super");
+
+    System.out.println("SuperClass");
   }
 
-  public Super(int n) {
-    System.out.println("Super-" + n);
+  public SuperClass(int n) {
+    System.out.println("SuperClass-" + n);
   }
 }
 
-class Sub extends Super {
-  public Sub() {
-    System.out.println("Sub");
+class SubClass extends SuperClass {
+  public SubClass() {
+    // super();
+    System.out.println("SubClass");
   }
 
-  public Sub(int n) {
+  public SubClass(int n) {
+    // super();
+    System.out.println("SubClass-" + n);
+  }
+}
 
-    /*
-    If we called `this()` here, it would call the first constructor of Sub,
-    which would then implicitly call the first constructor of Super.
+/*
+Prints:
+- "SuperClass" (`super()` calls the first parameter-less constructor of `SuperClass`)
+- "SubClass-5" (output from the second constructor of `SubClass`, the one with an int argument)
+*/
 
-    ----
-    this();
-    ----
+new SubClass(5);
+----
 
-    `super()` is automatically called by the compiler, even if it's not
-    explicitly written.
+We could change the behavior of `super()` by explicitly calling it and passing arguments.
 
-    ----
-    super();
-    ----
+[source,java]
+----
+class SubClass extends SuperClass {
+  public SubClass() {
+    System.out.println("SubClass");
+  }
 
-    We could change the behavior of the `super()` call by passing an argument to
-    it. This would then call the second constructor of `Super`. This would change
-    the output to "Super-5" and "Sub-5".
-
-    ----
+  public SubClass(int n) {
     super(n);
-    ----
-    */
 
-    System.out.println("Sub-" + n);
+    System.out.println("SubClass-" + n);
   }
 }
 
+/*
+Prints:
+- "SuperClass-5" (`super(n)` calls the second constructor of `SuperClass`)
+- "SubClass-5" (output from the second constructor of `SubClass`)
+*/
+
+new SubClass(5);
+----
+
+Another way to change the behavior is to write `this()` in the position where `super()` would be implicitly called. In the following example, `this()` will call the first constructor of `SubClass`, which would then implicitly call the first constructor of `SuperClass` as normal.
+
+[source,java]
+----
+class SubClass extends SuperClass {
+  public SubClass() {
+    // super()
+    System.out.println("SubClass");
+  }
+
+  public SubClass(int n) {
+    this();
+    System.out.println("SubClass-" + n);
+  }
+}
+
+/*
+Prints:
+- "SuperClass" (implicit `super()` call from the first `SubClass` constructor calls the first constructor of `SuperClass`)
+- "SubClass" (output from the first constructor of `SubClass`)
+- "SubClass-5" (output from the second constructor of `SubClass`)
+*/
+
+new SubClass(5);
 ----

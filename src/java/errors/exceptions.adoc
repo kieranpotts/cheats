@@ -37,7 +37,7 @@ NOTE: Most names that end with "able" are actually interfaces, eg `Runnable`, `S
 
 There are two types of throwable objects in Java:
 
-1. *Exception*: These are exceptional conditions that a applications SHOULD anticipate and recover from (ie handle using the `try`/`catch` construct). Examples include file not found exceptions (`FileNotFoundException`), network connection errors (`IOException`), and arithmetic errors (`ArithmeticException`).
+1. *Exception*: These are exceptional conditions that applications SHOULD anticipate and recover from, handling them using the `try`/`catch` construct. Examples include file not found exceptions (`FileNotFoundException`), network connection errors (`IOException`), and arithmetic errors (`ArithmeticException`).
 
 2. *Error*: These are exceptional conditions that are external to the application, and that the application usually cannot anticipate or recover. Examples include out-of-memory errors (`OutOfMemoryError`) and stack overflow errors (`StackOverflowError`). Errors are typically ignored in code because you can rarely do anything about an error. Other examples include `ThreadDeath`, `IOError`, and `VirtualMachineError`.
 
@@ -47,7 +47,7 @@ There are lots of further subclasses of `Exception`, such as `RuntimeException`,
 
 All other types of `Exception` are checked by the compiler. These are known as *checked exceptions*. Methods that may throw checked exceptions MUST declare them in the method signature using the `throws` keyword, and consuming code MUST catch or rethrow them. Examples include `IOException`, `SQLException`, and `ClassNotFoundException`.
 
-== The `throw` and `throws` keyword
+== The `throw` and `throws` keywords
 
 The `throw` keyword is used to raise an exception. A new `Exception` object is created and thrown. Optionally, you can also provide a message with the exception.
 
@@ -63,20 +63,23 @@ program will terminate.
 
 [source,java]
 ----
-class A {
-  public void fn() throws ClassNotFoundException {
-    Class.forName("com.mysql.jdbc.Driver");
-  }
-}
-
 public class Main {
   public static void main(String[] args) {
+
     A a = new A();
+    
     try {
       a.fn();
     } catch (ClassNotFoundException e) {
       e.printStackTrace(); // This can be helpful for debugging.
     }
+
+  }
+}
+
+class A {
+  public void fn() throws ClassNotFoundException {
+    Class.forName("com.mysql.jdbc.Driver");
   }
 }
 ----
@@ -87,15 +90,17 @@ Note, you could also do the following, but this is never recommended for `main` 
 ----
 public class Main {
   public static void main(String[] args) throws ClassNotFoundException {
+
     A a = new A();
     a.fn();
+
   }
 }
 ----
 
 == Custom exceptions
 
-It is RECOMMENDED to extend the most appropriate `Exception` class, which most of the time will be `RuntimeException`.
+When creating custom exception types, it is RECOMMENDED to extend the most appropriate `Exception` class, which most of the time will be `RuntimeException`.
 
 [source,java]
 ----
@@ -112,53 +117,4 @@ try {
 }
 
 throw new MyCustomException("This is a custom exception");
-----
-
-''''
-
-[source,java]
-----
-public class ExceptionsInJava {
-  public static void main(String[] args) {
-
-    /* This is a normal statement. Nothing can really go wrong: */
-    int i = 4;
-
-    /*
-    This is a critical statement. It can throw an exception,
-    if the value of i is 0.
-    */
-
-    @SuppressWarnings("unused")
-    int j = 8/i;
-
-    /*
-    For critical statements, even if you think it is unlikely that
-    anything will go wrong, it is always better to handle possible
-    exceptions. This is done using `try/catch` blocks.
-    */
-
-    int divider = 0;
-    int x = 0; // default value
-
-    try {
-      x = 10 / divider;
-    } catch (ArithmeticException e) {
-      System.out.println("Arithmetic Exception: " + e);
-    }
-
-    /*
-    Where `try` encapsulates quite a bit of complex logic, where you might not
-    be certain about all the possible kinds of exceptions that could be thrown,
-    it is RECOMMENDED to catch all possible exceptions. (Make sure parent
-    exceptions are caught after child ones.)
-    */
-
-    catch (Exception e) {
-      System.out.println("Exception: " + e);
-    }
-
-    System.out.println("Value of x: " + x);
-  }
-}
 ----

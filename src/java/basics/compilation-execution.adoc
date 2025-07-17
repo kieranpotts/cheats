@@ -1,19 +1,24 @@
 = Java: Compilation and execution
 
+To run a Java program, there are two steps:
+
+* Compile the Java source code into bytecode using the `javac` command.
+* Execute the compiled bytecode using the `java` command.
+
 [source,sh]
 ----
 # Produces an artifact named <filename>.class
 javac <filename>.java
 
-# Run <filename>.class in the JVM.
+# Runs <filename>.class in the JVM.
 java <filename>
 ----
 
-Or use the single-command shortcut (which works from versions of Java ≈v14).
-This does not produce a built artifact, so this is intended only for use in
-development. It works only when there is one file to compile.
+The above commands will typically be run on an application's root class file, which contains the `main` method that accepts an array of `String` input arguments from the command line.
 
-[source,sh]
+Alternatively, you can run the `java` program directly on a `*.java` file. This will compile and run the file in one step. This is useful for quick tests or small scripts. It does not produce a built artifact and it works only when there is a single file to compile and execute. This is intended only for use in development.
+
+[source,java]
 ----
 java <filename>.java
 ----

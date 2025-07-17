@@ -1,45 +1,14 @@
 = Java: Encapsulation
 
+A principle of good object-oriented design is encapsulation. This means that the internal state of an object should be hidden from the outside world, and can only be accessed or modified through a well-defined interface, and not directly via the instance variables.
+
+THe following class demonstrates encapsulation in Java. The `age` and `name` variables are private, so they can only be accessed from within the class. To access them from outside the class, you need to use the public getter and setter methods.
+
+It is best practice to make all instance variables private, and provide public getter and setter methods for them.
+
 [source,java]
 ----
-public class EncapsulationInJava {
-  public static void main(String[] args) {
-    Human human = new Human();
-
-    /*
-    This will not work, because age and name are private.
-    */
-
-    // human.age = 44;
-    // human.name = "Kieran";
-    // int age = human.age;
-    // String name = human.name;
-
-    /*
-    Use the public getter and setter methods instead.
-    */
-
-    System.out.println(human.getName()); // ""
-    human.setName("Kieran");
-    System.out.println(human.getName()); // "Kieran"
-
-    System.out.println(human.getAge()); // 0
-    human.setAge(44);
-    System.out.println(human.getAge()); // 44
-  }
-}
-
 class Human {
-
-  /*
-  This is an example of encapsulation. The age and name variables are
-  private, so they can only be accessed from within this class. To access
-  them from outside the class, you need to use the public getter and
-  setter methods.
-
-  It is best practice to make all instance variables private, and provide
-  public getter and setter methods for them.
-  */
 
   /* 0 by default. */
   private int age;
@@ -59,11 +28,10 @@ class Human {
   public void setAge(int age) {
 
     /*
-    Use this to refer to the instance variable, so the parameter
-    can also be named age, else you would have to write:
+    Use `this.*` to refer to instance variables. Method parameters
+    can have the same name as instance variables.
     */
 
-    // age = newAge;
     this.age = age;
   }
 
@@ -74,5 +42,29 @@ class Human {
   public void setName(String name) {
     this.name = name;
   }
+
 }
+----
+
+The following will not compile, because `age` and `name` are private.
+
+[source,java]
+----
+human.age = 44;
+human.name = "Kieran";
+int age = human.age;
+String name = human.name;
+----
+
+Client code must use the public getter and setter methods instead.
+
+[source,java]
+----
+System.out.println(human.getName()); // ""
+human.setName("Kieran");
+System.out.println(human.getName()); // "Kieran"
+
+System.out.println(human.getAge()); // 0
+human.setAge(44);
+System.out.println(human.getAge()); // 44
 ----

@@ -1,44 +1,42 @@
 = Java: Importing packages
 
+Use `import` statements to import classes from other packages. The following code imports the `PackagesInJava` class from the `tools` package, which is defined in the `tools` directory.
+
 [source,java]
 ----
-/* This is importing the Packages class from the tools package. */
 import tools.PackagesInJava;
+----
 
-/*
-Java also has a lot of built-in packages that you can import.
-For example, the `ArrayList` class is in the `java.util` package.
-*/
+Java also has a lot of built-in packages that you can import. For example, the `ArrayList` class is in the `java.util` package.
+
+[source,java]
+----
 import java.util.ArrayList;
+----
 
-/*
-You can also import all classes from a package. The star means import all the
-`.java` files from the package, but not sub-packages (which are in sub-directories).
-*/
+You can also use the following syntax to import all classes from a package. The star means import all the `.java` files from the package, but not from sub-packages (which would be in sub-directories).
 
-// import java.util.*;
+[source,java]
+----
+import java.util.*;
+----
 
-/*
-All Java classes will have the `java.lang` package imported by default.
-In other words, the follow statement is implicitly added to the top of
-every Java file. The `System` class is in the `java.lang` package, and is
-therefore automatically available everywhere.
-*/
+All Java classes will have the `java.lang` package imported by default. In other words, the follow statement is implicitly added to the top of every Java file.
 
+[source,java]
+----
+import java.lang.*;
+----
+
+The `System` class is in the `java.lang` package, and is therefore automatically available everywhere.
+
+[source,java]
+----
+/* Import not required - the System class is implicitly imported. */
 // import java.lang.*;
 
 public class ImportingPackagesInJava {
   public static void main(String[] args) {
-    PackagesInJava.main(args);
-
-    ArrayList<Object> list = new ArrayList<>();
-    System.out.println("ArrayList: " + list);
-
-    /*
-    System is not explicitly imported, but it is done so implicitly
-    from the `java.lang` package.
-    */
-
     System.out.println("Hello, World!");
   }
 }

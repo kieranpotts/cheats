@@ -1,5 +1,7 @@
 = Java: Try/Finally
 
+`try` blocks MUST be paired with either a `catch` or `finally` block, or both. The `finally` block is executed regardless of whether an exception is thrown or not. This is useful for freeing up resources, like closing a file or network connection.
+
 [source,java]
 ----
 import java.io.BufferedReader;
@@ -8,13 +10,6 @@ import java.io.InputStreamReader;
 
 public class TryFinallyInJava {
   public static void main(String[] args) throws IOException {
-
-    /*
-    `try` blocks MUST be paired with either a `catch` or `finally` block, or both.
-    The `finally` block is executed regardless of whether an exception is
-    thrown or not. This is useful for freeing up resources, like closing
-    a file or network connection.
-    */
 
     int num = 0;
     BufferedReader reader =  null;
@@ -29,20 +24,48 @@ public class TryFinallyInJava {
     }
 
     System.out.println(num);
-
-    /*
-    Alternative syntax for closing resources in Java 7:
-    This is called a `try-with-resources` statement. The resource MUST
-    implement the `AutoCloseable` interface. The resource is closed
-    automatically when the try block is exited.
-    */
-
-    int num2 = 0;
-    try (BufferedReader reader2 = new BufferedReader(new InputStreamReader(System.in))) {
-      num2 = Integer.parseInt(reader2.readLine());
-    }
-
-    System.out.println(num2);
   }
+}
+----
+
+For closing resource, Java 7+ provides a `try-with-resources` statement. The resource MUST implement the `AutoCloseable` interface. The resource is closed automatically when the `try` block is exited.
+
+[source,java]
+----
+int num2 = 0;
+try (BufferedReader reader2 = new BufferedReader(new InputStreamReader(System.in))) {
+  num2 = Integer.parseInt(reader2.readLine());
+}
+----
+
+For critical statements, even if you think it is unlikely that anything will go wrong, it is always better to handle possible exceptions. The following is an example of a critical statement, because it can throw an exception if the value of `i` is 0.
+
+[source,java]
+----
+int j = 8/i;
+----
+
+This is more verbose, but more defensive:
+
+[source,java]
+----
+int divider = 0;
+int x = 0; // default value
+
+try {
+  x = 10 / divider;
+} catch (ArithmeticException e) {
+  System.out.println("Arithmetic Exception: " + e);
+}
+----
+
+Whenever a `try` block encapsulates quite a lot of complex logic, where you might not know about all the possible kinds of exceptions that could be thrown, it is RECOMMENDED to catch all possible exceptions. (Make sure parent exceptions are caught after child ones.)
+
+[source,java]
+----
+try {
+  // ...
+} catch (Exception e) {
+  System.out.println("Exception: " + e);
 }
 ----

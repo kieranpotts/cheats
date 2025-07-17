@@ -4,10 +4,15 @@
 ----
 public class ConditionalsInJava {
   public static void main(String[] args) {
+
     int x = 8;
     int y = 7;
 
-    /* if / else-if / else */
+    /*
+    ----------------------------------------------------------------------------
+    if / else-if / else
+    ----------------------------------------------------------------------------
+    */
 
     if (x > y) {
       System.out.println(x);
@@ -20,7 +25,11 @@ public class ConditionalsInJava {
     else
        System.out.println("x is equal to y");
 
-    /* Ternary operator `?:`. */
+    /*
+    ----------------------------------------------------------------------------
+    Ternary operator: `?:`
+    ----------------------------------------------------------------------------
+    */
 
     int n = 4;
     int result = 0;
@@ -37,7 +46,11 @@ public class ConditionalsInJava {
     result = n % 2 == 0 ? 10 : 20;
     System.out.println(result); // 10
 
-    /* Switch */
+    /*
+    ----------------------------------------------------------------------------
+    Switch
+    ----------------------------------------------------------------------------
+    */
 
     /*
     Before Java 5, `switch` statements could only be used with
@@ -118,6 +131,7 @@ public class ConditionalsInJava {
     };
 
     System.out.println(output);
+
   }
 }
 ----

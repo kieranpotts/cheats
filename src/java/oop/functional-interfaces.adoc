@@ -6,29 +6,34 @@ The `@FunctionalInterface` annotation is optional, but it is a good practice to 
 
 [source,java]
 ----
-public class FunctionalInterfacesInJava {
-  public static void main(String[] args) {
-    B b = new B();
-    b.show(); // "B"
-
-    /* Or you can create an inner class that implements A. */
-    A a = new A() {
-      public void show() {
-        System.out.println("Inner");
-      }
-    };
-    a.show(); // "Inner"
-  }
-}
-
 @FunctionalInterface
 interface A {
   void show();
 }
+----
 
+Usage example:
+
+[source,java]
+----
 class B implements A {
   public void show() {
     System.out.println("B");
   }
 }
+
+B b = new B();
+b.show(); // "B"
+----
+
+Alternatively, you could create an inner class that implements `A`:
+
+[source,java]
+----
+A a = new A() {
+  public void show() {
+    System.out.println("Inner");
+  }
+};
+a.show(); // "Inner"
 ----

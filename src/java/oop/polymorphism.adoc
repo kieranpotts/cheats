@@ -13,24 +13,6 @@ add(int, int, int)
 
 [source,java]
 ----
-public class PolymorphismInJava {
-  public static void main(String[] args) {
-
-    /* The type of `a` `A`, but the object/implementation is of type `B`. */
-    A a = new B();
-    a.show(); // A
-
-    /*
-    The type of `a` is `A`, as defined previously, but now the implementation
-    is of type `C`. This time, the `show` method of `C` is called, as it
-    overrides the method of the same name in `A`.
-    */
-
-    a = new C();
-    a.show(); // C
-  }
-}
-
 class A {
   public void show() {
     System.out.println("A");
@@ -44,4 +26,20 @@ class C extends A {
     System.out.println("C");
   }
 }
+----
+
+In the following example, the type of `a` is `A`, but the object/implementation is of type `B`:
+
+[source,java]
+----
+A a = new B();
+a.show(); // Calls `show()` in the `A` class.
+----
+
+In the following example, the type of `a` is `A` (as defined in the previous example). But now the implementation is of type `C`. Therefore, this time, the `show` method of `C` is called, as it overrides the method of the same name in `A`.
+
+[source,java]
+----
+a = new C();
+a.show(); // C
 ----

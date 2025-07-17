@@ -1,28 +1,17 @@
 = Java: Packages and namespaces
 
+Almost all classes (and other constructs) within an application or library SHOULD be part of a package. Packages help organize classes and avoid naming conflicts.
+
 [source,java]
 ----
-/*
-Almost all classes (and other constructs) within an application or library
-SHOULD be part of package.
-*/
 package tools;
+----
 
-/*
-When creating libraries for consumption in other projects, you need to
-create a unique "namespace" for all your classes, so they are unique not
-only in the current project but in *all* Java projects the world over.
+When creating libraries for consumption in other projects, you need to create a unique "namespace" for all your classes, so they are unique not only in the current project but in *all* Java projects the world over.
 
 A convention is to flip your domain name, so "google.com" becomes "com.google".
 
+[source,java]
 ----
 package com.google.java;
-----
-*/
-
-public class PackagesInJava {
-  public static void main(String[] args) {
-    // …
-  }
-}
 ----

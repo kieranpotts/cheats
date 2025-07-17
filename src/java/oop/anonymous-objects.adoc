@@ -1,11 +1,15 @@
 = Java: Anonymous objects
 
+In Java, *anonymous objects* are instances of classes that are created without assigning them to a variable. They are often used when you need to pass an object as an argument to a method, or when you want to invoke a method on an object, without needing to keep a reference to it.
+
 [source,java]
 ----
 public class AnonymousObjectsInJava {
   public static void main(String[] args) {
+
     /* Anonymous object (it has no reference). */
     new A().show();
+
   }
 }
 

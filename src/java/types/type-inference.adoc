@@ -1,6 +1,6 @@
 = Java: Type inference
 
-The Java compiler can infer the types of some variables based on assigned values. This feature is called type inference.
+The Java compiler can infer the types of some variables based on assigned values. This feature is called *type inference*.
 
 This feature began in Java 8 when lambda expressions were introduced. In lambda expressions, the type declarations for arguments were optional as the compiler was designed to infer the argument types from the surrounding context. Example:
 
@@ -49,7 +49,7 @@ You can't use `var` on a local variable without initializing it. The following c
 var i;
 ----
 
-The introduction of local variable type inference in Java 10 was intended to reduce Java's legendary verbosity, and so improve the readability of Java code. After all, code is written once but read many times.
+The introduction of local variable type inference in Java 10 was intended to reduce Java's legendary verbosity, and so improve the readability of Java code.
 
 [source,java]
 ----
@@ -62,13 +62,16 @@ var list = new ArrayList();
 
 Arguably, there is little difference in readability of the above code lines. However, sometimes class names are very long, in which case writing a class name twice on the same line _does_ greatly reduce readability.
 
-You can still call variables `var` if you want, but this is not recommended – it's confusing. We should treat `var` as a reserved keyword, though it is not.
+[NOTE]
+======
+Java permits variables to be named `var`, but this is NOT RECOMMENDED. We SHOULD treat `var` as a reserved keyword, even though it is not.
 
 [source,java]
 ----
 /* This works but is bad practice. */
 int var = 10;
 ----
+======
 
 Type inference is limited to local variables . It is not extended to class instance variables, method parameters, or return types. This is a good design. Local variables (within a method) exist only to serve the processing of data through the method, and their types are usually clear from the immediate context. By contrast, instance variables, say, are a form of data storage, and therefore it is desirable to always be explicit about their expected types.
 

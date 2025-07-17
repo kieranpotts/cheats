@@ -13,7 +13,7 @@ public class AnnotationsInJava {
 
     /*
     The expected output here is "B", but it is "A" because there is a
-    bug - a mistake in the logic. The method name is misspelled.
+    bug - a mistake in the logic. The method name is misspelled - see below.
     */
 
     b.thisIsAReallyLongMethodName(); // "A"
