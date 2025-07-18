@@ -1,14 +1,14 @@
 = Java platform
 
-Java code undergoes several transformations between code being written and a program running on a machine. First, the Java compiler converts the source code (`.java` files) into bytecode (`.class` files). The bytecode is then executed by a *Java Virtual Machine (JVM)*, which interprets the bytecode and runs it on the host machine.
+Java code undergoes several transformations between code being written and a program running on a machine. First, the Java compiler (`javac`) converts the source code (`.java` files) into bytecode (`.class` files). The bytecode is then executed by a *Java Virtual Machine (JVM)*, which interprets the bytecode and runs it on the host machine.
 
 == Java Virtual Machine (JVM)
 
 The Java Virtual Machine (JVM) is an integral part of the Java ecosystem. It allows Java programs to be run on almost any computing platform.
 
-Each operating system has a specific JVM designed for it. Java programs run in the JVM, which interprets the compiled Java bytecode and executes it on the host machine. Thus, the same Java program can run on different platforms without modification, making Java a "write once, run anywhere" language.
+Each operating system has a specific JVM designed for it - thus, JVM is platform-dependent. Java programs run in the JVM, which interprets the compiled Java bytecode and executes it on the host machine. Thus, the same Java program can run on different platforms without modification, making Java a "write once, run anywhere" (WORA) language – all that is required is for the host machine to have a compatible JRE. Java as a language is thus platform-independent.
 
-The JVM specifically looks for a program's `main` method, which is required to have a specific signature (`public static void main (String[] args)`). The `main` method serves as the entry point for the program.
+When you run a Java program, JVM will first execute a entry point file that you specify. The JVM will look for a class in that file that contains a method named `main` and which has a specific signature (`public static void main (String[] args)`). This method serves as the entry point for the program.
 
 == Java Runtime Environment (JRE)
 
@@ -16,7 +16,7 @@ The JRE is a software bundle that includes a JVM plus a set of libraries and oth
 
 == Java Development Kit (JDK)
 
-A JDK is a larger package that includes the JRE, a compiler, and other tools needed for Java development. The JDK is what developers use to write and compile Java programs.
+A JDK is an even larger package that includes a JRE, a Java compiler, and other tools needed for Java development. A JDK is what developers use to write and compile Java programs.
 
 Thus, the main components of the Java platform can be thought of as being like a series of nested boxes:
 
