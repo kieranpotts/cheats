@@ -1,0 +1,85 @@
+= Docker networking
+
+By default, Docker containers run in an isolated network. This means that they can't communicate with each other unless you explicitly allow it.
+
+To allow containers to communicate with each other, you can create a user-defined network and attach containers to it. This is done using the `docker network` command.
+
+In the following example, we set up a Node.js application in one container, and have it communicate with a MongoDB database running in another container. We will also deploy another container that provides a UI to MongoDB, MongoExpress, so we can inspect the application's database directly. The URLs we will use to access the two front-ends will be:
+
+* `localhost:3000`
+* `localhost:8081`
+
+Pull the latest images for MongoDB and MongoExpress:
+
+----
+docker pull mongo
+docker pull mongo-express
+----
+
+Type `docker network ls` to list Docker's internal networks. Docker auto-generates some networks, such as "bridge" and "host", which will be listed. To create a custom network for our databases, which we will call `mongo-network`, run:
+
+----
+docker network create mongo-network
+----
+
+We can now run the MongoDB and MongoExpress containers, attaching them to the `mongo-network` network. For MongoDB, we need to specify a container name, as we'll use this to configure the MongoExpress instance so it knows which container is the MongoDB one. We also need to pass in environment variables, which the `mongo` container uses to configuration its MongoDB instance - as https://hub.docker.com/_/mongo[documented here].
+
+----
+docker run -d \
+  -p 27017:27017 \
+  -e MONGO_INITDB_ROOT_USERNAME=admin \
+  -e MONGO_INITDB_ROOT_PASSWORD=password \
+  --name mongodb
+  --net mongo-network
+  mongo
+----
+
+Type `docker log <container-id>`, using the output from the previous command to capture the container ID, to check the log output. An entry near the end of the log should read "... waiting for connections ...", indicating that the MongoDB database instance started successfully.
+
+And for MongoExpress, follow the instructions at https://hub.docker.com/_/mongo-express to specify the environment variables required to connect to the MongoDB instance. The value of the `ME_CONFIG_MONGODB_SERVER` environment variable should be the name of the container with the MongoDB instance we want to connect to.
+
+----
+docker run -d \
+ -p 8081:8081 \
+ -e ME_CONFIG_MONGODB_SERVER=mongodb \
+ -e ME_CONFIG_MONGODB_ADMIN_USERNAME=admin \
+ -e ME_CONFIG_MONGODB_ADMIN_USERPASSWORD=password \
+ --net mongo-network\
+ --name mongo-express \
+  mongo-express
+----
+
+Check the log output again. It should reveal if the database connection was made successfully.
+
+In your browser, go to localhost:8081 to open the Mongo Express GUI. Use the UI to create a database for your application.
+
+If you have a JavaScript application, running on your host machine rather than in a container, you should be able to connect to the containerized MongoDB, using code similar to the following. You can write code to create, update, read, and delete records in the MongoDB database. Use MongoExpress to inspect the database and verify that the changes are being made.
+
+[source,javascript]
+----
+MongoClient.connect('mongodb://admin:password@localhost:27017', function(err, client) {
+  if (err) throw err;
+
+  let db = client.db('users'); // → Name of the MongoDB table you created.
+  let query = { userid: 1 };
+
+  db.collection('users').findOne(query, function(err, result) {
+    if (err) throw err;
+
+    client.close();
+    console.log(result);
+  });
+});
+----
+
+You can inspect the logs of the MongoDB container to see the queries being executed.
+
+----
+docker logs mongodb | tail
+----
+
+Or to stream the output:
+
+----
+docker logs mongodb -f
+----

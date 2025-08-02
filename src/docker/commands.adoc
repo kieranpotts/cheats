@@ -1,0 +1,104 @@
+= Docker commands
+
+Running the `docker` program without any arguments will display a list of available commands and options.
+
+== Image commands
+
+`docker build .` +
+Build a Docker image from the Dockerfile in the current working directory. See link:./dockerfile.adoc[Dockerfile] for more information on this command.
+
+`docker pull <image-name>(:<tag>)` +
+Pull an pre-built image from a registry (Docker Hub by default).
+
+`docker images` | `docker image ls` +
+Display all pulled Docker images (intermediate images are hidden).
+
+`docker image ls -a` +
+Display all pulled Docker images (including intermediate images).
+
+`docker image inspect <image-id>` +
+View the configuration of a specific image.
+
+`docker image rm <image-id>` | `docker rmi <image-id>` +
+Remove an image. Any containers built from the image must be removed first - use `docker rm <container-id|name>`.
+
+== Container commands
+
+`docker run <image-name>(:<tag>)` +
+Build a container from an image, and then run the container. If the image is not available locally, a `docker pull` operation will be implicitly performed.
+
+`docker run -d <image-name>(:<tag>)` +
+By default, containers will be run in the foreground. This means when you exit the process, the container will stop. Use detached mode (`-d`) to run a container in the background instead.
+
+`docker run --name <container-id|name> <image-name>(:<tag>)` +
+Docker will generate a random name for a container, unless you specify one using `--name`.
+
+`docker run --rm <image-name>(:<tag>)` +
+By default, `docker run` creates a fresh container from the specified version tag. This means you can end up with lots of unused containers lying around if you do not explicitly delete them later. Commonly, you will only want one container instance per image. Use the `--rm` option to automatically remove existing containers built from the specified image, before building and running a new container.
+
+`docker stop|start|restart <container-id>` +
+The `run` command builds a new container before running it. If you just want to restart a container without rebuilding it every time, use the `stop`, `start`, and `restart` commands after the first `run` operation.Restarted containers will retain the attributes specified when the container was created using `docker run`, such as port bindings.
+
+`docker run -it <image-name>(:<tag>)` +
+Run the container in interactive mode. This allows you to interact with the container's shell. See below for more information on interactive mode.
+
+`docker run -d -p <host>:<guest> nginx:1.23` +
+By default, applications inside containers run in an isolated network within the container engine. To interact with other running containerized applications, we need to expose the containerized application's port – which is defined by the running application - eg. Nginx always run on port 80, and Redis on port 6379 – to an available port on the host system.
+
+The `-p` (port) flag maps a container port to a host port. This is called *port binding*. For example, to map the container's port 80 to port 8080 on the host machine, use `-p 8080:80`. The container's web server will be available on port 8080 on the host machine: `localhost:8080`. We could run another containerized web server and map its port 80 to port 8081, and so on.
+
+`docker logs <container-id|name>` +
+Show logs for a running container. This is useful especially for containers that are started in detached mode, as the startup logs will not have been printed to the terminal.
+
+`docker ps` ("process status") +
+Display details of all containers, except stopped ones.
+
+`docker ps -a` +
+Display details of all containers, including stopped ones.
+
+`docker container ls` +
+Display all _running_ containers.
+
+`docker container ls -a` +
+Display all containers, even if stopped.
+
+`docker container inspect <container-id|name>` +
+View the configuration of a specific container.
+
+`docker container rm <container-id|name>` | `docker rm <container-id|name>` +
+Remove a specific container.
+
+== Volume commands
+
+`docker volume prune` +
+Remove all unused volumes. This does not remove data persisted locally, it just removes the volume reference.
+
+== Compose commands
+
+`docker compose up` +
+Create, then run, all the containers defined in the `docker-compose.yml` file in the current working directory.
+
+`docker compose up -d` +
+Start all the defined containers in the background (detached mode).
+
+`docker compose up --build` +
+Rebuild the containers from the images, before starting them.
+
+`docker compose start` +
+Start existing containers.
+
+`docker compose stop` +
+Stop all running containers, without removing them.
+
+`docker compose down` +
+Stop and remove all containers, images, networks and volumes as defined in the `docker compose.yml` file in the current working directory.
+
+== Interactive mode
+
+The `-it` option is used to run a container, or a command within a container, in interactive mode. This option is commonly used when a container is created from an image: `docker run -it <image-name>`.
+
+`docker exec -it <container-id|name> <command>` executes a command in a container that is already running. Use `docker exec -it <container-id|name> /bin/bash` to "shell into" and get an interactive terminal (`-it`) for a container. This is equivalent to using `docker run -it <image-name>` when the container is created.
+
+From the interactive terminal, you can navigate the filesystem in the normal way, check logs, and print out environment variables (`env`), and so on. If the container is based on a lightweight Linux distribution, you may not have access to common Linux utilities like `curl`.
+
+Type the command `exit` to leave the interactive session.

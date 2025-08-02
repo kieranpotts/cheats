@@ -1,0 +1,93 @@
+= Docker shortcut scripts
+
+The following are handy scripts to make it easier to work with Docker containers.
+
+== `install`
+
+Add this script to the root directory of your project:
+
+.`install`
+[source,bash]
+----
+#!/usr/bin/env bash
+
+set -e
+
+docker compose down
+docker compose build --pull
+docker compose up -d
+----
+
+You can then run `./install` to build and start the containers defined in `docker-compose.yml`.
+
+Extend the script to declare environment variables that are required by `docker-compose.yml`, eg.:
+
+[source,bash]
+----
+#!/usr/bin/env bash
+
+set -e
+
+export HOST_IP=`ip -4 addr show scope global dev docker0 | grep inet | awk '{print \$2}' | cut -d / -f 1`
+export HOST_UID=$UID
+export HOST_GID=$(id -g)
+export HOST_NAME=${hostname}
+
+docker compose down
+docker compose build --pull
+docker compose up -d
+----
+
+== `run`
+
+Add the following script in the root directory of your project:
+
+.`run`
+[source,bash]
+----
+#!/usr/bin/env bash
+
+set -e
+
+docker compose exec -it <container-name> "${@:1}"
+----
+
+You can then run `./run <command> <args...>` to execute a command in the named container.
+
+Additional scripts can be created as shortcuts for running specific commands. For example, to run PHP's `composer`:
+
+.`composer`
+[source,bash]
+----
+#!/usr/bin/env bash
+
+./run composer "${@:1}"
+----
+
+And a further shortcut to update dependencies using Composer:
+
+.`update`
+[source,bash]
+----
+#!/usr/bin/env bash
+
+./composer install
+----
+
+== `start`
+
+The following script starts a container and keeps it running in the background indefinitely -
+like a daemon process. `/bin/sh -c "sleep infinity"` is run inside the container. This keeps the
+container running indefinitely by executing a shell that sleeps forever. This setup is useful for
+creating a persistent environment in which you can execute one-off commands (eg. build steps)
+quickly.
+
+.`start`
+[source,sh]
+----
+#!/bin/sh
+
+IMAGE=<image-name>
+
+exec docker run -d --rm --name <container-name> -i -t -v $PWD:/data "$IMAGE" /bin/sh -c "sleep infinity"
+----

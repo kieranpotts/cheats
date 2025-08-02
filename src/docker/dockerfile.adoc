@@ -1,0 +1,82 @@
+= Dockerfile
+
+The Dockerfile is a text file that contains a set of instructions for building a Docker image. You run containers from those images. Thus, the two main `docker` commands to know are:
+
+* `docker build`: Builds a Docker image from a Dockerfile.
+* `docker run`: Runs a Docker container from an image.
+
+image::./_/docker-build-run.drawio.svg[]
+
+.Example Dockerfile
+[source,Dockerfile]
+----
+# Use the official Alpine Linux image.
+FROM alpine:latest
+
+# Install necessary packages.
+RUN apk update && \
+    apk add --no-cache bash curl git build-base ncurses-dev
+
+# Clone btop repository and build it.
+RUN git clone https://github.com/aristocratos/btop.git /opt/btop && \
+    cd /opt/btop && \
+    make && \
+    make install
+
+# Clean up
+RUN apk del git build-base ncurses-dev && \
+    rm -rf /var/cache/apk/* /opt/btop
+
+# Run btop when the container starts.
+CMD ["btop"]
+----
+
+The three main instructions in the Dockerfile are `FROM`, `RUN`, and `CMD`.
+
+The `FROM` instruction specifies the *base image* to use for the build. Base images are typically lightweight versions of common Linux distros, with some additional system software like web servers or database servers.
+
+Use the `:<tag>` syntax to specify a specific version of the base image. If you do not specify a tag, the default behavior is to give you the latest version of the image available from Docker Hub – but better to be explicit by using the tag `:latest` or, better still, locking to a specific version to avoid problems associated with future breaking changes.
+
+The `RUN` instruction executes a command in the container. This is used to run commands that we would normally run directly on the command line of a physical or virtual server. The commands must be compatible with the base image. In the example above, we are using the `apk` package manager to install software packages, because this is the package manager used by the Alpine Linux base image.
+
+Finally, the `CMD` instruction specifies the command to run when the container starts.
+
+The `docker build` command will tell Docker to read the Dockerfile and build a container image from it, eg.:
+
+----
+docker build -t btop-image .
+----
+
+The period on the end represents the current working directory. Use an alternative path if the Dockerfile is located elsewhere.
+
+The `-t` flag is used to tag the image with a name. This is useful for referencing the image later.
+
+Once the container is built, to execute it we use the `docker run` command, eg:
+
+----
+docker run -rm -it btop-image
+----
+
+To run the container in detached mode, use the `-d` flag. This will run the container in the background and return the container ID.
+
+----
+docker run -rm -d btop-image
+----
+
+Use the `-rm` flag for tell Docker to throw away any old containers previously built from the specified image. The `-it` flag is used to run the container in interactive mode.
+
+For containerized applications, more commonly the Dockerfile instructions include steps to copy some of the source files into the container. This is done using the `COPY` command. The `WORKDIR` command is equivalent to `cd`, which tends to be used before subsequent commands are `RUN` inside the container. Example:
+
+[source,Dockerfile]
+----
+FROM node:19-alpine
+
+COPY package.json /app/
+COPY src /app/
+
+WORKDIR /app
+
+RUN npm install
+
+CMD ["npm", "start"]
+----
