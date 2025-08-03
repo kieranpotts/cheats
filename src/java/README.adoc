@@ -10,6 +10,7 @@
 
 == Types
 
+* link:./types/variables.adoc[Variables]
 * link:./types/primitives.adoc[Primitive data types]
 * link:./types/strings.adoc[Strings]
 * link:./types/arrays.adoc[Arrays]
