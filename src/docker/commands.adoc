@@ -10,6 +10,9 @@ Build a Docker image from the Dockerfile in the current working directory. See l
 `docker pull <image-name>(:<tag>)` +
 Pull an pre-built image from a registry (Docker Hub by default).
 
+`docker search <query>` +
+Search for images on Docker Hub. This is useful to find pre-built images for common technology stacks, eg. `docker search jdk`.
+
 `docker images` | `docker image ls` +
 Display all pulled Docker images (intermediate images are hidden).
 
@@ -40,7 +43,7 @@ By default, `docker run` creates a fresh container from the specified version ta
 The `run` command builds a new container before running it. If you just want to restart a container without rebuilding it every time, use the `stop`, `start`, and `restart` commands after the first `run` operation.Restarted containers will retain the attributes specified when the container was created using `docker run`, such as port bindings.
 
 `docker run -it <image-name>(:<tag>)` +
-Run the container in interactive mode. This allows you to interact with the container's shell. See below for more information on interactive mode.
+Run the container in interactive mode. This allows you to interact with the container's shell. See below for more information on interactive mode. You will typically use interactive mode when running a container in detached mode, so normally you will combine the `-d` and `-it` flags: `docker run -dit <image-name>(:<tag>)`.
 
 `docker run -d -p <host>:<guest> nginx:1.23` +
 By default, applications inside containers run in an isolated network within the container engine. To interact with other running containerized applications, we need to expose the containerized application's port – which is defined by the running application - eg. Nginx always run on port 80, and Redis on port 6379 – to an available port on the host system.

@@ -7,3 +7,8 @@
 * link:./volumes.adoc[Volumes]
 * link:./multi-stage-builds.adoc[Multi-stage builds]
 * link:./shortcut-scripts.adoc[Shortcut scripts]
+
+== Examples
+
+* link:./examples/java.adoc[Java]
+
