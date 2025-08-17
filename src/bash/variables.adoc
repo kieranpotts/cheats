@@ -1,0 +1,62 @@
+= Bash variables
+
+[source,bash]
+----
+$0              # Name of shell or shell script.
+$1, $2, $3, ... # Positional parameters.
+$#              # Number of positional parameters.
+$?              # Most recent foreground pipeline exit status.
+$-              # Current options set for the shell.
+$$              # PID of the current shell (not sub-shell).
+$!              # The PID of the most recent background command.
+$_              # Last argument of the previously executed command,
+                #   or the path of the bash script.
+----
+
+Get the length of a variable:
+
+[source,bash]
+----
+var="Hello, World!"
+${#var}
+----
+
+Get the first character of a variable:
+
+[source,bash]
+----
+var="Hello, World!"
+${var:0:1}
+
+# Or:
+echo ${var%%"${var#?}"}
+----
+
+Remove characters from a string:
+
+[source,bash]
+----
+var="Hello, World!"
+
+${var:2}    # Remove the first two characters.
+${var#*, }  # Remove everything up to the first comma and space.
+${var##*, } # Remove everything up to the last comma and space.
+${var%,*}   # Remove everything after the last comma.
+${var%%,*}  # Remove everything after the first comma.
+----
+
+Replacement:
+
+[source,bash]
+----
+var="0050"
+
+# Remove the first leading zero.
+echo ${var[@]#0}
+
+# Replace "a" with "b".
+{var/a/b}
+
+# Replace all "a" with "b".
+{var//a/b}
+----

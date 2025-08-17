@@ -1,0 +1,11 @@
+= Bash built-in commands
+
+.Re-run the last command
+[source,bash]
+----
+# Run the last command.
+!!
+
+# Run the last command as root.
+sudo !!
+----
