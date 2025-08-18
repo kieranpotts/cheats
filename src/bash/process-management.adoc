@@ -1,0 +1,42 @@
+= Process management in Bash
+
+The Bash shell has two modes of execution for commands:
+
+- Batch mode, ie. in sequence.
+- Concurrent mode, ie. background execution.
+
+To execute commands in sequence, commands are separated by newlines or the semi-colon (`;`) character. In the following example, when `command1` is finished, `command2` will be executed.
+
+[source,bash]
+----
+command1
+command2
+
+# Or:
+command1; command2
+
+----
+
+To execute a command in the background, a single ampersand (`&`) character is written immediately after the command. In the following example, `command1` is executed in the background, while control is immediately returned to the shell, allowing continued execution of subsequent commands.
+
+[source,bash]
+----
+command1 &
+
+----
+
+In the following example, `command1` and `command2` are run concurrently. `command1` is executed in the background and `command2` in the foreground. The execution of `command2` is not dependent upon the result returned from `command1`.
+
+[source,bash]
+----
+command1 & command2
+
+----
+
+To have both commands run in the background, with neither dependent upon the other, both commands must be suffixed with `&`.
+
+[source,bash]
+----
+command1 & command2 &
+
+----

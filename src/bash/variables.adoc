@@ -1,9 +1,64 @@
 = Bash variables
 
+== Variable substitution
+
+In Bash, variable substitution (also known as variable expansion) is done using the dollar sign (`$`) followed by the variable name. For example, to use a variable named `var`, you would write `$var`.
+
+An alternative syntax is to wrap the variable name in curly braces (`{}`). Thus, the two available syntax for variable substitution are:
+
+* `$var`
+* `${var}`
+
+Generally, both syntaxes behave identically. But there are subtle differences that make `${var}` more robust and flexible. For example, because the brackets clearly delimit the variable name, it is easier to append literal characters immediately after the variable expansion.
+
+[source,bash]
+----
+var="foo"
+
+echo "$varbar"     # Looks for a variable named 'varbar' (likely undefined).
+echo "${var}bar"   # Correctly expands to 'foobar'.
+----
+
+The bracketed syntax also supports extended syntax for querying and manipulating the values of variables:
+
+[source,bash]
+----
+var="Hello, World!"
+
+# Returns the length of the variable.
+${#var}
+
+# Returns the first character of the variable.
+${var:0:1}
+
+# Or:
+${var%%"${var#?}"}
+
+# Remove characters from a string:
+${var:2}    # Remove the first two characters.
+${var#*, }  # Remove everything up to the first comma and space.
+${var##*, } # Remove everything up to the last comma and space.
+${var%,*}   # Remove everything after the last comma.
+${var%%,*}  # Remove everything after the first comma.
+
+# Replacing characters:
+var="0050"
+${var[@]#0} # Remove the first leading zero.
+${var/a/b}  # Replace "a" with "b".
+${var//a/b} # Replace all "a" with "b".
+
+# Set a default value, which is used if `var` is unset.
+${var:-default}
+----
+
+== Built-in variables
+
+Other built-in variables include:
+
 [source,bash]
 ----
 $0              # Name of shell or shell script.
-$1, $2, $3, ... # Positional parameters.
+$1, $2, $3, ... # Positional parameters (from command-line input arguments).
 $#              # Number of positional parameters.
 $?              # Most recent foreground pipeline exit status.
 $-              # Current options set for the shell.
@@ -13,50 +68,28 @@ $_              # Last argument of the previously executed command,
                 #   or the path of the bash script.
 ----
 
-Get the length of a variable:
+== Array variables
+
+Arrays hold multiple values, each accessible by an index.
 
 [source,bash]
 ----
-var="Hello, World!"
-${#var}
+arr=("item1" "item2" "item3")
+
+${arr[0]}  # Access the first element.
+${arr[@]}  # Access all elements.
+${#arr[@]} # Get the length of the array.
 ----
 
-Get the first character of a variable:
+== Command substitution
+
+Use command substitution to capture the output of a command into a variable.
 
 [source,bash]
 ----
-var="Hello, World!"
-${var:0:1}
+# Modern syntax.
+var=$(command)
 
-# Or:
-echo ${var%%"${var#?}"}
-----
-
-Remove characters from a string:
-
-[source,bash]
-----
-var="Hello, World!"
-
-${var:2}    # Remove the first two characters.
-${var#*, }  # Remove everything up to the first comma and space.
-${var##*, } # Remove everything up to the last comma and space.
-${var%,*}   # Remove everything after the last comma.
-${var%%,*}  # Remove everything after the first comma.
-----
-
-Replacement:
-
-[source,bash]
-----
-var="0050"
-
-# Remove the first leading zero.
-echo ${var[@]#0}
-
-# Replace "a" with "b".
-{var/a/b}
-
-# Replace all "a" with "b".
-{var//a/b}
+# Old syntax - but it still works.
+var=`command`
 ----

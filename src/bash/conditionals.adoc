@@ -1,0 +1,269 @@
+= Conditional statements
+
+Conditional statements are a common type of *control structure*. Other control structures include loops and functions.
+
+Conditionals allow your script to make decisions and respond differently based on specific conditions.
+
+== if/elif/else
+
+[source,bash]
+----
+if conditional_expression ; then
+  operation1
+elif conditional_expression ; then
+  operation2
+else
+  operation3
+fi
+
+# Or written like this:
+if [ conditional_expression1 ]
+then
+  operation1
+elif [ conditional expression2 ]
+then
+  operation2
+else
+  operation3
+fi
+----
+
+.Example
+[source,bash]
+----
+count=99
+
+if [ $count -eq 100 ]
+then
+  echo "Count is 100"
+elif [ $count -gt 100 ]
+then
+  echo "Count is greater than 100"
+else
+  echo "Count is less than 100"
+fi
+----
+
+== Case statements
+
+[source,bash]
+----
+case expression in
+  case1)
+    operation1
+  ;;
+  case2)
+    operation2
+  ;;
+esac
+----
+
+Simple commands may be put on the same line as the pattern and ;; as long as the expression remains readable. This is often appropriate for single-letter option processing.
+
+[source,bash]
+----
+verbose='false'
+aflag=''
+bflag=''
+files=''
+
+while getopts 'abf:v' flag; do
+  case "${flag}" in
+    a) aflag='true' ;;
+    b) bflag='true' ;;
+    f) files="${OPTARG}" ;;
+    v) verbose='true' ;;
+    *) error "Unexpected option ${flag}" ;;
+  esac
+done
+----
+
+For single-line actions, as above, add a space after the close parenthesis of the pattern and another before the `;;`.
+
+When the actions don't fit on a single line, put the pattern on a line on its own, then the actions, then `;;` also on a line of its own.
+
+=== Select options
+
+Case conditionals are perhaps most useful when combined with the `select` control structure. This is designed specifically for user-driven, interactive scripts. It provides a simple text-based menu from which the user chooses an option from a list of available options.
+
+[source,bash]
+----
+select option in "Option 1" "Option 2" "Quit"; do
+  case $option in
+    "Option 1") echo "You chose Option 1" ;;
+    "Quit") break ;;
+    *) echo "Invalid option" ;;
+  esac
+done
+----
+
+
+== Nesting
+
+Bash supports nested conditional statements.
+
+[source,bash]
+----
+if [ conditional_expression1 ]
+then
+  operation1
+  operation2
+else
+  if [ conditional_expression2 ]
+  then
+    operation3
+  fi
+fi
+----
+
+== Relational (comparison) operators
+
+The following relational operators are commonly used in conditional expressions.
+
+* `-gt`: Greater than (numeric comparison).
+* `-eq`: Equal to.
+* `-lt`: Less than.
+* `-ne`: Not equal to.
+
+=== Equals
+
+[source,bash]
+----
+if [ $value -eq 1 ]
+then
+  echo "Value equals 1"
+fi
+----
+
+This construct is commonly used in conjunction with output from other built-in commands or external programs. Consider the following example. The `grep -ic` command tells `grep` to look for the string (case-insensitive search), and to count the results. This is a simple and fast way of checking whether a string exists within a file, and to perform some action if it does.
+
+[source,bash]
+----
+value=$( grep -ic "someusername" /etc/passwd )
+
+if [ $value -eq 1 ]
+then
+  echo "I found someusername"
+fi
+----
+
+=== Greater than, less than
+
+[source,bash]
+----
+value=$( grep -ic "benjamin" /etc/passwd )
+
+if [ $value -gt 5 ]
+then
+  echo "Found a lot of Benjamins"
+elif [ $value -lt 5 ]
+then
+  echo "Found a few Benjamins"
+else
+  echo "Found exactly 5 Benjamins"
+fi
+----
+
+== String operators
+
+* `-n`: Non-empty string (ie. checks if a string has a length greater than zero).
+* `-z`: Empty string (ie. checks if a string has a length of zero).
+
+The `-n` operator is for checking if a variable has a non-empty string value. This is a great way to do something only if an optional input variable has been provided.
+
+[source,bash]
+----
+if [ -n $1 ]
+then
+  echo "First argument was provided."
+fi
+----
+
+Use `-z` to check for the existence of mandatory input arguments. It returns `true` if the variable has an empty value.
+
+[source,bash]
+----
+if [ -z $1 ]
+then
+  echo "Sorry, you didn't give me a value."
+  exit 2
+fi
+----
+
+The `-z` operator is the opposite of the `-n` operator. The behavior is the same if you negate the `-n` result using the `!` (NOT) operator.
+
+[source,bash]
+----
+if [ ! -n $1 ]
+then
+  echo "Sorry, you didn't give me a value."
+  exit 2
+fi
+----
+
+The following syntax also achieves the same result. But using `-n`/`-z` is preferred for clarity.
+
+[source,bash]
+----
+if [[ "${my_var}" = "" ]]; then
+  do_something
+fi
+----
+
+Use the `=` operator to check that a string matches a particular sequence of characters.
+
+[source,bash]
+----
+# Do this:
+if [[ "${my_var}" = "some_string" ]]; then
+  do_something
+fi
+----
+
+== AND/OR
+
+Use the AND operator `&&` to combine conditional expressions.
+
+[source,bash]
+----
+# Check if a value is set and is valid.
+if [[ -n $1 ]] && [[ -r $1 ]]
+then
+  echo "File exists and is readable."
+fi
+----
+
+The OR operator is `||`. Use this to evaluate multiple conditions and return `false` if any one condition returns a false result.
+
+[source,bash]
+----
+if [[ -z $1 ]] || [[ ! -r $1 ]]
+then
+  echo "Either you didn't give me a value or the file is unreadable"
+  exit 2
+fi
+----
+
+== Test conditions
+
+Notice the use of double brackets `[[ ... ]]` in the above examples. This is RECOMMENDED when combining conditional statements using AND or OR operators. That's because, in older version of Bash, using single bracket syntax with `&&` or `||` could cause syntax issues. Using the double bracket syntax is better, therefore, for backwards compatibility with older implementations of Bash.
+
+But the double bracket syntax – which is a Bash-specific extension, and not as POSIX standard – is also preferred for other reasons. It prevents pathname expansion and word splitting, which eliminates a common class of bugs in shell scripts. It also allows for regular expression matching, which the single bracket syntax does not support.
+
+.Examples
+[source,bash]
+----
+if [[ "filename" =~ ^[[:alnum:]]+name ]]; then
+  echo "Match"
+fi
+
+if [[ "filename" == "f*" ]]; then
+  echo "Match"
+fi
+
+# For comparison, this gives a "too many arguments" error as
+# f* is expanded to the contents of the current directory.
+if [ "filename" == f* ]; then
+  echo "Match"
+fi
+----
