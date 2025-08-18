@@ -1,6 +1,6 @@
 = Unix commands
 
-The following commands can be found on most Unix-like operating systems. These are "mandatory" commands as specified in the Single Unix Specification (SUS) – a family of standards for computer operating systems, compliance with which is required to qualify for using the "UNIX" trademark.
+The following commands can be found on most Unix-like operating systems. These are "mandatory" commands, built-in to Unix shells, as specified in the Single Unix Specification (SUS) – a family of standards for computer operating systems, compliance with which is required to qualify for using the "UNIX" trademark.
 
 See also link:../utilities/README.adoc[Unix utilities] for simple, single-purpose command line programs such as `ping`, `rsync`, and `wget`.
 
@@ -10,7 +10,7 @@ See also the link:https://archive.org/details/unixtoolbox[Unix Toolbox] by Colin
 
 * `bg` — Run a program in the background. See also fg.
 * `command` — Execute a simple command.
-* `echo` — Write arguments to standard output.
+* link:./echo.adoc[`echo`] — Write arguments to standard output.
 * `expr` — Evaluate arguments as an expression.
 * `false` — Return false value.
 * `fg` — Runs a program in the foreground. See also bg.

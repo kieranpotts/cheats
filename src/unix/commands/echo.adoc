@@ -1,0 +1,9 @@
+= `echo`
+
+When you use the `-e` flag with `echo`, it tells the command to interpret backslash escape sequences in the string instead of treating them as literal characters. Without the `-e` flag, `echo` will print the exact characters you provide, including the backslash and the letter following it.
+
+[source,bash]
+----
+echo -e "\n### List of log files updated yersterday ###"
+find /Users/kieran/logs -name "*.log" -mtime -1
+----
