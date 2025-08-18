@@ -1,0 +1,16 @@
+= `which`
+
+Finds the location of an executable that would be run if you typed the first argument as a command in the shell. Searches the directories listed in your PATH environment variable.
+
+----
+$ which <command>
+----
+
+Example:
+
+----
+$ which python
+/usr/bin/python
+----
+
+`which` only finds executables. It is useful for debugging PATH issues. To find more things about a program – not only its binary but also its source and manual pages – use link:./whereis.adoc[`whereis`].

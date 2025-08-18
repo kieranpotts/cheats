@@ -1,6 +1,6 @@
 = Unix utilities
 
-I'm defining utility software as any simple computer program with only a command line interface and which specializes in a single discrete task. Many of these utilities are commonly shipped with Linux distributions (some like `su` being integrated into the Linux kernel) and other Unix-like operating systems, though they are not part of the Single Unix Specification (SUS).
+I'm defining Unix utility software as any simple computer program with only a command line interface and which specializes in a single discrete task. Many of these utilities are commonly shipped with Linux distributions (some like `su` being integrated into the Linux kernel) and other Unix-like operating systems. However, most of these utility programs are *external utilities*, which means they are not built-in to Unix shells but are installed separately. External utilities are not part of the Single Unix Specification (SUS), though they may be colloquially considered to be "standard" programs on most Unix and Unix-like systems.
 
 * link:./bindfs.adoc[`bindfs`]
 * link:./dig.adoc[`dig`]
@@ -34,6 +34,8 @@ I'm defining utility software as any simple computer program with only a command
 * link:./tshark.adoc[`tshark`]
 * link:./unp.adoc[`unp`]
 * link:./watch.adoc[`watch`]
+* link:./whereis.adoc[`whereis`]
+* link:./which.adoc[`which`]
 * link:./wget.adoc[`wget`]
 * link:./whois.adoc[`whois`]
 * link:./wormhole.adoc[`wormhole`]
