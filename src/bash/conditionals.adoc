@@ -44,6 +44,14 @@ else
 fi
 ----
 
+The `elif` and `else` blocks are optional. There may be zero, one, or multiple `elif` blocks, but there can be only one `if` block and exactly zero or one `else` blocks.
+
+Conditional constructs are terminated by `fi`, meaning "finish", or "if" backwards if you prefer.
+
+Multiple statements may be included within each conditional block. As a matter of style, inner statements SHOULD be indented two spaces from their containing conditional construct.
+
+The whitespace padding within the square brackets is optional, but including it is a common coding convention as it improves readability.
+
 == Case statements
 
 [source,bash]
@@ -82,7 +90,7 @@ For single-line actions, as above, add a space after the close parenthesis of th
 
 When the actions don't fit on a single line, put the pattern on a line on its own, then the actions, then `;;` also on a line of its own.
 
-=== Select options
+== Select options
 
 Case conditionals are perhaps most useful when combined with the `select` control structure. This is designed specifically for user-driven, interactive scripts. It provides a simple text-based menu from which the user chooses an option from a list of available options.
 
@@ -96,7 +104,6 @@ select option in "Option 1" "Option 2" "Quit"; do
   esac
 done
 ----
-
 
 == Nesting
 
@@ -113,6 +120,32 @@ else
   then
     operation3
   fi
+fi
+----
+
+However, nesting reduces readability and understandability. It increases the risk of errors, and it makes debugging harder. Work to refactor complex conditional logic.
+
+== Conditional execution
+
+The `&&` and `||` operators may be used to form shorthand conditional statements, executing commands based on the results of preceding commands.
+
+[source,bash]
+----
+A && B  # Run B if and only if A succeeded
+A || B  # Run B if and only if A failed
+----
+
+Using `&&` is the equivalent of running an `if` check on the result of the left-side command.
+
+This syntax can also help to flatten nested conditionals.
+
+[source,bash]
+----
+sudo apt-get update && sudo apt-get install pyrenamer
+
+# Equivalent to:
+if sudo apt-get update ; then
+  sudo apt-get install pyrenamer
 fi
 ----
 
@@ -265,5 +298,61 @@ fi
 # f* is expanded to the contents of the current directory.
 if [ "filename" == f* ]; then
   echo "Match"
+fi
+----
+
+== Command result checking
+
+A common use case for conditionals is to check the result of some command, and take action based on whether it succeeded or failed.
+
+```bash
+if command; then
+  # Command succeeded
+else
+  # Command failed
+fi
+```
+
+[source,bash]
+----
+if ! mv "${file_list}" "${dest_dir}/" ; then
+  echo "Unable to move ${file_list} to ${dest_dir}" >&2
+  exit "${E_BAD_MOVE}"
+fi
+----
+
+For un-piped commands, you can instead use `$?` to check the return value of the command, like this:
+
+[source,bash]
+----
+mv "${file_list}" "${dest_dir}/"
+if [[ "$?" -ne 0 ]]; then
+  echo "Unable to move ${file_list} to ${dest_dir}" >&2
+  exit "${E_BAD_MOVE}"
+fi
+----
+
+For piped commands, Bash has the `PIPESTATUS` variable that allows checking of the return code from all parts of a pipe. If it's only necessary to check the success or failure of the whole pipe, then the following is acceptable:
+
+[source,bash]
+----
+tar -cf - ./* | ( cd "${dir}" && tar -xf - )
+if [[ "${PIPESTATUS[0]}" -ne 0 || "${PIPESTATUS[1]}" -ne 0 ]]; then
+  echo "Unable to tar files to ${dir}" >&2
+fi
+----
+
+However, as `PIPESTATUS` will be overwritten as soon as you do any other command, if you need to act differently on errors based on where it happened in the pipe, you'll need to assign `PIPESTATUS` to another variable immediately after running the command. Don't forget that `[` itself is a command, and it will therefore wipe out `PIPESTATUS`.)
+
+[source,bash]
+----
+tar -cf - ./* | ( cd "${DIR}" && tar -xf - )
+return_codes=(${PIPESTATUS[*]})
+
+if [[ "${return_codes[0]}" -ne 0 ]]; then
+  do_something
+fi
+if [[ "${return_codes[1]}" -ne 0 ]]; then
+  do_something_else
 fi
 ----
