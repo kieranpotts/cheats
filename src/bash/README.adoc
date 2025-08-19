@@ -5,6 +5,7 @@ See also link:../unix[Unix cheats] for usage of built-in system commands like `g
 * link:./installation.adoc[Installation]
 * link:./executables.adoc[Executables]
 * link:./variables.adoc[Variables]
+* link:./functions.adoc[Functions]
 * link:./conditionals.adoc[Conditionals]
 * link:./iteration.adoc[Iteration (loops)]
 * link:./file-redirection.adoc[File redirection]

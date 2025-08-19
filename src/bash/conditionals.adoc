@@ -1,4 +1,4 @@
-= Conditional statements
+= Conditional statements in Bash
 
 Conditional statements are a common type of *control structure*. Other control structures include loops and functions.
 
