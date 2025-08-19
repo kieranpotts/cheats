@@ -32,7 +32,7 @@ some_function () {
 }
 ----
 
-The explicit alternative gives more readability, but the implicit one is the POSIX standard so it is more portable
+The explicit alternative gives more readability, but the implicit one is the POSIX standard so it is more portable.
 
 The function body is placed inside the curly braces.
 
