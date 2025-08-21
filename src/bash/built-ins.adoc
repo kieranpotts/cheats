@@ -1,11 +1,65 @@
-= Bash built-in commands
+= Bash: Built-in commands
 
-.Re-run the last command
-[source,bash]
-----
-# Run the last command.
-!!
+A *built-in* is a command or function that is part of the shell itself. No external programs are required to run built-in commands, and thus no new processes are spawned when built-ins are used.
 
-# Run the last command as root.
-sudo !!
-----
+Built-in commands are available in most shells. These are Bash's built-in commands.
+
+* `!!` repeats the last command. Use `sudo !!` to run the last command with root privileges.
+* `:` returns an exit status of zero.
+* `.` is an alias of `source`.
+* `[` is the same as `test`.
+* `alias` defines or displays the shell's command aliases.
+* `bg` resumes a suspended job so that it runs in the background.
+* `bind` defines or displays the shell's key and function bindings.
+* `break` exits from a `for`, `while`, or `select` loop.
+* `builtin` runs a built-in command, even if there is a function with the same name that would otherwise override the built-in's name.
+* `caller` returns the context (execution frame) of a running subroutine. This is useful for examining the stack when debugging a script.
+* `cd` changes the working directory.
+* `command` runs an external or built-in command, even if there is a function with the same name.
+* `compgen` generates auto-completion matches for the specific command.
+* `complete` specifies how arguments should be auto-completed.
+* `compopt` modifies or displays options for auto-completion.
+* `continue` skips to the next, or to another, iteration in a `for`, `while`, `until`, or `select` loop.
+* `declare` declares, displays, or assigns attributes to variables.
+* `dirs` displays the shell's directory stack, which contains remembered directories.
+* `disown` removes specific jobs from the current shell.
+* `echo` writes a string to the standard output.
+* `enable` enables or disables built-in shell commands. This is useful when other commands on the system share the same name.
+* `eval` evaluates arguments and executes them as a command.
+* `exec` executes a command which replaces the current shell, without creating a new process.
+* `exit` exits the shell with an optional numerical exit code.
+* `export` designates shell variables or functions to be passed to child processes.
+* `fc` edits, or executes a range of, commands from the history list.
+* `fg` moves a job to the foreground, making it the shell's current job.
+* `getopts` parses arguments passed to a shell script.
+* `hash` forgets, determines, or displays the remembered locations of command executables.
+* `help` displays brief help information about the available shell built-in commands and how to use them.
+* `history` displays or modifies the history list.
+* `jobs` displays the status of all jobs.
+* `kill` sends a signal to a process.
+* `let` evaluates arithmetic expressions.
+* `local` declares a variable as being function-scoped.
+* `logout` exits a login shell within an optional exit status.
+* `mapfile` reads lines from a file or from standard input (`stdin`), and maps each line to an element in an array.
+* `popd` removes directories from the shell's directory stack.
+* `printf` prints formatted text to standard output.
+* `pushd` adds directories to the shell's directory stack.
+* `pwd` prints the absolute path name of the current working directory.
+* `read` reads a line from a file or from standard input, splits it into words, and assigns each word to a variable.
+* `readarray` is the same as `mapfile`.
+* `readonly` designates a function or variable as read-only, so it cannot be changed.
+* `return` exits a function and returns a value.
+* `set` modifies the options of the current shell, changing its behavior. It also displays the names and values of shell functions and variables.
+* `shift` shifts the positional parameters of the current command to the left.
+* `shopt` modifies certain shell options.
+* `source` takes a file name as an argument and executes the commands in that file.
+* `test` evaluates a conditional expression and returns a value of `true` or `false`.
+* `times` displays the user and system CPU times of the shell process.
+* `trap` specifies a signal trap, to be executed when the shell receives a specific signal.
+* `type` determines how the shell will interpret a name: as an alias, function, built-in, file, or keyword.
+* `typeset` is the same as `declare`.
+* `ulimit` assigns limits to the resources available to processes started by the shell.
+* `umask` sets the file creation mask for files created by the shell.
+* `unalias` removes aliases.
+* `unset` removes variable or function names.
+* `wait` waits for a process to exit, then displays its return value.

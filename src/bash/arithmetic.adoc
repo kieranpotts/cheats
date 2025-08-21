@@ -1,0 +1,62 @@
+= Bash: Arithmetic
+
+On the command line, try this:
+
+[source,bash]
+----
+$ echo 1 + 1
+----
+
+The output will be "1 + 1". In Bash, all values are strings by default.
+
+To evaluate arithmetic expressions, you need to encapsulate those expressions using the following syntax:
+
+[source,bash]
+----
+$ echo $((1+1))
+----
+
+Or:
+
+[source,bash]
+----
+$ echo $[1+1]
+----
+
+This syntax is called *arithmetic expansion*.
+
+To increment integer values in Bash, you can use any of the following syntaxes:
+
+[source,bash]
+----
+var=$((var+1))
+((var=var+1))
+((var+=1))
+((var++))
+----
+
+You can also use `let`:
+
+[source,bash]
+----
+let "var=var+1"
+let "var+=1"
+let "var++"
+----
+
+== Arithmetic operators
+
+* `+`
+* `-`
+* `*`
+* `/`
+* `%` (remainder)
+
+== Arithmetic relational operators
+
+* `-lt` (<)
+* `-gt` (>)
+* `-le` (<=)
+* `-ge` (>=)
+* `-eq` (==)
+* `-ne` (!=)

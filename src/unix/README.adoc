@@ -1,5 +1,7 @@
 = Unix
 
+See also link:../bash[Bash cheats] and See also link:../linux[Linux cheats].
+
 * link:./filesystem.adoc[Unix filesystem]
 * link:./users.adoc[Unix users]
 * link:./permissions.adoc[Unix permissions]

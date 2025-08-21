@@ -1,0 +1,48 @@
+= Bash: Imports (aka. sourcing)
+
+The process of importing other Bash files is known as sourcing. It is done using the `source keyword followed by a path to the file to import. The path may be absolute, or relative to the current running script (which is not necessarily the current file).
+
+[source,bash]
+----
+source functions.sh
+----
+
+A period can be used in place of the `source` keyword. This shorthand notation is the POSIX-standard (`source` is a Bashism) and is more commonly used.
+
+[source,bash]
+----
+. functions.sh
+----
+
+Use sourcing for the loading of common functions and variables within a large script, and for separating program code from user code, and more generally to promote code reuse.
+
+Sourcing is something that Bash does itself, internally. When you open a terminal, or when you SSH into a server that uses the Bash shell, so starting a new Bash session, Bash starts up and then automatically sources your `~/.bashrc` file or `~/.bash_profile` file (depending on how you log in). These files can be used to set environment variables, as well as global variables that will persist for the duration of the Bash session.
+
+When sourcing a file, all Bash does is copy the contents of the sourced file and implant them into the current script at runtime. Any variables that are defined in the parent script and referenced in the child script are handled as though all the code had been written in a single file.
+
+Thus, in Bash, imported files are not truly modular. Sourcing merely provides a way of breaking up long scripts into smaller chunks, for easier code management. Bash authors must be careful of doing things like changing directory (`cd`) within a child script, as doing so may break the relative paths for subsequent imports in the parent script. Also, authors need to be careful about overwriting global variables and functions that are needed by another part of a script.
+
+If a source file does not exist, the sourcing operation will fail, stopping execution of the rest of the script. Therefore, it is best practice to first check if a file exists before importing it. In the following implementation, the file `secondary.sh` is sourced only if it exists, else an error message is recorded in a variable.
+
+[source,bash]
+----
+[[ -f secondary.sh ]] && source secondary.sh || last_error="file secondary.sh not found"
+----
+
+Bash supports the passing of variables to sourced files. Example:
+
+[source,bash]
+----
+$hello="helloworld"
+. install.sh $hello
+----
+
+In `install.sh`:
+
+[source,bash]
+----
+# Prints "helloworld".
+echo $1
+----
+
+The ability to source a script with arguments is a Bashism. In other shells such as Dash, positional parameters like `$1` parameters will not be defined in this case.

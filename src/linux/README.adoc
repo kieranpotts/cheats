@@ -1,5 +1,7 @@
 = Linux
 
+See also link:../bash[Bash cheats] and See also link:../unix[Unix cheats].
+
 * link:./apt.adoc[APT package manager]
 * link:./distros.adoc[Linux distributions]
 * link:./kernel.adoc[Linux kernel]

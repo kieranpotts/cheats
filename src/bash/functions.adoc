@@ -1,4 +1,4 @@
-= Functions in Bash
+= Bash: Functions
 
 As in almost any programming language, in Bash you can use functions to group pieces of code in a logical way, and to implement recursion.
 
@@ -48,13 +48,11 @@ In Bash, doing any of the following operations involves the exact same syntax:
 
 It means that a variable number of arguments can be passed to any function (or program or built-in command). It is up to the function or program to verify that any required arguments have been provided.
 
-In Bash functions, like Bash scripts, functions are indexed – not named. `$1` is the first argument, `$2` is the second argument, and so on.
-
-In the following example, the function `e` prints the first argument it receives.
+In Bash functions, like Bash scripts, parameters are indexed, not named. `$1` is the first argument, `$2` is the second argument, and so on. In the following example, the function `print_me` just prints the first argument it receives.
 
 [source,bash]
 ----
-function e {
+function print_me {
   echo $1
 }
 ----

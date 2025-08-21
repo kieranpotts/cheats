@@ -1,4 +1,4 @@
-= Bash executables
+= Bash: Executables
 
 A Bash script is a file containing a sequence of commands that can be executed by the Bash shell. The file must have executable permissions set, which can be done with the command:
 
@@ -24,4 +24,4 @@ To pass arguments to the script, append them after the script name:
 ./<script-file> <arg1> <arg2>
 ----
 
-The `.sh` file extension is not required. It is RECOMMENDED to omit the extension on files that are intended to be used as executable commands, but to keep the `.sh` extension for Bash libraries.
+The `.sh` file extension is not required. It is RECOMMENDED to omit the extension on files that are intended to be used as executable commands, but to keep the `.sh` extension for Bash libraries (ie. Bash files that are intended to be sourced from other scripts).

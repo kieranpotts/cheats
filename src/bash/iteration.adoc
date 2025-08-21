@@ -1,6 +1,6 @@
-= Iteration (loops)
+= Bash: Iteration (loops)
 
-Loops are a *control structure* that allow you to execute a block of code multiple times. In Bash, there are several types of loops. Each has different use cases.
+Loops are a control structure that allow you to execute a block of code multiple times. In Bash, there are several types of loops. Each has different use cases.
 
 == For loops
 

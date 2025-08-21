@@ -1,4 +1,4 @@
-= Bash installation
+= Bash: Installation
 
 Bash is bundled with most mainstream Linux distributions. You can check which version you have by typing:
 
@@ -18,7 +18,7 @@ To make Bash the default shell again:
 chsh -s /bin/bash
 ----
 
-On Windows, it is recommended to install Windows Subsystem for Linux, as the Bash implementation in Ubuntu is more complete than emulators like Git Bash for Windows.
+On Windows, it is recommended to install Windows Subsystem for Linux, as the Bash implementation in Ubuntu is more complete than emulators like Git Bash.
 
 ----
 wsl --install

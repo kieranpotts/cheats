@@ -1,4 +1,4 @@
-= Process management in Bash
+= Bash: Process management
 
 The Bash shell has two modes of execution for commands:
 

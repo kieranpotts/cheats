@@ -1,0 +1,73 @@
+= Bash: Filesystem (reading and writing)
+
+To read the contents of a file into a variable, Bash supports the following syntax:
+
+[source,bash]
+----
+value=$(<input_file.txt)
+----
+
+This syntax is Bash-specific. If you want a solution that's more cross-platform compatible, your best option is `cat`.
+
+[source,bash]
+----
+value=$(cat input_file.txt)
+----
+
+Another common pattern is to capture the output of a command:
+
+[source,bash]
+----
+var=$(./input_file)
+----
+
+A common use case in Bash scripting is to read configuration files or data files line-by-line for processing. The most general syntax for reading a file line-by-line is this:
+
+[source,bash]
+----
+while IFS= read -r line
+do
+  echo "${line}"
+done < path/to/input_file
+----
+
+This can also be written on one line:
+
+[source,bash]
+----
+while IFS= read -r line; do echo ${line}; done < path/to/input_file
+----
+
+This works as follows. The input file, `input_file`, is opened for reading by the `read` command. This command reads the file one line at a time, assigning the content of each line to the `line` variable. Each line is printed to the terminal window with the `echo` statement. When the whole file has been read, the `while` loop terminates.
+
+Note also the use of the internal field separator, `IFS`. This is set to a null string (the space after the `=` assignment operator is significant) to preserve leading and trailing whitespace, which is the default behavior of the `read` command.
+
+There are several other methodologies that could be used to read a file line-by-line. Process substitution is one option. It allows you to pass the output from a command as a filename:
+
+[source,bash]
+----
+while IFS= read -r line
+do
+  echo "$line"
+done < <(cat input_file )
+----
+
+Alternatively, you could use a here string (a variant of a here document). The value returned from `cat input_file` will preserve newlines:
+
+[source,bash]
+----
+while IFS= read -r line
+do
+  echo "$line"
+done <<< $(cat input_file )
+----
+
+Yet another method is to provide the input to the loop using a file descriptor. Remember, when using file descriptors, use a number between 4 and 9 to avoid conflict with the shell's internal file descriptors.
+
+[source,bash]
+----
+while IFS= read -r -u9 line
+do
+  echo "$line"
+done 9< input_file
+----

@@ -1,0 +1,5 @@
+= Bash: Exit codes
+
+Bash functions can both produce output and return exit codes from the same call.
+
+A function can return a numeric value (an exit code) and optionally print something to `stdout` and/or `stderr`.

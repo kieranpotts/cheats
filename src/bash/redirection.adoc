@@ -1,0 +1,64 @@
+= Bash: Redirection
+
+Instead of printing the output of commands to the console, you can write the output to files. This is a common pattern in Bash scripting – particularly for logging.
+
+The two operators for file redirection are:
+
+* `>`: Redirect output to a file, overwriting the file if it already exists.
+* `>>`: Append output to a file.
+
+You might use a combination of both: `>` to initially clear or create the log file, then `>>` for subsequent writes.
+
+[source,bash]
+----
+# Write to file (overwrites existing content).
+echo -e "\n" > "$log_file"
+
+# Append output to file.
+echo "==== Analyzing log files in $log_dir directory" >> "$log_file"
+----
+
+The `>` and `>>` operators capture the `stdout` output of a command or program, and redirect it. The following example will print to the file exactly what you would see if you typed `ls -l` in your terminal.
+
+[source,bash]
+----
+ls -l > out.txt
+----
+
+To capture the `stderr` output of a command instead, us the `2>` operator.
+
+[source,bash]
+----
+grep da * 2> grep-errors.txt
+----
+
+Using various operators, it's actually possible to do all of the following types of redirection:
+
+* Redirect `stdout` to a file.
+* Redirect `stderr` to a file.
+* Redirect `stdout` to `stderr`.
+* Redirect `stderr` to `stdout`.
+* Redirect `stderr` and `stdout` to a file.
+* Redirect `stderr` and `stdout` to `stdout`.
+* Redirect `stderr` and `stdout` to `stderr`.
+
+The following redirects `stdout` to `stderr`:
+
+[source,bash]
+----
+grep da * 1>&2
+----
+
+You can do the opposite, and redirect `stderr` to `stdout`.
+
+[source,bash]
+----
+grep * 2>&1
+----
+
+If you want to capture both `stderr` and `stdout` in a file, use the `&>` operator. This turns out to be very handy. It is particularly useful in cron entries where you want commands to pass in absolute silence. To stop the commands from logging anything at all, you redirect both their `stdout` and `stderr` to `/dev/null`.
+
+[source,bash]
+----
+rm -f $(find / -name core) &> /dev/null
+----

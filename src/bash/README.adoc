@@ -4,11 +4,16 @@ See also link:../unix[Unix cheats] for usage of built-in system commands like `g
 
 * link:./installation.adoc[Installation]
 * link:./executables.adoc[Executables]
+* link:./imports.adoc[Imports (aka. sourcing)]
 * link:./variables.adoc[Variables]
+* link:./arithmetic.adoc[Arithmetic]
 * link:./functions.adoc[Functions]
 * link:./conditionals.adoc[Conditionals]
 * link:./iteration.adoc[Iteration (loops)]
-* link:./file-redirection.adoc[File redirection]
+* link:./pipes.adoc[Pipes]
+* link:./filesystem.adoc[Filesystem (reading and writing)]
+* link:./redirection.adoc[Redirection]
+* link:./exit-codes.adoc[Exit codes]
 * link:./process-management.adoc[Process management]
 * link:./built-ins.adoc[Built-in commands]
 

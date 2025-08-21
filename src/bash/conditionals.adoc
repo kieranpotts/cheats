@@ -1,6 +1,6 @@
-= Conditional statements in Bash
+= Bash: Conditionals
 
-Conditional statements are a common type of *control structure*. Other control structures include loops and functions.
+Conditional statements are a common type of control structure. Other control structures include loops and functions.
 
 Conditionals allow your script to make decisions and respond differently based on specific conditions.
 
@@ -46,49 +46,13 @@ fi
 
 The `elif` and `else` blocks are optional. There may be zero, one, or multiple `elif` blocks, but there can be only one `if` block and exactly zero or one `else` blocks.
 
-Conditional constructs are terminated by `fi`, meaning "finish", or "if" backwards if you prefer.
+Conditional constructs are terminated by `fi`, meaning "finish" or "if" backwards – however you like to think of it!
 
-Multiple statements may be included within each conditional block. As a matter of style, inner statements SHOULD be indented two spaces from their containing conditional construct.
-
-The whitespace padding within the square brackets is optional, but including it is a common coding convention as it improves readability.
+Multiple statements may be included within each conditional block. As a matter of style, inner statements SHOULD be indented from their containing conditional construct.
 
 == Case statements
 
-[source,bash]
-----
-case expression in
-  case1)
-    operation1
-  ;;
-  case2)
-    operation2
-  ;;
-esac
-----
-
-Simple commands may be put on the same line as the pattern and ;; as long as the expression remains readable. This is often appropriate for single-letter option processing.
-
-[source,bash]
-----
-verbose='false'
-aflag=''
-bflag=''
-files=''
-
-while getopts 'abf:v' flag; do
-  case "${flag}" in
-    a) aflag='true' ;;
-    b) bflag='true' ;;
-    f) files="${OPTARG}" ;;
-    v) verbose='true' ;;
-    *) error "Unexpected option ${flag}" ;;
-  esac
-done
-----
-
-For single-line actions, as above, add a space after the close parenthesis of the pattern and another before the `;;`.
-
-When the actions don't fit on a single line, put the pattern on a line on its own, then the actions, then `;;` also on a line of its own.
+// TODO
 
 == Select options
 
@@ -135,9 +99,7 @@ A && B  # Run B if and only if A succeeded
 A || B  # Run B if and only if A failed
 ----
 
-Using `&&` is the equivalent of running an `if` check on the result of the left-side command.
-
-This syntax can also help to flatten nested conditionals.
+Using `&&` is the equivalent of running an `if` check on the result of the left-side command. This syntax can also help to flatten nested conditionals.
 
 [source,bash]
 ----
@@ -201,6 +163,8 @@ fi
 
 * `-n`: Non-empty string (ie. checks if a string has a length greater than zero).
 * `-z`: Empty string (ie. checks if a string has a length of zero).
+* `=`: The two comparison values, each side of the operator, match.
+* `!=`: The two comparison values do not match.
 
 The `-n` operator is for checking if a variable has a non-empty string value. This is a great way to do something only if an optional input variable has been provided.
 
@@ -255,7 +219,7 @@ fi
 
 == AND/OR
 
-Use the AND operator `&&` to combine conditional expressions.
+Use the AND operator, `&&`, to combine conditional expressions.
 
 [source,bash]
 ----
@@ -313,6 +277,7 @@ else
 fi
 ```
 
+.Example
 [source,bash]
 ----
 if ! mv "${file_list}" "${dest_dir}/" ; then
@@ -326,7 +291,7 @@ For un-piped commands, you can instead use `$?` to check the return value of the
 [source,bash]
 ----
 mv "${file_list}" "${dest_dir}/"
-if [[ "$?" -ne 0 ]]; then
+if [[ "$?" -ne "0" ]]; then
   echo "Unable to move ${file_list} to ${dest_dir}" >&2
   exit "${E_BAD_MOVE}"
 fi
