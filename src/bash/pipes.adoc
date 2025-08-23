@@ -8,15 +8,3 @@ In the following example the following happens: first, the command `ls -l` is ex
 ----
 ls -l | sed -e "s/[aeio]/u/g"
 ----
-
-Pipelines that do not neatly fit on one line MAY be split across multiple lines. Double indentation SHOULD be used for follow-on lines.(This rule also applies to logical compounds using `||` and `&&`.)
-
-[source,bash]
-----
-command1 | command2
-
-command1 \
-    | command2 \
-    | command3 \
-    | command4
-----

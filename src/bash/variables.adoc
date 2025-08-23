@@ -308,7 +308,7 @@ EOF
 
 == Array variables
 
-Arrays hold multiple values, each accessible by an index.
+Arrays are supported by Bash. Arrays hold multiple values, each accessible by an index.
 
 [source,bash]
 ----
