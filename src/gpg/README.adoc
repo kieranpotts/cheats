@@ -1,0 +1,103 @@
+= GPG (GNU Privacy Guard)
+
+https://www.ietf.org/rfc/rfc4880.txt[OpenPGP] is a standard for cryptographic privacy and authentication. It allows you to encrypt and sign your data and communications. This is done using a system of public and private keys.
+
+https://www.gnupg.org/[GPG] is a free, open source implementation of the OpenPGP standard. It is a command line tool, widely available on all major operating systems, used for encrypting, decrypting, signing, and verifying all kinds of data and communications.
+
+== How GPG works
+
+GPG implements key-based asymmetric cryptography. You using the `gpg` utility to create two mathematically related keys:
+
+* A *public key*, which you share openly, and which is used by others to encrypt messages that they send to you, or to verify your signatures.
+
+* A *private key*, which you keep secret, and which you use to decrypt messages that are sent to you, and to create your digital signatures.
+
+Thus, when someone wants to send you a secure message – whether by email or any other insecure channel – they use your public key to encrypt it. Only you can decrypt it with your private key.
+
+You can also "sign" your own files and messages. This is done to prove the authenticity of those files and messages – to prove that they really came from you and haven't been tampered with by others. This works the other way around: you sign a message with your private key, and recipients of the message use your public key to verify the message's signature.
+
+When you sign a message, you're adding a cryptographically-strong proof that you – or someone in possession of your private key – wrote the message, and that the message was not tampered with. The steps to add a signature are:
+
+1. You calculate a hash (or checksum) of the message, using a hashing function such as SHA-256. Hashing functions are one-way operations that generate a unique set of bytes from a message.
+2. You use your private key to sign the calculated hash, using algorithms like RSA.
+3. You send the signature with the original clear-text message. The message is not encrypted in this case, only signed.
+
+(It is possible to use RSA to both sign and encrypt a message – called "authenticated encryption".)
+
+The OpenPGP standard contains specifications on algorithms, encodings, etc, for real-world usage of solutions based on cryptography. Among the various implementations of the OpenPGP standard, the most widely-adopted one is likely GPG (aka. GnuPG). GPG implements a decentralized trust model, meaning there is no single authority that issues or verifies keys. Instead, users can sign each other's keys to create a "web of trust."
+
+GPG is widely trusted because it is open source, follows established cryptographic standards, and has been thoroughly audited by security experts over many years.
+
+== Use cases
+
+GPG can be used to encrypt, decrypt, sign, and verify any arbitrary data. Common use cases include:
+
+* Secure email
+* File encryption
+* Software distribution
+* Password management
+* Document authentication
+
+For example, when adding packages from third-party repositories in Linux, GPG keys tend to be used to verify the authenticity of downloaded packages. It works like this:
+
+1. Third-party package providers sign their packages, adding a signature in the package metadata using their private GPG key.
+2. The third-party repository provides its public GPG key.
+3. You add the public key to your system's trusted keyring.
+4. When you install packages from the third-party repository, your package manager verifies the authenticity of the download packages by verifying the packages' signatures with the public key. Only valid packages are installed.
+
+In the following code example, Docker's public GPG key is downloaded and added to APT's keyring. Docker's own package repository is then added as a source for APT to install packages from, and APT is configured to use Docker's public key to verify packages downloaded from that repository.
+
+----
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor --yes --output /etc/apt/keyrings/docker.gpg
+
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+----
+
+Trusted keys can be viewed in these directories:
+
+* `/usr/share/keyrings/`
+* `/etc/apt/trusted.gpg.d/`
+
+Another use case is the signing of Git commits. To set this up, first check if you already have a GPG key pair:
+
+----
+$ gpg --list-secret-keys --keyid-format=long
+----
+
+The key ID is the bit on the `sec` line after the first `/`:
+
+----
+sec   <key-type>/<key-id> <creation-date>
+----
+
+If you don't already have a GPG key, create one with the following command. At the prompts, choose RSA, 4096 bits, and set an expiration date. For your uid, use the same email address you use to login to GitHub/GitLab.
+
+----
+$ gpg --full-generate-key
+----
+
+Add your key ID to your Git config:
+
+----
+$ git config --global user.signingkey <key-id>
+----
+
+You can now sign commits and tags on a case-by-case basis:
+
+----
+git commit -S -m "Your commit message"
+git tag -s v1.0 -m "Version 1.0"
+----
+
+Alternatively, you can make this the default behavior for all commits:
+
+----
+$ git config --global commit.gpgsign true
+----
+
+Finally, you need to export your public key, and copy the output into your GitHub/GitLab account (in Settings → SSH and GPG keys). Once set up, a "verified" badge will be shown next to your signed commits in the upstream repository's GUI.
+
+----
+$ gpg --armor --export <key-id>
+----

@@ -11,6 +11,7 @@ Cheat sheets and study notes for various tools, technologies, and languages.
 * link:./src/github[GitHub]
 * link:./src/github-actions[GitHub Actions]
 * link:./src/go[Go]
+* link:./src/gpg[GPG]
 * link:./src/htop[htop]
 * link:./src/intellij[IntelliJ IDEA]
 * link:./src/iptables[iptables]
