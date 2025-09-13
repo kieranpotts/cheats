@@ -1,4 +1,4 @@
-= Bash: Pipes
+= Bash: Basic piping
 
 Pipes let you use the output of one program as the input of another.
 

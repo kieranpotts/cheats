@@ -1,0 +1,55 @@
+= Bash: Variable substitution
+
+Variable substitution – also known as variable expansion – is the concept of replacing a variable reference with the value held by the variable.
+
+In Bash, variable substitution is done using the dollar sign (`$`) followed by the variable name. For example, to use a variable named `var`, you would write `$var`.
+
+An alternative syntax is to wrap the variable name in curly braces (`{}`). Thus, the two available syntaxes for variable substitution are:
+
+* `$var`
+* `${var}`
+
+Generally, both syntaxes behave identically. But there are subtle differences that make `${var}` more robust and flexible. For example, because the brackets clearly delimit the variable name, it is easier to append literal characters immediately after the variable substitution.
+
+[source,bash]
+----
+var="foo"
+
+# Looks for a variable named 'varbar' (likely undefined).
+echo "$varbar"
+
+# Correctly expands to 'foobar'.
+echo "${var}bar"
+----
+
+The bracketed syntax also supports extended syntax for querying and manipulating the values of variables.
+
+[source,bash]
+----
+var="Hello, World!"
+
+# Returns the length of the variable.
+${#var}
+
+# Returns the first character of the variable.
+${var:0:1}
+
+# Or:
+${var%%"${var#?}"}
+
+# Remove characters from a string:
+${var:2}    # Remove the first two characters.
+${var#*, }  # Remove everything up to the first comma and space.
+${var##*, } # Remove everything up to the last comma and space.
+${var%,*}   # Remove everything after the last comma.
+${var%%,*}  # Remove everything after the first comma.
+
+# Replacing characters:
+var="0050"
+${var[@]#0} # Remove the first leading zero.
+${var/a/b}  # Replace "a" with "b".
+${var//a/b} # Replace all "a" with "b".
+
+# Set a default value, which is used if `var` is unset.
+${var:-default}
+----

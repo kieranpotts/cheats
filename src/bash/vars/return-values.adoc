@@ -1,0 +1,48 @@
+= Bash: Return values
+
+`$?` is a special variable that returns the return value (ie. the exit status) of the last-executed command.
+
+[source,bash]
+----
+cd /dada &> /dev/null
+echo rv: $?
+
+cd $(pwd) &> /dev/null
+echo rv: $?
+----
+
+`$?` is commonly used in conditional expressions to check if the last command succeeded or not.
+
+[source,bash]
+----
+return_value=$?
+if [ $return_value -ne 0 ]; then
+  echo "Error"
+fi
+exit $return_value
+----
+
+The behavior of `$?` can be confusing sometimes. It always captures the return value of the last-executed command, but what _is_ the last-executed command is not always obvious. Consider the following example.
+
+[source,bash]
+----
+test_fn() {
+  local my_var="$(my_func)"
+  [[ $? -eq 0 ]] || return
+
+  # ...
+}
+----
+
+Here, `$?` actually contains the exit code of `local`, not of `my_func`. The solution is to declare the local variable, and then assign its value (using command substitution) separately.
+
+[source,bash]
+----
+test_fn() {
+  local my_var
+  my_var="$(my_func)"
+  [[ $? -eq 0 ]] || return
+
+  # ...
+}
+----

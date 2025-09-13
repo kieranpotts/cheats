@@ -1,0 +1,12 @@
+= Bash: `while` loops
+
+A `while` loop continues to execute as long as a specified condition is true.
+
+[source,bash]
+----
+while [ condition ]; do
+  # Commands to execute while condition is true.
+done
+----
+
+`while` loops are useful when you need to wait for a process to finish, to monitor system state, or to continue to read input until a precondition changes.

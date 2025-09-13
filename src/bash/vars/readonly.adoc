@@ -1,0 +1,11 @@
+= Bash: Read-only variables (constants)
+
+Variables may be turned into constants, which means their value cannot be changed once assigned. This is done by enabling the `readonly` _attribute_ of a variable.
+
+[source,bash]
+----
+readonly str="Hello, World!"
+echo "${str}"
+----
+
+You can also declare a variable, assign a value to it, and then subsequently mark it as `readonly`.

@@ -1,0 +1,7 @@
+= Bash: Types
+
+Unix shells don't have formal data types, like high-level programming languages. Instead, every variable value is treated as a string by default.
+
+But there are behaviors that interpret values into other types. For examples, variables are treated as integers when used in arithmetic contexts.
+
+Furthermore, community conventions have emerged for simulating other types; for example, the string values `"true"` and `"false"` are commonly used to represent boolean values.

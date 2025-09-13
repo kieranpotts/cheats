@@ -25,7 +25,7 @@ The `>` and `>>` operators capture the `stdout` output of a command or program, 
 ls -l > out.txt
 ----
 
-To capture the `stderr` output of a command instead, us the `2>` operator.
+To capture the `stderr` output of a command instead, use the `2>` operator.
 
 [source,bash]
 ----

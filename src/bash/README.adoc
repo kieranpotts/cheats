@@ -2,15 +2,59 @@
 
 See also link:../unix[Unix cheats] for usage of built-in system commands like `grep`, `find`, and `head`/`tail`, which are commonly executed via Bash but which are not part of the Bash language specification itself.
 
-* link:./installation.adoc[Installation]
-* link:./executables.adoc[Executables]
-* link:./imports.adoc[Imports (aka. sourcing)]
-* link:./variables.adoc[Variables]
-* link:./arithmetic.adoc[Arithmetic]
-* link:./functions.adoc[Functions]
-* link:./conditionals.adoc[Conditionals]
-* link:./iteration.adoc[Iteration (loops)]
+== Getting started
+
+* link:./start/installation.adoc[Installation]
+
+== Bash files
+
+* link:./files/executables.adoc[Executables]
+* link:./files/sourcing.adoc[Sourcing]
+
+== Variables
+
+* link:./vars/types.adoc[Types]
+* link:./vars/declaration.adoc[Declaring variables]
+* link:./vars/readonly.adoc[Read-only variables (constants)]
+* link:./vars/local.adoc[Local variables]
+* link:./vars/substitution.adoc[Variable substitution (aka. variable expansion)]
+* link:./vars/builtins.adoc[Built-in variables]
+* link:./vars/return-values.adoc[Return values]
+* link:./vars/command-substitution.adoc[Command substitution]
+* link:./vars/multi-line-strings.adoc[Multi-line strings]
+* link:./vars/arrays.adoc[Arrays]
+
+== Functions
+`
+* link:./fns/declaration.adoc[Declaring functions]
+* link:./fns/invocation.adoc[Invoking functions]
+* link:./fns/parameters.adoc[Function parameters]
+
+== User interfaces
+
+* link:./ui/read.adoc[Reading user input (`read`)]
+* link:./ui/select.adoc[User selections (`select`)]
+
+== Conditionals
+
+* link:./conditionals/if.adoc[`if`]
+* link:./conditionals/case.adoc[`case`]
+* link:./conditionals/shorthand.adoc[Shorthand conditional syntax]
+* link:./conditionals/tests.adoc[Tests]
+* link:./conditionals/conditional-operators.adoc[Conditional operators]
+* link:./conditionals/return-value-evaluation.adoc[Evaluating return values]
+
+== Loops
+
+* link:./loops/for.adoc[`for`]
+* link:./loops/while.adoc[`while`]
+* link:./loops/until.adoc[`until`]
+* link:./loops/nesting.adoc[Nested loops]
+
+== Other topics
+
 * link:./pipes.adoc[Pipes]
+* link:./arithmetic.adoc[Arithmetic]
 * link:./filesystem.adoc[Filesystem (reading and writing)]
 * link:./redirection.adoc[Redirection]
 * link:./exit-codes.adoc[Exit codes]
@@ -22,23 +66,13 @@ See also link:../unix[Unix cheats] for usage of built-in system commands like `g
 == References
 
 * Bash manual: `man bash`
-
 * https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html[Bash reference manual]
-
 * https://github.com/dylanaraps/pure-bash-bible[Pure Bash bible] by Dylan Araps
-
 * https://tldp.org/LDP/Bash-Beginners-Guide/html/[Bash guide for beginners] by Machtelt Garrels
-
 * https://tldp.org/LDP/abs/html/[Advanced Bash scripting guide] by Mendel Cooper
-
 * https://tldp.org/HOWTO/Bash-Prog-Intro-HOWTO.html[BASH Programming - Introduction HOW-TO] by Mike G
-
 * https://mywiki.wooledge.org/BashGuide[BashGuide], written by various authors.
-
 * https://guide.bash.academy/[The Bash guide] by Maarten Billemont (work-in-progress)
-
-* https://web.archive.org/web/20230331215718/https://wiki.bash-hackers.org/[The Bash hackers wiki], community-maintained documentation (archived).
-
-* https://en.wikibooks.org/wiki/Bash_Shell_Scripting[Bash shell scripting], a Creative Commons wiki-book by various authors.
-
+* https://web.archive.org/web/20230331215718/https://wiki.bash-hackers.org/[The Bash hackers wiki], community-maintained documentation (archived)
+* https://en.wikibooks.org/wiki/Bash_Shell_Scripting[Bash shell scripting], a Creative Commons wiki-book by various authors
 * https://jvns.ca/blog/2017/03/26/bash-quirks/[Bash scripting quirks and safety tips] by Julia Evans

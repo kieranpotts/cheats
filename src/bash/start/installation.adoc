@@ -6,7 +6,7 @@ Bash is bundled with most mainstream Linux distributions. You can check which ve
 bash --version
 ----
 
-Bash is bundled with macOS, but since Catalina (10.15) it is not the default shell (which was changed to Zsh). To switch to the Bash shell on macOS, type:
+Bash is bundled with macOS, but since Catalina (v10.15) it is not the default shell (which was changed to Zsh). To switch to the Bash shell on macOS, type:
 
 ----
 bash

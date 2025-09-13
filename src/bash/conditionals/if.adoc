@@ -1,0 +1,69 @@
+= Bash conditionals: `if`
+
+The `if` statement is used for control flow. It works by executing commands based on the evaluation of conditional expressions.
+
+The syntax is as follows:
+
+[source,bash]
+----
+if [ conditional_expression1 ] ; then
+  operation1
+elif [ conditional_expression2 ] ; then
+  operation2
+else
+  operation3
+fi
+----
+
+Or written like this:
+
+[source,bash]
+----
+if [ conditional_expression1 ]
+then
+  operation1
+elif [ conditional expression2 ]
+then
+  operation2
+else
+  operation3
+fi
+----
+
+.Example
+[source,bash]
+----
+count=99
+
+if [ $count -eq 100 ] ; then
+  echo "Count is 100"
+elif [ $count -gt 100 ] ; then
+  echo "Count is greater than 100"
+else
+  echo "Count is less than 100"
+fi
+----
+
+The `elif` and `else` blocks are optional. There may be zero, one, or multiple `elif` blocks, but there can be only one `if` block and exactly zero or one `else` blocks.
+
+Conditional constructs are terminated by `fi`, meaning "finish" or "if" backwards – however you like to think of it!
+
+Multiple statements may be included within each conditional block. As a matter of style, inner statements SHOULD be indented from their containing conditional construct.
+
+== Nesting
+
+Bash supports nested conditional statements.
+
+[source,bash]
+----
+if [ conditional_expression1 ]; then
+  operation1
+  operation2
+else
+  if [ conditional_expression2 ]; then
+    operation3
+  fi
+fi
+----
+
+However, nesting reduces readability and understandability. It increases the risk of errors, and it makes debugging harder. Work to refactor complex conditional logic.

@@ -1,0 +1,12 @@
+= Bash: `until` loops
+
+The `until` loop is similar to the `while` loop, except it is inverted: the loop executes for as long as the condition is `false`.
+
+[source,bash]
+----
+until [ condition ]; do
+  # Commands to execute until condition is true.
+done
+----
+
+`until` is useful for doing things like running commands until a file exists, or until a service starts, or otherwise polling something until success.

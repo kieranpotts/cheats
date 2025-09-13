@@ -1,0 +1,21 @@
+= Bash: `for` loops
+
+A `for` loop is used to iterate over a list of items.
+
+[source,bash]
+----
+for item in list; do
+  # Commands to execute for each item.
+done
+----
+
+C-style `for` syntax is also supported:
+
+[source,bash]
+----
+for ((i=0; i<10; i++)); do
+  # Commands here will be executed exactly 10 times.
+done
+----
+
+`for` loops are great for looping through dynamically-generated lists of things, like files found on the local filesystem, or for repeating a task a fixed number of times.

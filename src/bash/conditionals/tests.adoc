@@ -1,0 +1,62 @@
+= Bash: Tests
+
+The single backet syntax `[ ... ]` is the original test command in Bourne shell. It is POSIX-compliant and works in all POSIX-compliant shells, including Bash.
+
+[source,bash]
+----
+count=99
+
+if [ $count -eq 100 ] ; then
+  echo "Count is 100"
+elif [ $count -gt 100 ] ; then
+  echo "Count is greater than 100"
+else
+  echo "Count is less than 100"
+fi
+----
+
+But the double bracket syntax `[[ ... ]]`, which is a Bash-specific extension and is not POSIX-compliant, is RECOMMENDED for most use cases. It prevents pathname expansion and word splitting, which eliminates a common class of bugs in shell scripts. It also allows for regular expression matching, which the single bracket syntax does not support.
+
+.Examples
+[source,bash]
+----
+if [[ "filename" =~ ^[[:alnum:]]+name ]]; then
+  echo "Match"
+fi
+
+if [[ "filename" == "f*" ]]; then
+  echo "Match"
+fi
+
+# For comparison, this gives a "too many arguments" error as
+# f* is expanded to the contents of the current directory.
+if [ "filename" == f* ]; then
+  echo "Match"
+fi
+----
+
+== Combining conditions
+
+Use the AND operator, `&&`, to combine conditional expressions.
+
+[source,bash]
+----
+# Check if a value is set and is valid.
+if [[ -n $1 ]] && [[ -r $1 ]]
+then
+  echo "File exists and is readable."
+fi
+----
+
+The OR operator is `||`. Use this to evaluate multiple conditions and return `false` if any one condition returns a false result.
+
+[source,bash]
+----
+if [[ -z $1 ]] || [[ ! -r $1 ]]
+then
+  echo "Either you didn't give me a value or the file is unreadable"
+  exit 2
+fi
+----
+
+It is RECOMMENDED to always use the double bracket syntax `[[ ... ]]` when combining conditional expressions with `&&` or `||`. It's better for backwards compatibility with older implementations of Bash, in which using single bracket syntax with `&&` or `||` could cause syntax issues.

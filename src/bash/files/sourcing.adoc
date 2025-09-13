@@ -1,4 +1,4 @@
-= Bash: Imports (aka. sourcing)
+= Bash: Sourcing
 
 The process of importing other Bash files is known as sourcing. It is done using the `source keyword followed by a path to the file to import. The path may be absolute, or relative to the current running script (which is not necessarily the current file).
 

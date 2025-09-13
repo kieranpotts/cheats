@@ -1,0 +1,50 @@
+= Bash: Command substitution
+
+Use command substitution to capture the output of a command into a variable.
+
+[source,bash]
+----
+# Modern syntax.
+var=$(command)
+
+# Old syntax - but it still works.
+var=`command`
+
+----
+
+Be careful about assigning the result of commands to local variables. Consider the following example. It looks to be correct, but `$?` actually contains the exit code of `local`, not of `my_func`.
+
+[source,bash]
+----
+test_fn() {
+  local my_var="$(my_func)"
+  [[ $? -eq 0 ]] || return
+
+  # ...
+}
+----
+
+The solution is to declare the local variable, and then assign its value (using command substitution) separately.
+
+[source,bash]
+----
+test_fn() {
+  local my_var
+  my_var="$(my_func)"
+  [[ $? -eq 0 ]] || return
+
+  # ...
+}
+----
+
+We can actually simplify this further:
+
+[source,bash]
+----
+test_fn() {
+  local my_var
+  my_var="$(my_func)" || return
+
+  # ...
+}
+----

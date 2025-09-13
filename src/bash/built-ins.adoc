@@ -2,7 +2,9 @@
 
 A *built-in* is a command or function that is part of the shell itself. No external programs are required to run built-in commands, and thus no new processes are spawned when built-ins are used.
 
-By comparison, Unix *utilities* are external programs that are not built into the shell. These utilities are typically found in standard locations like `/bin` or `/usr/bin`, and they are executed as separate processes when called from a shell script or command line. There are many POSIX-specific Unix utilities, defined in the https://pubs.opengroup.org/onlinepubs/9699919799/utilities/rm.html[Shell and Utilities Specification], which are widely available on Unix and Unix-like systems.
+By comparison, Unix *utilities* are external programs that are not built into the shell. These utilities are typically found in standard locations like `/bin` or `/usr/bin`, and they are executed as separate processes when called from a shell script or command line.
+
+In addition to shell built-ins, there are many POSIX-standard Unix utilities, which are defined in the https://pubs.opengroup.org/onlinepubs/9699919799/utilities/rm.html[Shell and Utilities Specification] and which are widely available on Unix and Unix-like systems.
 
 [TIP]
 ======
