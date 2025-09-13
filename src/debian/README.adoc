@@ -1,0 +1,11 @@
+= Debian
+
+These cheats cover Debian and Debian-based Linux distributions such as Ubuntu and Pop OS.
+
+== Application icons
+
+To fix a missing application icon in the launcher, edit the application's `StartupWMClass` setting in its `.desktop` configuration file, so that it matches the actual window class of the application.
+
+To find an application's window class, open the Looking Glass tool. Open the application. Then press `Alt+F2`, type `lg`, and press Enter. In the "Windows" tab, find the application in the list of running applications, and note its window class. For example, for Firefox Developer Edition, the window class is `firefox-dev`.
+
+Locate the application's `.desktop` file, which is usually in `/usr/share/applications` or `~/.local/share/applications`. Open the file in a text editor, with superuser privileges. Add or modify the line `StartupWMClass=` to reference the correct window class, eg. `StartupWMClass=firefox-dev` rather than `StartupWMClass=firefox-aurora`.
