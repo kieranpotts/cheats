@@ -166,7 +166,22 @@ $ gpg --armor --export-secret-keys YOUR_EMAIL > private.key
 $ gpg --armor --export YOUR_EMAIL > public.key
 ----
 
-// Etc.
+Copy the files to somewhere on the Windows filesystem.
+
+Open Kleopatra, an OpenPGP certificate and key management utility that is installed with GPG4Win. Go to *File -> Import Certificates*, and import both the `public.key` and `private.key` files you exported from WSL. The key should now be listed in Kleopatra, under *Certificates*.
+
+Alternatively, you can import the keys via the command line:
+
+----
+cd C:\path\to\your\keys
+
+# Import private key first (this usually imports the public key too)
+"C:\Program Files (x86)\GnuPG\bin\gpg.exe" --import private.key
+
+# Import public key (if needed)
+"C:\Program Files (x86)\GnuPG\bin\gpg.exe" --import public.key
+----
+
 
 == Other GPG cheats
 
