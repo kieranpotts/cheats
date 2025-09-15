@@ -182,6 +182,47 @@ cd C:\path\to\your\keys
 "C:\Program Files (x86)\GnuPG\bin\gpg.exe" --import public.key
 ----
 
+Verify the import:
+
+----
+# List secret keys
+"C:\Program Files (x86)\GnuPG\bin\gpg.exe" --list-secret-keys
+
+# List public keys
+"C:\Program Files (x86)\GnuPG\bin\gpg.exe" --list-keys
+----
+
+[IMPORTANT]
+======
+Delete the original `public.key` and `private.key` files after importing them to GPG.
+======
+
+To test the configuration, make a commit from a Windows GUI Git client, and you should be prompted for your GPG key's passphrase via a Windows GUI dialog. Also test via WSL, using either of the below commands. You should get the same "pinentry" dialog, rather than the original terminal prompt, for your passphrase.
+
+----
+# Sign an arbitrary piece of text.
+echo "test" | gpg --clearsign
+
+# Create a signed commit (may be empty).
+git commit --allow-empty -m "test signed commit"
+----
+
+[TIP]
+======
+Your passphrase is held in memory by the GPG agent. You need to restart the agent to clear the cached passphrase. For the native Linux agent you would use:
+
+----
+$ gpgconf --kill gpg-agent
+----
+
+But of course you're now using the Windows agent, so you need to issue the following command from Powershell or the regular Command Prompt:
+
+----
+taskkill /f /im gpg-agent.exe
+----
+
+On the next GPG command, it will take a few seconds for the agent to startup, and then you will be prompted for your passphrase again.
+======
 
 == Other GPG cheats
 
