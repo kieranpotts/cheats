@@ -125,7 +125,7 @@ Finally, before you push any signed commits, you need to export your public key,
 $ gpg --armor --export <key-id>
 ----
 
-== Other cheats
+== Other GPG cheats
 
 Get the GPG version:
 
