@@ -34,6 +34,8 @@ GPG can be used to encrypt, decrypt, sign, and verify any arbitrary data. Common
 * Password management
 * Document authentication
 
+=== Package managers
+
 For example, when adding packages from third-party repositories in Linux, GPG keys tend to be used to verify the authenticity of the downloaded packages. It works like this:
 
 1. Third-party package providers sign their packages, adding a signature in the package metadata using their private GPG key.
