@@ -159,7 +159,7 @@ Configure Git to use the wrapper script instead of the default `gpg` binary:
 $ git config --global gpg.program /usr/local/bin/gpg
 ----
 
-Export your GPG key pair from WSL, and import it into GPG4Win:
+Export your GPG key pair from WSL, and import the keys into GPG4Win:
 
 ----
 $ gpg --armor --export-secret-keys YOUR_EMAIL > private.key
