@@ -129,9 +129,42 @@ $ gpg --armor --export <key-id>
 
 ==== WSL-specific configuration
 
-The above configuration works fine when using Git exclusively in the WSL environment. But if you are committing from a Windows GUI client (eg. VS Code's built-in Git client, or GitHub Desktop), you will need some additional configuration so that you are prompted for your GPG key's passphrase via the Windows GUI, rather than the terminal.
+The above configuration works fine when using Git exclusively in the WSL environment. But if you are committing from a Windows GUI client (eg. VS Code's built-in Git client, or GitHub Desktop), you will need some additional configuration so that you are prompted for your GPG key's passphrase via the Windows GUI.
 
-The solution is to download and install https://www.gpg4win.org[GPG4Win], and configure Git in WSL to use GPG4Win's `gpg.exe` Windows binary, rather than the native `gpg` binary installed in WSL.
+The solution is to download and install https://www.gpg4win.org[GPG4Win], and configure Git in WSL to use GPG4Win's `gpg.exe` Windows binary, rather than the `gpg` binary installed in WSL.
+
+In WSL, create a wrapper script for GPG4Win's `gpg.exe`:
+
+----
+$ sudo vim /usr/local/bin/gpg
+----
+
+Add the following contents:
+
+----
+#!/bin/bash
+
+/mnt/c/Program\ Files\ \(x86\)/GnuPG/bin/gpg.exe "$@"
+----
+
+Make it executable:
+
+----
+$ sudo chmod +x /usr/local/bin/gpg
+----
+
+Configure Git to use the wrapper script instead of the default `gpg` binary:
+
+----
+$ git config --global gpg.program /usr/local/bin/gpg
+----
+
+Export your GPG key pair from WSL, and import it into GPG4Win:
+
+----
+$ gpg --armor --export-secret-keys YOUR_EMAIL > private.key
+$ gpg --armor --export YOUR_EMAIL > public.key
+----
 
 // Etc.
 
