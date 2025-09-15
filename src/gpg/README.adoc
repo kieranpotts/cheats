@@ -127,6 +127,14 @@ Finally, before you push any signed commits, you need to export your public key,
 $ gpg --armor --export <key-id>
 ----
 
+==== WSL-specific configuration
+
+The above configuration works fine when using Git exclusively in the WSL environment. But if you are committing from a Windows GUI client (eg. VS Code's built-in Git client, or GitHub Desktop), you will need some additional configuration so that you are prompted for your GPG key's passphrase via the Windows GUI, rather than the terminal.
+
+The solution is to download and install https://www.gpg4win.org[GPG4Win], and configure Git in WSL to use GPG4Win's `gpg.exe` Windows binary, rather than the native `gpg` binary installed in WSL.
+
+// Etc.
+
 == Other GPG cheats
 
 Get the GPG version:
