@@ -1,0 +1,3 @@
+= Python
+
+* link:./poetry.adoc[Poetry]

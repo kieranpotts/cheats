@@ -27,6 +27,7 @@ Cheat sheets and study notes for various tools, technologies, and languages.
 * link:./src/nginx[Nginx]
 * link:./src/pm2[PM2]
 * link:./src/posix[POSIX]
+* link:./src/python[Python]
 * link:./src/react[React]
 * link:./src/redis[Redis]
 * link:./src/spring-framework[Spring Framework]
