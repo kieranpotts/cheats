@@ -49,6 +49,23 @@ The following redirects `stdout` to `stderr`:
 grep da * 1>&2
 ----
 
+Or:
+
+[source,bash]
+----
+grep da * >&2
+----
+
+This is commonly used to print error messages to the console, commonly before a non-zero exit or return.
+
+[source,bash]
+----
+if [ $# -gt 0 ]; then
+  echo "This script does not accept any arguments" >&2
+  exit 1
+fi
+----
+
 You can do the opposite, and redirect `stderr` to `stdout`.
 
 [source,bash]
