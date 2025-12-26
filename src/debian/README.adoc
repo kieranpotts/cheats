@@ -2,6 +2,18 @@
 
 These cheats cover Debian and Debian-based Linux distributions such as Ubuntu and Pop OS.
 
+== Booting
+
+If Debian fails to start – you're seeing a blank screen with no prompt – you have the following options:
+
+* Reboot the computer, and hold (or press repeatedly) either `Shift` or `Esc` after the BIOS splash.
+
+* Boot the OS from a USB stick.
+
+Choose the option to boot the OS in recovery mode. This will load the OS in memory but not install it. If the live session works, the problem is with the installed OS, not your hardware.
+
+You can then use the option to fix the current installation, rather than installing a new one.
+
 == Application icons
 
 To fix a missing application icon in the launcher, edit the application's `StartupWMClass` setting in its `.desktop` configuration file, so that it matches the actual window class of the application.
