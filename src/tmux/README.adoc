@@ -85,7 +85,7 @@ Thus, to split the current pane into two horizontally, you will hold down the `C
 |Kill the current pane.
 
 |`&`
-|Kill the current window.
+|Kill the current window (kills the session if no remaining windows).
 |===
 
 === Session controls
