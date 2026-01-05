@@ -1,0 +1,93 @@
+= Windows Subsystem for Linux (WSL)
+
+== Installing and updating WSL
+
+Install:
+
+----
+$ wsl --install
+----
+
+This will install the latest version of WSL with the default Ubuntu distribution of Linux. To install a distribution other than Ubuntu, use:
+
+----
+$ wsl --install <Distro>
+----
+
+For a valid list of distribution names, available to install from the Microsoft Store:
+
+----
+$ wsl --list --online
+----
+
+To update WSL to the latest version:
+
+----
+$ wsl --update
+----
+
+Updating is recommended whenever you have any problems loading WSL – this can fix many common issues, and WSL has a habit of needing an explicit update after a Windows update.
+
+Check the current WSL version:
+
+----
+$ wsl --version
+----
+
+Set default version to WSL 2 (RECOMMENDED):
+
+----
+$ wsl --set-default-version 2
+----
+
+Set running version to a particular `<Distro` (eg. `Ubuntu-20.04`) running on WSL 2:
+
+----
+$ wsl --set-version <Distro> 2
+----
+
+To list all distributions that are locally installed and available for use:
+
+----
+$ wsl --list --verbose
+----
+
+== Starting and stopping WSL
+
+To start WSL, simply type:
+
+----
+$ wsl
+----
+
+To launch into your home directory:
+
+----
+$ wsl ~
+----
+
+To run as a specific user, where `<Username>` is the name of the user that exists in the distro:
+
+----
+$ wsl --user <Username>
+----
+
+To shutdown WSL:
+
+----
+$ wsl --shutdown
+----
+
+== Other commands
+
+For help:
+
+----
+$ wsl --help
+----
+
+''''
+
+== References
+
+* https://learn.microsoft.com/en-us/windows/wsl/basic-commands[Windows Developer Tools: Basic commands for WSL]

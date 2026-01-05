@@ -37,6 +37,7 @@ Cheat sheets and study notes for various tools, technologies, and languages.
 * link:./src/tmux[tmux]
 * link:./src/unix[Unix]
 * link:./src/web-components[Web Components]
+* link:./src/wsl[Windows Subsystem for Linux (WSL)]
 * link:./src/xdebug[Xdebug]
 
 ''''
