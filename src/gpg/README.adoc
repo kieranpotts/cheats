@@ -224,6 +224,37 @@ taskkill /f /im gpg-agent.exe
 On the next GPG command, it will take a few seconds for the agent to startup, and then you will be prompted for your passphrase again.
 ======
 
+== Passphrase caching
+
+When you use your GPG private key, you may be prompted for your passphrase. To avoid having to enter your passphrase every time, you can use the GPG agent to cache your passphrase for a configurable amount of time. There will usually be a default cache time, typically an hour.
+
+To change the cache time, on Linux create or edit the `~/.gnupg/gpg-agent.conf` file, adding the following lines:
+
+----
+# Cache passphrase for 1 hour (3600 seconds).
+default-cache-ttl 3600
+
+# Maximum cache time regardless of use (2 hours).
+max-cache-ttl 7200
+----
+
+These optional settings are required only if you're using gpg-agent for SSH authentication:
+
+----
+default-cache-ttl-ssh 3600
+max-cache-ttl-ssh 7200
+----
+
+For Kleopatra on Windows, open Kleopatra, go to *Settings -> Configure Kleopatra -> GnuPG System -> Private Keys (or GPG Agent)*. Locate the option *Expire cached PINs after N seconds* and set it to your desired value (eg. 600). Click *OK* to save the changes.
+
+You can adjust the values to your desired length. For instance, 86400 is the number of seconds in one day. Setting the value to 0 will disable the cache entirely, meaning you will be prompted for your passphrase every time you use your private key.
+
+After changing the setting, you may need to restart the GPG agent for the changes to take effect. You can do this by killing the current agent process:
+
+----
+$ gpgconf --kill gpg-agent
+----
+
 == Other GPG cheats
 
 Get the GPG version:
