@@ -7,6 +7,9 @@ The Bash shell has two modes of execution for commands:
 
 To execute commands in sequence, commands are separated by newlines or the semi-colon (`;`) character. In the following example, when `command1` is finished, `command2` will be executed.
 
+// IMPORTANT: Leave the empty line on the end of the following code blocks. It seems to be
+// required for correct rendering of these scripts.
+
 [source,bash]
 ----
 command1
@@ -40,3 +43,45 @@ To have both commands run in the background, with neither dependent upon the oth
 command1 & command2 &
 
 ----
+
+This is equivalent to:
+
+[source,bash]
+----
+command1 &
+command2 &
+
+----
+
+If you want a background process to keep running even after you close your terminal, use `nohup`:
+
+[source,bash]
+----
+nohup ./my_script.sh &
+
+----
+
+When you run a command in the background, uou'll see output like `[1] 12345`` where 1 is the job number and 12345 is the process ID (PID). To stop the background job, you can run either of these commands:
+
+[source,bash]
+----
+# Kill job 1.
+kill %1
+
+# Kills process 12345.
+kill 12345
+----
+
+If you need to find the process ID:
+
+[source,bash]
+----
+ps aux | grep my_script
+----
+
+Other useful commands are:
+
+* `jobs`: Lists all background jobs in the current shell.
+* `fg %1`: Brings job 1 back to the foreground.
+* `bg %1`: Resumes a stopped job in the background.
+* `kill -9 <PID>`: Forcefully kills a process if regular kill doesn't work.
