@@ -73,4 +73,3 @@
 == User input and output
 
 * link:./io/console-input.adoc[Console input]
-
