@@ -1,0 +1,170 @@
+= Ollama
+
+Ollama is a tool for downloading and running open-weight large language models locally. It provides a simple CLI and a local HTTP API, and handles model storage, hardware acceleration, and inference.
+
+== Installation
+
+On Linux:
+
+[source,sh]
+----
+curl -fsSL https://ollama.com/install.sh | sh
+----
+
+On macOS and Windows, download the installer from https://ollama.com/download.
+
+== Models
+
+Models are pulled from https://ollama.com/library, which lists all available models.
+
+[source,sh]
+----
+# Download a model.
+ollama pull <model>
+
+# Download a specific variant (tag).
+ollama pull <model>:<tag>
+
+# List all downloaded models.
+ollama list
+
+# Remove a downloaded model.
+ollama rm <model>
+----
+
+Model names follow the format `<name>:<tag>`, where the tag identifies the variant (typically size and quantisation level, e.g. `llama3:8b`). Omitting the tag pulls the default variant.
+
+[TIP]
+======
+Start small when testing a new setup — a 1B parameter model like `gemma3:1b` is a fast way to verify everything is working before downloading larger models.
+======
+
+== Running models
+
+[source,sh]
+----
+# Start an interactive chat session with a model.
+# The model is downloaded automatically if not already present.
+ollama run <model>
+
+# Pass a single prompt and exit (non-interactive).
+echo "Why is the sky blue?" | ollama run <model>
+----
+
+To exit an interactive session, press `Ctrl+D` or type `/bye`.
+
+== Hardware
+
+Ollama automatically uses GPU acceleration where available (NVIDIA via CUDA, AMD via ROCm, Apple Silicon via Metal). It falls back to CPU if no GPU is detected.
+
+The primary constraint on performance is VRAM. If a model fits entirely in VRAM, inference is fast (~50 words/second on a mid-range GPU). If the model exceeds available VRAM and spills into system RAM, generation speed drops dramatically.
+
+An SSD is strongly recommended — HDDs cause significant load delays.
+
+== Customising models with Modelfiles
+
+A Modelfile defines a custom model variant, specifying a base model, a system prompt, and generation parameters. The syntax is similar to a Dockerfile.
+
+[source]
+----
+FROM llama3
+
+SYSTEM """
+You are a senior technical writer.
+Write clear, concise explanations.
+Use headings and bullet points where appropriate.
+Avoid marketing language.
+"""
+
+PARAMETER temperature 0.2
+PARAMETER top_p 0.9
+PARAMETER repeat_penalty 1.1
+PARAMETER num_ctx 4096
+----
+
+Key Modelfile directives:
+
+[cols="1,1,3"]
+|===
+|Directive |Required |Description
+
+|`FROM`
+|Yes
+|Base model to build from.
+
+|`SYSTEM`
+|No
+|System prompt that sets the model's persona and behaviour.
+
+|`PARAMETER`
+|No
+|Adjusts a generation setting. Can be specified multiple times.
+
+|`TEMPLATE`
+|No
+|Custom prompt formatting template.
+
+|`STOP`
+|No
+|Token(s) that signal the end of a response.
+
+|`MESSAGE`
+|No
+|Seeds the conversation history before the first user turn.
+|===
+
+Common `PARAMETER` options:
+
+[cols="1,3,1"]
+|===
+|Parameter |Description |Example
+
+|`temperature`
+|Randomness of outputs. Lower values are more deterministic.
+|`0.2`
+
+|`top_p`
+|Nucleus sampling threshold.
+|`0.9`
+
+|`repeat_penalty`
+|Penalises repeated phrases.
+|`1.1`
+
+|`num_ctx`
+|Context window size in tokens.
+|`4096`
+|===
+
+Build and run a custom model from a Modelfile:
+
+[source,sh]
+----
+ollama create <name> -f Modelfile
+ollama run <name>
+----
+
+== API
+
+Ollama exposes a local REST API on port 11434 by default. It is compatible with the OpenAI API format, which means tools and libraries built for OpenAI can be pointed at Ollama with minimal changes.
+
+[source,sh]
+----
+# Generate a completion.
+curl http://localhost:11434/api/generate \
+  -d '{"model": "llama3", "prompt": "Why is the sky blue?"}'
+
+# Chat endpoint (OpenAI-compatible).
+curl http://localhost:11434/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "llama3",
+    "messages": [{"role": "user", "content": "Why is the sky blue?"}]
+  }'
+----
+
+''''
+
+== References
+
+* Siddiqui, Kashif. https://www.freecodecamp.org/news/run-and-customize-llms-locally-with-ollama[Run and Customize LLMs Locally with Ollama]. freeCodeCamp, 2025.
