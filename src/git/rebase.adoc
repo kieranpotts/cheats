@@ -1,9 +1,0 @@
-= `git rebase`
-
-When you run `git rebase`, the commit objects have their committer dates reset to the current date. To preserve the original committer date, you can tell `git` to use the author date (which is not changed) as the committer date, by passing in the `--committer-date-is-author-date` option.
-
-There is no way to configure this as the default behavior, so our best option would be to have an alias, say `git rb`.
-
-```
-git config --global alias.rb 'rebase --committer-date-is-author-date'
-```
