@@ -32,6 +32,14 @@ Alternatively, you can clone and initialize all submodules in one step:
 git clone --recurse-submodules <repository-url>
 ----
 
+== Adding a submodule
+
+[source,bash]
+----
+git submodule add --force -b "<branch>" "<url>" "<path>"
+git submodule update --init --recursive "<path>"
+----
+
 == Updating a submodule
 
 Submodules are pinned to a specific commit (not to branches). To update a submodule to a newer commit:
@@ -39,7 +47,7 @@ Submodules are pinned to a specific commit (not to branches). To update a submod
 [source,bash]
 ----
 cd <submodule-path>
-git checkout main
+git checkout <branch>
 git pull
 
 cd ..
