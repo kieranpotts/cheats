@@ -1,3 +1,4 @@
 = Git
 
 * link:./rebase.adoc[Rebase]
+* link:./submodules.adoc[Submodules]

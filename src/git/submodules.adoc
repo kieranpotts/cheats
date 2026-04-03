@@ -1,0 +1,66 @@
+= Submodules
+
+Submodules allow you to attach an external repository within another repository at a specific path.
+
+The parent repo stores a pointer to a specific commit in the submodule, not a branch — so submodule updates must be explicitly pulled and then committed to the parent.
+
+== Adding a submodule
+
+[source,bash]
+----
+git submodule add <repository-url> <local-path>
+----
+
+This creates a `.gitmodules` file (if one doesn't already exist) containing the submodule's path and remote URL, and stages both the `.gitmodules` file and the new submodule directory for commit.
+
+== Cloning a repo that contains submodules
+
+After cloning a repository that contains submodules, the submodule directories will be empty. Run the following commands to populate them:
+
+[source,bash]
+----
+git submodule init
+git submodule update
+----
+
+`git submodule init` copies the submodule entries from `.gitmodules` into `.git/config`. `git submodule update` checks out the commit recorded in the parent repo for each submodule.
+
+Alternatively, you can clone and initialize all submodules in one step:
+
+[source,bash]
+----
+git clone --recurse-submodules <repository-url>
+----
+
+== Updating a submodule
+
+Submodules are pinned to a specific commit (not to branches). To update a submodule to a newer commit:
+
+[source,bash]
+----
+cd <submodule-path>
+git checkout main
+git pull
+
+cd ..
+git add <submodule-path>
+git commit -m "Update <submodule-name> submodule"
+----
+
+== Removing a submodule
+
+Git has no built-in command to remove a submodule. The steps are:
+
+1. Delete the relevant section from `.gitmodules`.
+2. Delete the relevant section from `.git/config`.
+3. Run `git rm --cached <submodule-path>`.
+4. Delete the submodule directory.
+5. Commit the changes.
+
+[source,bash]
+----
+git rm --cached <submodule-path>
+rm -rf <submodule-path>
+
+git commit -m "Remove <submodule-name> submodule"
+----
