@@ -115,10 +115,11 @@ git commit -S -m "Your commit message"
 git tag -s v1.0 -m "Version 1.0"
 ----
 
-Once you've verified this works as expected, you can make this the default behavior for all commits:
+Once you've verified this works as expected, you can make this the default behavior for all commits and all tags:
 
 ----
 $ git config --global commit.gpgsign true
+$ git config --global tag.gpgsign true
 ----
 
 Finally, before you push any signed commits, you need to export your public key, and copy the output into your GitHub/GitLab account (in Settings → SSH and GPG keys). Once set up, a "verified" badge will be shown next to your signed commits in the upstream repository's GUI.
