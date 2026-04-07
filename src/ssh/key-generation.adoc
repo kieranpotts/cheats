@@ -1,12 +1,54 @@
 = SSH Key Generation
 
-Use the following command to generate a 4096-bit RSA public/private key pair, with no passphrase (`-N`).
+== Generate a key pair
+
+For modern systems, use ed25519 (shorter, faster, and equally secure):
 
 [source]
 ----
-ssh-keygen -t rsa -b 4096 -N "" -C "Optional description"
+ssh-keygen -t ed25519 -C "Optional description"
 ----
 
-Install the public key on the server by copying the contents of the public key file (`~/.ssh/id_rsa.pub`) to the server's `~/.ssh/authorized_keys` file.
+For older systems without ed25519 support, use 4096-bit RSA:
 
-The private key file should be stored at `~/.ssh/id_rsa` on the client machine, and never shared.
+[source]
+----
+ssh-keygen -t rsa -b 4096 -C "Optional description"
+----
+
+The `-C` flag sets a comment (typically your email or hostname) in the public key.
+
+== About passphrases
+
+By default, `ssh-keygen` will prompt you to set a passphrase to encrypt your private key. This is recommended for security — if your private key file is compromised, the passphrase prevents unauthorized use without additional effort.
+
+If you want to skip the passphrase prompt (not recommended for production systems), use `-N ""`:
+
+[source]
+----
+ssh-keygen -t ed25519 -N "" -C "Optional description"
+----
+
+To add a passphrase to an existing key without a passphrase:
+
+[source]
+----
+ssh-keygen -p -f ~/.ssh/id_ed25519
+----
+
+== Install the public key
+
+Install the public key on the server by copying the contents of the public key file (`~/.ssh/id_ed25519.pub` or `~/.ssh/id_rsa.pub`) to the server's `~/.ssh/authorized_keys` file.
+
+The private key file should be stored securely on the client machine, and never shared.
+
+== Permissions
+
+After creating your key pair, ensure correct permissions:
+
+[source]
+----
+chmod 700 ~/.ssh
+chmod 600 ~/.ssh/id_ed25519
+chmod 644 ~/.ssh/id_ed25519.pub
+----
