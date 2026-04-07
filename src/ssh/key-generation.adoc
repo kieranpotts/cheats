@@ -1,5 +1,18 @@
 = SSH Key Generation
 
+== Check for existing keys
+
+Before generating a new key pair, check if you already have one:
+
+[source]
+----
+ls -al ~/.ssh
+----
+
+Look for files named `id_ed25519.pub`, `id_ecdsa.pub`, or `id_rsa.pub`. If you find any, you may be able to reuse an existing key instead of generating a new one.
+
+If the `~/.ssh` directory doesn't exist, you'll need to generate a new key pair.
+
 == Generate a key pair
 
 For modern systems, use ed25519 (shorter, faster, and equally secure):
@@ -9,7 +22,14 @@ For modern systems, use ed25519 (shorter, faster, and equally secure):
 ssh-keygen -t ed25519 -C "Optional description"
 ----
 
-For older systems without ed25519 support, use 4096-bit RSA:
+For systems without ed25519 support, use ECDSA:
+
+[source]
+----
+ssh-keygen -t ecdsa -b 256 -C "Optional description"
+----
+
+For older systems without ECDSA support, use 4096-bit RSA:
 
 [source]
 ----

@@ -58,9 +58,9 @@ Host production-server
     Port 2222
 ----
 
-=== Wildcard configuration
+=== Wildcard configuration for safe settings
 
-Apply settings to multiple hosts:
+Apply settings to multiple hosts using safe options:
 
 [source]
 ----
@@ -74,6 +74,8 @@ Host *
     ServerAliveCountMax 10
 ----
 
+WARNING: Do NOT use `ForwardAgent yes` with `Host *`. This would share your SSH credentials with every remote server you connect to. See the ForwardAgent section below for secure usage.
+
 == Common options
 
 * `Host` — The hostname pattern to match
@@ -86,6 +88,40 @@ Host *
 * `ServerAliveCountMax` — Number of keepalive packets before disconnecting
 * `StrictHostKeyChecking` — Whether to verify the host key (default: ask)
 * `AddKeysToAgent` — Automatically add keys to SSH agent (yes/no/confirm)
+
+== SSH agent forwarding
+
+SSH agent forwarding allows you to use your local SSH keys on remote servers without storing unencrypted keys there. However, this grants the remote server access to all your SSH credentials.
+
+*Only enable forwarding for servers you explicitly trust.*
+
+=== Example: Secure agent forwarding
+
+[source]
+----
+Host trusted-jump-server.example.com
+    HostName jump.example.com
+    User deployer
+    ForwardAgent yes
+----
+
+WARNING: Never use `ForwardAgent yes` with a wildcard like `Host *`. This would share your SSH keys with every server you connect to, including potentially compromised ones.
+
+=== Verify agent forwarding works
+
+On the remote server, check if the SSH agent is accessible:
+
+[source]
+----
+echo $SSH_AUTH_SOCK
+----
+
+If a socket path is shown, agent forwarding is active. Verify your keys are available:
+
+[source]
+----
+ssh-add -l
+----
 
 == List available hosts
 

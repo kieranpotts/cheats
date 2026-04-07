@@ -38,12 +38,53 @@ fi
 
 == Add your key to the agent
 
+=== On macOS
+
+Use the `--apple-use-keychain` flag to store your passphrase in the macOS keychain:
+
+[source]
+----
+ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+----
+
+Then, modify `~/.ssh/config` to automatically load your key and use keychain storage:
+
+[source]
+----
+Host *
+    AddKeysToAgent yes
+    UseKeychain yes
+    IdentityFile ~/.ssh/id_ed25519
+----
+
+=== On Windows
+
+Ensure ssh-agent is running with elevated permissions, then add your key:
+
+[source]
+----
+ssh-add c:/Users/YOU/.ssh/id_ed25519
+----
+
+Replace `YOU` with your username.
+
+=== On Linux
+
 [source]
 ----
 ssh-add ~/.ssh/id_ed25519
 ----
 
 You will be prompted for your key's passphrase. Once entered, the agent stores the decrypted key.
+
+=== All platforms
+
+After adding your key, verify it's loaded:
+
+[source]
+----
+ssh-add -l
+----
 
 == Add a key with a custom timeout
 
