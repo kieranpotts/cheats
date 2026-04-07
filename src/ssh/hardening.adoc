@@ -5,7 +5,7 @@ For better security, root access and password authentication should be disabled 
 .See also
 [NOTE]
 ====
-link:../fail2ban.adoc[Fail2Ban] can be used to protect against SSH brute-force attacks.
+For additional protection against SSH brute-force attacks, consider using link:../security/fail2ban.adoc[Fail2Ban].
 ====
 
 == Disable root login
