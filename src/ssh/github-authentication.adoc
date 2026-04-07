@@ -4,18 +4,23 @@ You've already been added to the `hacksltd` GitHub organization – else you wou
 
 == Generate an SSH key
 
-If you do not already have an SSH key, generate one:
+If you do not already have an SSH key, generate one. For modern systems, use ed25519:
 
 [source]
 ----
-ssh-keygen -t rsa -b 4096 -N "" -C "Optional description"
+ssh-keygen -t ed25519 -C "your-email@example.com"
 ----
 
-This creates an RSA key pair, with a 4096-bit key length. You may use newer cryptographic algorithms, such as `ed25519`, if your computer supports them.
+For older systems without ed25519 support, use 4096-bit RSA:
 
-The `-N ""` means no passphrase, and the `-C` flag sets a comment in the public key.
+[source]
+----
+ssh-keygen -t rsa -b 4096 -C "your-email@example.com"
+----
 
-Follow the prompts to generate the key. When complete, output the contents of the public key file:
+You will be prompted to set a passphrase to encrypt your private key. This is recommended for security.
+
+When complete, output the contents of the public key file:
 
 [source]
 ----
