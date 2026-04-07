@@ -1,0 +1,42 @@
+= SSH Authentication with GitHub
+
+You've already been added to the `hacksltd` GitHub organization – else you wouldn't be seeing this page. If you haven't already, you should generate an SSH key pair on your computer, and add the public key to GitHub as an SSH authentication key. You will need to have this in place before you can clone our repositories onto your computer.
+
+== Generate an SSH key
+
+If you do not already have an SSH key, generate one:
+
+[source]
+----
+ssh-keygen -t rsa -b 4096 -N "" -C "Optional description"
+----
+
+This creates an RSA key pair, with a 4096-bit key length. You may use newer cryptographic algorithms, such as `ed25519`, if your computer supports them.
+
+The `-N ""` means no passphrase, and the `-C` flag sets a comment in the public key.
+
+Follow the prompts to generate the key. When complete, output the contents of the public key file:
+
+[source]
+----
+less ~/.ssh/id_rsa.pub
+----
+
+== Add the public key to GitHub
+
+Copy-and-paste the contents of the public key into your GitHub account settings. Go to **Settings** > **SSH and GPG keys** > **New SSH key**. Give the key a title, to identify it, and paste the contents of the public key. Set the key type to **Authentication Key**. In effect, you've added the public key to your `~/.ssh/authorized_keys` file on GitHub's servers.
+
+== Test the connection
+
+Test you can now authenticate with GitHub via SSH:
+
+[source]
+----
+ssh git@github.com
+----
+
+You should get a result confirming you have successfully authenticated.
+
+== Secure your private key
+
+Keep your private key secure on your computer. If it leaks, you should revoke the corresponding public key from your GitHub account, and generate a new key pair.

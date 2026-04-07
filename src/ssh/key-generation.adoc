@@ -1,0 +1,12 @@
+= SSH Key Generation
+
+Use the following command to generate a 4096-bit RSA public/private key pair, with no passphrase (`-N`).
+
+[source]
+----
+ssh-keygen -t rsa -b 4096 -N "" -C "Optional description"
+----
+
+Install the public key on the server by copying the contents of the public key file (`~/.ssh/id_rsa.pub`) to the server's `~/.ssh/authorized_keys` file.
+
+The private key file should be stored at `~/.ssh/id_rsa` on the client machine, and never shared.
