@@ -1,5 +1,7 @@
 = SSH
 
-* link:./key-generation.adoc[]
-* link:./github-authentication.adoc[]
-* link:./hardening.adoc[]
+* link:./key-generation.adoc[Key generation]
+* link:./ssh-config.adoc[SSH config file]
+* link:./ssh-agent.adoc[SSH agent]
+* link:./github-authentication.adoc[GitHub authentication]
+* link:./hardening.adoc[Hardening]
