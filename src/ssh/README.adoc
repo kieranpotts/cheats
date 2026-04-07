@@ -1,7 +1,14 @@
 = SSH
 
-* link:./key-generation.adoc[Key generation]
-* link:./ssh-config.adoc[SSH config file]
-* link:./ssh-agent.adoc[SSH agent]
-* link:./github-authentication.adoc[GitHub authentication]
-* link:./hardening.adoc[Hardening]
+SSH allows you to connect to remote machines securely using public key cryptography. The following sections walk through setting up SSH keys, using them in practice, optimizing your workflow, and hardening servers.
+
+== Client setup
+
+* link:./key-generation.adoc[Key generation] — Create SSH key pairs (ed25519 or RSA)
+* link:./github-authentication.adoc[GitHub authentication] — Add your public key to GitHub
+* link:./ssh-config.adoc[SSH config file] — Manage multiple keys and simplify connections
+* link:./ssh-agent.adoc[SSH agent] — Store decrypted keys in memory to avoid re-entering passphrases
+
+== Server hardening
+
+* link:./hardening.adoc[Hardening] — Disable root login and password authentication on servers

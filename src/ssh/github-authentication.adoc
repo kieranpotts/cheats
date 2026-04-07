@@ -2,25 +2,20 @@
 
 You've already been added to the `hacksltd` GitHub organization – else you wouldn't be seeing this page. If you haven't already, you should generate an SSH key pair on your computer, and add the public key to GitHub as an SSH authentication key. You will need to have this in place before you can clone our repositories onto your computer.
 
-== Generate an SSH key
+== Prerequisites
 
-If you do not already have an SSH key, generate one. For modern systems, use ed25519:
+If you don't already have an SSH key, see link:./key-generation.adoc[Key generation] first.
 
-[source]
-----
-ssh-keygen -t ed25519 -C "your-email@example.com"
-----
+== Get your public key
 
-For older systems without ed25519 support, use 4096-bit RSA:
+Output the contents of your public key file:
 
 [source]
 ----
-ssh-keygen -t rsa -b 4096 -C "your-email@example.com"
+less ~/.ssh/id_ed25519.pub
 ----
 
-You will be prompted to set a passphrase to encrypt your private key. This is recommended for security.
-
-When complete, output the contents of the public key file:
+If you used RSA instead of ed25519:
 
 [source]
 ----
