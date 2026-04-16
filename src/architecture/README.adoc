@@ -1,0 +1,86 @@
+= Architecture
+
+The following sections are based on the structure of the iSAQB Software Architecture – Foundation Level (CPSA-F) syllabus.
+
+== Basic concepts of software architecture
+
+== Roles and reponsibilities of software architects
+
+* Tasks and responsibilities
+* Desired skills
+* Relationship to other roles/stakeholders
+
+== Requirements, quality goals, and design constraints
+
+* System context
+* Technological influencing factors
+* Organizational influencing factors, Conway's Law
+* Product-related influencing factors
+* Quality requirements and attributes
+
+== Design and development of software architectures
+
+* Identifying uncertainty and risks
+
+* Software architecture design principles
+** Information hiding, SoC, modularity
+** Loose coupling
+** High cohesion
+** KISS, YAGNI, DRY
+** Murphy's Law, Pastel's Law
+** Abstraction, Conceptual Integrity
+** SOLID principles
+
+* Software architecture patterns
+** Layers
+** Pipes and filters
+** Microservices
+** Dependency injection
+
+* Additional design considerations
+** Programming language features
+** Paradigms to reduce complexity
+** Annotations and aspect-oriented programming
+** Cross-cutting concerns and concepts
+
+* Designing interfaces
+
+* Design strategies for achieving quality goals
+** Design strategies for achieving high performance
+** Design strategies for achieving adaptability and flexibility
+** Design strategies for achieving high availability
+
+* Design tactics to reduce coupling...
+** ... in structural dependencies
+** ... in instantiation dependencies
+** ... in call dependencies
+** Static versus dynamic coupling
+
+* Design of data and data models
+** Data model types and notations
+** Data modeling process
+** Data modeling techniques
+** Products and sums in data modeling
+
+* Methods for architecture development
+** Iterative and incremental architecture development
+** View-based architecture development
+** Top-down versus bottom-up architecture development
+
+== Specification and communication of software architectures
+
+* Goals, benefits, and quality requirements of documentation
+* Template-based documentation
+* Document types, diagrams, and UML
+* Documenting views and cross-cutting concerns
+* Documenting interfaces and design decisions
+* Documentation best practices
+
+== Analysis and assessment of software architectures (quality)
+
+* Software quality modeling
+* Evaluation of software architecture
+* Quantitative evaluation of software architecture and Goodhart's Law
+* Qualitative assessment of software architecture and ATAM
+
+== Examples of software architectures
