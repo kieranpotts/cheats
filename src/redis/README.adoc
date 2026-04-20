@@ -42,7 +42,7 @@ sudo systemctl status redis
 
 == Configuration
 
-Redis has several commands, via the `redis-cli` utility, that allow you to change the server's configuration on the fly. (The following examples are correct for Redis Server v4 and Ubuntu v18.04). Other Redis interfaces, such as link:https://github.com/IBM-Cloud/redli[Redli], are available as alternatives to `redis-cli`.
+Redis has several commands, via the `redis-cli` utility, that allow you to change the server's configuration on the fly. (The following examples are correct for Redis Server v4 and Ubuntu v18.04). Other Redis interfaces, such as https://github.com/IBM-Cloud/redli[Redli], are available as alternatives to `redis-cli`.
 
 The `config set` command allows you to reconfigure Redis at runtime without having to restart the service. It uses the following syntax:
 

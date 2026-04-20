@@ -4,7 +4,7 @@ The following commands can be found on most Unix-like operating systems. These a
 
 See also link:../utilities/README.adoc[Unix utilities] for simple, single-purpose command line programs such as `ping`, `rsync`, and `wget`.
 
-See also the link:https://archive.org/details/unixtoolbox[Unix Toolbox] by Colin Barschel (archived).
+See also the https://archive.org/details/unixtoolbox[Unix Toolbox] by Colin Barschel (archived).
 
 == Shell programming
 
