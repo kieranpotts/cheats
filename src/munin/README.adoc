@@ -170,4 +170,4 @@ systemctl restart munin-node.service
 
 * *Inode table usage*: This shows the total number of files that are open on a system. If this number increases suddenly then it might mean that there is a program on the system that is not closing files correctly.
 
-* *Load average*: This is a useful number that shows how much is trying to be run by the system. Numbers under 1.0 mean that there is enough resources to cope with the amount of work to be done. Numbers over 1.0 mean that the system is under high load and there are not enough system resources.
+* *Load average*: This is a useful number that shows how much is trying to be run by the system. Numbers under 1.0 mean that there are enough resources to cope with the amount of work to be done. Numbers over 1.0 mean that the system is under high load and there are not enough system resources.
