@@ -1,0 +1,6 @@
+= Go
+
+* link:./code-examples.adoc[Code examples]
+* link:./compiling-and-running.adoc[Compiling and running]
+* link:./gopath-and-modules.adoc[GOPATH and modules]
+* link:./concurrency-and-parallelism.adoc[Concurrency and parallelism] — Goroutines and channels
