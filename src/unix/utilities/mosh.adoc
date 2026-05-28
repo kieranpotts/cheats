@@ -1,0 +1,3 @@
+= `mosh`
+
+Mosh can be used to SSH into a remote server. It's unique selling point is that it supports mobile roaming by keeping the connection alive when the client IP address changes – as happens when you switch from Wi-Fi to a mobile data connection. Mosh needs to be installed on both the client and server, which is how it maintains connection state.

@@ -1,0 +1,3 @@
+= `exa`
+
+https://github.com/ogham/exa[`exa`] is a modern replacement for `ls` written in Rust.

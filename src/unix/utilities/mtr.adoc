@@ -1,0 +1,3 @@
+= `mtr`
+
+`mtr` is a network diagnostic tool, combining the functionality of `ping` and `traceroute`. It tracks latency and package loss hop-by-hop in real-time as packets travel across a network.
