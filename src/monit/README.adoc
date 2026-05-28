@@ -36,7 +36,7 @@ The "with start delay" line prevents Monit from running a test immediately after
 
 == Web interface
 
-Monit comes with its own built-in web server, for displaying the system tests as a web page. Monit's server needs to run on a different port than other web servers running on the same system. FOr this reason, port 2812 is Monit's default port.
+Monit comes with its own built-in web server, for displaying the system tests as a web page. Monit's server needs to run on a different port than other web servers running on the same system. For this reason, port 2812 is Monit's default port.
 
 TIP: Make sure the Firewall settings allow traffic on port 2812.
 
