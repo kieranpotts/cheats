@@ -1,0 +1,42 @@
+= Nginx
+
+== `upstream` versus `location`
+
+The `location` block is used to match expressions and create rules for them.
+
+[source]
+----
+location ~ \.php$ {
+  try_files      $uri = 404;
+  fastcgi_pass   unix:/run/php-fpm/php-fpm.sock;
+  fastcgi_index  index.php;
+  include        fastcgi.conf;
+}
+----
+
+`upstream` defines servers that can be referenced to. In the following example, the `factcgi_pass` setting is replaced by a reference to the `php` server, defined by the earlier `upstream` block.
+
+[source]
+----
+upstream php {
+  server         unix:/run/php-fpm/php-fpm.sock;
+}
+
+location ~ \.php$ {
+  try_files      $uri = 404;
+  fastcgi_pass   php;
+  fastcgi_index  index.php;
+  include        fastcgi.conf;
+}
+----
+
+The benefit of using `upstream` blocks is that you can configure more than one server/port/service as upstream, and distribute traffic across the servers. Example:
+
+[source]
+----
+upstream php {
+  server 127.0.0.1:8080   max_fails=3 fail_timeout=30s;
+  server 192.68.1.2       weight=5;
+  server                  unix:/run/php-fpm/php-fpm.sock;
+}
+----
