@@ -36,7 +36,7 @@ Restart the SSH service.
 systemctl restart sshd.service
 ----
 
-Logout of your limited user account and try logging in again as root. It should fail with an "Access Denied" message.
+Log out of your limited user account and try logging in again as root. It should fail with an "Access Denied" message.
 
 == Disable password authentication
 
@@ -44,7 +44,7 @@ Brute-force attacks are still possible with root access disabled, so for the ult
 
 Implement the following steps for your own user account, then repeat these steps for every other user, using a unique public/private cryptographic key pair for each user.
 
-Login to your limited user account using an SSH client of your choice, then elevate your session to root:
+Log in to your limited user account using an SSH client of your choice, then elevate your session to root:
 
 [source]
 ----
@@ -78,9 +78,9 @@ nvim .ssh/authorized_keys
 
 Copy the contents of the user's public key into the `authorized_keys` file. (Multiple keys may be entered into this file. Start each key on a new line.)
 
-Save the `authorized_keys` file and logout of the server. Now try logging in again, using the private key to connect. You should see a message similar to "Authenticating with public key...", and then you will be prompted for the key's passphrase, if it requires one.
+Save the `authorized_keys` file and log out of the server. Now try logging in again, using the private key to connect. You should see a message similar to "Authenticating with public key...", and then you will be prompted for the key's passphrase, if it requires one.
 
-You should now be logged in. If instead you see the message "Server refused our key", something is wrong will the configuration and you should repeat the steps above to resolve the issue. For now, you can still login with the user's normal password.
+You should now be logged in. If instead you see the message "Server refused our key", something is wrong with the configuration and you should repeat the steps above to resolve the issue. For now, you can still log in with the user's normal password.
 
 When you've confirmed that all users can successfully login using their private key, then you can safely disable password authentication. After this step, all users MUST use their private key and passphrase for SSH access. They will use their password only to confirm root-level commands.
 
