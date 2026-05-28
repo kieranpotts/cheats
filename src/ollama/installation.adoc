@@ -1,0 +1,17 @@
+= Installation
+
+On Linux:
+
+[source,sh]
+----
+curl -fsSL https://ollama.com/install.sh | sh
+----
+
+On macOS and Windows, download the installer from https://ollama.com/download.
+
+To check the installed version:
+
+[source,sh]
+----
+ollama --version
+----

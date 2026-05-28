@@ -1,0 +1,13 @@
+= Running models
+
+[source,sh]
+----
+# Start an interactive chat session with a model.
+# The model is downloaded automatically if not already present.
+ollama run <model>
+
+# Pass a single prompt and exit (non-interactive).
+echo "Why is the sky blue?" | ollama run <model>
+----
+
+To exit an interactive session, press `Ctrl+D` or type `/bye`.

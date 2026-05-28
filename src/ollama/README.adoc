@@ -1,0 +1,17 @@
+= Ollama
+
+Ollama is a tool for downloading and running open-weight large language models locally. It provides a simple CLI and a local HTTP API, and handles model storage, hardware acceleration, and inference.
+
+* link:./installation.adoc[Installation]
+* link:./models.adoc[Models]
+* link:./running-models.adoc[Running models]
+* link:./hardware.adoc[Hardware]
+* link:./modelfiles.adoc[Modelfiles]
+* link:./api.adoc[API]
+* link:./front-ends.adoc[Front-ends]
+
+''''
+
+== References
+
+* Siddiqui, Kashif. https://www.freecodecamp.org/news/run-and-customize-llms-locally-with-ollama[Run and Customize LLMs Locally with Ollama]. freeCodeCamp, 2025.

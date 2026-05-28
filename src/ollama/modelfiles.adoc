@@ -1,0 +1,82 @@
+= Modelfiles
+
+A Modelfile defines a custom model variant, specifying a base model, a system prompt, and generation parameters. The syntax is similar to a Dockerfile.
+
+[source]
+----
+FROM llama3
+
+SYSTEM """
+You are a senior technical writer.
+Write clear, concise explanations.
+Use headings and bullet points where appropriate.
+Avoid marketing language.
+"""
+
+PARAMETER temperature 0.2
+PARAMETER top_p 0.9
+PARAMETER repeat_penalty 1.1
+PARAMETER num_ctx 4096
+----
+
+Key Modelfile directives:
+
+[cols="1,1,3"]
+|===
+|Directive |Required |Description
+
+|`FROM`
+|Yes
+|Base model to build from.
+
+|`SYSTEM`
+|No
+|System prompt that sets the model's persona and behaviour.
+
+|`PARAMETER`
+|No
+|Adjusts a generation setting. Can be specified multiple times.
+
+|`TEMPLATE`
+|No
+|Custom prompt formatting template.
+
+|`STOP`
+|No
+|Token(s) that signal the end of a response.
+
+|`MESSAGE`
+|No
+|Seeds the conversation history before the first user turn.
+|===
+
+Common `PARAMETER` options:
+
+[cols="1,3,1"]
+|===
+|Parameter |Description |Example
+
+|`temperature`
+|Randomness of outputs. Lower values are more deterministic.
+|`0.2`
+
+|`top_p`
+|Nucleus sampling threshold.
+|`0.9`
+
+|`repeat_penalty`
+|Penalises repeated phrases.
+|`1.1`
+
+|`num_ctx`
+|Context window size in tokens.
+|`4096`
+|===
+
+Build and run a custom model from a Modelfile:
+
+[source,sh]
+----
+ollama create <name> -f Modelfile
+ollama run <name>
+----
