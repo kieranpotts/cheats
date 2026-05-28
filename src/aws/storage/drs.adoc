@@ -15,7 +15,7 @@ Initially, the replicated data is stored in a low-cost *staging area*. This is u
 
 Because backup data gets replicated to EBS volumes, these volumes could be used, for example, to boot up EC2 instances within AWS in a disaster recovery scenario. DRS can launch recovery instances into the recover subnets with Recovery Time Objective (RTO) metrics of minutes, and Recovery Point Objective (RPO) metrics of seconds, restoring business operations quickly.
 
-DRS can recover applications from physical infrastructure, VMware, vSphere, Hyper-V, and even other (non-AWS) clouds. You can also use DRS for disaster recover from AWS itself, eg. to recover from failures in one region to another.
+DRS can recover applications from physical infrastructure, VMware, vSphere, Hyper-V, and even other (non-AWS) clouds. You can also use DRS for disaster recovery from AWS itself, eg. to recover from failures in one region to another.
 
 DRS can also interact with CloudWatch and EventBridge, which you might want to send to an email using SNS, for example.
 
