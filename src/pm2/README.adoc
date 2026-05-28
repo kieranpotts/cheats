@@ -133,7 +133,7 @@ pm2 delete website
 pm2 list|ls|l|status
 ----
 
-By default, processes are listed by name in ascending ordered. To change the sort order:
+By default, processes are listed by name in ascending order. To change the sort order:
 
 [source]
 ----
