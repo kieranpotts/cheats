@@ -1,0 +1,58 @@
+= AWS networking: Route tables
+
+Subnets have *route tables* associated with them, which determine how traffic is routed within the subnet.
+
+.Public subnet route table
+|===
+|Destination |Target
+
+|172.31.0.0/16
+|Local
+
+|0.0.0.0/0
+|igw-id
+|===
+
+In the above route table, `172.31.0.0/16` is the CIDR block, ie. the overall IP address range for the VPC. This is mapped to the `Local` route, which means that any IP addresses within this range are going to be routed internally to resources within the VPC. This is the default configuration for subnet route tables, and it is how all resources within a VPC communicate with each other by default, via their private IP addresses within their VPC's CIDR range.
+
+The second routing rule says that any other traffic must be routed out to the internet gateway. This is how EC2 instances within the VPC can communicate with the outside world.
+
+In the previous step we'd implemented the following architecture. But we cannot yet SSH into the instance in the public subnet because there is no *route* to the public subnet from the internet gateway attached the VPC>
+
+image::../_/aws-networking-3.drawio.svg[]
+
+This is done using something called a *route table*, which has this symbol:
+
+image::../_/route-table.png[]
+
+And this is the symbol for a router:
+
+image::../_/router.png[]
+
+Every VPC has a router by default, so you don't need to explicitly create any routers. You only need to _configure_ a VPC's router, and you do that using route tables. Route tables are used to control the routing of traffic _into_ a VPC, and _within_ a VPC.
+
+To configure a VPC's route tables, from the *VPC* dashboard go to *Route tables*. All VPCs come with default route tables, which will be listed here. The default route table is also called the *main route table*. All unassociated subnets (ie. subnets that are not explicitly associated with a route table) use the main route table.
+
+If you select the main route table and then view the routes within it, you will see that it has a route to the local VPC CIDR range. This is how all resources within a VPC can communicate with each other by default. Basically, a VPC's default route table says: "Everything that is inside my CIDR range is inside my network."
+
+image::../_/main-route-table-routes.png[]
+
+For the main route table, if you look under the *Subnet associations* tab, you will see that there are no explicit subnets associated with the main route table. This is because all subnets are associated with the main route table by default. Any subnet that is not explicitly associated with another route table will use the main route table.
+
+We want to create separate route tables for our public and private subnets. We don't want to use the default main route table for this purpose, because we don't want to treat our public and private subnets the same way in terms of routing. It is RECOMMENDED, for most use cases, to create and assign different route tables for each subnet.
+
+Create two new route tables, one "public" and one "private", and both associated with the VPC.
+
+image::../_/create-route-table.png[]
+
+Route tables belong to VPCs, but each route table is associated with one or more subnets within that VPC. Select the public route table, and associate it with the public subnet. Repeat for the private route table and the private subnet.
+
+To add a route between the public subnet and the internet gateway, we can now add a route to the public route table. Select the public route table, and then click *Routes* > *Edit routes*. Add a new line to the route table. For the destination, we want to allow everything, so enter the value `0.0.0.0/0`. This value covers all IP addresses - including those outside of the VPC's own CIDR range (which are used for internal traffic).
+
+For the target, select *Internet gateway*, and then choose the internet gateway you created earlier. Click *Save changes*.
+
+This is the new architecture:
+
+image::../_/aws-networking-4.drawio.svg[]
+
+Now, if you try to SSH into the EC2 instance, it should work. This proves that you have public access to the instance via SSH. You can also try running a command like `sudo yum update -y`, to verify that the instance can connect _out_ to the internet also.

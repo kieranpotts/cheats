@@ -1,0 +1,5 @@
+= AWS global network
+
+All the AWS regions and availability zones around the world are connected through the *AWS global network*.
+
+This is a private, high-speed network owned and operated by AWS. It is designed to have plentiful redundancy and low latency — so you get great performance when moving your data between AWS regions.

@@ -1,0 +1,5 @@
+= AWS QLDB
+
+*Amazon QLDB* is a fully-managed *ledger database* for immutable change history.
+
+It provides cryptographically verifiable transaction logging — ie. it is a ledger that is very difficult to manipulate in any way.
