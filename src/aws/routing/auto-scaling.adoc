@@ -6,13 +6,13 @@ In AWS, auto-scaling is primarily a feature of EC2, but by extension is also app
 
 Auto-scaling integrates with lots of other AWS services, including:
 
-* *CloudWatch* for monitoring. Instances constantly send information to CloudWatch — things like metrics on the CPU utilization — which can be used by auto-scaling to determine whether to scale  the cluster out or in, so adding or terminating individual nodes.
+* *CloudWatch* for monitoring. Instances constantly send information to CloudWatch — things like metrics on the CPU utilization — which can be used by auto-scaling to determine whether to scale the cluster out or in, so adding or terminating individual nodes.
 
 * *Elastic Load Balancing* for distributed connections, so the LB automatically knows about changes in instances to which it can distribute traffic.
 
 * *VPC*, because we want to deploy new instances within the VPC and across availability zones.
 
-Auto-scaling working like this:
+Auto-scaling works like this:
 
 * Across AZs, we define an *auto-scaling group (ASG)*.
 

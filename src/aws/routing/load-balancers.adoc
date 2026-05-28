@@ -14,7 +14,7 @@ An ELB instance is a single IP endpoint — a DNS name or IP address — behind 
 * Lambda functions.
 * Other load balancers (you can chain LBs together — there are some use cases where this can be advantageous).
 
-Load balancers implement their own health checks on their targets, and they will send traffic only to healthy instances. If an instance becomes unhealthy, the ELB will stop sending traffic to it until it becomes healthy again. An ELB can also tell an Auto-Scaling Group to replace failing instances, and in turn the ASG tells ELBs about new instances that is creates, and old ones it has terminated.
+Load balancers implement their own health checks on their targets, and they will send traffic only to healthy instances. If an instance becomes unhealthy, the ELB will stop sending traffic to it until it becomes healthy again. An ELB can also tell an Auto-Scaling Group to replace failing instances, and in turn the ASG tells ELBs about new instances that it creates, and old ones it has terminated.
 
 If an ELB sits in front of multiple availability zones, then the Auto-Scaling Group should also span the same AZs. ASGs try to spread load across multiple AZs, while ELBs distribute connectivity to all the available instances across all those AZs.
 
