@@ -45,7 +45,7 @@ You can also pass in the name of any model listed in `ollama ls`:
 ollama launch claude --model gemma4:31b
 ----
 
-If you want to make Ollama the default provider, and to set default models, add the following to your shell profile (`~/.bashrc`, `~/.zshrc`, etc.). The auth token can be any value – Ollama ignores it's value.
+If you want to make Ollama the default provider, and to set default models, add the following to your shell profile (`~/.bashrc`, `~/.zshrc`, etc.). The auth token can be any value – Ollama ignores its value.
 
 [source,sh]
 ----
