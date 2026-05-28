@@ -85,7 +85,7 @@ There are limits to the values that can be used for coordinates. The values cann
 }
 ----
 
-There are man other good examples on the JSON Schema website: https://json-schema.org/learn/miscellaneous-examples
+There are many other good examples on the JSON Schema website: https://json-schema.org/learn/miscellaneous-examples
 
 == Other resources
 
