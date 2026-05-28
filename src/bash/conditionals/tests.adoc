@@ -1,6 +1,6 @@
 = Bash: Tests
 
-The single backet syntax `[ ... ]` is the original test command in Bourne shell. It is POSIX-compliant and works in all POSIX-compliant shells, including Bash.
+The single bracket syntax `[ ... ]` is the original test command in Bourne shell. It is POSIX-compliant and works in all POSIX-compliant shells, including Bash.
 
 [source,bash]
 ----

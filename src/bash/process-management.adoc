@@ -61,7 +61,7 @@ nohup ./my_script.sh &
 
 ----
 
-When you run a command in the background, uou'll see output like `[1] 12345`` where 1 is the job number and 12345 is the process ID (PID). To stop the background job, you can run either of these commands:
+When you run a command in the background, you'll see output like `[1] 12345` where 1 is the job number and 12345 is the process ID (PID). To stop the background job, you can run either of these commands:
 
 [source,bash]
 ----
