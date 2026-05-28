@@ -1,0 +1,18 @@
+= htop
+
+`htop` is used to monitor local processes, memory, and CPU usage.
+
+To load htop:
+
+[source]
+----
+htop
+----
+
+You can quit at any time by pressing the F10 or Q keys.
+
+The memory utilization graph displays used memory, buffered memory, and cached memory. The numbers displayed at the end of this graph reflect the total amount of memory available and the total amount of memory on the system as reported by the kernel.
+
+The default configuration of htop presents all application threads as independent processes. You can disable this by selecting the setup option with F2, then "Display Options", and then toggling the "Hide userland threads" option.
+
+Press F5 to toggle the tree view, which displays the processes in a hierarchy, showing which processes were spawned by which other processes. This is helpful in identifying what processes are what.
