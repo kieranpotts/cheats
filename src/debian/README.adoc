@@ -1,0 +1,55 @@
+= Debian
+
+These cheats cover Debian and Debian-based Linux distributions such as Ubuntu and Pop OS.
+
+== Changing passwords
+
+You can change user passwords via the GUI (eg. the Cosmic Settings app) or the terminal. To change your own password:
+
+----
+passwd
+----
+
+To change another user's password:
+
+----
+sudo passwd <username>
+----
+
+To change the root password:
+
+----
+sudo passwd root
+----
+
+When you restart, you might see the error "The password you use to login to your computer no longer matches that of your login keyring". This error occurs when your user login password and the saved keyring password (used to auto-unlock stored credentials) become de-synchronized. When you see this message, you can simply enter your _old_ keyring password (which will match your _old_ system password), nd the keyring password will be automatically updated to match your _new_ system password.
+
+To avoid this error in the first place, change the keyring password to match your current login password using the "Passwords and Keys" (aka. seahorse) app:
+
+1. Open the application menu and search for "seahorse". Select the "Passwords and Keys" app.
+2. Select the "Login" keyring on the left panel.
+3. Right-click on it and choose "Change Password".
+4. Enter the old login password (the one the keyring is asking for).
+5. Set the new password to match your current system login password.
+
+== Troubleshooting
+
+=== Booting
+
+If Debian fails to start – you're seeing a blank screen with no prompt – you have the following options:
+
+* Reboot the computer, and hold (or press repeatedly) either `Shift` or `Esc` after the BIOS splash.
+
+* Boot the OS from a USB stick.
+
+Choose the option to boot the OS in recovery mode. This will load the OS in memory but not install it. If the live session works, the problem is with the installed OS, not your hardware.
+
+You can then use the option to fix the current installation, rather than installing a new one.
+
+=== Application icons
+
+To fix a missing application icon in the launcher, edit the application's `StartupWMClass` setting in its `.desktop` configuration file, so that it matches the actual window class of the application.
+
+To find an application's window class, open the Looking Glass tool. Open the application. Then press `Alt+F2`, type `lg`, and press Enter. In the "Windows" tab, find the application in the list of running applications, and note its window class. For example, for Firefox Developer Edition, the window class is `firefox-dev`.
+
+Locate the application's `.desktop` file, which is usually in `/usr/share/applications` or `~/.local/share/applications`. Open the file in a text editor, with superuser privileges. Add or modify the line `StartupWMClass=` to reference the correct window class, eg. `StartupWMClass=firefox-dev` rather than `StartupWMClass=firefox-aurora`.
