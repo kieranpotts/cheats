@@ -1,0 +1,22 @@
+= Bash: Built-in variables
+
+Bash defines a number of "special variables" that are built-in to the shell, and the values are automatically assigned by the shell.
+
+Built-in variables provide useful information about the shell's state and the execution environment.
+
+The following are built-in variables:
+
+[source,bash]
+----
+$0              # Name of shell or shell script.
+$1, $2, $3, ... # Positional parameters (from command-line input arguments).
+$#              # Number of positional parameters.
+$?              # Most recent foreground pipeline exit status.
+$-              # Current options set for the shell.
+$$              # PID of the current shell (not sub-shell).
+$!              # The PID of the most recent background command.
+$_              # Last argument of the previously executed command,
+                #   or the path of the bash script.
+----
+
+These special variables MAY also be written using the bracketed syntax, eg. `${0}`, but they tend not to be.

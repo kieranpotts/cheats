@@ -1,0 +1,26 @@
+= Bash: Reading user input
+
+You can prompt for user input and capture that in a variable, using `read`:
+
+[source,bash]
+----
+echo Please, enter your name
+read user_name
+
+echo "Hi ${user_name}!"
+----
+
+You can get multiple values with `read`, too:
+
+[source,bash]
+----
+echo Please, enter your first and last name.
+read first_name last_name
+
+echo "Hi! ${first_name} ${last_name}!"
+----
+
+[IMPORTANT]
+======
+Always validate user input.
+======

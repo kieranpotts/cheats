@@ -1,0 +1,35 @@
+= Bash: Shorthand conditional syntax
+
+The `&&` and `||` operators may be used to form shorthand conditional statements, executing commands based on the results of preceding commands.
+
+[source,bash]
+----
+A && B  # Run B if and only if A succeeded
+A || B  # Run B if and only if A failed
+----
+
+Using `&&` is the equivalent of running an `if` check on the result of the left-side command. This syntax can also help to flatten nested conditionals.
+
+[source,bash]
+----
+sudo apt-get update && sudo apt-get install pyrenamer
+
+# Equivalent to:
+if sudo apt-get update ; then
+  sudo apt-get install pyrenamer
+fi
+----
+
+This syntax can be combined with `[ … ]` and Bash-specific `[[ … ]]` test syntax:
+
+[source,bash]
+----
+[ -z "${var}" ] && echo "var is empty"
+[ -z "${var}" ] || echo "var is not empty"
+[ -z "${var}" ] && echo "var is empty" || echo "var is not empty"
+
+[[ ! -z "${var}" ]] && echo "var is not empty"
+[[ ! -z "${var}" ]] echo "var is empty"
+[[ ! -z "${var}" ]] && echo "var is not empty" || echo "var is empty"
+----
+

@@ -1,0 +1,340 @@
+= Bash: Conditional operators
+
+[source,bash]
+----
+# Numeric comparisons.
+if [[ $num -gt 10 && $num -lt 100 ]]; then
+  echo "Number is between 10 and 100"
+fi
+
+# Using arithmetic context.
+if (( age >= 21 )); then
+  echo "Can drink alcohol"
+fi
+
+# String operations.
+if [[ "$user" == "admin" || "$user" == "root" ]]; then
+  echo "Administrative user"
+fi
+
+# File testing.
+if [[ -f "$config_file" && -r "$config_file" ]]; then
+  source "$config_file"
+fi
+----
+
+Some operators, like `<` and `>`, behave differently depending on whether they are used in string tests in `[[ ... ]]` or `[ ... ]`, or in arithmetic contexts in `(( ... ))`.
+
+== Arithmetic comparison operators
+
+Used to test numbers in `[[ ... ]]`, `[ ... ]`, or `(( ... ))`.
+
+=== `-eq` equal to
+
+[source,bash]
+----
+[[ $num -eq 5 ]]  # true if $num equals 5
+----
+
+This construct is commonly used in conjunction with output from other built-in commands or external programs. Consider the following example. The `grep -ic` command tells `grep` to look for the string (case-insensitive search), and to count the results. This is a simple and fast way of checking whether a string exists within a file, and to perform some action if it does.
+
+[source,bash]
+----
+value=$( grep -ic "someusername" /etc/passwd )
+
+if [[ $value -eq 1 ]]; then
+  echo "I found someusername"
+fi
+----
+
+=== `-ne` not equal to
+
+[source,bash]
+----
+[[ $num -ne 0 ]]  # true if $num is not zero
+----
+
+=== `-lt` less than
+
+[source,bash]
+----
+[[ $age -lt 18 ]]  # true if $age is less than 18
+----
+
+=== `-le` less than or equal to
+
+[source,bash]
+----
+[[ $score -le 100 ]]  # true if $score is 100 or less
+----
+
+=== `-gt` greater than
+
+[source,bash]
+----
+[[ $count -gt 32 ]]  # true if $count is greater than 32
+----
+
+=== `-ge` greater than or equal to
+
+[source,bash]
+----
+[[ $count -ge 10 ]]  # true if $count is 10 or greater
+----
+
+[source,bash]
+----
+value=$( grep -ic "benjamin" /etc/passwd )
+
+if [ $value -gt 5 ]
+then
+  echo "Found a lot of Benjamins"
+elif [ $value -lt 5 ]
+then
+  echo "Found a few Benjamins"
+else
+  echo "Found exactly 5 Benjamins"
+fi
+----
+
+== Arithmetic operators
+
+Used in `(( ... ))` for C-style arithmetic expressions.
+
+=== `==` equal to
+
+[source,bash]
+----
+(( num == 5 ))  # true if num equals 5
+----
+
+=== `!=` not equal to
+
+[source,bash]
+----
+(( x != y ))  # true if x does not equal y
+----
+
+=== `<` less than
+
+[source,bash]
+----
+(( a < b ))  # true if a is less than b
+----
+
+=== `<=` less than or equal to
+
+[source,bash]
+----
+(( value <= 100 ))  # true if value is less than or equal to 100
+----
+
+=== `>` greater than
+
+[source,bash]
+----
+(( price > 50 ))
+----
+
+=== `>=` greater than or equal to
+
+[source,bash]
+----
+(( age >= 21 ))
+----
+
+== String comparison operators
+
+=== `=` or `==` string equality
+
+[source,bash]
+----
+[[ "$name" = "John" ]]  # true if name equals "John", POSIX-compliant syntax
+[[ "$name" == "John" ]] # same as above, Bashism
+----
+
+=== `!=` string inequality
+
+[source,bash]
+----
+[[ "$status" != "failed" ]]
+----
+
+=== Pattern matching with `==` and `=~`
+
+[source,bash]
+----
+[[ "$filename" == *.txt ]] # ends with .txt
+[[ "$name" != [Jj]ohn* ]]  # doesn't start with John or john
+----
+
+=== `=~` regular expression match
+
+[source,bash]
+----
+[[ "$email" =~ ^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$ ]]
+----
+
+=== `<` lexicographic less than, ASCII order
+
+[source,bash]
+----
+[[ "$word1" < "$word2" ]]  # true if word1 comes before word2 alphabetically
+----
+
+=== `>` lexicographic greater than
+
+[source,bash]
+----
+[[ "$version" > "1.0" ]]
+----
+
+=== `-z`/`-n` empty (zero length) or non-empty string
+
+[source,bash]
+----
+[[ -z "$var" ]]    # true if $var is empty or unset
+[[ -n "$input" ]]  # true if $input has content
+----
+
+The `-n` operator is commonly used to check if an optional input variable has been provided.
+
+[source,bash]
+----
+if [ -n $1 ]
+then
+  echo "First argument was provided."
+fi
+----
+
+While `-z` is commonly used to check for the existence of mandatory input arguments.
+
+[source,bash]
+----
+if [ -z $1 ]
+then
+  echo "Sorry, you didn't give me a value."
+  exit 2
+fi
+----
+
+The `-z` operator is the opposite of the `-n` operator. The behavior is the same if you negate the `-n` result using the `!` (NOT) operator.
+
+[source,bash]
+----
+if [ ! -n $1 ]
+then
+  echo "Sorry, you didn't give me a value."
+  exit 2
+fi
+----
+
+The following syntax also achieves the same result, but using `-n`/`-z` is preferred for clarity.
+
+[source,bash]
+----
+if [[ "${my_var}" == "" ]]; then
+  do_something
+fi
+----
+
+Prefer to use the string equality and inequality operators only to check that a value matches (or mismatches) a particular sequence of characters. Keep use of `-n`/`-z` specifically for testing empty and non-empty values.
+
+[source,bash]
+----
+# Do this:
+if [[ "${my_var}" == "some_string" ]]; then
+  do_something
+fi
+----
+
+== File test operators
+
+=== `-e` file or directory exists
+
+[source,bash]
+----
+[[ -e "/path/to/file" ]]
+----
+
+=== `-f` is a regular file
+
+[source,bash]
+----
+[[ -f "script.sh" ]]
+----
+
+[source,bash]
+----
+file=$1
+if [ -f "${file}" ]; then
+   echo "File ${file} exists."
+else
+   echo "File ${file} does not exist."
+fi
+----
+
+=== `-d` is a directory
+
+[source,bash]
+----
+[[ -d "/home/user" ]]
+----
+
+=== `-s` file exists and is not empty
+
+[source,bash]
+----
+[[ -s "logfile.txt" ]]
+----
+
+=== `-r` file is readable
+
+[source,bash]
+----
+[[ -r "config.conf" ]]
+----
+
+=== `-w` file is writable
+
+[source,bash]
+----
+[[ -w "output.txt" ]]
+----
+
+=== `-x` file is executable
+
+[source,bash]
+----
+[[ -x "myscript.sh" ]]
+----
+
+=== `-L` is a symbolic link
+
+[source,bash]
+----
+[[ -L "/usr/bin/python" ]]
+----
+
+== Logical operators
+
+=== `&&` logical AND
+
+[source,bash]
+----
+[[ $age -ge 18 && $age -le 65 ]]  # between 18 and 65
+----
+
+=== `||` logical OR
+
+[source,bash]
+----
+[[ "$status" == "ok" || "$status" == "good" ]]
+----
+
+=== `!` logical NOT
+
+[source,bash]
+----
+[[ ! -f "missing.txt" ]]  # true if file doesn't exist
+----

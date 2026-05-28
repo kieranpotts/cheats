@@ -1,0 +1,20 @@
+= Bash: Nesting loops
+
+You can nest loops within each other to perform more complex iterations.
+
+[source,bash]
+----
+#!/bin/bash
+
+log_dir="/Users/nana/logs"
+error_patterns=("ERROR" "FATAL" "CRITICAL")
+
+log_files=$(find "$log_dir" -name "*.log" -mtime -1)
+
+for log_file in $log_files; do
+  for pattern in "${error_patterns[@]}"; do
+    echo -e "\nNumber of ${error_patterns[0]} logs found in $log_file:"
+    grep -c "${error_patterns[0]}" "$log_file"
+  done
+done
+----

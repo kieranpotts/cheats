@@ -1,0 +1,12 @@
+= Bash: Arrays
+
+Arrays are supported by Bash. Arrays hold multiple values, each accessible by an index.
+
+[source,bash]
+----
+arr=("item1" "item2" "item3")
+
+${arr[0]}  # Access the first element.
+${arr[@]}  # Access all elements.
+${#arr[@]} # Get the length of the array.
+----
