@@ -1,0 +1,22 @@
+= Linux kernel
+
+Use either of the following commands to find the version number of the Linux kernel:
+
+[source]
+----
+uname -a
+uname -mrs
+----
+
+Sample output:
+
+[source]
+----
+Linux 2.6.32-5-amd64 x86_64
+----
+
+Where:
+
+* `Linux` = kernel name
+* `2.6.32-5-amd64` = kernel version number
+* `x86_64` = machine hardware name (64 bit)

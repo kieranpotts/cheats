@@ -1,0 +1,74 @@
+= systemd
+
+Systemd is an init system and system manager that is widely becoming the new standard for Linux machines.
+
+The fundamental purpose of an init system is to initialize the components that must be started after the Linux kernel is booted (traditionally known as "userland" components). The init system is also used to manage services and daemons for the server at any point while the system is running.
+
+The `systemctl` command is the main tool for controlling the init system.
+
+Start a service:
+
+[source]
+----
+sudo systemctl start <application>.service
+----
+
+Systemd knows to look for `*.service` files for service management commands, so the above command can be abbreviated to:
+
+[source]
+----
+sudo systemctl start <application>
+----
+
+Stop a running service:
+
+[source]
+----
+sudo systemctl stop <application>.service
+----
+
+Restart a running service:
+
+[source]
+----
+sudo systemctl restart <application>.service
+----
+
+If the application in question is able to reload its configuration files (without restarting), you can issue the reload command to initiate that process:
+
+[source]
+----
+sudo systemctl reload <application>.service
+----
+
+If you are unsure whether the service has the functionality to reload its configuration, you can issue the reload-or-restart command. This will reload the configuration in-place if available. Otherwise, it will restart the service so the new configuration is picked up:
+
+[source]
+----
+sudo systemctl reload-or-restart <application>.service
+----
+
+The above commands are useful for starting or stopping commands during the current session. To tell systemd to start services automatically at boot, you must enable them.
+
+To start a service at boot, use the enable command:
+
+[source]
+----
+sudo systemctl enable <application>.service
+----
+
+This will create a symbolic link from the system's copy of the service file (usually in `/lib/systemd/system` or `/etc/systemd/system`) into the location on disk where systemd looks for autostart files (usually `/etc/systemd/system/some_target.target.wants`).
+
+To remove the symbolic link that indicated that the service should be started automatically:
+
+[source]
+----
+sudo systemctl disable <application>.service
+----
+
+To check the status of a service on your system:
+
+[source]
+----
+systemctl status <application>.service
+----
