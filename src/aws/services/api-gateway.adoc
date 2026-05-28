@@ -6,4 +6,4 @@ An API Gateway sits within a region. We can connect to it over the internet usin
 
 An API Gateway may forward requests to, for example, Lambda functions (in the same region) or EC2 instances (in a VPC in the same region).
 
-You can talk to almost any other AWS service from an API Gateway. An API Gateway can also talk _out_ to other public API endpoints served from elsewhere on the web, which could be a service being served from an on-premised data center. Thus, an API Gateway can sit in front of both internal and external services.
+You can talk to almost any other AWS service from an API Gateway. An API Gateway can also talk _out_ to other public API endpoints served from elsewhere on the web, which could be a service being served from an on-premises data center. Thus, an API Gateway can sit in front of both internal and external services.
