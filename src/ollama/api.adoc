@@ -1,0 +1,18 @@
+= API
+
+Ollama exposes a local REST API on port 11434 by default. It is compatible with the OpenAI API format, which means tools and libraries built for OpenAI can be pointed at Ollama with minimal changes.
+
+[source,sh]
+----
+# Generate a completion.
+curl http://localhost:11434/api/generate \
+  -d '{"model": "llama3", "prompt": "Why is the sky blue?"}'
+
+# Chat endpoint (OpenAI-compatible).
+curl http://localhost:11434/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "llama3",
+    "messages": [{"role": "user", "content": "Why is the sky blue?"}]
+  }'
+----
