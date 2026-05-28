@@ -1,0 +1,18 @@
+= Dockerizing Java applications
+
+== Run a basic Java container
+
+This is useful for just experimenting with Java code in a containerized environment, so you don't need to install a Java runtime directly on your host machine.
+
+[source,java]
+----
+docker pull openjdk:22-jdk
+
+# Run the container in detached interactive mode:
+docker run -dit openjdk:22-jdk
+
+# If you run the container in interactive mode in the
+# foreground, jshell will be elevated to your terminal.
+# (Type `/exit` to exit jshell but keep the container running).
+docker run -it openjdk:22-jdk
+----

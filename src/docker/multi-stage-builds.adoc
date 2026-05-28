@@ -1,0 +1,191 @@
+= Multi-stage builds
+
+Multi-stage builds are a feature of Docker that allow you to use multiple `FROM` instructions in a single Dockerfile. This is useful where you need extra steps to prepare an image for production, eg. building production-grade artifacts, rather than running the application directly from the source code, as you would in development environments.
+
+Example:
+
+.Dockerfile
+[source,Dockerfile]
+----
+# Create a base stage.
+FROM node:20 as base
+
+RUN apt install imagemagick
+
+WORKDIR /app
+
+COPY package*.json .
+
+RUN npm install
+
+# Create a dev container that has all of the source code inside of it:
+FROM base as dev
+
+COPY . .
+
+# Create a build stage for production.
+FROM dev as build
+
+RUN npm run build
+
+# Create a production container that only has the build artifacts,
+# but not the source code.
+FROM base as prod
+
+# Run the build stage first, then copy the build artifacts.
+COPY --from=build /app/dist /app
+----
+
+These stages can then be referenced from the `docker-compose.yml` file. Convention is to use different docker-compose files for different environments, eg. `docker-compose.dev.yml` and `docker-compose.prod.yml`.
+
+.`docker-compose.dev.yml`
+[source,yaml]
+----
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      target: dev # Target stage.
+    ports:
+      - 5000:5000
+    command: npm run dev
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - db
+  db:
+    image: postgres:16.2
+    ports:
+      - ${DB_PORT}:5432
+    environment:
+      - POSTGRES_PASSWORD=${DB_PSWD}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - ./db-data:/var/lib/postgresql/data
+----
+
+.`docker-compose.prod.yml`
+[source,yaml]
+----
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      target: prod # Target stage.
+    ports:
+      - 5000:5000
+    # Run the app, rather than the dev environment:
+    command: node src/index.js
+    # These volumes are not needed in the prod environment.
+    # volumes:
+    #   - .:/app
+    #   - /app/node_modules
+    depends_on:
+      - db
+    # Environment variables need to be captured from the actual environment,
+    # not the `.env file:
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PSWD}
+      - DB_NAME=${DB_NAME}
+      - DB_PORT=${DB_PORT}
+      - DATABASE_URL=${DB_URL}
+  db:
+    image: postgres:16.2
+    ports:
+      - ${DB_PORT}:5432
+    environment:
+      - POSTGRES_PASSWORD=${DB_PSWD}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - ./db-data:/var/lib/postgresql/data
+----
+
+You can simplify these configurations by extracting the common `db` service to a base configuration, and then having the dev and prod configurations extend that base configuration.
+
+.`docker-compose.base.yml`
+[source,yaml]
+----
+version: '3'
+
+services:
+  db:
+    image: postgres:16.2
+    ports:
+      - ${DB_PORT}:5432
+    environment:
+      - POSTGRES_PASSWORD=${DB_PSWD}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - ./db-data:/var/lib/postgresql/data
+----
+
+.`docker-compose.dev.yml`
+[source,yaml]
+----
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      target: dev
+    ports:
+      - 5000:5000
+    command: npm run dev
+    volumes:
+      - .:/app
+      - /app/node_modules
+    depends_on:
+      - db
+  db:
+    extends:
+      file: docker-compose.base.yml
+      service: db
+
+----
+
+.`docker-compose.prod.yml`
+[source,yaml]
+----
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      target: prod
+    ports:
+      - 5000:5000
+    command: node src/index.js
+    depends_on:
+      - db
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PSWD}
+      - DB_NAME=${DB_NAME}
+      - DB_PORT=${DB_PORT}
+      - DATABASE_URL=${DB_URL}
+  db:
+    extends:
+      file: docker-compose.base.yml
+      service: db
+----
+
+Usage:
+
+----
+docker compose -f docker-compose.prod.yml up --build
+----

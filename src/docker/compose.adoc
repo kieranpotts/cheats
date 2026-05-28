@@ -1,0 +1,172 @@
+= Docker Compose
+
+When working with multiple containers that need to communicate with each other, it's easier to use Docker Compose. This is a tool for defining and running multi-container applications.
+
+With Docker Compose, you use a YAML file to configure your application's services, networks, and volumes. Then, with a single command, you create and start all the containers ("services") from your configuration.
+
+The manual configuration described in the link:./networking.adoc[networking] section can be mapped to a static configuration like this:
+
+.`docker-compose.yml`
+[source,yaml]
+----
+version: '3' # version of docker-compose.yml
+
+services:
+
+  mongodb: # Container name
+    image: mongo
+    ports:
+      - 27017:27017 # host:guest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+
+  mongo-express:
+    image: mongo-express
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_ADMIN_USERNAME=admin
+      - ME_CONFIG_MONGODB_ADMIN_USERPASSWORD=password
+----
+
+By default, `docker compose` (`docker-compose` in earlier versions of Docker) will automatically create a common network for all containers defined in a `docker-compose.yml` file. This is another advantage of using a `docker-compose.yml` file – we don't need to manually create a network.
+
+To start the containers using the `docker-compose.yml` configuration in the current working directory, run the following command:
+
+----
+docker compose up
+----
+
+Because there will be multiple containers, you'd typically run them in detached mode:
+
+----
+docker compose -d up
+----
+
+If you change the name of the `docker-compose.yml` file, or if it exists in another directory, you will need to specify the file name in the command, eg.:
+
+----
+docker compose -d -f mongo.yml up
+----
+
+Environment variables can be used in the `docker-compose.yml` file. If a `.env` file exists in the same directory, Docker will automatically read these in. Here's an example for a Postgres database:
+
+.`docker-compose.yml`
+[source,yaml]
+----
+version: '3'
+
+services:
+  db:
+    image: postgres:16.2
+    ports:
+      - ${DB_PORT}:5432
+    environment:
+      - POSTGRES_PASSWORD=${DB_PSWD}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
+----
+
+Below is a more advanced configuration for a distributed system with a client application, a server application, and a server-side database.
+
+.Dockerfile for back-end application
+[source,Dockerfile]
+----
+FROM node:18-alpine
+
+# Copy everything from the current directory to the container's /app directory.
+WORKDIR /app
+COPY . .
+
+RUN npm i -g pnpm nodemon && pnpm i
+
+EXPOSE 4000
+
+CMD [ "npm", "start" ]
+----
+
+.Dockerfile for front-end application
+[source,Dockerfile]
+----
+FROM node:18-alpine
+
+WORKDIR /app
+COPY . .
+
+RUN npm i -g pnpm nodemon && pnpm i
+
+EXPOSE 3000
+
+CMD [ "npm", "run", "dev" ]
+----
+
+For the MongoDB database, we don't need to create a Dockerfile for that, because we can just pull a ready-made image from Docker Hub.
+
+.docker-compose.yml file
+[source,yaml]
+----
+version: "3"
+
+services:
+  client:
+    build: ./frontend
+    container_name: react-ui
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+    depends_on:
+      - api
+    networks:
+      - mern-network
+
+  api:
+    build: ./backend
+    container_name: node-api
+    restart: always
+    ports:
+      - "4000:4000"
+    depends_on:
+      - database
+    networks:
+      - mern-network
+
+  database:
+    image: mongo
+    container_name: mongo-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - /home/name/project/mongodb-backup:/data/db
+    networks:
+      - mern-network
+
+networks:
+  mern-network:
+    driver: bridge
+----
+
+With the inter-service communication enabled using Docker's network bridge, we can configure the individual applications to communicate with each other. Configurations will vary depending on how the applications are coded, but something like this:
+
+.Front-end .env file
+[source,env]
+----
+VITE_API_KEY="http://localhost:4000/api"
+----
+
+.Back-end .env file
+[source,env]
+----
+MONGODB_URI=mongodb://mongo-db:27017/to-do-app
+PORT=4000
+----
+
+Notice that the hostname for the MongoDB is the container name for the MongoDB service: "mongo-db".
+
+To run all the services together, from the directory of the `docker-compose.yml` file, run:
+
+----
+docker compose up -d
+----
