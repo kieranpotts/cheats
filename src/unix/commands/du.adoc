@@ -1,0 +1,7 @@
+= `du`
+
+`du` – "disk usage" – is a standard Unix shell command for reporting the amount of disk space used by files and directories.
+
+`du` reports allocation space, not absolute file space. For this reason, the output of `du` may not match the output of link:./df.adoc[`df`], which reports absolute file space. If files have been deleted but their blocks not yet freed, `du` will still report the space used by those files, while `df` will not.
+
+See also the link:../utilities/ncdu.adoc[`ncdu`] utility, which provides a more user-friendly interface for disk usage analysis.

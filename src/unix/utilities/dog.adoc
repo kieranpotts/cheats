@@ -1,0 +1,3 @@
+= `dog`
+
+An alternative to link:./dig.adoc[`dig`], `dog` is a cleaner DNS lookup tool.

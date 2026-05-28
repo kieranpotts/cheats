@@ -1,0 +1,3 @@
+= `duf`
+
+An alternative to the that Unix command link:../commands/df.adoc[`df`], `duf` outputs disk usage statistics in a more user-friendly way.

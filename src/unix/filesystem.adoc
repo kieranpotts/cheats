@@ -1,0 +1,20 @@
+= Unix filesystem
+
+.Root and standard top-level directories
+----
+/      - the root directory
+bin/   - system programs
+sbin/  - system administration binary executables
+boot/  - file for Unix boot (operating system kernel) code
+etc/   - system administration files and system configuration
+lib/   - library routines
+home/  - typical location of user home directories
+tmp/   - scratch pad directory for temporary files
+usr/   - more application and system specific information
+bin/   - more user binary executables
+lib/   - even more system shared library files
+local/ - OSC local area for site specific programs and files
+----
+
+See also the
+https://refspecs.linuxfoundation.org/fhs.shtml[Filesystem Hierarchy Standard (FHS)].

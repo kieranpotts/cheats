@@ -1,0 +1,3 @@
+= `jq`
+
+`jq` is a popular utility for querying and manipulating JSON data.

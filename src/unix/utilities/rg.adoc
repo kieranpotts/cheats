@@ -1,0 +1,7 @@
+= `rg` (ripgrep)
+
+Written in Rust, `rg` (ripgrep) is similar to `grep` but is faster and more powerful. It can be used to – very quickly – do things like find errors in logs:
+
+----
+$ sudo rg -c "ERROR" /var/log/*.log
+----

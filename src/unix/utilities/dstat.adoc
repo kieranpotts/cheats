@@ -1,0 +1,3 @@
+= `dstat`
+
+https://linux.die.net/man/1/dstat[`dstat`], which is built-in to many Linux distributions, outputs system resource information, combining data from `vmstat`, `iostat`, `ifstat`, and `netstat` in a single interface.

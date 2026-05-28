@@ -1,0 +1,16 @@
+= `whereis`
+
+Locates the binary, source, and manual pages for a given command.Searches a predefined set of directories, not just $PATH.
+
+----
+$ whereis <command>
+----
+
+Example:
+
+----
+$ whereis gcc
+gcc: /usr/bin/gcc /usr/share/man/man1/gcc.1.gz
+----
+
+`whereis` searches for more things than link:./which.adoc[`which`], which just looks for binaries. It is much faster than `find`, which searches the entire filesystem, but is also less flexible and less powerful.

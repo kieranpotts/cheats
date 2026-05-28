@@ -1,0 +1,9 @@
+= `ipcalc`
+
+https://linux.die.net/man/1/ipcalc[`ipcalc`] is a great utility for calculating subnet ranges and masks from CIDR notation.
+
+----
+ipcalc 10.7.8.94/18
+----
+
+See https://www.linux.com/topic/networking/how-calculate-network-addresses-ipcalc/
