@@ -63,7 +63,7 @@ systemctl start httpd
 systemctl enable httpd
 ----
 
-User Data is limited to 16KB in size, so its only good for simple scripts. For Windows instances, you can run Batch and Powershell scripts as well as Bash ones.
+User Data is limited to 16KB in size, so it's only good for simple scripts. For Windows instances, you can run Batch and Powershell scripts as well as Bash ones.
 
 == EC2 Metadata
 
