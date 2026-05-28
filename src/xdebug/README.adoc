@@ -1,0 +1,68 @@
+= Xdebug
+
+The following instructions are for setting up Xdebug in VS Code to inspect an application that is running in a Docker container.
+
+Add the following to `~/.bashrc`. This will set XDebug's `client_host` setting to the IP address of the Docker virtual bridge (docker0), which is what Docker containers use to communicate with the host system, and vice versa.
+
+[source,sh]
+----
+IP=`ip -4 addr show scope global dev docker0 | grep inet | awk '{print \$2}' | cut -d / -f 1`
+export XDEBUG_CONFIG="client_host=$IP"
+----
+
+Reload your shell configuration:
+
+[source,sh]
+----
+source ~/.bashrc
+----
+
+Add the following environment variables to your `docker-compose.yml` file:
+
+[source,yaml]
+----
+services:
+  app:
+    environment:
+      - XDEBUG_CONFIG
+      - XDEBUG_MODE=debug,coverage
+      - XDEBUG_SESSION=1
+
+----
+
+(The `coverage` mode is required only if you want Xdebug to capture code coverage metric when tests are run.)
+
+Rebuild your Docker containers:
+
+[source,sh]
+----
+docker compose down
+docker composer build
+docker-compose up -d
+----
+
+Add the following to `.vscode/launch.json` in your project.
+
+[source,json]
+----
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Listen for XDebug",
+      "type": "php",
+      "request": "launch",
+      "port": 9003,
+      "pathMappings": {
+        "/srv": "${workspaceFolder}"
+      }
+    }
+  ]
+}
+----
+
+(Update the `pathMappings` value to match the path to your project in the Docker container. It might be something like `/var/www/html`. 9003 is the default port for Xdebug.)
+
+Open the project folder directly (not via a multi-root workspace) in VS Code. Start the debugger in VS Code by clicking the green play button in the debug panel.
+
+The easiest way to trigger Xdebug is to pass a Cookie header, `XDEBUG_TRIGGER`, with a value of `1` in your HTTP request. If using the Xdebug Helper browser extension, this will be done automatically when you enable "Debug" mode. For API clients such as Postman, simply add the `Cookie` key to the `Headers` tab with a value of `XDEBUG_TRIGGER=1`.
