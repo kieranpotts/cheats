@@ -1,0 +1,30 @@
+= Java: Method overriding
+
+Methods can override methods defined in subclasses. The `@Override annotation is optional but RECOMMENDED.
+
+[source,java]
+----
+class A {
+  public void show() {
+    System.out.println("A");
+  }
+}
+
+class B extends A {
+  @Override
+  public void show() {
+    System.out.println("B");
+  }
+}
+----
+
+Usage example:
+
+[source,java]
+----
+A a = new A();
+a.show(); // "A"
+
+B b = new B();
+b.show(); // "B"
+----

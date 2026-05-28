@@ -1,0 +1,75 @@
+= Java
+
+== Basics
+
+* link:./basics/platform.adoc[Overview of the Java platform]
+* link:./basics/compilation-execution.adoc[Compilation and execution]
+* link:./basics/jshell.adoc[JShell]
+* link:./basics/packages-namespaces.adoc[Packages and namespaces]
+* link:./basics/importing-packages.adoc[Importing packages]
+
+== Types
+
+* link:./types/variables.adoc[Variables]
+* link:./types/primitives.adoc[Primitive data types]
+* link:./types/strings.adoc[Strings]
+* link:./types/arrays.adoc[Arrays]
+* link:./types/wrapper-classes.adoc[Wrapper classes]
+* link:./types/type-inference.adoc[Type inference]
+* link:./types/type-conversion-and-casting.adoc[Type conversion and casting]
+
+== Object-oriented programming
+
+* link:./oop/classes.adoc[Classes]
+* link:./oop/constructors.adoc[Constructors]
+* link:./oop/abstract-classes.adoc[Abstract classes]
+* link:./oop/method-overriding.adoc[Method overriding]
+* link:./oop/final.adoc[Final]
+* link:./oop/sealed-classes.adoc.adoc[Sealed classes]
+* link:./oop/access-modifiers.adoc[Access modifiers]
+* link:./oop/encapsulation.adoc[Encapsulation]
+* link:./oop/upcasting-downcasting.adoc[Upcasting and downcasting]
+* link:./oop/polymorphism.adoc[Polymorphism]
+* link:./oop/anonymous-objects.adoc[Anonymous objects]
+* link:./oop/inner-classes.adoc[Inner classes]
+* link:./oop/interfaces.adoc[Interfaces]
+* link:./oop/functional-interfaces.adoc[Functional interfaces]
+* link:./oop/lambda-expressions.adoc[Lambda expressions]
+* link:./oop/super.adoc[super()]
+* link:./oop/tostring-hashcode.adoc[toString() and hashCode()]
+
+== Annotations
+
+* link:./annotations/annotations.adoc[Annotations]
+
+== Data structures
+
+* link:./structs/record-classes.adoc[Record classes]
+* link:./structs/maps.adoc[Maps]
+* link:./structs/enums.adoc[Enums]
+* link:./structs/collection.adoc[Collection API]
+* link:./structs/stream.adoc[Stream API]
+
+== Operators
+
+* link:./operators/logical.adoc[Logical operators]
+* link:./operators/relational.adoc[Relational operators]
+* link:./operators/arithmetic.adoc[Arithmetic operators]
+
+== Control flow structures
+
+* link:./control-flow/conditionals.adoc[Conditionals]
+* link:./control-flow/loops.adoc[Loops]
+
+== Error handling
+
+* link:./errors/exceptions.adoc[Exceptions]
+* link:./errors/try-finally.adoc[Try/Finally]
+
+== Concurrency
+
+* link:./concurrency/threads.adoc[Threads]
+
+== User input and output
+
+* link:./io/console-input.adoc[Console input]

@@ -1,0 +1,50 @@
+= Java: Abstract classes
+
+Abstract classes cannot be instantiated. This will not compile:
+
+[source,java]
+----
+public class AbstractClassesInJava {
+  public static void main(String[] args) {
+
+    Car car = new Car();
+
+  }
+}
+
+abstract class Car {
+  public abstract void drive();
+  public abstract void park();
+}
+----
+
+Only concrete classes can be instantiated.
+
+[source,java]
+----
+public class AbstractClassesInJava {
+  public static void main(String[] args) {
+
+    Car car = new Mondeo();
+    car.drive(); // "Driving Mondeo"
+    car.park(); // "Parking"
+
+  }
+}
+
+abstract class Car {
+  public abstract void drive();
+
+  public void park() {
+    System.out.println("Parking");
+  }
+}
+
+class Mondeo extends Car {
+  public void drive() {
+    System.out.println("Driving Mondeo");
+  }
+}
+----
+
+It is not compulsory to have abstract methods in an abstract class. The only requirement is that all the abstract methods be implemented in whatever subclass that gets instantiated.
