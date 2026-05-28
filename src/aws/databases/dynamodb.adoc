@@ -1,6 +1,6 @@
 = AWS DynamoDB
 
-*DynamoDB* is a fully-managed, serverless, NoSQL database services with *in-memory performance*, *low latency* (in milliseconds), *high I/O*, and both dynamic *auto-scaling* or manual *push-button scaling* with no downtime. It can be very cost effective for many storage use cases.
+*DynamoDB* is a fully-managed, serverless, NoSQL database service with *in-memory performance*, *low latency* (in milliseconds), *high I/O*, and both dynamic *auto-scaling* or manual *push-button scaling* with no downtime. It can be very cost effective for many storage use cases.
 
 DynamoDB can be used as both a *key-value store* and as a *document database*. The core components are:
 
@@ -9,7 +9,7 @@ DynamoDB can be used as both a *key-value store* and as a *document database*. T
 * *Attributes* (each item has one or more attributes)
 
 Data is stored in *partitions* that are replicated across multiple availability zones in a region.
-As you data grows, it automatically gets stored across more partitions — so maintaining durability and redundancy at scale. Scaling happens without downtime.
+As your data grows, it automatically gets stored across more partitions — so maintaining durability and redundancy at scale. Scaling happens without downtime.
 
 When you adjust the performance characteristics of your database, AWS automatically adjusts how data is stored to optimize read and write performance as you require.
 
@@ -17,7 +17,7 @@ When you adjust the performance characteristics of your database, AWS automatica
 
 .Key features
 ****
-* *Serverless*: Fully-managed, fault-tolerant, serverles.
+* *Serverless*: Fully-managed, fault-tolerant, serverless.
 
 * *High availability*: 99.99% availability; SLA of 99.999% for global tables.
 
@@ -38,7 +38,7 @@ When you adjust the performance characteristics of your database, AWS automatica
 
 Pricing can be based on either provisioned throughput or on-demand capacity.
 
-The first option means you choose a *provisioned capacity* and you pay for the volume of reads and writes that you have allocated. This is a good option when you understand the performance requirements ad usage patterns of your application.
+The first option means you choose a *provisioned capacity* and you pay for the volume of reads and writes that you have allocated. This is a good option when you understand the performance requirements and usage patterns of your application.
 
 Otherwise, choose *on-demand capacity*. You will pay for the _actual_ read and write operations performed, without needing to worry about capacity planning.
 
