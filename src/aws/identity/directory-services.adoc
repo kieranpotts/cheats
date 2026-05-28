@@ -8,7 +8,7 @@ AWS offers a suite of different products for hosting or connecting to directory 
 
 This is a great choice if your have more than 5,000 users and/or you need a trust relationship between different Active Directories. For example, you can set up trust relationships to extend authentication from on-premises Active Directories into the AWS cloud.
 
-*AD Connector*: This is a good option where you have a self-managed Microsoft Active Directory in our own (on-premises) data center. You create a VPN to the AD Connector, which then connects to various services within AWS, such as Workspaces, WorkDocs, and WorkMail. So, rather than having an Active Directory service in the cloud, you just connecting your on-premises Active Directory service into the cloud via this connector. It's simpler. No need to synchronize identities or creating trust relationships
+*AD Connector*: This is a good option where you have a self-managed Microsoft Active Directory in our own (on-premises) data center. You create a VPN to the AD Connector, which then connects to various services within AWS, such as Workspaces, WorkDocs, and WorkMail. So, rather than having an Active Directory service in the cloud, you just connecting your on-premises Active Directory service into the cloud via this connector. It's simpler. No need to synchronize identities or create trust relationships.
 
 With AD Connector, you can use the AWS Management Console to map the AD identities to IAM roles in the normal way. You can also seamlessly join Windows EC2 instances to an on-premises Active Directory domain.
 

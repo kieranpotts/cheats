@@ -13,7 +13,7 @@ There are two protocols we can use to federate _to_ AWS:
 * SAML 2.0
 * Web Identity Federation
 
-== SAML (Security Assertion Markup Language
+== SAML (Security Assertion Markup Language)
 
 Imagine we have an on-premises Active Directory service — which is very common in enterprise environments — and we want to allow users to access AWS resources using their existing AD credentials.
 
@@ -21,7 +21,7 @@ Imagine we have an on-premises Active Directory service — which is very common
 
 However, for a user (or an application) to access AWS resources, we need to add an *Active Directory Federation Service (ADFS)*, which is another type of IdP. The client (which may be a user or application) communicates with the ADFS service, which in turn authenticates the user with the AD service. The IdP returns a *SAML assertion* to the client, which proves that the user is who they say they are.
 
-The SAML assertion is then passed to *AWS STS (Security Token Service)* via the `sts:AssumeRomeWithSAML` API call. This API call includes the SAML assertion as a parameter, and it returns temporary security credentials to the client. It is these credentials that the client can then use to access the AWS resources it needs, such as a DynamoDB table.
+The SAML assertion is then passed to *AWS STS (Security Token Service)* via the `sts:AssumeRoleWithSAML` API call. This API call includes the SAML assertion as a parameter, and it returns temporary security credentials to the client. It is these credentials that the client can then use to access the AWS resources it needs, such as a DynamoDB table.
 
 == Web Identity Federation
 
