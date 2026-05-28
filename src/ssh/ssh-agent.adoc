@@ -1,0 +1,130 @@
+= SSH Agent
+
+SSH agent is a helper program that manages your SSH keys in memory. Once you've authenticated with your key's passphrase, the agent stores the decrypted key, so you won't need to re-enter your passphrase for subsequent SSH connections.
+
+== Start the SSH agent
+
+Most modern systems start the SSH agent automatically. Check if it's running:
+
+[source]
+----
+echo $SSH_AUTH_SOCK
+----
+
+If the output is empty, start the agent:
+
+[source]
+----
+eval "$(ssh-agent -s)"
+----
+
+For persistent setup (Bash), add to `~/.bashrc`:
+
+[source]
+----
+if [ -z "$SSH_AUTH_SOCK" ]; then
+    eval "$(ssh-agent -s)"
+fi
+----
+
+For Zsh, add to `~/.zshrc`:
+
+[source]
+----
+if [ -z "$SSH_AUTH_SOCK" ]; then
+    eval "$(ssh-agent -s)"
+fi
+----
+
+== Add your key to the agent
+
+=== On macOS
+
+Use the `--apple-use-keychain` flag to store your passphrase in the macOS keychain:
+
+[source]
+----
+ssh-add --apple-use-keychain ~/.ssh/id_ed25519
+----
+
+Then, modify `~/.ssh/config` to automatically load your key and use keychain storage:
+
+[source]
+----
+Host *
+    AddKeysToAgent yes
+    UseKeychain yes
+    IdentityFile ~/.ssh/id_ed25519
+----
+
+=== On Windows
+
+Ensure ssh-agent is running with elevated permissions, then add your key:
+
+[source]
+----
+ssh-add c:/Users/YOU/.ssh/id_ed25519
+----
+
+Replace `YOU` with your username.
+
+=== On Linux
+
+[source]
+----
+ssh-add ~/.ssh/id_ed25519
+----
+
+You will be prompted for your key's passphrase. Once entered, the agent stores the decrypted key.
+
+=== All platforms
+
+After adding your key, verify it's loaded:
+
+[source]
+----
+ssh-add -l
+----
+
+== Add a key with a custom timeout
+
+Remove the key from memory after 1 hour (3600 seconds):
+
+[source]
+----
+ssh-add -t 3600 ~/.ssh/id_ed25519
+----
+
+== List loaded keys
+
+[source]
+----
+ssh-add -l
+----
+
+== Remove a key from the agent
+
+[source]
+----
+ssh-add -d ~/.ssh/id_ed25519
+----
+
+Remove all keys:
+
+[source]
+----
+ssh-add -D
+----
+
+== SSH config integration
+
+You can configure SSH to automatically add keys to the agent. Add this to `~/.ssh/config`:
+
+[source]
+----
+Host *
+    AddKeysToAgent yes
+    IdentityFile ~/.ssh/id_ed25519
+----
+
+With `AddKeysToAgent yes`, your key will be automatically added to the agent on first connection.
