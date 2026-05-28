@@ -6,7 +6,7 @@ A VPC is analogous to having your own data center, but in the cloud. A VPC is a 
 
 You get a default VPC as soon as you create a new AWS account.
 
-Any resources you launch into a VPC will be visible only to your AWS account by default. Resources launched in different VPCs under the same account will be hidden from each other — unless you explicitly configure them to communicate with each other. This is the primary purpose of VPCs: to created logically-isolated groups of resources.
+Any resources you launch into a VPC will be visible only to your AWS account by default. Resources launched in different VPCs under the same account will be hidden from each other — unless you explicitly configure them to communicate with each other. This is the primary purpose of VPCs: to create logically-isolated groups of resources.
 
 A VPC is region-specific, meaning it is created within a single AWS region. A VPC will span all the availability zones (AZs) within the same region (there's usually two or three) — in effect, spanning multiple data centers that are geographically close together. This allows resources to be distributed across multiple AZs, adding redundancy to your architecture to achieve high availability and fault tolerance (if one AZ goes down, you can failover to resources in other AZs in the same region). Distributing load across multiple AZs also allows for better resource balancing and scaling.
 
