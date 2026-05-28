@@ -1,0 +1,133 @@
+= Monit
+
+Monit checks the availability of services like Apache, MySQL, and Postfix, and takes the appropriate action such as a restart if it finds a service is not behaving as expected. It can also be configured to do advanced things like checking that the file size, checksum, and permissions on files are as expected.
+
+The combination of Munin plus Monit gives you full monitoring of a local system: graphics that let you recognize current or upcoming problems, and a watchdog that ensures the availability of the monitored services.
+
+== Configuration
+
+Monit is very easy to use nearly out of the box. By default, it is set up to check that services are running every 2 minutes and stores its log file in `/var/log/monit.log`.
+
+Monit's default configuration file is located at:
+
+[source]
+----
+/etc/monitrc
+----
+
+Monit will also look for configuration files in the `/etc/monit.d` directory. It is good practice to create custom configurations here (eg. `/etc/monit.d/monitrc`) so we can override rather than directly modify Monit's default configuration.
+
+[source]
+----
+nvim /etc/monit.d/monitrc
+----
+
+Add the following lines to the new file:
+
+[source]
+----
+set daemon 300
+    with start delay 240
+----
+
+The first number is the interval, in seconds, at which Monit runs its tests. The value you choose will depend on how many tests you define, how quickly you need Monit to act on events, and how much load the tests themselves add to your server.
+
+The "with start delay" line prevents Monit from running a test immediately after it boots up. Other processes may take some time to complete their own startup, so including this delay will prevent Monit from sending alerts that all services are down every time you reboot the server.
+
+== Web interface
+
+Monit comes with its own built-in web server, for displaying the system tests as a web page. Monit's server needs to run on a different port than other web servers running on the same system. FOr this reason, port 2812 is Monit's default port.
+
+TIP: Make sure the Firewall settings allow traffic on port 2812.
+
+Add the following block to the custom configuration file. The "use address" value should be the hostname or IP address of the server. The "allow 0.0.0.0/0.0.0.0" line does not restrict access by IP address, allowing the web interface to be accessed from any device. Instead the web interface is protected with HTTP basic access authentication - provide your own username and password on the last line.
+
+[source]
+----
+set httpd port 2812
+    use address <hostname>
+    allow 0.0.0.0/0.0.0.0
+    allow monitadmin:<password>
+----
+
+Example:
+
+[source]
+----
+set httpd port 2812
+    use address nextgaa1.memset.net
+    allow 0.0.0.0/0.0.0.0
+    allow monitadmin:WHCK.....
+----
+
+Test the configuration:
+
+[source]
+----
+monit -t
+----
+
+Reload Monit's configuration for these changes to take effect.
+
+[source]
+----
+monit reload
+----
+
+TIP: Type `monit status` into the terminal to display monit's status and related details.
+
+== Configuring program monitoring
+
+The following configuration options ensure that these services remain up-and-running at all times:
+
+.SSH
+[source]
+----
+check process sshd with pidfile /var/run/sshd.pid
+    start program = "/usr/bin/systemctl start sshd.service"
+    stop program  = "/usr/bin/systemctl stop sshd.service"
+----
+
+.Apache
+[source]
+----
+check process httpd with pidfile /var/run/httpd/httpd.pid
+    start program = "/usr/bin/systemctl start httpd.service" with timeout 60 seconds
+    stop program  = "/usr/bin/systemctl stop httpd.service"
+----
+
+.MySQL
+[source]
+----
+check process mysqld with pidfile /var/run/mysqld/mysqld.pid
+    start program = "/usr/bin/systemctl start mysqld.service"
+    stop program = "/usr/bin/systemctl stop mysqld.service"
+----
+
+Once you have set up the configuration, check the syntax:
+
+[source]
+----
+monit -t
+----
+
+Reload the configuration:
+
+[source]
+----
+monit reload
+----
+
+Once you have configured all of the programs that you want to run, they will be automatically tracked and restarted should they turn off.
+
+You can control the managed programs through both the web interface or the command line.
+
+== Setting up email alerts
+
+Type the following at the bottom of the custom config file. This configuration depends on a local mail server, such as sendmail, being installed and running.
+
+[source]
+----
+set mailserver localhost
+set alert hostmaster@hostmaster.com
+----
