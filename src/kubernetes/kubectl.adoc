@@ -24,7 +24,7 @@ kubectl cluster-info
 # one container per pod.
 kubectl run <pod-name> --image=<container-image> --port=<port>
 
-# Get list if existing pods.
+# Get list of existing pods.
 kubectl get pods
 
 # Get detailed info on a pod. Each pod gets its own internal (private) IP
