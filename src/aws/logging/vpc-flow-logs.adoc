@@ -4,7 +4,7 @@
 
 They are not a security feature, but rather a monitoring feature.
 
-This is about logging what happens in an account's networks — at the VPC, subnet, and instance levels (or, correctly, the network interfaces attached to EC2 instances). You can inspect the logs at those three levels, or all of them, and I can output the logs to CloudWatch Logs or S3.
+This is about logging what happens in an account's networks — at the VPC, subnet, and instance levels (or, correctly, the network interfaces attached to EC2 instances). You can inspect the logs at those three levels, or all of them, and you can output the logs to CloudWatch Logs or S3.
 
 VPC Flow Logs provide *visibility* of network traffic and support *troubleshooting* and *forensics* of network traffic.
 
