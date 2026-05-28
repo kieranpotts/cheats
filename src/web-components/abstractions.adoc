@@ -72,4 +72,4 @@ Note the following:
 
 * The markup is defined directly within the component class. While you are free to define your templates outside of the class, it is common practice to return the template from Lit's `render()` method. (This is more in line with the pattern of custom component solutions like React and Vue.)
 
-* Instead of the using the `attributeChangedCallback` lifecycle method, Lit's `render()` function has access to all of the component's properties, which simplifies the process sof manipulating templates based on data changes.
+* Instead of the using the `attributeChangedCallback` lifecycle method, Lit's `render()` function has access to all of the component's properties, which simplifies the process of manipulating templates based on data changes.
