@@ -2,7 +2,7 @@
 
 == Budgets and billing alerts
 
-It is RECOMMENDED to setup billing alarms, so you don't spend more than you have budgeted for on AWS resources.
+It is RECOMMENDED to set up billing alarms, so you don't spend more than you have budgeted for on AWS resources.
 
 Go to *Billing and Cost Management* > *Preferences and settings* > *Billing preferences*. Under the *Alert preferences* panel, enable the options for Free Tier and CloudWatch alerts.
 
@@ -47,4 +47,4 @@ Alerts can be sent via SNS when prices change.
 
 == AWS Calculator
 
-The AWS Calculator is served from https://calculator.aws. Use it to to estimate the cost of the components that you want to build into your AWS cloud infrastructure.
+The AWS Calculator is served from https://calculator.aws. Use it to estimate the cost of the components that you want to build into your AWS cloud infrastructure.

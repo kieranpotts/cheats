@@ -20,9 +20,9 @@ The main pricing options for EC2 are:
 
 * *Dedicated instances*: This type of EC2 instance provides physical isolation at the host hardware level. In other words, it guarantees that your instances run on hardware that is dedicated to you and is not shared with other AWS customers. You pay on-demand per instance, but it is more expensive than the standard on-demand plan. This is a good option for security-sensitive applications, or for workloads that benefit from dedicated hardware for any other reason.
 
-* *Dedicated hosts*: This is a step-up from dedicated instances. Now, you get a whole physical server dedicated for you use, not just an isolated proportion of a server. This means you also get visibility over the server's physical attributes (eg, sockets, cores) and there is affinity between the host and the instance, which means you control which host an instance runs on. These features may be required for server-bound software (ie. software in which the license is bound to specific physical devices, such as a database system with per-socket licensing), or where you are clustering at the OS or application level and you want to make sure that two instances are running on separate dedicated hosts so there is no correlation in hardware failure. You pay per host, rather than per instance, which can be more cost-effective if you have a large number of instances.
+* *Dedicated hosts*: This is a step-up from dedicated instances. Now, you get a whole physical server dedicated for your use, not just an isolated proportion of a server. This means you also get visibility over the server's physical attributes (eg, sockets, cores) and there is affinity between the host and the instance, which means you control which host an instance runs on. These features may be required for server-bound software (ie. software in which the license is bound to specific physical devices, such as a database system with per-socket licensing), or where you are clustering at the OS or application level and you want to make sure that two instances are running on separate dedicated hosts so there is no correlation in hardware failure. You pay per host, rather than per instance, which can be more cost-effective if you have a large number of instances.
 
-.Dedicated instance versus dedicate host
+.Dedicated instance versus dedicated host
 |===
 |Characteristic |Dedicated instance |Dedicated host
 
@@ -74,10 +74,10 @@ In addition, you will be billed for any EBS volumes that are attached to your EC
 You pay for:
 
 * *Storage class*, eg. Standard or IA.
-* *Storage quantity*: the data volume store in your buckets on a per-GB basis.
+* *Storage quantity*: the data volume stored in your buckets on a per-GB basis.
 * *Number of requests*, eg. GET, PUT, POST, LIST, COPY.
 * *Lifecycle transition requests*, ie. moving data between storage classes.
-* *Data transfer* our of an S3 region is charged.
+* *Data transfer* out of an S3 region is charged.
 * *Retrievals and Requests* for some storage classes like Glacier.
 
 == EBS pricing
