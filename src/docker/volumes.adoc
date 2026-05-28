@@ -1,0 +1,87 @@
+= Docker volumes
+
+Docker containers do not persist state between restarts – unlike traditional VMs.
+
+To preserve state, you use Docker volumes. A volume is a directory on the host system that is mounted into a container. This allows the container to read and write files to the host system. Those files are persisted even if the container is stopped and restarted, and indeed even if the container is removed/deleted.
+
+Volumes work by plugging a path in a container's virtual file system (eg. `/var/lib/mysql/data`) to a path on the host's physical file system (eg. `/home/mount/data`).
+
+There are three types of Docker volumes:
+
+* A direct path-to-path mapping. Use the `docker run` command with the `-v` option to map a host path to a guest path, eg. `docker run -v /home/mount/data:/var/lib/mysql/data`.
+
+* A second option is to specify only the container directory, eg. `docker run -v /var/lib/mysql/data`. Docker will automatically allocate a path on the host system, which will be something like `/var/lib/docker/volumes/<random-hash>/_data`. This is called an anonymous volume, and each anonymous volume is scoped to a specific container. It means host files cannot be shared between containers (normally a good thing), and the volume is removed when the container is removed.
+
+* The third option is an extension of the second, called a named volume: `docker run -v name:/var/lib/mysql/data`. Named volumes are RECOMMENDED for production, as there are added benefits to letting Docker manage the volume on the host.
+
+Volumes can also be configured in `docker-compose.yml`. Notice that you list all the volumes at the bottom of the configuration, and then specify which containers use which volumes. For each container you can mount a volume to a different guest path. You can mount the same data to multiple containers – allowing for data sharing – even if the mount points differ between containers.
+
+[source,yaml]
+----
+version: '3'
+
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - db-data:/var/lib/mysql/data
+  mongo-express:
+    # ...
+
+volumes:
+  - db-data
+----
+
+The guest path will be specified in the documentation for the container image. For `postgres`, the data path is `/var/lib/postgresql/data`. The below example maps this to a local directory called `db-data`, which will be created in the same directory as the `docker-compose.yml` file. If this directory is under source control, you will typically want to add it to `.gitignore`. You may also need to add it to `.dockerignore` if you do not want the `COPY` command to see it.
+
+.`docker-compose.yml`
+[source,yaml]
+----
+version: '3'
+
+services:
+  db:
+    image: postgres:16.2
+    ports:
+      - ${DB_PORT}:5432
+    environment:
+      - POSTGRES_PASSWORD=${DB_PSWD}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - ./db-data:/var/lib/postgresql/data
+----
+
+You can also use volumes to mount application code into a container, so that you can make changes to the code on your host machine and see the changes reflected in the container without needing to rebuild it. This is useful for development, but not recommended for production.
+
+.`docker-compose.yml`
+[source,yaml]
+----
+version: '3'
+
+services:
+  app:
+    build: .
+    ports:
+      - 5000:5000
+    command: npm run dev
+    volumes:
+      - .:/app            # Mount the current directory to /app in the container.
+      - /app/node_modules # Prevents node_modules from being mounted.
+    depends_on:
+      - db
+  db:
+    image: postgres:16.2
+    ports:
+      - ${DB_PORT}:5432
+    environment:
+      - POSTGRES_PASSWORD=${DB_PSWD}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - ./db-data:/var/lib/postgresql/data
+----
+
+An alternative option is to use https://code.visualstudio.com/docs/devcontainers/containers[Visual Studio Dev Containers], or equivalent features of other IDEs – see the https://containers.dev/[Dev Containers Specification]). The IDE loads a container's virtual file system and thus you develop directly inside of a running container. This provides highly consistent development environments.
