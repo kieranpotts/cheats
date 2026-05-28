@@ -14,7 +14,7 @@ location ~ \.php$ {
 }
 ----
 
-`upstream` defines servers that can be referenced to. In the following example, the `factcgi_pass` setting is replaced by a reference to the `php` server, defined by the earlier `upstream` block.
+`upstream` defines servers that can be referenced to. In the following example, the `fastcgi_pass` setting is replaced by a reference to the `php` server, defined by the earlier `upstream` block.
 
 [source]
 ----
