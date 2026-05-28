@@ -1,0 +1,348 @@
+= LaTeX
+
+LaTeX (pronounced "lay-teck") is a typesetting system that is widely used for producing scientific and mathematical documents due to its powerful handling of formulas and bibliographies. It can also be used to typeset books and any other document that requires complex formatting and features such as footnotes, cross-references, indexes, glossaries, tables of contents, lists of figures, and more.
+
+LaTeX documents are plain text files interspersed with commands that express desired typesetting – ie. the commands control the visual formatting of the document. LaTeX documents are processed by a piece of software called a TeX engine, which interprets the commands and produces a formatted document, typically in PDF format.
+
+LaTeX is highly customizable and extensible, and thousands of free add-on packages are available through the https://www.ctan.org/pkg[Comprehensive TeX Archive Network (CTAN)] to extend the basic out-of-the-box functionality.
+
+LaTeX syntax can appear daunting at first, but it is quite logical and consistent once you get the hang of it.
+
+== TeX files
+
+LaTeX source files have, by convention, the `.tex` file extension.
+
+TeX files contain the text of a document, along with TeX commands that control the visual formatting to be applied by the TeX engine.
+
+== Preamble
+
+A minimal LaTeX document looks like this:
+
+[source,latex]
+----
+\documentclass{article}
+
+\begin{document}
+
+Document content.
+
+\end{document}
+----
+
+Everything from the `\documentclass` command to the `\begin{document}` command is known as the _preamble_. The preamble is where you load packages and set up the document's basic formatting.
+
+Example:
+
+[source,latex]
+----
+\documentclass[12pt, letterpaper]{article}
+
+\usepackage{graphicx}
+----
+
+=== Document classes
+
+The `\documentclass` command specifies the type of document being created. The document type, known as the document _class_, determines the overall layout and formatting of the document.
+
+Many document classes are available. They are listed on the CTAN website: https://www.ctan.org/topic/class. For maximum flexibility and customization, the `article` class is often used. It is suitable for shorter documents such as essays, reports, and résumés (CVs).
+
+Parameters may be passed to the `\documentclass` command to configure the document class. Parameters are specified in square brackets (`[...]`) and are separated by commas. The parameters can control aspects such as font size, paper size, and other layout options.
+
+[source,latex]
+----
+\documentclass[12pt, a4paper]{article}
+----
+
+In this example:
+
+* `12pt` sets the font size to 12 points.
+* `letterpaper` sets the paper size to US letter (8.5 x 11 inches). `a4paper` and `legalpaper` are also common options for paper size.
+
+Alternatively, the `geometry` package can be used to set the page size and margins more flexibly:
+
+[source,latex]
+----
+\documentclass{article}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+----
+
+=== Packages
+
+The `\usepackage` line can be used to import all sorts of packages to extend LaTeX's core capabilities. The syntax is:
+
+[source,latex]
+----
+\usepackage[options]{somepackage}
+----
+
+For example, the `graphicx` package is commonly used to import external graphics files.
+
+[source,latex]
+----
+\usepackage{graphicx}
+----
+
+The following example adds the `geometry` package, and sets options to configure the page layout.
+
+[source,latex]
+----
+\usepackage[total={6.5in,8.75in},
+top=1.2in, left=0.9in, includefoot]{geometry}
+----
+
+LaTeX packages are distributed through the https://www.ctan.org/[Comprehensive TeX Archive Network (CTAN)]. Once a year, a large subset of packages hosted on CTAN, plus LaTeX-related fonts and other software, is bundled into system called https://tug.org/texlive/[TeX Live]. TeX Live is the most widely used distribution of LaTeX, is available for all major operating systems, and will be installed on your machine by default when you install a LaTeX distribution.
+
+[WARNING]
+======
+LaTeX documents will not compile if a referenced package is not available.
+======
+
+=== Title, author, and date
+
+The following commands can be used to set the title, author, and date of the document:
+
+* `\title{The document title}`
+* `\author{First Lastname}`
+* `\date{DD MMM YYYY}`
+
+These can be combined into a title printed in the document body using the `\maketitle` command, which is typically placed after the `\begin{document}` command.
+
+[source,latex]
+----
+\documentclass{article}
+
+\title{My Document Title}
+\author{John Doe}
+\date{01 January 2023}
+
+\begin{document}
+
+\maketitle
+Document content goes here.
+
+\end{document}
+----
+
+== Document body
+
+The main content of a document, known as the document _body_, is enclosed between the `\begin{document}` and `\end{document}` commands.
+
+== Environments
+
+An environment is a block of text that is formatted in a specific way. Environments are defined by the `\begin{...}` and `\end{...}` commands, where `...` is the name of the environment.
+
+== Abstracts
+
+Scientific articles often start with an abstract. The `abstract` environment can be used to create an abstract.
+
+[source,latex]
+----
+\documentclass{article}
+\title{My Document Title}
+\author{John Doe}
+\date{01 January 2023}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This is the abstract of the document. It provides a brief summary of the content.
+\end{abstract}
+
+Document content goes here.
+
+\end{document}
+----
+
+== Sections and headings
+
+Sections and headings are created using LaTeX commands, however the available commands vary depending on the document class being used.
+
+There are up to 7 levels of depth for sections, depending on the document class:
+
+* `\part{Part Title}` (level -1)
+* `\chapter{Chapter Title}` (level 0, only in book and report classes)
+* `\section{Section Title}` (level 1)
+* `\subsection{Subsection Title}` (level 2)
+* `\subsubsection{Subsubsection Title}` (level 3)
+* `\paragraph{Paragraph Title}` (level 4)
+* `\subparagraph{Subparagraph Title}` (level 5)
+
+Usually, `\section` is the top-level document command in most documents. However, in reports or books, and similar long documents, this would be `\chapter` or `\part`.
+
+Sections are automatically numbered by default. To get an unnumbered chapter, section, subsection, etc. add an asterisk (`*`) at the end of the command, before the opening curly brace. Unnumbered sections will not get added to the table of contents by default.
+
+[source,latex]
+----
+\section*{Introduction}
+----
+
+== Table of contents
+
+To add a table of contents to a document, use the `\tableofcontents` command.
+
+[source,latex]
+----
+\tableofcontents
+----
+
+== Paragraphs
+
+Normal paragraphs are created by simply writing text. A new paragraph is started by leaving a blank line in the source code.
+
+[source,latex]
+----
+\documentclass{article}
+\begin{document}
+
+\begin{abstract}
+This is a simple paragraph at the beginning of the
+document. A brief introduction about the main subject.
+\end{abstract}
+
+After our abstract we can begin the first paragraph. Then add two newline characters to start a second paragraph.
+
+This line will start a second paragraph.
+
+I will start the third paragraph and then add \\ a manual line break which causes this text to start on a new line but remains part of the same paragraph. Alternatively, I can use the \verb|\newline|\newline command to start a new line, which is also part of the same paragraph.
+
+\end{document}
+----
+
+Manual line breaks can be created using the `\\` syntax. This forces a line break without starting a new paragraph. Alternatively, the `\newline` command can be used to achieve the same effect. New line breaks should not be used to simulate paragraphs with larger spacing, because this can interfere with LaTeX's typesetting algorithms.
+
+By default, LaTeX will automatically indent the first line of each paragraph (except paragraphs that immediate follow a header). This behavior can be changed by using the `\noindent` command at the beginning of a paragraph to prevent indentation.
+
+== Lists
+
+The `itemize` and `enumerate` environments are used to create unordered and ordered lists, respectively.
+
+[source,latex]
+----
+\begin{itemize}
+    \item First item
+    \item Second item
+    \item Third item
+\end{itemize}
+----
+
+[source,latex]
+----
+\begin{enumerate}
+    \item First item
+    \item Second item
+    \item Third item
+\end{enumerate}
+----
+
+== Text formatting
+
+* *Bold text* can be created using the `\textbf{...}` command.
+* _Italic text_ can be created using the `\textit{...}` command.
+* `\underline{...}` can be used to underline text.
+
+These styles can be combined, eg. `\textbf{\textit{bold and italic text}}`.
+
+Another useful command is `\emph{...}`. The effect on its text depends on the context. Inside normal text, the emphasized text is italicized, but this behavior is reversed if used inside text that is already italicized.
+
+== Comments
+
+Lines beginning with a percent sign (`%`) are comments and are ignored by the TeX engine. Comments can be used to annotate the source code or to temporarily disable parts of the code.
+
+[source,latex]
+----
+\begin{document}
+
+\maketitle
+Document content goes here.
+
+% This line is a comment. It will not be processed by the TeX engine.
+
+\end{document}
+----
+
+== Graphics
+
+Graphics can be embedded in a LaTeX document using the `graphicx` package.
+
+[source,latex]
+----
+\documentclass{article}
+
+% Import the graphicx package to handle graphics.
+\usepackage{graphicx}
+
+% Set the path to the directory containing the images.
+\graphicspath{{images/}}
+
+\begin{document}
+
+The universe is immense...
+
+% This next command imports an image file named "universe.png".
+% Optionally, the file extension can be omitted. The TeX engine will
+% look for all matching images of supported formats.
+
+\includegraphics{universe.png}
+
+\end{document}
+----
+
+Arguments can be passed to the `\includegraphics` command to control the size and placement of the image. For example, to set the width of the image to 75% of the text width, you can use:
+
+[source,latex]
+----
+\includegraphics[width=0.75\textwidth]{universe.png}
+----
+
+Images can be captioned, labelled and referenced by means of the figure environment.
+
+[source,latex]
+----
+\begin{figure}[h]
+    \centering
+    \includegraphics{diagram}
+    \caption{Description of the diagram.}
+\end{figure}
+----
+
+== Tables
+
+Tables can be created using the `tabular` environment. The `tabular` environment takes a mandatory argument that specifies the alignment of each column in the table. The following example creates a table with three columns, each centered. The whole table is contained within a `center` environment, to center the whole table on the page, too.
+
+[source,latex]
+----
+\begin{center}
+\begin{tabular}{c c c}
+ cell1 & cell2 & cell3 \\
+ cell4 & cell5 & cell6 \\
+ cell7 & cell8 & cell9
+\end{tabular}
+\end{center}
+----
+
+The alignment symbol `&` is used to demarcate individual table cells within a table row. To end a table row use the new line command `\\`.
+
+The following example declares three columns. The first is left-aligned, the second is centered, and the third is right-aligned. The columns are separated by vertical lines, which are specified by the `|` character. In addition, the `\hline` command is used to draw horizontal lines above the first row and below the last row of the table – in effect wrapping the table in a box.
+
+[source,latex]
+----
+\begin{center}
+\begin{tabular}{|l|c|r|}
+ \hline
+ cell1 & cell2 & cell3 \\
+ cell4 & cell5 & cell6 \\
+ cell7 & cell8 & cell9 \\
+ \hline
+\end{tabular}
+\end{center}
+----
+
+''''
+
+== References
+
+* https://www.overleaf.com/learn/latex/Learn_LaTeX_in_30_minutes[Learn LaTeX in 30 minutes] by overleaf
+
+* https://www.bu.edu/math/files/2013/08/LongTeX1.pdf[LaTeX Command Summary] by Boston University's Department of Mathematics and Statistics
