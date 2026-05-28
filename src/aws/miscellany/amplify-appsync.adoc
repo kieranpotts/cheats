@@ -1,0 +1,15 @@
+= AWS Amplify and AppSync
+
+*Amplify* is a set of tools and features for building full-stack applications on AWS. It will help you to build web and mobile back-ends, and web front-end UIs.
+
+*Amplify Studio* is a visual interface for building web and mobile apps. You use it to define a data model, configure user authentication, and plan file storage, without any back-end development experience. You can add AWS services using the AWS Cloud Development Kit (CDK). And you can connect mobile and web apps using Amplify Libraries for iOS, Android, Flutter, React Native, and the web (JavaScript).
+
+*AWS Amplify Hosting* is a fully-managed CI/CD and hosting service for fast, secure, and reliable static and server-side rendered apps.
+
+*AWS AppSync* is a fully-managed services that makes it easy to develop GraphQL APIs. Applications can securely access, manipulate, and receive real-time updates from multiple data sources — which could be AWS Lambda, Aurora, DynamoDB, Elasticsearch, HTTP, etc.
+
+AppSync automatically scales the GraphQL API execution engine to meet API request volumes dynamically.
+
+It lets you specify which portions of data should be made available to clients in real-time using GraphQL Subscriptions.
+
+You can also configure server-side caching to reduce the need to query data sources. AppSync is fully managed and eliminates the operational overhead of managing cache clusters.

@@ -1,0 +1,52 @@
+= AWS networking: Security groups
+
+A NACL protects a subnet, but once a communication gets through the NACL, you have *security groups* that protect the individual resources within the subnet.
+
+A security group is a virtual firewall that controls the traffic to and from your instances. It is a set of rules that filter traffic based on IP protocol, port, and source/destination IP address.
+
+Security groups are assigned at the instance level. Every EC2 instance gets associated with a security group. A security group may encapsulate two or more instances, and those instances may even be distributed across multiple subnets. Thus, security groups can be applied to _any instance_ in _any subnet_.
+
+image::../_/aws-networking-8.drawio.svg[]
+
+Strictly speaking, security groups are not attached to instances, but rather are attached to the *Elastic Network Interface (ENI)* of the adapters that connect to the instances.
+
+Unlike a NACL, a security group is stateful. If some traffic is allowed through by an inbound rule, its going to remember that state and allow the response out.
+
+A common pattern for security groups is to have one security group for the "frontend" web servers, one for the "backend" application servers, and perhaps also another for the database servers. The frontend security group would allow traffic on `0.0.0.0/0` (meaning everything). But for the backend security group you might add a rule that says: "Only allow communication from the WebServerSecurityGroup."
+
+image::../_/security-groups.drawio.svg[]
+
+This is an important feature of security groups: you can explicitly allow traffic from other security groups by referencing those other security groups by their unique ID. This means, at scale, we don't have the complexity of managing growing numbers of IP addresses in our firewall configurations.
+
+.Security groups versus Network ACLs
+****
+|===
+|Security group |NACL
+
+|Applied at the instance level.
+|Operate at the subnet level.
+
+|Applies only to instances explicitly associated with the security group.
+|Automatically applies to all instances launched into the associated subnets.
+
+|Will filter traffic _between_ instances in the same subnet, if those instances are in different security groups.
+|Only filters traffic _into_ and _out_ from the subnet.
+
+|Must be explicitly applied to individual instances.
+|Automatically applied to all instances within a subnet.
+
+|Stateful. Return traffic is automatically allowed.
+|Stateless. Return traffic must be explicitly allowed.
+
+|Supports ALLOW rules only.
+|Supports ALLOW and DENY rules.
+
+|Evaluates _all_ rules before allowing traffic (so every rule has an opportunity to override prior ones).
+|Processes rules in order and stops at the first ALLOW or DENY rules that matches the request.
+|===
+
+[NOTE]
+======
+Neither security groups nor NACLs will filter traffic to or from link-local addresses (`169.254.0.0/16` or AWS-reserved IPv4 addresses (these are the first four IPv4 addresses of the subnet, one ofw which is allocated to the VPC's DNS server).
+======
+****

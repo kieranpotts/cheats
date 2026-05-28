@@ -1,0 +1,13 @@
+= AWS Organizations
+
+It is a common pattern in large organizations to have multiple AWS accounts, each with its own root user. This is often done to separate environments, such as production from development, or to separate different business units or departments.
+
+*AWS Organizations* is a service that allows multiple AWS accounts to be managed under one umbrella. It allows the control of resources and permissions to be delegated to divisions or product/service areas within the organization.
+
+If you choose to use AWS Organizations, you will create a *Management Account*, which will be at the root of the account hierarchy you create in your organization. You can then create additional accounts, or invite existing accounts, into the organization. This can be done via the AWS Management Console, or the HTTP API or CLI using the *Organizations API*.
+
+For example, you might create a "Production" account and a "Development" account, all under the same organization. These are known as *linked accounts* and they are managed by the Management Account for the organization.
+
+Accounts can be organized into *Organizational Units* (OUs), which may map (for example) to departments or products within the organization. You can attach policies, such as *Service Control Policies (SCPs)*, to the OUs. These policies will apply to all accounts within the OU. The SCPs determine the permissions that are allowed within an organizational unit. They can restrict which types of resources can be created, and which AWS services can be used, within each account, for example.
+
+Optionally, the Management Account can receive a *consolidated bill* for all accounts within the organization. The bill will show the usage and costs of each linked account in the organization. When you enable consolidated billing, a *Paying Account* will be added to your organization. This account will be used exclusively for billing purposes (it cannot be used to launch resources).
