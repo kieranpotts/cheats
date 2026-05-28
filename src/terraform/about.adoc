@@ -34,6 +34,6 @@ Terraform Enterprise, which launched in 2019, includes all the free and paid fea
 
 == Licensing and forks
 
-Terraform Community Edition was previously free and open source software distribute under the terms of the Mozilla Public License (MPL) v2. In August 2022, HashiCorp switched all its open source projects, including Terraform Community Edition, to the https://mariadb.com/bsl11/[Business Source License], which places restrictions on the commercial use of the software.
+Terraform Community Edition was previously free and open source software distributed under the terms of the Mozilla Public License (MPL) v2. In August 2022, HashiCorp switched all its open source projects, including Terraform Community Edition, to the https://mariadb.com/bsl11/[Business Source License], which places restrictions on the commercial use of the software.
 
 The move to the Business Source License sparked the creation of the https://opentofu.org/[OpenTofu] fork. This is actively maintained under the stewardship of the Linux Foundation and aims to remain a drop-in replacement for Terraform Community Edition, supporting fully its CLI and HCL syntax.
