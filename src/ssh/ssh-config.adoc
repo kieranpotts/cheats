@@ -1,0 +1,133 @@
+= SSH Config File
+
+The `~/.ssh/config` file allows you to configure SSH connection settings for different hosts, including which key to use, what username to use, and custom port numbers.
+
+== Basic configuration
+
+Edit or create `~/.ssh/config`:
+
+[source]
+----
+nano ~/.ssh/config
+----
+
+Set appropriate permissions:
+
+[source]
+----
+chmod 600 ~/.ssh/config
+----
+
+== Configuration examples
+
+=== Simple host alias
+
+[source]
+----
+Host myserver
+    HostName example.com
+    User username
+    IdentityFile ~/.ssh/id_ed25519
+----
+
+Now you can connect with:
+
+[source]
+----
+ssh myserver
+----
+
+=== Multiple keys for different hosts
+
+[source]
+----
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/github_ed25519
+
+Host gitlab.com
+    HostName gitlab.com
+    User git
+    IdentityFile ~/.ssh/gitlab_ed25519
+
+Host production-server
+    HostName prod.example.com
+    User deployer
+    IdentityFile ~/.ssh/production_rsa
+    Port 2222
+----
+
+=== Wildcard configuration for safe settings
+
+Apply settings to multiple hosts using safe options:
+
+[source]
+----
+Host *.example.com
+    User admin
+    IdentityFile ~/.ssh/company_ed25519
+    ConnectTimeout 10
+
+Host *
+    ServerAliveInterval 60
+    ServerAliveCountMax 10
+----
+
+WARNING: Do NOT use `ForwardAgent yes` with `Host *`. This would share your SSH credentials with every remote server you connect to. See the ForwardAgent section below for secure usage.
+
+== Common options
+
+* `Host` — The hostname pattern to match
+* `HostName` — The actual hostname to connect to
+* `User` — Username for authentication
+* `IdentityFile` — Path to the private key file
+* `Port` — SSH port (default: 22)
+* `ConnectTimeout` — Connection timeout in seconds
+* `ServerAliveInterval` — Send keepalive packets every N seconds
+* `ServerAliveCountMax` — Number of keepalive packets before disconnecting
+* `StrictHostKeyChecking` — Whether to verify the host key (default: ask)
+* `AddKeysToAgent` — Automatically add keys to SSH agent (yes/no/confirm)
+
+== SSH agent forwarding
+
+SSH agent forwarding allows you to use your local SSH keys on remote servers without storing unencrypted keys there. However, this grants the remote server access to all your SSH credentials.
+
+*Only enable forwarding for servers you explicitly trust.*
+
+=== Example: Secure agent forwarding
+
+[source]
+----
+Host trusted-jump-server.example.com
+    HostName jump.example.com
+    User deployer
+    ForwardAgent yes
+----
+
+WARNING: Never use `ForwardAgent yes` with a wildcard like `Host *`. This would share your SSH keys with every server you connect to, including potentially compromised ones.
+
+=== Verify agent forwarding works
+
+On the remote server, check if the SSH agent is accessible:
+
+[source]
+----
+echo $SSH_AUTH_SOCK
+----
+
+If a socket path is shown, agent forwarding is active. Verify your keys are available:
+
+[source]
+----
+ssh-add -l
+----
+
+== List available hosts
+
+View all configured hosts:
+
+[source]
+----
+grep "^Host " ~/.ssh/config
+----
