@@ -2,7 +2,7 @@
 
 *AWS regions* are geographical areas around the world.
 
-Each region has multiple, isolated locations known as *availability zones (AZs)*. There are usually three AZs per regions (some have two, and some regions have more than three). The AZs within a region are physically isolated from one another, but they are geographically close enough together to provide very low latency between AZs in the same region.
+Each region has multiple, isolated locations known as *availability zones (AZs)*. There are usually three AZs per region (some have two, and some regions have more than three). The AZs within a region are physically isolated from one another, but they are geographically close enough together to provide very low latency between AZs in the same region.
 
 Regions are further apart and, although they are connected by the AWS global network, latency between regions is higher than between AZs in the same region.
 
@@ -16,6 +16,6 @@ Nevertheless, an AZ represents a single-point-of-failure. A common strategy, the
 
 But for disaster recovery you would also want to replicate resources and data across regions.
 
-There is also something called as a *local zone*, which is a bit like an availability zone, but is usually located in a metropolitan area. The purpose of local zones is to provide lower latency to end-users in the local area. The cost to launch resources into local zones is a bit higher than for availability zones.
+There is also something called a *local zone*, which is a bit like an availability zone, but is usually located in a metropolitan area. The purpose of local zones is to provide lower latency to end-users in the local area. The cost to launch resources into local zones is a bit higher than for availability zones.
 
 There are also *wavelength zones*, which are used for 5G. If you have mobile applications that you want to make available over the 5G network, you can deploy your applications into a wavelength zone, so reducing latency for mobile users.
