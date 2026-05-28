@@ -21,7 +21,7 @@ export default function App() {
 }
 ----
 
-Why does this happen? The component renders initially with no data. Then, when the `fetch` is resolved, the component state is updated, triggering a re-render of the component. But because the `fetch` code is at the top level of the component, it is executed again. This is how React works - when a component is re-rendered, literally it's top-level logic is re-run.
+Why does this happen? The component renders initially with no data. Then, when the `fetch` is resolved, the component state is updated, triggering a re-render of the component. But because the `fetch` code is at the top level of the component, it is executed again. This is how React works - when a component is re-rendered, literally its top-level logic is re-run.
 
 So you have to be careful about what you do in the top-level of a component.
 

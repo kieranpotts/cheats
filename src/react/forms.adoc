@@ -5,7 +5,7 @@
 This documentation is up-to-date with React v17. React v18 introduced a new hook called `useActionState` that makes it much easier to work with forms in React.
 ======
 
-Working with native forms forms is one React's weak points.
+Working with native forms is one React's weak points.
 
 Traditionally, to dynamically send form data to a server, you would listen to a form's `submit` event, prevent the default action, capture the values of all the form's inputs, and send the data to an HTTP endpoint. In React, it is better practice to dynamically track the state of form inputs, syncing the values of the inputs with the state of the React components that wrap them – literally on every keystroke as the user enters data.
 
@@ -248,7 +248,7 @@ export default function Form() {
       <br />
       <br />
 
-      <!-- When a button is in a form, it's default is `type="submit"`. -->
+      <!-- When a button is in a form, its default is `type="submit"`. -->
       <button>Submit</button>
     </form>
   )
