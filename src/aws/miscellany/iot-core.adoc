@@ -4,4 +4,4 @@ The Internet of Things (IoT) describes a network of physical objects that are em
 
 AWS IoT Core lets you connect IoT devices to the AWS cloud without the need to provision or manage servers. It can support billions of devices and trillions of messages.
 
-Messages are transmitted and received using the MQTT (Message Queuing Telemetry Transport) protocol, which minimizes the code footprint on the device and reduces network bandwidth requirements. Devices publish and subscribe to messages by topic. AWS IOT Core allows devices to communicate with AWS services and/or each other.
+Messages are transmitted and received using the MQTT (Message Queuing Telemetry Transport) protocol, which minimizes the code footprint on the device and reduces network bandwidth requirements. Devices publish and subscribe to messages by topic. AWS IoT Core allows devices to communicate with AWS services and/or each other.

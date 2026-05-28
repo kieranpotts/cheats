@@ -6,7 +6,7 @@
 
 *AWS Amplify Hosting* is a fully-managed CI/CD and hosting service for fast, secure, and reliable static and server-side rendered apps.
 
-*AWS AppSync* is a fully-managed services that makes it easy to develop GraphQL APIs. Applications can securely access, manipulate, and receive real-time updates from multiple data sources — which could be AWS Lambda, Aurora, DynamoDB, Elasticsearch, HTTP, etc.
+*AWS AppSync* is a fully-managed service that makes it easy to develop GraphQL APIs. Applications can securely access, manipulate, and receive real-time updates from multiple data sources — which could be AWS Lambda, Aurora, DynamoDB, Elasticsearch, HTTP, etc.
 
 AppSync automatically scales the GraphQL API execution engine to meet API request volumes dynamically.
 
