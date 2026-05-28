@@ -31,7 +31,7 @@ Lower-level secrets override higher-level secrets.
 
 Secret names MUST contain only alphanumeric characters and underscores. Secret names MUST NOT start with number, and names MUST NOT started with the `GITHUB_` prefix, which is reserved.
 
-Names are case-insensitive, and they must be unique at the level they are at which they are declared.
+Names are case-insensitive, and they must be unique at the level at which they are declared.
 
 Secrets can be set via the GitHub web UI or the `gh` CLI tool. To set repository-level secrets:
 

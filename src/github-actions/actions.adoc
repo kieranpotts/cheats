@@ -8,7 +8,7 @@ toc::[]
 
 == Overview
 
-Actions – not be confused with "GitHub Actions", which happens to also be the brand name for the overall CI/CD service offered by GitHub – can be thought of as shareable packaged commands that can be reused across multiple workflows.
+Actions – not to be confused with "GitHub Actions", which happens to also be the brand name for the overall CI/CD service offered by GitHub – can be thought of as shareable packaged commands that can be reused across multiple workflows.
 
 An action is plugged in to a link:./steps.adoc[step] in a link:./jobs.adoc[job]. See links:./steps.adoc[steps] for instructions to call an action from a step.
 
