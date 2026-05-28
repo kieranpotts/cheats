@@ -1,0 +1,39 @@
+= Bash: Declaring functions
+
+As in other scripting and programming languages, in Bash you use functions to group pieces of code in a logical way, and to implement recursion.
+
+You declare a function with the following syntax:
+
+----
+function [function_name] {
+  # function body
+}
+----
+
+This is an _explicit_ function declaration. _Implicit_ function declarations are possible with the following syntax:
+
+----
+[function_name] {
+  # function body
+}
+----
+
+.Examples
+[source,bash]
+----
+# Explicit declaration.
+function some_function () {
+  return 0
+}
+
+# Implicit declaration.
+some_function () {
+  return 0
+}
+----
+
+The explicit alternative gives more readability, but the implicit one is the POSIX standard so it is more portable.
+
+The function body is placed inside the curly braces.
+
+Functions don't need to be declared in any specific order.

@@ -1,0 +1,24 @@
+= Bash: Local variables
+
+Bash supports `local` variables, which are variables scoped to the function they are declared in.
+
+[source,bash]
+----
+hello="hello"
+
+function hello {
+  # This local variable is distinct from the global one with the same name.
+  local hello="world"
+  echo "${hello}" # → "world"
+}
+
+echo "${hello}" # → "hello" (unchanged)
+----
+
+Local variables may be declared, then subsequently assigned. This is a common pattern.
+
+[source,bash]
+----
+local hello
+hello="world"
+----

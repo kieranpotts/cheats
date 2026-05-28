@@ -1,0 +1,130 @@
+= Bash: Multi-line strings
+
+String values can contain newline characters, if the string is quoted.
+
+[source,bash]
+----
+dbuser="admin"
+dbpass="secret"
+
+my_cnf="
+[mysql]
+user=${dbuser}
+password=${dbpass}
+host=localhost
+
+[mysqladmin]
+user=${dbuser}
+password=${dbpass}
+host=localhost
+
+[mysqldump]
+user=${dbuser}
+password=${dbpass}
+host=localhost
+"
+
+echo "${my_cnf}" > /home/vagrant/.my.cnf
+----
+
+Another way to do this is to use `read` with the `-d` option to specify a delimiter. Setting the delimiter to an empty string (ie. the null byte) is a bit of hack: because you're not telling `read` to stop reading at any particular character (eg. a newline), `read` will just keep reading until it reaches the EOF. (The `-r` option tells `read` not to treat backslashes as escape characters. So `\n` and `\\` will be read literally.)
+
+[source,bash]
+----
+dbuser="admin"
+dbpass="secret"
+
+read -r -d '' my_cnf <<EOF
+[mysql]
+user=${dbuser}
+password=${dbpass}
+host=localhost
+
+[mysqladmin]
+user=${dbuser}
+password=${dbpass}
+host=localhost
+
+[mysqldump]
+user=${dbuser}
+password=${dbpass}
+host=localhost
+EOF
+
+echo "${my_cnf}" > /home/vagrant/.my.cnf
+----
+
+For this particular use case, where the variable is just a temporary store for a value that will be piped into a file, the variable can be omitted and the value just piped directly to the file.
+
+[source,bash]
+----
+dbuser="admin"
+dbpass="secret"
+
+echo "
+[mysql]
+user=${dbuser}
+password=${dbpass}
+host=localhost
+
+[mysqladmin]
+user=${dbuser}
+password=${dbpass}
+host=localhost
+
+[mysqldump]
+user=${dbuser}
+password=${dbpass}
+host=localhost
+" | tee /home/vagrant/.my.cnf
+----
+
+An alternative, common practice is to use `cat` and a heredoc to pipe values directly to files.
+
+[source,bash]
+----
+dbuser="admin"
+dbpass="secret"
+
+cat > /home/vagrant/.my.cnf <<EOF
+[mysql]
+user=${dbuser}
+password=${dbpass}
+host=localhost
+
+[mysqladmin]
+user=${dbuser}
+password=${dbpass}
+host=localhost
+
+[mysqldump]
+user=${dbuser}
+password=${dbpass}
+host=localhost
+EOF
+----
+
+`tee` can do the same thing.
+
+[source,bash]
+----
+dbuser="admin"
+dbpass="secret"
+
+tee /home/vagrant/.my.cnf <<EOF
+[mysql]
+user=${dbuser}
+password=${dbpass}
+host=localhost
+
+[mysqladmin]
+user=${dbuser}
+password=${dbpass}
+host=localhost
+
+[mysqldump]
+user=${dbuser}
+password=${dbpass}
+host=localhost
+EOF
+----

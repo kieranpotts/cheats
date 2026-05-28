@@ -1,0 +1,26 @@
+= Bash: Function invocation
+
+In Bash, doing any of the following operations involves the exact same syntax:
+
+* Calling a function.
+* Running a program.
+* Running a built-in command.
+
+The syntax is:
+
+----
+<function_name> <arg1> <arg2> ...
+----
+
+Example:
+
+[source,bash]
+----
+function print_me {
+  echo $1
+}
+
+print_me "Hello, World!"
+----
+
+A variable number of arguments can be passed to any function (or program or built-in command). It is up to the function or program to verify that any required arguments have been provided.
