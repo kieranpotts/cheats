@@ -1,0 +1,5 @@
+= Pi
+
+* link:./settings.adoc[Settings]
+* link:./prompts.adoc[Prompts]
+* link:./skills.adoc[Skills]

@@ -1,0 +1,10 @@
+= Skills
+
+Pi will look for skills in both the current project and the user's home directory in the paths `.pi/skills/` and `.agents/skills`. If you want Pi to auto-discover skills in other paths, adjust your `settings.json`:
+
+[source,json]
+----
+{
+  "skills": ["../path/to/skills"]
+}
+----

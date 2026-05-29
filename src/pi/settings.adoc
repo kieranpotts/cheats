@@ -1,0 +1,11 @@
+= Settings
+
+You can configure the default model and provider on a per-project basis:
+
+[source,json]
+----
+{
+  "defaultProvider": "ollama-cloud",
+  "defaultModel": "qwen3.5-coder:32b",
+}
+----
