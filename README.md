@@ -29,6 +29,7 @@ Cheat sheets and study notes for various tools, technologies, and languages.
 - [Munin](./src/munin)
 - [Nginx](./src/nginx)
 - [Ollama](./src/ollama)
+- [pass](./src/pass)
 - [PM2](./src/pm2)
 - [POSIX](./src/posix)
 - [Python](./src/python)
