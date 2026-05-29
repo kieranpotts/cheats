@@ -29,7 +29,3 @@ The capitalized words REQUIRED, MUST, MUST NOT, RECOMMENDED, SHOULD, SHOULD NOT,
 - MUST follow the template structure.
 - MUST write valid AsciiDoc syntax.
 - Text files MUST have `.adoc` file extension.
-
-## Skills
-
-There are no domain-specific skills in this repository.
