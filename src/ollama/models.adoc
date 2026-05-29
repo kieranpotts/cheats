@@ -17,7 +17,7 @@ ollama list
 ollama rm <model>
 ----
 
-Model names follow the format `<name>:<tag>`, where the tag identifies the variant (typically size and quantisation level, e.g. `llama3:8b`). Omitting the tag pulls the default variant.
+Model names follow the format `<name>:<tag>`, where the tag identifies the variant (typically size and quantisation level, eg. `llama3:8b`). Omitting the tag pulls the default variant.
 
 [TIP]
 ======

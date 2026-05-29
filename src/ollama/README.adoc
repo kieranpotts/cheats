@@ -2,6 +2,8 @@
 
 Ollama is a tool for downloading and running open-weight large language models locally. It provides a simple CLI and a local HTTP API, and handles model storage, hardware acceleration, and inference.
 
+Ollama also offers a [cloud service](https://docs.ollama.com/cloud) that provides access to hosted models via the same local HTTP API server (or via direct HTTP requests to the cloud API). This means you can use the same tools and interfaces to access both local and hosted models, and switch between them seamlessly.
+
 * link:./installation.adoc[Installation]
 * link:./models.adoc[Models]
 * link:./running-models.adoc[Running models]
@@ -9,6 +11,8 @@ Ollama is a tool for downloading and running open-weight large language models l
 * link:./modelfiles.adoc[Modelfiles]
 * link:./api.adoc[API]
 * link:./front-ends.adoc[Front-ends]
+
+**[Full docs here.](https://docs.ollama.com/)**
 
 ''''
 

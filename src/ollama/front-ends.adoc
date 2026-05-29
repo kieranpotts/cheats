@@ -96,14 +96,6 @@ Alternatively you can configure a custom integration at `~/.config/opencode/open
 
 Restart OpenCode, run /models, and your local model should be there.
 
-== Choosing models for tool integrations
-
-When using Ollama with tools like VS Code's chat, the model selection dropdown only shows models that support function calling. If a model doesn't support tools, it won't appear in the list. For example, if you pull `deepseek-coder:6.7b`, it won't show up in VS Code's model selection panel because this model does not support tooling.
-
-The best way to check for tool calling support is to look for a "tools" badge on the model's page in the Ollama library at ollama.com.
-
-You can also use the `ollama show <model>` command in your terminal to check a model's capabilities.
-
 == Command line interfaces
 
 https://aider.chat/[Aider] works across a whole Git repository, similar to Claude Code or Copilot CLI. It connects to Ollama via its OpenAI-compatible endpoint.
@@ -132,3 +124,12 @@ git diff | fabric --model ollama:mistral --pattern write_commit
 ----
 
 https://terminaltrove.com/oterm/[Oterm] is a terminal UI (TUI) that provides a more visually rich experience than plain CLI tools like Aider or sgpt.
+
+
+== Choosing models for tool integrations
+
+When using Ollama with tools like VS Code's chat, the model selection dropdown only shows models that support function calling. If a model doesn't support tools, it won't appear in the list. For example, if you pull `deepseek-coder:6.7b`, it won't show up in VS Code's model selection panel because this model does not support tooling.
+
+The best way to check for tool calling support is to look for a "tools" badge on the model's page in the [Ollama model library](https://ollama.com/search).
+
+You can also use the `ollama show <model>` command in your terminal to check a model's capabilities.
