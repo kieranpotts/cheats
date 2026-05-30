@@ -1,25 +1,39 @@
 = Settings and context
 
-== General configuration
+== Configuration files
 
-You can configure the default model and provider globally at `~/.pi/agent/settings.json`, and also on a per-project basis.
+Pi reads two JSON settings files:
+
+[cols="1,3", options="header"]
+|===
+| Location | Scope
+| `~/.pi/agent/settings.json` | Global (all projects).
+| `.pi/settings.json` | Project (current directory).
+|===
+
+Project settings override global ones via a nested merge: project values replace only the fields they define, leaving the rest of the global config intact. Launch-time `--provider` / `--model` override both.
 
 [source,json]
 ----
 {
   "defaultProvider": "ollama-cloud",
   "defaultModel": "qwen3.5-coder:32b",
+  "defaultThinkingLevel": "medium",
+  "theme": "dark",
+  "compaction": { "enabled": true, "reserveTokens": 16384, "keepRecentTokens": 20000 },
   "skills": ["../path/to/skills"]
 }
 ----
 
-At launch, the `--provider` and `--model` parameters will override both your user-level and project-level settings, eg.:
+== What you can configure
 
-[source,sh]
-----
-pi --provider openai --model gpt-4o
-pi --model sonnet:high
-----
+- Model & thinking: default provider/model, thinking level, token budgets.
+- UI & display: theme, startup behavior, editor padding, autocomplete.
+- Compaction: `reserveTokens`, `keepRecentTokens` (see link:./compaction.adoc[Compaction]).
+- Retry: error handling / exponential backoff.
+- Shell: `shellPath`, `shellCommandPrefix`, npm commands.
+- Resources: extensions, skills, prompts, themes - from packages or local paths.
+- Terminal & images: image display and resizing.
 
 == Project context (`AGENTS.md`)
 
@@ -33,4 +47,4 @@ Pi loads an `AGENTS.md` file in the project root at startup. Use this to define 
 - Use functional programming patterns for new modules.
 ----
 
-Run `/reload` inside Pi to refresh changes made to this file.
+Run `/reload` inside Pi to refresh changes made to this file. See link:./context.adoc[Context] for how `AGENTS.md` fits into the full system-prompt stack.

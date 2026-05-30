@@ -10,7 +10,7 @@ Pi builds the prompt as a stack:
 
 Examples of files that mutate the context:
 
-- Global: `~/pi/.agent/AGENTS.md`
+- Global: `~/.pi/agent/AGENTS.md`
 - Project tree: `AGENTS.md` or `CLAUDE.md`
 - Replace default: `.pi/SYSTEM.md`
 - Append: `.pi/APPEND_SYSTEM.md`

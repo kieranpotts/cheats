@@ -1,0 +1,23 @@
+= Development
+
+Pi is developed in the `earendil-works/pi-mono` monorepo, organized into packages: `ai` (LLM abstraction), `agent`, `tui`, and `coding-agent` (the CLI).
+
+== Build from source
+
+[source,sh]
+----
+git clone https://github.com/earendil-works/pi-mono
+cd pi-mono && npm install && npm run build
+----
+
+Run the local build from any directory with `./pi-test.sh`.
+
+== Tests
+
+- `./test.sh` - non-LLM tests (no API keys needed).
+- `npm test` - everything.
+- `npm test -- test/specific.test.ts` - a single file.
+
+== Forking
+
+Set your own `name`, `configDir`, and `bin` in `package.json`, and reference package assets via `src/config.ts` rather than `__dirname`.

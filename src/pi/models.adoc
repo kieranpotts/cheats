@@ -1,0 +1,34 @@
+= Models
+
+Models are configured in `~/.pi/agent/models.json`, keyed by an `id`. An optional `name` gives a human-readable label used for pattern matching and status text.
+
+The file hot-reloads each time you open `/model` - edit it mid-session, no restart needed.
+
+== Selecting a model
+
+* `/model` or `Ctrl+L`: open the model selector.
+* `Ctrl+P` / `Shift+Ctrl+P`: cycle through scoped models.
+* `--model <pattern>` at launch: matches `provider/id` and supports a `:thinking` suffix, eg. `pi --model sonnet:high`.
+
+== Thinking levels
+
+Six levels: `off`, `minimal`, `low`, `medium`, `high`, `xhigh`. Cycle with `Shift+Tab`, or set with `--thinking <level>` / the `defaultThinkingLevel` setting.
+
+Each model maps the levels to its own reasoning parameters via `thinkingLevelMap`. Unsupported levels are set to `null` and hidden from the UI:
+
+[source,json]
+----
+"thinkingLevelMap": {
+  "minimal": null,
+  "low": null,
+  "medium": null,
+  "high": "high",
+  "xhigh": "max"
+}
+----
+
+== Overrides
+
+Models inherit provider-level `compat` settings but can override them per-model. `modelOverrides` lets you tweak specific built-in models without replacing the whole provider. Per-model fields include `name`, `reasoning`, `input`, `cost`, `contextWindow`, `maxTokens`, `headers`, and `compat`.
+
+See link:./providers.adoc[Providers] for authentication and registering custom providers.

@@ -1,0 +1,21 @@
+= Themes
+
+Themes are JSON files defining 51 color tokens, covering UI, markdown, syntax highlighting, and tool output.
+
+Two themes ship built in - `dark` and `light` - and Pi auto-detects which to use from your terminal background on first run.
+
+== Setting a theme
+
+* `/settings`, or
+* `"theme": "<name>"` in `settings.json`.
+
+== Locations
+
+In addition to the built-ins, themes are discovered from:
+
+- Global: `~/.pi/agent/themes/*.json`
+- Project: `.pi/themes/*.json`
+- Package `themes/` directories
+- Custom paths via settings or `--theme <path>`
+
+Custom themes hot-reload: edits to the active theme appear immediately. Color values support hex, 256-color palette indices, variable references, and terminal defaults.

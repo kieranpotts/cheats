@@ -1,6 +1,6 @@
 = Pi's design philosophy
 
-Pi is a mimimal, unopinionated, terminal-based agent harness for programming.
+Pi is a minimal, unopinionated, terminal-based agent harness for programming.
 
 It is better to think of it as a baseline framework for developing your own custom agent UIs. That's because Pi is a very small core with programmable edges. Out-of-the-box, Pi has only a minimal toolset:
 
@@ -22,4 +22,6 @@ Other things that Pi leaves out:
 - To-Dos
 - Built-in MCP
 
-The idea is individual programmers should shape their coding agent harness to fit their own unique workflow. You end up with a personalize agent that only has the features you use and none that you don't.
+A few non-obvious capabilities *are* core, though: link:./sessions.adoc[tree-structured sessions] and automatic link:./compaction.adoc[context compaction].
+
+The idea is individual programmers should shape their coding agent harness to fit their own unique workflow. You end up with a personalized agent that only has the features you use and none that you don't.

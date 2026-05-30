@@ -1,8 +1,20 @@
 = Prompts
 
-In Pi, prompts are expanded from slash commands. They are great choice or recurring project tasks like: review, refactor, issue triage.
+In Pi, prompts are expanded from slash commands. They're a great choice for recurring project tasks like review, refactor, issue triage. They're plain Markdown text-expansion - lighter than link:./skills.adoc[skills], whose instructions only load on-demand.
 
-Install at `.pi/prompts/<prompt>.md`. Template:
+== Locations
+
+Pi discovers prompt templates from:
+
+- Global: `~/.pi/agent/prompts/*.md`
+- Project: `.pi/prompts/*.md`
+- Packages: `prompts/` directories
+- Settings: the `prompts` array
+- CLI: `--prompt-template <path>`
+
+The filename (minus `.md`) becomes the command name - `review.md` -> `/review`.
+
+== Template
 
 [source,markdown]
 ----
@@ -21,4 +33,12 @@ Proofread the AsciiDoc files in this repository, opening one pull request per fi
 ...
 ----
 
-To execute: `/proofread <glob>`.
+== Arguments
+
+Templates take positional and combined arguments:
+
+- `$1`, `$2`, ...: positional.
+- `$@` / `$ARGUMENTS`: all arguments.
+- `${@:N}` / `${@:N:L}`: a slice.
+
+To execute: `/proofread <glob>`, or eg. `/component Button "click handler"`.

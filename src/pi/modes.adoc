@@ -2,10 +2,27 @@
 
 Pi has four execution modes:
 
-* Interactive: The full TUI experience.
+* Interactive: the full TUI experience.
 
-* Print/JSON: `pi -p "query"` supports scripting. Adding `--mode json` toggles the output to JSON, useful for event streams.
+* Print/JSON: `pi -p "query"` runs the prompt and exits - useful for scripting. Add `--mode json` to emit a newline-delimited JSON event stream (session header, then agent / turn / message / tool / compaction events). Pipe to `jq` to filter.
 
-* RPC: JSON protocol over stdin/stdout for non-Node integrations.
+* RPC: `pi --mode rpc` speaks JSONL over stdin/stdout for non-Node integrations (IDEs, custom UIs). Commands in (`prompt`, `steer`, `follow_up`, `set_model`, `get_state`, `new_session`, `fork`, ...), responses and an event stream out. An extension sub-protocol drives interactive dialogs.
 
-* SDK: Embed Pi in your apps. OpenClaw is an example implementation.
+* SDK: embed Pi in your own app - the best path for Node/TS. `createAgentSession()` returns an `AgentSession` with `prompt()`, `subscribe()`, and `setModel()`; `createAgentSessionRuntime()` handles new/switch/fork. OpenClaw is an example implementation.
+
+[source,js]
+----
+const { session } = await createAgentSession({
+  sessionManager: SessionManager.inMemory(),
+  authStorage,
+  modelRegistry,
+});
+
+session.subscribe((event) => {
+  if (event.type === "message_update") {
+    process.stdout.write(event.assistantMessageEvent.delta);
+  }
+});
+
+await session.prompt("What files are in the current directory?");
+----

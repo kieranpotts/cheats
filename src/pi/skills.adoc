@@ -2,20 +2,30 @@
 
 In Pi, skills and prompts serve different purposes.
 
-Skills are intended for reusable capability packaging: workflows, setup, scripts, references. Pi loads into context the descriptions for all the skills it has auto-discovered, then it dynamically loads the full skill instructions on-demand.
+Skills are self-contained capability packages the agent loads on-demand: workflows, setup instructions, helper scripts, references. Only each skill's *description* sits in the system prompt; Pi loads the full instructions on-demand when it judges the skill relevant (progressive disclosure).
 
-To explicitly load a skill:
+== Invoking
+
+The agent can load a skill itself, or you can load one explicitly:
 
 ----
 /skill:brave-search
 /skill:pdf-tools extract
 ----
 
-Note that parameters can be passed to the skill.
+Parameters can be passed to the skill. The `/skill:` commands require `"enableSkillCommands": true` (set it via `/settings` or `settings.json`).
 
 == Locations
 
-Pi will look for skills in both the current project and the user's home directory in the paths `.pi/skills/` and `.agents/skills`. If you want Pi to auto-discover skills in other paths, adjust your `settings.json`:
+Pi auto-discovers skills from:
+
+- Global: `~/.pi/agent/skills/` and `~/.agents/skills/`
+- Project: `.pi/skills/` and `.agents/skills/`
+- Packages: `skills/` directories
+- Settings: the `skills` array
+- CLI: `--skill <path>`
+
+To add other paths, adjust `settings.json`:
 
 [source,json]
 ----
@@ -23,3 +33,15 @@ Pi will look for skills in both the current project and the user's home director
   "skills": ["../path/to/skills"]
 }
 ----
+
+== SKILL.md frontmatter
+
+[source,yaml]
+----
+---
+name: pdf-tools          # 1-64 chars; lowercase letters, numbers, hyphens
+description: ...         # up to 1024 chars: what it does and when to use it
+---
+----
+
+Optional fields: `license`, `compatibility`, `metadata`, `allowed-tools`, `disable-model-invocation`.

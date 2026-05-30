@@ -1,11 +1,43 @@
 = Model hosting providers
 
-Pi can talk to all mainstream model hosting providers via either:
+Pi talks to 30+ providers, via either:
 
 - Subscriptions: eg. Claude Pro/Max (but Anthropic will charge by usage if you use a third-party front-end); ChatGPT Plus/Pro; GitHub Copilot.
 
-- API keys: eg. Anthropic, OpenAI, Gemini, Grok, Mistral, xAI, OpenRouter, Fireworks, Azure, Bedrock...
+- API keys: eg. Anthropic, OpenAI, Gemini, Mistral, Groq, xAI (Grok), DeepSeek, OpenRouter, Together, Hugging Face, Fireworks.
 
-It can also communicate with local model servers, eg. Ollama, LM Studio, vLLM, and any OpenAI API-compatible proxies.
+- Cloud platforms: Azure OpenAI, Amazon Bedrock, Google Vertex AI, Cloudflare.
 
-And it's always possible to write an extension if you need something very custom.
+It also talks to local model servers - Ollama, LM Studio, vLLM, any OpenAI API-compatible proxy - configured in `models.json` (see link:./models.adoc[Models]).
+
+== Authenticating
+
+* Subscriptions: `/login` runs an OAuth flow; tokens auto-refresh and are stored in `~/.pi/agent/auth.json`.
+* API keys: set an env var (eg. `export ANTHROPIC_API_KEY=sk-ant-...`), or store the key in `auth.json` via `/login`.
+* `/logout` clears stored credentials.
+
+Key resolution order: CLI `--api-key` -> `auth.json` -> environment variable -> custom-provider config.
+
+== Custom providers
+
+Register an OpenAI-compatible (or other) endpoint from an link:./extensions.adoc[extension] with `pi.registerProvider()`:
+
+[source,js]
+----
+pi.registerProvider("my-provider", {
+  baseUrl: "https://api.example.com",
+  apiKey: "$MY_API_KEY",        // supports $ENV_VAR
+  api: "openai-completions",    // most OpenAI-compatible APIs
+  models: [{
+    id: "my-model",
+    name: "My Model",
+    reasoning: false,
+    input: ["text"],
+    cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+    contextWindow: 128000,
+    maxTokens: 4096
+  }]
+});
+----
+
+Use an async extension factory if you need to fetch and register models dynamically before startup.
