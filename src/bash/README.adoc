@@ -25,7 +25,7 @@ See also link:../unix[Unix cheats] for usage of built-in system commands like `g
 * link:./vars/arrays.adoc[Arrays]
 
 == Functions
-`
+
 * link:./fns/declaration.adoc[Declaring functions]
 * link:./fns/invocation.adoc[Invoking functions]
 * link:./fns/parameters.adoc[Function parameters]
