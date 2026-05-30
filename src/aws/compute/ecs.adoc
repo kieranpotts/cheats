@@ -2,11 +2,11 @@
 
 AWS supports the use of Docker containers for deployment of applications.
 
-Docker is an ideal choice for *cloud-native applications* — that is, things lke microservices that are designed from the ground-up to be deployed into distributed, virtualized environments, and which have a high degree of decoupling from the underlying infrastructure on which they run, and even from things like network messaging (for communication between components).
+Docker is an ideal choice for *cloud-native applications* — that is, things like microservices that are designed from the ground-up to be deployed into distributed, virtualized environments, and which have a high degree of decoupling from the underlying infrastructure on which they run, and even from things like network messaging (for communication between components).
 
 The *Elastic Container Service (ECS)* is the service we use to launch Docker containers in AWS. Only Docker containers are supported by AWS at this time, but both Linux and Windows Docker containers are supported.
 
-With ECS, we can choose to deploy an *ECS cluster*, which may span multiple availability zones. An ECS cluster is a logic grouping of tasks or services.
+With ECS, we can choose to deploy an *ECS cluster*, which may span multiple availability zones. An ECS cluster is a logical grouping of tasks or services.
 
 image::../_/ecs-cluster-across-azs.drawio.svg[]
 
@@ -39,7 +39,7 @@ An *EC2 container instance* is an EC2 instance that hosts an ECS container.
 
 We use an *EC2 launch type* to launch EC2 instances into our account, and those instances must have the *EC2 Container Agent* running, so we can join them into an ECS cluster. Those EC2 instances become the hosts on which our containers are run.
 
-Unlike ECS tasks and services (which are a bit more "serverless"), we manage ourselves the EC2 instances that are used to host our ECS container instances. However, you get all the normal features of EC2, including auto-scaling. You have more work to do to optimize your container clusters, but the trade-off is you get more control over the infrastructure.
+Unlike ECS tasks and services (which are a bit more "serverless"), we manage the EC2 instances ourselves that are used to host our ECS container instances. However, you get all the normal features of EC2, including auto-scaling. You have more work to do to optimize your container clusters, but the trade-off is you get more control over the infrastructure.
 
 image::../_/ec2-container-instances.drawio.svg[]
 
