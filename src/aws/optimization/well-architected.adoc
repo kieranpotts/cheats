@@ -8,7 +8,7 @@ AWS Well-Architected consists of:
 
 * *Well-Architected Tool*: Organizations input information about their existing workloads, via a series of questions, and the tool returns some guidance on where you could improve your architecture.
 
-* *Well-Architected Lenses*: This is a series of guidance and best practices that are tailored to specific industry verticals, such as healthcare or data analytics, or specific technology areas. such as containers or serverless.
+* *Well-Architected Lenses*: This is a series of guidance and best practices that are tailored to specific industry verticals, such as healthcare or data analytics, or specific technology areas, such as containers or serverless.
 
 * *Well-Architected Guidance*: This is general guidance, not necessarily aligned to the Well-Architected Pillars, that is focused on specific use cases, technology areas, and implementation scenarios.
 
@@ -33,7 +33,7 @@ Best practices for operational excellence include:
 
 * Performing operations as code (eg. using CloudFormation or another IaC solution, rather than manually building out infrastructure).
 
-* Making frequent, small, reversible changes (to minimize the potential impact of deployments and make it easy to rollback if you need to.
+* Making frequent, small, reversible changes (to minimize the potential impact of deployments and make it easy to roll back if you need to.
 
 * Refining operations procedures frequently.
 
