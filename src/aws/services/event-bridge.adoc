@@ -19,4 +19,4 @@ Which targets receive the events is determined by *rules* that you define in the
 
 SNS is often used as a target, where you want to send notifications for events such as termination of EC2 instances.
 
-EventBridge is intended to be used as the backbone for event-driven application, responsible for processing state changes in application resources. But it is a very versatile system and can really be used for managing all sorts of events at both the application and system levels.
+EventBridge is intended to be used as the backbone for event-driven applications, responsible for processing state changes in application resources. But it is a very versatile system and can really be used for managing all sorts of events at both the application and system levels.
