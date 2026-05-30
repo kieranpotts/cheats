@@ -1,0 +1,25 @@
+= Pi's design philosophy
+
+Pi is a mimimal, unopinionated, terminal-based agent harness for programming.
+
+It is better to think of it as a baseline framework for developing your own custom agent UIs. That's because Pi is a very small core with programmable edges. Out-of-the-box, Pi has only a minimal toolset:
+
+- read
+- edit
+- write
+- bash
+- sessions
+
+Workflow-specific behavior moves into extensions, AGENTS.md and skills, prompt templates, themes and packages.
+
+Unusually for coding agent harnesses, Pi has no built-in plan mode. If you wanted that, you'd have to build your own extension, or download an existing extension. In the real world, not everyone uses plan mode - hence it's been taken out of the core.
+
+Other things that Pi leaves out:
+
+- Sub-agents
+- Background Bash
+- Permission popups
+- To-Dos
+- Built-in MCP
+
+The idea is individual programmers should shape their coding agent harness to fit their own unique workflow. You end up with a personalize agent that only has the features you use and none that you don't.

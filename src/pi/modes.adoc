@@ -1,0 +1,11 @@
+= Runtime modes
+
+Pi has four execution modes:
+
+* Interactive: The full TUI experience.
+
+* Print/JSON: `pi -p "query"` supports scripting. Adding `--mode json` toggles the output to JSON, useful for event streams.
+
+* RPC: JSON protocol over stdin/stdout for non-Node integrations.
+
+* SDK: Embed Pi in your apps. OpenClaw is an example implementation.

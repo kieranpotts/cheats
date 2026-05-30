@@ -1,5 +1,7 @@
 # Prompts
 
+In Pi, prompts are expanded from slash commands. They are great choice or recurring project tasks like: review, refactor, issue triage.
+
 Install at `.pi/prompts/<prompt>.md`. Template:
 
 [source,markdown]
@@ -18,3 +20,5 @@ Proofread the AsciiDoc files in this repository, opening one pull request per fi
 
 ...
 ----
+
+To execute: `/proofread <glob>`.

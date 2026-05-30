@@ -1,0 +1,32 @@
+= Session management
+
+An innovation in Pi's architecture is the design of sessions as trees rather than a flat hierarchy. With the `/tree` command, you can jump back to an earlier message, edit it, then resubmit. This creates a new branch in the session tree. The original path is maintained in the same session file.
+
+image::./_/sessions.svg[]
+
+When we create forks in the session history, we're not also changing the code - it's not Git! We're just changing the conversation history. To undo changes in code, you should use Git, or a Pi extension that implements checkpoints (another feature not natively supported by Pi).
+
+== CLI session control
+
+[cols="1,3", options="header"]
+|===
+| Flag | Description
+| `-c` | Continue the most recent session.
+| `-r` | Browse and select from previous sessions.
+| `--name "name"` | Assign a specific display name to the current session.
+| `--session <id>` | Open a specific session by its ID or path.
+|===
+
+== Internal session commands
+
+While in interactive mode, use the following commands to manage your history:
+
+* `/new`: Start a fresh session.
+* `/resume`: Resume a previous session.
+* `/tree`: View the session hierarchy.
+* `/fork`: Create a branch from the current session.
+* `/clone`: Duplicate the current session.
+
+== Storage
+
+Sessions and configuration are stored locally in `~/.pi/agent/`. This directory persists after uninstalling the Pi binary.

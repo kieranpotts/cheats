@@ -1,0 +1,11 @@
+= Model hosting providers
+
+Pi can talk to all mainstream model hosting providers via either:
+
+- Subscriptions: eg. Claude Pro/Max (but Anthropic will charge by usage if you use a third-party front-end); ChatGPT Plus/Pro; GitHub Copilot.
+
+- API keys: eg. Anthropic, OpenAI, Gemini, Grok, Mistral, xAI, OpenRouter, Fireworks, Azure, Bedrock...
+
+It can also communicate with local model servers, eg. Ollama, LM Studio, vLLM, and any OpenAI API-compatible proxies.
+
+And it's always possible to write an extension if you need something very custom.

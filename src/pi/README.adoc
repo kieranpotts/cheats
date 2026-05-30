@@ -1,5 +1,24 @@
 = Pi
 
-* link:./settings.adoc[Settings]
-* link:./prompts.adoc[Prompts]
+Pi is a lightweight coding agent harness designed to be extended via custom prompts, skills, and project-level instructions.
+
+== Quick start
+
+1. *Install*: `npm install -g --ignore-scripts @earendil-works/pi-coding-agent`
+
+2. *Auth*: Run `pi` then use `/login` to authenticate with your model provider, else set your API key in environment variables, eg. `export ANTHROPIC_API_KEY=...`.
+
+3. *Run*: `pi` in your project directory.
+
+== Documentation
+
+* link:./philosophy.adoc[Design philosophy]
+* link:./modes.adoc[Runtime modes]
+* link:./providers.adoc[Providers]
+* link:./cli.adoc[CLI reference]
+* link:./settings.adoc[Settings and context]
+* link:./sessions.adoc[Sessions]
+* link:./context.adoc[Context]
 * link:./skills.adoc[Skills]
+* link:./prompts.adoc[Prompts]
+

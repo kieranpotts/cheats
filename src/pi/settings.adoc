@@ -1,11 +1,36 @@
-= Settings
+= Settings and context
 
-You can configure the default model and provider on a per-project basis:
+== General configuration
+
+You can configure the default model and provider globally at `~/.pi/agent/settings.json`, and also on a per-project basis.
 
 [source,json]
 ----
 {
   "defaultProvider": "ollama-cloud",
   "defaultModel": "qwen3.5-coder:32b",
+  "skills": ["../path/to/skills"]
 }
 ----
+
+At launch, the `--provider` and `--model` parameters will override both your user-level and project-level settings, eg.:
+
+[source,sh]
+----
+pi --provider openai --model gpt-4o
+pi --model sonnet:high
+----
+
+== Project context (`AGENTS.md`)
+
+Pi loads an `AGENTS.md` file in the project root at startup. Use this to define project-specific rules, coding standards, or environment constraints:
+
+[source,markdown]
+----
+# Project Instructions
+- Run `npm run check` after code changes.
+- Keep responses concise.
+- Use functional programming patterns for new modules.
+----
+
+Run `/reload` inside Pi to refresh changes made to this file.

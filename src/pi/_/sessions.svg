@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 300" width="660" height="300" font-family="monospace" font-size="14">
+
+  <!-- Main horizontal line -->
+  <line x1="80" y1="210" x2="580" y2="210" stroke="#555" stroke-width="2"/>
+
+  <!-- Branch line: B to E (diagonal) -->
+  <line x1="230" y1="210" x2="380" y2="110" stroke="#555" stroke-width="2"/>
+
+  <!-- Branch line: E to F (horizontal) -->
+  <line x1="380" y1="110" x2="530" y2="110" stroke="#555" stroke-width="2"/>
+
+  <!-- Main line circles: A, B, C, D -->
+  <circle cx="100" cy="210" r="20" fill="white" stroke="#333" stroke-width="2"/>
+  <text x="100" y="215" text-anchor="middle" dominant-baseline="middle" fill="#333">A</text>
+
+  <circle cx="230" cy="210" r="20" fill="white" stroke="#333" stroke-width="2"/>
+  <text x="230" y="215" text-anchor="middle" dominant-baseline="middle" fill="#333">B</text>
+
+  <circle cx="380" cy="210" r="20" fill="white" stroke="#333" stroke-width="2"/>
+  <text x="380" y="215" text-anchor="middle" dominant-baseline="middle" fill="#333">C</text>
+
+  <circle cx="530" cy="210" r="20" fill="white" stroke="#333" stroke-width="2"/>
+  <text x="530" y="215" text-anchor="middle" dominant-baseline="middle" fill="#333">D</text>
+
+  <!-- Branch circles: E, F -->
+  <circle cx="380" cy="110" r="20" fill="white" stroke="#333" stroke-width="2"/>
+  <text x="380" y="115" text-anchor="middle" dominant-baseline="middle" fill="#333">E</text>
+
+  <circle cx="530" cy="110" r="20" fill="white" stroke="#333" stroke-width="2"/>
+  <text x="530" y="115" text-anchor="middle" dominant-baseline="middle" fill="#333">F</text>
+
+</svg>

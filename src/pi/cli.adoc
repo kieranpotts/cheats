@@ -1,0 +1,49 @@
+= Pi CLI reference
+
+== Startup flags
+
+[source,sh]
+----
+pi ...
+----
+
+[cols="1,3" options="header"]
+|===
+| Flag | Description
+| `-c` | Continue the most recent session.
+| `-r` | Browse previous sessions.
+| `--name "name"` | Set the session display name at startup.
+| `--session <path\|id>` | Open a specific session.
+| `-p "prompt"` | One-shot mode: run the prompt and exit. Useful for scripting.
+| `--mode json` | Output events in JSON format.
+| `--mode rpc` | Enable RPC mode for process integration.
+|===
+
+== File handling
+
+Pass files to the model using the `@` symbol:
+
+* `pi @README.md \"Summarize this\"`
+* `pi @src/app.ts @src/app.test.ts \"Review these together\"`
+
+== Interactive mode
+
+=== Command execution
+
+* `!command`: Run a shell command and send the output to the model context.
+* `!!command`: Run a shell command without adding its output to the model context.
+
+=== Shortcuts and controls
+
+* `Ctrl+L` or `/model`: Choose/change the active model.
+* `Ctrl+P` / `Shift+Ctrl+P`: Cycle through scoped models.
+* `Shift+Tab`: Cycle through thinking levels.
+* `Ctrl+G`: Launch external editor to input next prompt.
+* `Ctrl+-`: Undo editor text.
+* `Ctrl+V` (Alt+V on Windows): Paste images (requires a supporting terminal).
+* `Enter`: Submit or steer.
+* `Alt+Enter`: Follow-up.
+* `Escape`: Abort.
+* `Alt+Up`: Dequeue.
+* `/reload`: Reload context files (`AGENTS.md`, prompts, skills).
+* `/settings`: Common config.
