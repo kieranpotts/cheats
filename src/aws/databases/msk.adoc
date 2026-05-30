@@ -12,7 +12,7 @@ Components of MSK include:
 
 * *Producers*: Kafka clients that publish data to topics.
 
-* *Consumers*: Kafka client that read data from topics
+* *Consumers*: Kafka clients that read data from topics
 
 * *Kafka clusters*: At the core of MSK is a set of Kafka brokers, coordinated by Zookeeper nodes.
 

@@ -12,7 +12,7 @@ To deploy an OpenSearch service:
 
 OpenSearch clusters are deployed into a VPC. Nodes can be replicated across AZs. You can scale out by simply adding more instances into the cluster.
 
-Data can be integrated from various source, including:
+Data can be integrated from various sources, including:
 
 * Kinesis Firehose
 * Logstash
@@ -25,10 +25,10 @@ Alternatively, you can deploy a cluster into the public domain, outside of your 
 When deployed into a VPC, you cannot use IP-based access policies for the cluster. There are also other limitations of VPC deployments:
 
 * You can't switch later from a VPC to a public endpoint, or vice versa.
-* You can't launch your domain within a VPC that used dedicated tenancy.
+* You can't launch your domain within a VPC that uses dedicated tenancy.
 * After you place a domain within a VPC, you can't move it to a different VPC, but you can change the subnets and security group settings.
 
-Once the data sources are connecting, you might then use an open source tool like Kibana to search, analyze, and visualize that data.
+Once the data sources are connected, you might then use an open source tool like Kibana to search, analyze, and visualize that data.
 
 == OpenSearch best practices
 
