@@ -15,4 +15,4 @@ There are three types of Storage Gateway — think of these as virtual appliance
 
 * *Volume Gateway*: This is a block storage system. Your on-premises servers mount a block-based volume, which maps to S3 storage.
 
-* *Backup Gateway*: With this option, application servers have access to either block or file storage protocols via a virtual backup software application, installed locally. The storage volume appears to the client as a virtual tape library, but its actually just another S3 abstraction.
+* *Backup Gateway*: With this option, application servers have access to either block or file storage protocols via a virtual backup software application, installed locally. The storage volume appears to the client as a virtual tape library, but it's actually just another S3 abstraction.

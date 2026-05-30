@@ -1,19 +1,19 @@
 = AWS Simple File Storage (S3)
 
-S3 is AWS's object storage service. It is enormous scalable and durable. A single bucket can store an *unlimited amount of data* and an unlimited number of objects. Each individual object can be up to 5TB in size, with the largest object that can be uploaded in a single PUT request being 5GB.
+S3 is AWS's object storage service. It is enormously scalable and durable. A single bucket can store an *unlimited amount of data* and an unlimited number of objects. Each individual object can be up to 5TB in size, with the largest object that can be uploaded in a single PUT request being 5GB.
 
 The SLA declares eleven 9s of durability — that's 99.999999999% or, to explain it another way, if you stored 10 million objects, you would expect to lose one object every 10,000 years.
 
 S3 is used for a wide variety of use cases, including backup and restore, archiving, big data analytics, and content distribution. S3 can even be used for *static site hosting* — you just need to put CloudFront in front to enable HTTPS.
 
-Like a key-value store, objects are access via a key, which is unique to the bucket. Two URL formats are supported for retrieval:
+Like a key-value store, objects are accessed via a key, which is unique to the bucket. Two URL formats are supported for retrieval:
 
 ----
 https://<bucket>.s3.<region>.amazonaws.com/<key>
 https://s3.<region>.amazonaws.com/<bucket>/<key>
 ----
 
-These are public-facing URLs. Even though buckets are created in a region, bucket names must be unique across the whole of AWS. For this reason, organizations often use a naming convention that includes a combination of organization name, project name, region, and environment, and perhaps also a creation data or a random string or number.
+These are public-facing URLs. Even though buckets are created in a region, bucket names must be unique across the whole of AWS. For this reason, organizations often use a naming convention that includes a combination of organization name, project name, region, and environment, and perhaps also a creation date or a random string or number.
 
 [TIP]
 ======
@@ -35,7 +35,7 @@ Because S3 is a global service that sits in the AWS public space, to connect res
 
 == Storage classes
 
-All S3 storage classes have eleven 9s *durability*, but *availability* varies depending on how many availability the data is stored in.
+All S3 storage classes have eleven 9s *durability*, but *availability* varies depending on how many availability zones the data is stored in.
 
 The storage classes determine the availability. The main options are:
 
@@ -53,9 +53,9 @@ S3 also offers a number of archive storage classes, known as *S3 Glacier*. While
 
 * *S3 Glacier Flexible Retrieval*: Used for archives where you want to retrieve _some_ data in minutes, but where you can wait for longer for other data. This offers slightly lower costs than instant retrieval.
 
-* *S3 Glacier Deep Archive*: Used for long-term archiving of data that you may never need to access again. Retrieval, if you did need it, make take hours, but it is very low cost.
+* *S3 Glacier Deep Archive*: Used for long-term archiving of data that you may never need to access again. Retrieval, if you did need it, may take hours, but it is very low cost.
 
-Glacier-specific features include Object Lock and Vault Lock. *Object Lock* stores objects in a write-once-read-many (WORM) state, which prevents the objects from bring deleted or overwritten for a fixed time, or indefinitely. *Vault Lock* can also be used to enforce the WORM model, but with the addition that once the policy is enforced you can lock down the policy, preventing future edits. In effect, the whole object store is locked down. These are good features to enforce data retention compliance requirements.
+Glacier-specific features include Object Lock and Vault Lock. *Object Lock* stores objects in a write-once-read-many (WORM) state, which prevents the objects from being deleted or overwritten for a fixed time, or indefinitely. *Vault Lock* can also be used to enforce the WORM model, but with the addition that once the policy is enforced you can lock down the policy, preventing future edits. In effect, the whole object store is locked down. These are good features to enforce data retention compliance requirements.
 
 == S3 lifecycle management
 
@@ -67,7 +67,7 @@ Lifecycle management can also be used to define when objects should be automatic
 
 == S3 versioning
 
-Versioning is means of keeping multiple variants of an object in the same bucket. With versioning enabled, if you upload a new file with the same name as an existing one, the old one will be persisted as an older version of the same object.
+Versioning is a means of keeping multiple variants of an object in the same bucket. With versioning enabled, if you upload a new file with the same name as an existing one, the old one will be persisted as an older version of the same object.
 
 Use versioning to preserve, retrieve, and restore every version of every object stored in a bucket. This is particularly useful for protecting against accidental overwrites and deletions.
 
