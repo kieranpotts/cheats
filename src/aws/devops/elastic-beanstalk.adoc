@@ -6,11 +6,11 @@ By comparison, *infrastructure-as-a-service (IaaS)* requires you to provision an
 
 image::../_/iaas-versus-paas.drawio.svg[]
 
-IaaS and PaaS are the two main models for cloud application deployment. IaaS provides the most control over the underlying infrastructure, while PaaS abstracts away much of the complexity, allowing developers to focus on writing code and managing their customer's data.
+IaaS and PaaS are the two main models for cloud application deployment. IaaS provides the most control over the underlying infrastructure, while PaaS abstracts away much of the complexity, allowing developers to focus on writing code and managing their customers' data.
 
-With Elastic Beanstalk, you upload your source code as a ZIP file. The service automatically creates an *ElasticBeanstalk (EB) environment*. The EB environment could include multiple instances of your application, and load balancers to distribute traffic.
+With Elastic Beanstalk, you upload your source code as a ZIP file. The service automatically creates an *Elastic Beanstalk (EB) environment*. The EB environment could include multiple instances of your application, and load balancers to distribute traffic.
 
-All this is managed by Beanstalk. But you still need to define the VPC, subnets, and availability zones (AZs) into which you want the EB environment to launch run. Beanstalk itself cannot create or manage these parts of the infrastructure.
+All this is managed by Beanstalk. But you still need to define the VPC, subnets, and availability zones (AZs) into which you want the EB environment to launch and run. Beanstalk itself cannot create or manage these parts of the infrastructure.
 
 Beanstalk supports many application runtime environments, including Java, .NET, JavaScript (Node.js), PHP, Ruby, Python, and Go. It also supports Docker containers, which allows you to run any application that can be packaged in a container — so, basically everything.
 
@@ -26,7 +26,7 @@ In Beanstalk, an *application* encapsulates environments, environment configs, a
 
 An application may have multiple versions. Every time you upload new code for an existing Beanstalk application, a new version will be automatically created.
 
-Application versions allow *rollbacks* to previous versions of the application. This can be useful is a newly deployed version is found to have critical bugs or performance issues in production.
+Application versions allow *rollbacks* to previous versions of the application. This can be useful if a newly deployed version is found to have critical bugs or performance issues in production.
 
 == Environments
 
