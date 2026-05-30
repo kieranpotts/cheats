@@ -102,7 +102,7 @@ When a workflow produces something other than a log entry, the product is called
 
 Since each job uses a fresh instance of a virtual machine, by default artifacts are not preserved between jobs. Therefore, a job that deploys a container cannot, by default, access the container that was created by the build job.
 
-So preserve artifacts between jobs, the artifacts can be stored. There are a couple of ready-made actions for this purpose:
+To preserve artifacts between jobs, the artifacts can be stored. There are a couple of ready-made actions for this purpose:
 
 * `actions/upload-artifact`
 * `actions/download-artifact`

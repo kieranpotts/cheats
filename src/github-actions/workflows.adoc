@@ -55,7 +55,7 @@ jobs:
 
 (This example represents a classic use case for reusable workflows: to deploy to different environments while ensuring a similar deployment process for all environments.)
 
-You can also capture outputs from a reusable workflow and use them in the caller workflow. The process is similar to using outputs between different dependent jobs in the same workflow, but here you also have to specify the outputs under the `outputs` keyword in the `workflow_call` event definition, as wells as in the output from jobs within the reusable workflow. The job passes its outputs up to the workflow, and then the `workflow_call` event passes them out to the caller.
+You can also capture outputs from a reusable workflow and use them in the caller workflow. The process is similar to using outputs between different dependent jobs in the same workflow, but here you also have to specify the outputs under the `outputs` keyword in the `workflow_call` event definition, as well as in the output from jobs within the reusable workflow. The job passes its outputs up to the workflow, and then the `workflow_call` event passes them out to the caller.
 
 .Reusable workflow
 [source,yaml]
