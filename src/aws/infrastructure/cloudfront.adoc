@@ -19,11 +19,11 @@ Origins, regional edge caches, and edge locations, are connected together by the
 
 Users get routed to their nearest edge location. The only path on the public internet is from the user to the edge location. Everything else is in Amazon's private global network.
 
-CloudFront can deliver both static and dynamic content, and it automatically optimized delivery based on the content type. It even supports live streaming and video-on-demand.
+CloudFront can deliver both static and dynamic content, and it automatically optimizes delivery based on the content type. It even supports live streaming and video-on-demand.
 
 *Lambda@Edge* is a feature of CloudFront that enables the processing of data via Lambda functions that are closer to users.
 
-CloudFront uses HTTPs — so transit of caches between the origin and destinations are encrypted — and it integrates with *AWS Certificate Manager (ACM)* for easy management of the SSL/TLS certificates.
+CloudFront uses HTTPS — so transit of cached data between the origin and destinations is encrypted — and it integrates with *AWS Certificate Manager (ACM)* for easy management of the SSL/TLS certificates.
 
 CloudFront also integrates with *AWS Shield* (for DDoS protection) and *AWS Web Application Firewall (WAF)* (via which you create rules to protect against malicious web traffic) for additional security. Content can also be protected with features like signed cookies, signed URLs, and origin access identity (OAI).
 
