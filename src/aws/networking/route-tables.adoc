@@ -17,7 +17,7 @@ In the above route table, `172.31.0.0/16` is the CIDR block, ie. the overall IP 
 
 The second routing rule says that any other traffic must be routed out to the internet gateway. This is how EC2 instances within the VPC can communicate with the outside world.
 
-In the previous step we'd implemented the following architecture. But we cannot yet SSH into the instance in the public subnet because there is no *route* to the public subnet from the internet gateway attached the VPC>
+In the previous step we'd implemented the following architecture. But we cannot yet SSH into the instance in the public subnet because there is no *route* to the public subnet from the internet gateway attached to the VPC.
 
 image::../_/aws-networking-3.drawio.svg[]
 

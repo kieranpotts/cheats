@@ -20,7 +20,7 @@ NACLs should be relatively short; if you find your NACLs have grown, with lots o
 ****
 image::../_/stateless-firewall.drawio.svg[]
 
-The server is listening on port 80 for incoming connections. This is the "destination port" for client requests. A client making a request to the server assigns its own "source port" — this is dynamically allocated by the OS of the client machine and is a high-numbered port rather than one of the standard low-level ports in the range 1 - 1,124.
+The server is listening on port 80 for incoming connections. This is the "destination port" for client requests. A client making a request to the server assigns its own "source port" — this is dynamically allocated by the OS of the client machine and is a high-numbered port rather than one of the standard low-level ports in the range 1 – 1,023.
 
 When a server receives a request, it may create a second connection to the client and use it to send a response back to the client. The server's response is sent to the same port the client used to make the initial request. This becomes the destination port for the server's response.
 
