@@ -56,7 +56,7 @@ System.out.println(bfSize);
 /* Length may be different from the capacity. */
 System.out.println(sb.length()); // 6
 
-/* Appending more characters to the string buffer. It's capacity will
+/* Appending more characters to the string buffer. Its capacity will
 automatically increase if necessary. */
 System.out.println(sb); // "Kieran"
 sb.append(" Potts");
