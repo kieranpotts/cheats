@@ -1,4 +1,4 @@
-# Prompts
+= Prompts
 
 In Pi, prompts are expanded from slash commands. They are great choice or recurring project tasks like: review, refactor, issue triage.
 
