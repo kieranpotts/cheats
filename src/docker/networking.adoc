@@ -22,16 +22,14 @@ Type `docker network ls` to list Docker's internal networks. Docker auto-generat
 docker network create mongo-network
 ----
 
-We can now run the MongoDB and MongoExpress containers, attaching them to the `mongo-network` network. For MongoDB, we need to specify a container name, as we'll use this to configure the MongoExpress instance so it knows which container is the MongoDB one. We also need to pass in environment variables, which the `mongo` container uses to configuration its MongoDB instance - as https://hub.docker.com/_/mongo[documented here].
+We can now run the MongoDB and MongoExpress containers, attaching them to the `mongo-network` network. For MongoDB, we need to specify a container name, as we'll use this to configure the MongoExpress instance so it knows which container is the MongoDB one. We also need to pass in environment variables, which the `mongo` container uses to configure its MongoDB instance - as https://hub.docker.com/_/mongo[documented here].
 
 ----
 docker run -d \
   -p 27017:27017 \
   -e MONGO_INITDB_ROOT_USERNAME=admin \
   -e MONGO_INITDB_ROOT_PASSWORD=password \
-  --name mongodb
-  --net mongo-network
-  mongo
+  --name mongodb \\n  --net mongo-network \\n  mongo
 ----
 
 Type `docker log <container-id>`, using the output from the previous command to capture the container ID, to check the log output. An entry near the end of the log should read "... waiting for connections ...", indicating that the MongoDB database instance started successfully.
