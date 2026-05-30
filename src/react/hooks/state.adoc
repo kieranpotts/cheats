@@ -399,7 +399,7 @@ export default function App() {
     elements have changed, been added, or been removed when multiple instances
     of the same component type exist. But it is not available as a prop inside
     the components themselves – `props.key` is always undefined. Best practice
-    is to use use a prop named `id` where you need child components to
+    is to use a prop named `id` where you need child components to
     have a reference to their unique key.
     */
     <Box
