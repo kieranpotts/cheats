@@ -139,7 +139,7 @@ To rename a user group:
 sudo groupmod -n <newname> <oldname>
 ----
 
-Every user has a default or primary group, which is what they join automatically when they login. When a user creates a file or launches a program, the file or the running process will be associated with the user's current group membership. To create files or run programs in a different group, the user must first call `chgrp` to switch to another group (of which they must be a member).
+Every user has a default or primary group, which is what they join automatically when they log in. When a user creates a file or launches a program, the file or the running process will be associated with the user's current group membership. To create files or run programs in a different group, the user must first call `chgrp` to switch to another group (of which they must be a member).
 
 [source]
 ----
@@ -172,7 +172,7 @@ Or, to switch to the root user for the remainder of the session:
 sudo su -
 ----
 
-To logout of the root user account and return to your own, type `logout`.
+To log out of the root user account and return to your own, type `logout`.
 
 The sudoers file at `/etc/sudoers` provides a list of users that have root-level privileges. The file should not be edited directly with a text editor because if you make a mistake with the configuration you could lock out all users from the box entirely. Instead, use the `visudo` command to edit the sudoers configuration.
 
