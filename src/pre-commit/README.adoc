@@ -1,0 +1,34 @@
+= pre-commit
+
+== Uninstall
+
+To remove pre-commit hooks from a specific repository, from that repository's root directory run:
+
+[source,sh]
+----
+pre-commit uninstall
+----
+
+That removes the hook script from `.git/hooks/pre-commit`.
+
+If you also installed other hook types, eg. commit-msg, pre-push, uninstall those explicitly:
+
+[source,sh]
+----
+pre-commit uninstall --hook-type commit-msg
+pre-commit uninstall --hook-type pre-push
+----
+
+To remove all traces from the repository, delete the config file:
+
+[source,sh]
+----
+rm .pre-commit-config.yaml
+----
+
+And optionally clear cached environments globally:
+
+[source,sh]
+----
+pre-commit clean
+----

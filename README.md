@@ -32,6 +32,7 @@ Cheat sheets and study notes for various tools, technologies, and languages.
 - [pass](./src/pass)
 - [PM2](./src/pm2)
 - [POSIX](./src/posix)
+- [pre-commit](./src/pre-commit)
 - [Python](./src/python)
 - [React](./src/react)
 - [Redis](./src/redis)
