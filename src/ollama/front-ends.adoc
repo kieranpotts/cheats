@@ -20,7 +20,7 @@ Other VS Code extensions that support Ollama as a back-end:
 
 * https://marketplace.visualstudio.com/items?itemName=Continue.continue[Continue] — open source; supports chat, inline autocomplete, and code selection Q&A
 * https://marketplace.visualstudio.com/items?itemName=saoudrizwan.claude-dev[Cline] — suited to multi-file and whole-repo changes; reads, writes, and navigates files autonomously
-* https://marketplace.visualstudio.com/items?itemName=rjmacarthy.twinny[Twinny] — lightweight; focused on fast local autocomplete
+* https://marketplace.visualstudio.com/items?itemName=rjmacarthy.twinny[Twinny] — lightweight; focused on fast local autocomplete (no longer maintained)
 
 == Claude Code
 
