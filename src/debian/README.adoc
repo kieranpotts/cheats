@@ -46,6 +46,48 @@ Choose the option to boot the OS in recovery mode. This will load the OS in memo
 
 You can then use the option to fix the current installation, rather than installing a new one.
 
+=== Slow boot, laggy performance
+
+On Debian-based systems, boot can become extremely slow if systemd is waiting for a mount point, container, or service that no longer exists.
+
+Some useful checks, to identify what is delaying boot, are:
+
+[source,sh]
+----
+systemd-analyze blame
+systemd-analyze critical-chain
+----
+
+To find broken symlinks, try one of these commands:
+
+[source,sh]
+----
+find /etc/systemd -xtype l
+find /etc -xtype l
+----
+
+If you find a symlink who's target no longer exists, inspect it:
+
+[source,sh]
+----
+ls -l /path/to/broken/link
+----
+
+Remove it if no longer required:
+
+[source,sh]
+----
+sudo rm /path/to/broken/link
+----
+
+Another possibility is a stale mount definition in `/etc/fstab`. Systemd will wait for missing devices, NFS shares, Docker volumes, or bind mounts that are references here. Check for entries that reference paths that no longer exists. To see what systemd is currently waiting on:
+
+[source,sh]
+----
+systemctl --failed
+journalctl -b -p warning
+----
+
 === Application icons
 
 To fix a missing application icon in the launcher, edit the application's `StartupWMClass` setting in its `.desktop` configuration file, so that it matches the actual window class of the application.
