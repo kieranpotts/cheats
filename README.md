@@ -31,6 +31,7 @@ Cheat sheets and study notes for various tools, technologies, and languages.
 - [Ollama](./src/ollama)
 - [pass](./src/pass)
 - [PM2](./src/pm2)
+- [Pop OS](./src/popos)
 - [POSIX](./src/posix)
 - [pre-commit](./src/pre-commit)
 - [Python](./src/python)

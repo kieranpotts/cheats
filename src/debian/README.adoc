@@ -1,6 +1,6 @@
 = Debian
 
-These cheats cover Debian and Debian-based Linux distributions such as Ubuntu and Pop OS.
+These cheats cover Debian and Debian-based Linux distributions such as Ubuntu and Pop OS. See also link:../popos/[Pop OS] for cheats specific to that distribution.
 
 == Changing passwords
 

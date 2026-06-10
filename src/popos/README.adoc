@@ -1,0 +1,22 @@
+= Pop OS
+
+== Keyboard shortcuts
+
+=== Launching applications
+
+* `Super`: Open the application launcher.
+* `Super+t`: Launch terminal.
+* `Super+f`: Open the file browser.
+* `Super+b`: Open the web browser.
+
+=== Managing windows
+
+* `Super+q`: Quit (close) the current window.
+* `Super+m`: Maximize/minimize the current window.
+* `Super+h/j/k/l`: Move the focus to the left/down/up/right.
+
+=== Navigating workspaces
+
+* `Super+w`: Show workspace switcher.
+* `Super+<number>`: Switch to the nth workspace.
+* `Super+Shift+<number>`: Move the current window to the nth workspace, and switch to that workspace.
