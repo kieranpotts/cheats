@@ -49,4 +49,4 @@ Cheat sheets and study notes for various tools, technologies, and languages.
 
 -----
 
-Copyright © 2020-present Kieran Potts, [CC0 license](./LICENSE.txt)
+Copyright © 2020-present Kieran Potts, [CC-BY-SA-4.0 license](./LICENSE.txt)
