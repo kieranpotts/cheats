@@ -2,6 +2,47 @@
 
 These cheats cover Debian and Debian-based Linux distributions such as Ubuntu and Pop OS. See also link:../popos/[Pop OS] for cheats specific to that distribution.
 
+== Hostname
+
+Use this command to reveal the hostname of your machine:
+
+[source]
+----
+hostnamectl
+----
+
+To change the hostname on Debian or Ubuntu, you have a few options depending on whether you want the change to persist across reboots. The cleanest method also uses `hostnamectl`, which is available on most modern systems running systemd:
+
+[source,sh]
+----
+sudo hostnamectl set-hostname <new-hostname>
+----
+
+This updates the hostname immediately and persistently, no reboot required. If you're on an older system without `hostnamectl`, edit two files manually — first,  First, `/etc/hostname`:
+
+[source,sh]
+----
+sudo nano /etc/hostname
+----
+
+Replace the existing content with your new hostname, save, and close. Then update `/etc/hosts` so the new hostname resolves correctly to localhost:
+
+[source,sh]
+----
+sudo nano /etc/hosts
+----
+
+Find the line referencing your old hostname (usually next to 127.0.1.1) and replace it with the new one. After editing both files, apply the change with:
+
+[source,sh]
+----
+sudo hostname <new-hostname>
+----
+
+Or simply reboot.
+
+Hostnames should use only lowercase letters, numbers, and hyphens (no underscores or spaces), and shouldn't start or end with a hyphen.
+
 == Changing passwords
 
 You can change user passwords via the GUI (eg. the Cosmic Settings app) or the terminal. To change your own password:
