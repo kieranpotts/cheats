@@ -15,7 +15,7 @@ pi ...
 | `--name "name"` | Set the session display name at startup.
 | `--session <path\|id>` | Open a specific session.
 | `--fork <path\|id>` | Fork a session into a new one.
-| `--no-session` | Ephemeral mode - nothing is saved.
+| `--no-session` | Ephemeral mode - nothing is saved. Useful for running `pi` programmatically from scripts.
 | `-p "prompt"` | One-shot mode: run the prompt and exit. Useful for scripting.
 | `--mode json` | Output events as JSON.
 | `--mode rpc` | Enable RPC mode for process integration.
@@ -34,41 +34,3 @@ Pass files to the model using the `@` symbol:
 * `pi @README.md "Summarize this"`
 * `pi @src/app.ts @src/app.test.ts "Review these together"`
 * `pi -p @screenshot.png "Analyze this"`
-
-== Interactive mode
-
-=== Command execution
-
-* `!command`: Run a shell command and send the output to the model context.
-* `!!command`: Run a shell command without adding its output to the model context.
-
-=== Slash commands
-
-* `/model`: Choose/change the active model.
-* `/settings`: Common config (thinking level, theme, ...).
-* `/session`: Show session info and token usage.
-* `/new`, `/resume`, `/name`, `/tree`, `/fork`, `/clone`: session management (see link:./sessions.adoc[Sessions]).
-* `/compact [prompt]`: Summarize older context (see link:./compaction.adoc[Compaction]).
-* `/export [file]`: Save the session as HTML.
-* `/share`: Upload the session as a private GitHub gist.
-* `/login`, `/logout`: Manage provider credentials.
-* `/skill:<name> [args]`: Load a skill (see link:./skills.adoc[Skills]).
-* `/reload`: Reload context files (`AGENTS.md`, prompts, skills).
-
-=== Shortcuts and controls
-
-* `Ctrl+L` or `/model`: Choose/change the active model.
-* `Ctrl+P` / `Shift+Ctrl+P`: Cycle through scoped models.
-* `Shift+Tab`: Cycle through thinking levels.
-* `Ctrl+O`: Collapse/expand tool output.
-* `Ctrl+G`: Launch external editor to input next prompt.
-* `Ctrl+-`: Undo editor text.
-* `Ctrl+V` (Alt+V on Windows): Paste images (requires a supporting terminal).
-* `Enter`: Submit or steer.
-* `Shift+Enter`: New line.
-* `Alt+Enter`: Follow-up (queue).
-* `Escape`: Abort.
-* `Alt+Up`: Dequeue.
-* `Ctrl+D`: Exit (empty editor).
-
-Keybindings are customizable in `~/.pi/agent/keybindings.json` (Emacs and Vim styles supported).

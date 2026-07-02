@@ -17,6 +17,7 @@ Pi is a lightweight coding agent harness designed to be extended via custom prom
 * link:./providers.adoc[Providers]
 * link:./models.adoc[Models]
 * link:./cli.adoc[CLI reference]
+* link:./tui.adoc[TUI commands (interactive mode)]
 * link:./settings.adoc[Settings and context]
 * link:./context.adoc[Context]
 * link:./sessions.adoc[Sessions]

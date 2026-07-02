@@ -13,10 +13,12 @@ It also talks to local model servers - Ollama, LM Studio, vLLM, any OpenAI API-c
 == Authenticating
 
 * Subscriptions: `/login` runs an OAuth flow; tokens auto-refresh and are stored in `~/.pi/agent/auth.json`.
+
 * API keys: set an env var (eg. `export ANTHROPIC_API_KEY=sk-ant-...`), or store the key in `auth.json` via `/login`.
+
 * `/logout` clears stored credentials.
 
-Key resolution order: CLI `--api-key` -> `auth.json` -> environment variable -> custom-provider config.
+Resolution order: CLI `--api-key` -> `auth.json` -> environment variable -> custom-provider config.
 
 == Custom providers
 

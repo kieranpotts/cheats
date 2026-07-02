@@ -2,12 +2,12 @@
 
 Pi is highly extensible. Extensions are TypeScript modules (compiled natively via jiti). Through them you can add to Pi:
 
-* Tools – LLM-callable functions.
-* Commands – your own /command flows.
-* Events – intercept turns and tools (session start, tool calls, message updates, ...).
-* State – control session persistence.
-* Providers – dynamic model sources.
-* UI – prompts, confirms, notifications, widgets, shortcuts.
+* Tools: LLM-callable functions.
+* Commands: your own /command flows.
+* Events: intercept turns and tools (session start, tool calls, message updates, ...).
+* State: control session persistence.
+* Providers: dynamic model sources.
+* UI: prompts, confirms, notifications, widgets, shortcuts.
 
 Common uses: permission gates, path protection, custom compaction, interactive workflows, external integrations.
 
@@ -20,9 +20,21 @@ Extensions are auto-discovered in:
 
 Each exports a default factory function that receives the `ExtensionAPI`. Try one without installing using `pi -e ./path.ts`.
 
-Key API points: tool registration (name, description, Typebox params, async `execute`); UI via `ctx.ui.confirm()` / `ctx.ui.select()` / `ctx.ui.notify()`; shell via `pi.exec()`; state via `pi.appendEntry()`; session control (in commands) via `ctx.newSession()` / `ctx.fork()` / `ctx.switchSession()`.
+Key API points:
+
+* Tool registration (name, description, Typebox params, async `execute`).
+
+* UI via `ctx.ui.confirm()` / `ctx.ui.select()` / `ctx.ui.notify()`.
+
+* Shell via `pi.exec()`.
+
+* State via `pi.appendEntry()`.
+
+* Session control (in commands) via `ctx.newSession()` / `ctx.fork()` / `ctx.switchSession()`.
 
 == Ready-made extensions
 
-Bundled and shared as link:./packages.adoc[packages] - browse the gallery at https://pi.dev/packages[pi.dev/packages]. Example extensions:
+Bundled and shared as link:./packages.adoc[packages] - browse the gallery at https://pi.dev/packages[pi.dev/packages].
+
+Example extensions:
 https://github.com/earendil-works/pi/blob/main/packages/coding-agent/examples/extensions/README.md

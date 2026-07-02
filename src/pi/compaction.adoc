@@ -5,9 +5,13 @@ Pi automatically summarizes older context to keep long sessions within the model
 == How it works
 
 1. Walks backwards through the messages until it reaches the `keepRecentTokens` threshold (default 20,000) - this is the cut point.
+
 2. Extracts the messages from the previous boundary up to the cut point.
+
 3. Generates a structured summary via the LLM, folding in any previous summary for continuity.
+
 4. Saves a `CompactionEntry` (summary + metadata) into the session.
+
 5. Reloads the session from the summary plus the recent messages.
 
 Complete turns are preserved where possible. If a single turn is larger than the budget, Pi creates a "split turn", summarizing the turn's prefix and the history separately, then merging them.

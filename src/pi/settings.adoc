@@ -11,7 +11,7 @@ Pi reads two JSON settings files:
 | `.pi/settings.json` | Project (current directory).
 |===
 
-Project settings override global ones via a nested merge: project values replace only the fields they define, leaving the rest of the global config intact. Launch-time `--provider` / `--model` override both.
+Project settings override global ones via a nested merge. Project values replace only the fields they define, leaving the rest of the global config intact. Launch-time `--provider` / `--model` override both.
 
 [source,json]
 ----
@@ -27,13 +27,19 @@ Project settings override global ones via a nested merge: project values replace
 
 == What you can configure
 
-- Model & thinking: default provider/model, thinking level, token budgets.
-- UI & display: theme, startup behavior, editor padding, autocomplete.
-- Compaction: `reserveTokens`, `keepRecentTokens` (see link:./compaction.adoc[Compaction]).
-- Retry: error handling / exponential backoff.
-- Shell: `shellPath`, `shellCommandPrefix`, npm commands.
-- Resources: extensions, skills, prompts, themes - from packages or local paths.
-- Terminal & images: image display and resizing.
+* Model and thinking: default provider/model, thinking level, token budgets.
+
+* UI and display: theme, startup behavior, editor padding, autocomplete.
+
+* Compaction: `reserveTokens`, `keepRecentTokens` — see link:./compaction.adoc[Compaction].
+
+* Retry: error handling / exponential backoff.
+
+* Shell: `shellPath`, `shellCommandPrefix`, npm commands.
+
+* Resources: extensions, skills, prompts, themes - from packages or local paths.
+
+* Terminal and images: image display and resizing.
 
 == Project context (`AGENTS.md`)
 

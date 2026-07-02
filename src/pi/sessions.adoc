@@ -38,10 +38,10 @@ While in interactive mode, use the following commands to manage your history:
 
 == Storage and format
 
-Sessions and configuration are stored locally in `~/.pi/agent/`; this directory persists after uninstalling the Pi binary. Session files are JSONL (one JSON object per line), organized by working directory:
+Sessions and configuration are stored locally in `~/.pi/agent/`. This directory persists after uninstalling the Pi binary. Session files are JSONL (one JSON object per line), organized by working directory:
 
 ----
 ~/.pi/agent/sessions/--<path>--/<timestamp>_<uuid>.jsonl
 ----
 
-The first line is a header (metadata); every later entry carries an `id` and `parentId`, which is how the tree - and in-place branching - is represented within a single file. The format evolved v1 (linear) -> v2 (tree) -> v3 (current); older sessions auto-migrate on load.
+The first line is a header (metadata). Every later entry carries an `id` and `parentId`, which is how the tree - and in-place branching - is represented within a single file. The format evolved v1 (linear) -> v2 (tree) -> v3 (current). Older sessions auto-migrate on load.

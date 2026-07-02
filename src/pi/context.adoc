@@ -2,7 +2,7 @@
 
 Pi builds the prompt as a stack:
 
-- Default prompt.
+- Default prompt (can be overridden with a custom `SYSTEM.md` file).
 - `APPEND_SYSTEM.md`
 - `AGENTS.md` / `CLAUDE.md`
 - Skills list.
@@ -12,7 +12,5 @@ Examples of files that mutate the context:
 
 - Global: `~/.pi/agent/AGENTS.md`
 - Project tree: `AGENTS.md` or `CLAUDE.md`
-- Replace default: `.pi/SYSTEM.md`
-- Append: `.pi/APPEND_SYSTEM.md`
-
-You can even https://github.com/earendil-works/pi/blob/main/packages/coding-agent/src/core/system-prompt.ts[read the source files] to see how Pi compiles the system prompt.
+- Replacement system prompt: `.pi/SYSTEM.md`
+- Appended system prompt: `.pi/APPEND_SYSTEM.md`

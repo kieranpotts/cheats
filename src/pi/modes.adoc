@@ -8,7 +8,7 @@ Pi has four execution modes:
 
 * RPC: `pi --mode rpc` speaks JSONL over stdin/stdout for non-Node integrations (IDEs, custom UIs). Commands in (`prompt`, `steer`, `follow_up`, `set_model`, `get_state`, `new_session`, `fork`, ...), responses and an event stream out. An extension sub-protocol drives interactive dialogs.
 
-* SDK: embed Pi in your own app - the best path for Node/TS. `createAgentSession()` returns an `AgentSession` with `prompt()`, `subscribe()`, and `setModel()`; `createAgentSessionRuntime()` handles new/switch/fork. OpenClaw is an example implementation.
+* SDK: Embed Pi in your own app - the best path for Node/TS. `createAgentSession()` returns an `AgentSession` with `prompt()`, `subscribe()`, and `setModel()`; `createAgentSessionRuntime()` handles new/switch/fork. OpenClaw is an example implementation.
 
 [source,js]
 ----
@@ -31,9 +31,9 @@ await session.prompt("What files are in the current directory?");
 
 The following script demonstrates how `pi -p` can be used in deterministic scripting to query LLMs.
 
-This script iterates through a directory of Asciidoc files, used an LLM (via `pi`) to proofread them, make suggested edits, then commit the changes to a fresh branch and push the branch to GitHub and open a PR – one per file.
+This script iterates through a directory of AsciiDoc files, used an LLM (via `pi`) to proofread them, make suggested edits, then commit the changes to a fresh branch and push the branch to GitHub and open a PR – one per file.
 
-There are lots of safety procedures in place in this script. Pi's tools are restricted to read, edit, grep, find, and ls. No bash means the harness cannot physically run `git`, or push or delete anything. That part of the logic is kept in the deterministic script. The model is used solely for the things its good at: non-deterministic workflows like reasoning.
+There are lots of safety procedures in place in this script. Pi's tools are restricted to read, edit, grep, find, and ls. No Bash means the harness cannot physically run `git`, or push or delete anything. That part of the logic is kept in the deterministic script. The model is used solely for the things its good at: non-deterministic workflows like reasoning.
 
 Two design points worth noting: `--no-session` gives each file a fresh, clean context so files don't contaminate each other, and the `git diff --quiet` check means files with no needed edits don't generate empty PRs.
 
