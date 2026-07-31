@@ -2,6 +2,31 @@
 
 // TODO: Add main documentation on Git worktrees.
 
+Create a worktree from an existing branch:
+
+[source,sh]
+----
+git worktree add ../<worktree-directory-name> <existing-branch-name>
+----
+
+To create a new branch in a new worktree in a single step:
+
+[source,sh]
+----
+git worktree add -b <new-branch-name> ../<worktree-directory-name>
+----
+
+Branches off `HEAD` by default.
+
+Other useful commands:
+
+[source,sh]
+----
+git worktree list                      # Show all worktrees.
+git worktree remove ../myrepo-feature  # Remove a worktree.
+git worktree prune                     # Clean up stale entries.
+----
+
 == Bare repository
 
 A bare repository has no working directory, so there's nothing to "check out"
