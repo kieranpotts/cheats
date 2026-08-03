@@ -471,3 +471,23 @@ output "users_unique_id_name_custom" {
   }
 }
 ----
+
+== Splat expressions
+
+A splat expression applies an operation across every element of a list,
+tuple, or set, without needing to write a full `for` expression.
+`resource.*.attr` (legacy, attribute-only splat) walks a chain of attribute
+accesses across each instance. `resource[*].attr` (full splat syntax) is the
+more general, RECOMMENDED form, and also supports further indexing or
+operations after the splat.
+
+[source,hcl]
+----
+# Equivalent - both return a list of instance IDs.
+ids_a = aws_instance.servers.*.id
+ids_b = aws_instance.servers[*].id
+----
+
+If applied to a value that isn't a collection, HCL automatically treats it
+as a one-element list first, so splat syntax is safe to use even when a
+reference may or may not already be a list.

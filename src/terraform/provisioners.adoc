@@ -195,3 +195,182 @@ run commands _after_ the machine is created, such as when you need to install
 software or configure the machine in a specific way. Or perhaps you want to
 execute commands on _another_ remote machine when the current machine definition
 is applied. These are good use cases for the `remote-exec` provisioner.
+
+As an alternative to the `inline` argument, `remote-exec` also supports:
+
+* `script` – a single local script path, uploaded and executed remotely.
+* `scripts` – a list of local script paths, uploaded and executed remotely in
+  order.
+
+`inline` MUST NOT be combined with `script` or `scripts` in the same
+provisioner block.
+
+== `file` provisioner
+
+The `file` provisioner copies a file or directory from the Terraform host to
+the target resource. It takes a `source` OR `content` argument (mutually
+exclusive), plus a required `destination`.
+
+[source,hcl]
+----
+provisioner "file" {
+  source      = "app/config.yaml"
+  destination = "/etc/app/config.yaml"
+}
+----
+
+For SSH connections, add a trailing slash to `source` to copy only the
+contents of a directory (not the directory itself). For WinRM connections,
+the destination directory is created automatically if it does not exist.
+
+== Multiple provisioners
+
+A resource block MAY contain multiple `provisioner` blocks, of any type. They
+run in the order they are written in the configuration file.
+
+[source,hcl]
+----
+resource "aws_instance" "web" {
+  // ...
+
+  provisioner "file" {
+    source      = "app/config.yaml"
+    destination = "/etc/app/config.yaml"
+  }
+
+  provisioner "remote-exec" {
+    inline = ["sudo systemctl restart app"]
+  }
+}
+----
+
+== Creation-time vs. destroy-time provisioners
+
+By default, provisioners run at creation time (`when = apply`, the default –
+you don't normally need to specify this explicitly). Setting `when = destroy`
+runs the provisioner immediately before the resource is destroyed – useful
+for deregistration or cleanup steps.
+
+[source,hcl]
+----
+provisioner "local-exec" {
+  when    = destroy
+  command = "echo 'Destroying ${self.id}' >> destroy.log"
+}
+----
+
+Destroy-time provisioners can only reference a limited set of attributes via
+`self` (most values are unavailable once destruction has begun), and they
+only run if the resource is still tracked correctly in state. HashiCorp
+explicitly warns against relying on destroy-time provisioners for anything
+critical.
+
+== Failure handling
+
+By default (`on_failure = fail`), a failing provisioner halts the `apply`
+operation and taints the resource. Set `on_failure = continue` to allow
+`apply` to proceed despite a provisioner error – this SHOULD only be used
+deliberately, for genuinely non-critical steps.
+
+[source,hcl]
+----
+provisioner "remote-exec" {
+  on_failure = continue
+  inline     = ["curl -s http://metrics.internal/ping"]
+}
+----
+
+== The `connection` block
+
+The `connection` block configures how Terraform connects to a remote
+resource, for `remote-exec` and `file` provisioners. It MUST NOT reference
+the parent resource by name (this would create a dependency cycle) – use
+`self` instead.
+
+Common arguments:
+
+* `type` – `"ssh"` (default) or `"winrm"`.
+* `host`, `user`, and one of `password` / `private_key` / `certificate`.
+* `port` – default `22` for SSH, `5985` for WinRM.
+* `timeout` – default `"5m"`.
+* `agent`, `agent_identity` – SSH agent-based authentication.
+* `host_key` – SSH host key verification. Terraform does NOT verify host
+  keys by default.
+* `target_platform` – `"windows"` or `"unix"`; affects the default
+  `script_path`.
+* Bastion/jump-host arguments – `bastion_host`, `bastion_port`,
+  `bastion_user`, `bastion_password`, `bastion_private_key`,
+  `bastion_certificate`, `bastion_host_key` (each inherits the non-bastion
+  equivalent if unset).
+* Proxy arguments – `proxy_scheme`, `proxy_host`, `proxy_port`,
+  `proxy_user_name`, `proxy_user_password`.
+* WinRM-only – `https`, `insecure`, `use_ntlm`, `cacert`.
+
+[source,hcl]
+----
+connection {
+  type         = "ssh"
+  user         = "ubuntu"
+  host         = self.public_ip
+  private_key  = file("~/.ssh/id_rsa")
+  host_key     = file("~/.ssh/known_host_key.pub")
+  timeout      = "2m"
+  bastion_host = aws_instance.bastion.public_ip
+  bastion_user = "ec2-user"
+}
+----
+
+== `local-exec` additional arguments
+
+* `working_dir` – sets the directory the command runs from.
+* `quiet` – suppresses the command's stdout/stderr from Terraform's own
+  console output.
+
+[source,hcl]
+----
+provisioner "local-exec" {
+  command     = "./deploy.sh"
+  working_dir = "${path.module}/scripts"
+  quiet       = true
+}
+----
+
+== `terraform_data` as an alternative to `null_resource`
+
+`terraform_data` is the modern replacement for `null_resource` as a host for
+provisioners that don't need to manage real infrastructure. It supports an
+`input` argument (any value, stored in state and available to other
+resources) and `triggers_replace` (forces recreation, and re-running of
+provisioners, when the referenced values change).
+
+[source,hcl]
+----
+resource "terraform_data" "always_run" {
+  triggers_replace = [timestamp()]
+
+  provisioner "local-exec" {
+    command = "echo Ran at $(date)"
+  }
+}
+----
+
+== Alternatives to provisioners
+
+HashiCorp explicitly RECOMMENDS avoiding provisioners where a provider-native
+mechanism exists, since Terraform is primarily designed around immutable
+infrastructure. Preferred alternatives, in rough order of preference:
+
+* Provider-native bootstrapping arguments, eg. `user_data` on
+  `aws_instance` (see link:./providers/aws/resources.adoc[AWS resources]).
+* Image-baking tools such as Packer, so instances boot already configured.
+* A dedicated configuration management tool (Ansible, Chef, Puppet) applied
+  post-boot, as described in
+  link:./comparisons.adoc[Comparisons with other tools].
+
+Vendor-specific provisioners for Chef, Puppet, and Salt-Masterless, which
+appeared in older Terraform documentation, have since been removed/deprecated
+and SHOULD NOT be used in new configurations.
+
+Sensitive values passed to provisioners are suppressed from console/log
+output. Ephemeral values (Terraform v1.10+) are never persisted to state or
+plan files, including when used in provisioners.

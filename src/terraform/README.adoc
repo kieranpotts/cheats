@@ -25,6 +25,7 @@
 * link:./workspaces.adoc[Workspaces]
 * link:./importing.adoc[Importing]
 * link:./refactoring.adoc[Refactoring]
+* link:./tests.adoc[Tests]
 
 == Cloud service providers
 

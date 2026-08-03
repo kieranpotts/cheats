@@ -43,3 +43,110 @@ module "vpc" {
   cidr = "10.0.0.0/16"
 }
 ----
+
+== Comments
+
+Three comment styles are supported:
+
+[source,hcl]
+----
+# Idiomatic single-line comment.
+// Alternative single-line comment style.
+/*
+  Block comment,
+  spanning multiple lines.
+*/
+----
+
+`#` is the idiomatic style for single-line comments. `terraform fmt` MAY
+rewrite `//` comments to `#`.
+
+== Identifiers
+
+Identifiers (block types, labels used as names, argument names, variable
+names, etc.) MAY contain letters, digits, underscores, and hyphens, but MUST
+NOT start with a digit.
+
+[source,hcl]
+----
+# Valid.
+my_resource-1 = "ok"
+_private      = "ok"
+
+# Invalid – cannot start with a digit.
+# 1resource = "bad"
+----
+
+== Character encoding
+
+Terraform configuration files MUST be UTF-8 encoded. Both Unix-style (LF)
+and Windows-style (CRLF) line endings are accepted, but LF is idiomatic;
+`terraform fmt` MAY normalize CRLF to LF.
+
+== Strings and templates
+
+Multi-line strings can be defined using heredoc syntax. The `<<EOF ... EOF`
+form preserves all whitespace as literal content. The `<<-EOF ... EOF` form
+(with a hyphen) strips the smallest common leading-whitespace prefix from
+every line, which is useful for keeping the heredoc indented in line with
+the surrounding code.
+
+[source,hcl]
+----
+resource "local_file" "example" {
+  content = <<-EOT
+    line one
+    line two
+  EOT
+}
+----
+
+Values are interpolated into strings using `${...}`. If a string consists of
+*only* a single interpolation sequence, with no surrounding literal text,
+the result takes on the native type of the expression rather than being
+converted to a string. As soon as any literal text surrounds the
+interpolation, the result is always a string.
+
+[source,hcl]
+----
+# Returns a number, not a string.
+value = "${var.count}"
+
+# Returns a string.
+value = "count: ${var.count}"
+----
+
+Templates also support directives, using `%{ ... }`, which run control flow
+inline without producing output themselves. `%{ if COND }...%{ else
+}...%{ endif }` conditionally includes text, and `%{ for X in LIST
+}...%{ endfor }` repeats text once per element. Add a `~` against either
+brace (eg. `%{~ if ... ~}`) to strip adjacent whitespace/newlines – useful
+when directives are indented for readability but you don't want stray blank
+lines in the rendered output.
+
+[source,hcl]
+----
+locals {
+  greeting = "Hello, %{ if is_admin }admin%{ else }user%{ endif }!"
+
+  list_str = <<-EOT
+  %{ for name in var.names ~}
+  - ${name}
+  %{ endfor ~}
+  EOT
+}
+----
+
+== Operator precedence
+
+Operators bind from highest to lowest precedence: `* / %`, then `+ -`, then
+comparisons (`> >= < <=`), then equality (`== !=`), then `&&`, then `||`.
+All operators at the same precedence level are left-associative. Chained
+comparisons like `a < b < c` are NOT valid in HCL (unlike some other
+languages) – parenthesize explicitly instead.
+
+[source,hcl]
+----
+# RECOMMENDED: explicit grouping avoids ambiguity for readers.
+valid = (var.count > 0) && (var.enabled == true)
+----

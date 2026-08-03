@@ -359,6 +359,17 @@ The available functions are summarized below.
 * `can()` — Evaluates an expression and returns a boolean indicating whether the
   expression produces a result without any errors.
 
+* `convert()` — Converts a value to a given type constraint. Unlike
+  `tobool()`/`tolist()`/etc., which convert to one specific fixed type,
+  `convert()` takes an arbitrary type constraint as its second argument,
+  useful for converting to complex/structural types (eg. an object type with
+  optional attributes) rather than just primitives.
++
+[source,hcl]
+----
+convert({ name = "a", age = 42 }, object({ name = string, age = optional(number, 0) }))
+----
+
 * `ephemeralasnull()` — Takes an ephemeral value and returns `null`. You might
   do this, for example, to output ephemeral values (which are values that are
   not stored in the state file) as `null` in the output, without actually

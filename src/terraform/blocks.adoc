@@ -31,6 +31,32 @@ After the block type keyword and any labels, the block body is delimited by the
 `{` and `}` characters. Within the block body, further arguments (aka. variable
 assignments) and blocks may be nested.
 
+== Top-level vs. nested blocks
+
+Blocks that MAY appear at the top level of a configuration file – outside of
+any other block – are called _top-level blocks_. Examples include
+`resource`, `data`, `variable`, `output`, `module`, and `provider`. Most
+Terraform features are implemented as top-level block types, each typically
+requiring a specific number of labels (eg. `resource` blocks require two:
+the resource type and a name).
+
+Blocks MAY also be nested inside other blocks, in which case they usually
+require no labels of their own – eg. the `network_interface` block nested
+inside an `aws_instance` resource block.
+
+[source,hcl]
+----
+# Top-level block – requires 2 labels.
+resource "aws_instance" "example" {
+  ami = "ami-0c55b159cbfafe1f0"
+
+  # Nested block – requires 0 labels.
+  network_interface {
+    // ...
+  }
+}
+----
+
 == Dynamic blocks
 
 Imagine you need to specify twenty different ingress rules for a security group.

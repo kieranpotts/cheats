@@ -12,3 +12,13 @@ allow the vale to be generated from other values programmatically.
 
 Arguments are used to configure the behavior of a block. What values are allowed
 can vary depending on the block type.
+
+[NOTE]
+======
+HCL's own documentation generally uses the term _attribute_ for what
+Terraform calls an _argument_. Terraform deliberately reserves "attribute"
+for values *exported* by a resource (eg. `id`), which can be read via
+expressions elsewhere in the configuration, but not assigned as an argument.
+Keep this distinction in mind when cross-referencing the raw HCL
+specification.
+======

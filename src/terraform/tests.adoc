@@ -1,0 +1,564 @@
+= Terraform: Tests
+
+Terraform ships a native testing framework (`terraform test`) for validating
+module behavior before publishing or reusing a module. Tests are author-level
+verification – distinct from consumer-facing guardrails such as variable
+validation, preconditions, postconditions, and `check` blocks, which surface
+errors to _consumers_ of a module. Tests exist to catch _regressions_ before
+a module author ships a breaking change.
+
+Use this framework to:
+
+* Unit-test a module's logic (locals, conditionals, `for_each` expansion)
+  without provisioning real infrastructure, using `command = plan`.
+* Integration-test a module by actually provisioning and destroying
+  short-lived resources, using `command = apply` (the default).
+* Assert on outputs, resource attributes, and data source values.
+* Verify that invalid input correctly triggers validation errors
+  (`expect_failures`).
+
+== File format and layout
+
+Test files use the extension `.tftest.hcl` (or `.tftest.json`). Terraform
+auto-discovers test files in:
+
+* the root module directory, and
+* a `tests/` subdirectory (RECOMMENDED location – keeps tests out of the
+  main configuration).
+
+Override the discovery directory with `-test-directory=<path>` on the
+`terraform test` command. The directory MUST be beneath the configuration
+root.
+
+----
+.
+├── main.tf
+├── variables.tf
+├── outputs.tf
+├── terraform.tf
+└── tests/
+    ├── setup/
+    │   └── main.tf          # Helper module, provisions test fixtures.
+    └── main.tftest.hcl
+----
+
+A test file contains, in any order:
+
+* zero or one `test` block (file-wide settings, eg. `parallel`),
+* one or more `run` blocks (required – each is one test step),
+* zero or one file-level `variables` block,
+* zero or more `provider` blocks,
+* zero or more file-level `override_resource` / `override_data` /
+  `override_module` / `mock_provider` blocks.
+
+`variables` and `provider` blocks are order-independent – Terraform
+processes them all before any `run` block executes. Variables defined in a
+test file take the *highest precedence*, overriding environment variables,
+`.tfvars` files, and CLI `-var` input.
+
+.tests/main.tftest.hcl
+[source,hcl]
+----
+variables {
+  bucket_prefix = "test"
+}
+
+provider "aws" {
+  region = "us-east-1"
+}
+
+run "create_bucket" {
+  command = apply
+
+  assert {
+    condition     = aws_s3_bucket.this.bucket == "${var.bucket_prefix}-website"
+    error_message = "Invalid bucket name"
+  }
+}
+----
+
+== The `run` block
+
+Each `run` block is one discrete test step, executed against the
+configuration under test. Run blocks MUST have unique names within a file
+and execute in the order they are written.
+
+[cols="1,3"]
+|===
+| Field | Purpose
+
+| `command`
+| `plan` or `apply`. Default `apply`. Use `plan` for fast unit tests that
+  don't provision real resources; use `apply` to integration-test actual
+  provider behavior.
+
+| `plan_options.mode`
+| `normal` or `refresh-only`.
+
+| `plan_options.refresh`
+| Boolean, whether to refresh state before planning. Default `true`.
+
+| `plan_options.replace`
+| List of resource addresses to force-replace.
+
+| `plan_options.target`
+| List of resource addresses to target.
+
+| `variables`
+| Block overriding input variables for this run only.
+
+| `module`
+| Block pointing at an alternate module to run instead of the main
+  configuration (eg. a test helper/setup module).
+
+| `providers`
+| Map overriding which provider configuration a run uses.
+
+| `assert`
+| One or more assertion blocks; all must pass for the run to succeed.
+
+| `expect_failures`
+| List of checkable objects (eg. `var.x`, resource preconditions) expected
+  to fail validation in this run.
+
+| `state_key`
+| Overrides which state file this run shares. By default each distinct
+  module (main config vs. any `module` block) gets its own state.
+|===
+
+=== `command`: `plan` vs `apply`
+
+[source,hcl]
+----
+run "unit_test_naming_logic" {
+  command = plan          # No resources created – fast, no credentials required.
+
+  variables {
+    environment = "prod"
+  }
+
+  assert {
+    condition     = aws_s3_bucket.this.bucket == "prod-website"
+    error_message = "Bucket name does not follow naming convention"
+  }
+}
+
+run "integration_test_bucket_exists" {
+  command = apply          # Provisions real resources, then destroys them.
+
+  assert {
+    condition     = aws_s3_bucket.this.id != ""
+    error_message = "Bucket was not created"
+  }
+}
+----
+
+`plan`-mode runs are RECOMMENDED for fast, credential-light unit tests of
+module logic. `apply`-mode runs SHOULD be reserved for verifying genuine
+provider interactions, since they provision (and then tear down) real
+infrastructure.
+
+=== `assert` blocks
+
+Each `assert` block is one condition; a run block MAY contain several.
+
+[source,hcl]
+----
+assert {
+  condition     = aws_s3_bucket.this.bucket == "test-website"
+  error_message = "Invalid bucket name"
+}
+
+assert {
+  condition     = aws_s3_object.index.etag == filemd5("./www/index.html")
+  error_message = "Invalid eTag for index.html"
+}
+----
+
+Conditions can reference:
+
+* any named value in the configuration under test (resources, data
+  sources, locals),
+* outputs of the current run: `output.name`,
+* outputs of a _previous_ run: `run.<run_name>.<output_name>`.
+
+All `assert` blocks in a run MUST pass for the run – and the test file – to
+succeed.
+
+=== `variables`
+
+Variables can be set at file level (applies to every run) or inside a
+specific `run` block (overrides the file-level value for that run only).
+Run-level variables MAY reference file-level variables via `var.name` or
+prior run outputs via `run.<name>.<output>`.
+
+[source,hcl]
+----
+variables {
+  bucket_prefix = "test"
+}
+
+run "setup_tests" {
+  module {
+    source = "./tests/setup"
+  }
+}
+
+run "create_bucket" {
+  command = apply
+
+  variables {
+    bucket_name = "${run.setup_tests.bucket_prefix}-aws-s3-website-test"
+  }
+
+  assert {
+    condition     = aws_s3_bucket.this.bucket == "${run.setup_tests.bucket_prefix}-aws-s3-website-test"
+    error_message = "Invalid bucket name"
+  }
+}
+----
+
+=== `module`: testing with helper/setup modules
+
+The `module` block swaps in an alternate module for a given run – typically
+a small helper module under `tests/` that provisions fixtures (eg. a random
+suffix, a VPC) the main module needs but shouldn't itself own. Only `source`
+and `version` are valid inside `module`; everything else (inputs, providers)
+is set via the surrounding `run` block's own attributes.
+
+.tests/setup/main.tf
+[source,hcl]
+----
+terraform {
+  required_providers {
+    random = {
+      source  = "hashicorp/random"
+      version = "3.5.1"
+    }
+  }
+}
+
+resource "random_pet" "bucket_prefix" {
+  length = 4
+}
+
+output "bucket_prefix" {
+  value = random_pet.bucket_prefix.id
+}
+----
+
+.tests/main.tftest.hcl
+[source,hcl]
+----
+run "setup_tests" {
+  module {
+    source = "./tests/setup"
+  }
+}
+
+run "create_bucket" {
+  variables {
+    bucket_name = "${run.setup_tests.bucket_prefix}-website"
+  }
+}
+----
+
+Module sources MAY be local paths or Terraform Registry addresses.
+
+=== `providers`
+
+Provider configurations are declared with file-level `provider` blocks (same
+syntax as normal Terraform provider blocks, including `alias`), then wired
+into runs via the `providers` map – the same mechanism used for passing
+providers into child modules.
+
+[source,hcl]
+----
+provider "aws" {
+  region = "us-east-1"
+}
+
+provider "aws" {
+  alias  = "secondary"
+  region = "eu-central-1"
+}
+
+run "test_multi_region" {
+  providers = {
+    aws           = aws
+    aws.secondary = aws.secondary
+  }
+}
+----
+
+From Terraform 1.7.0 onward, `provider` blocks in test files MAY reference
+test-file variables and prior run outputs.
+
+=== `expect_failures`
+
+Use `expect_failures` to assert that Terraform's _custom_ validation
+mechanisms (variable `validation` blocks, resource/data `precondition` and
+`postcondition`, `check` blocks) correctly reject bad input. List the
+checkable objects expected to fail.
+
+[source,hcl]
+----
+run "reject_invalid_bucket_name" {
+  command = plan
+
+  variables {
+    bucket_name = "INVALID_UPPERCASE_NAME"
+  }
+
+  expect_failures = [
+    var.bucket_name,
+  ]
+}
+----
+
+`expect_failures` only applies to custom conditions. Type mismatches,
+missing required arguments, and genuine provider errors still fail the test
+regardless of this attribute.
+
+== State and execution model
+
+* Each run against the main configuration (or against a distinct `module`
+  source) gets its own state file by default. Force runs to share a state
+  file with the `state_key` attribute.
+* Runs execute strictly in file order unless `parallel = true` is set on
+  multiple runs _and_ they don't depend on each other's outputs _and_ they
+  don't share a `state_key`. A run with `parallel = false` (the default) is
+  a synchronization point – later runs wait for it.
+* At the end of a test file, Terraform destroys all provisioned resources
+  in *reverse* run-block order – later-created resources (eg. S3 objects)
+  are destroyed before earlier ones (eg. the bucket that holds them),
+  avoiding dependency conflicts.
+* `apply`-mode runs provision genuine infrastructure for the duration of the
+  test file only; nothing persists after `terraform test` completes.
+  `plan`-mode runs never touch real infrastructure.
+
+The optional top-level `test` block controls file-wide behavior:
+
+[source,hcl]
+----
+test {
+  parallel = true
+}
+----
+
+== Mocking
+
+Mocking lets you validate module logic without calling real providers –
+useful for skipping slow-to-provision resources unrelated to what's under
+test, or for testing entirely without cloud credentials.
+
+=== `mock_provider`
+
+Replaces a real provider with one that fabricates plausible values instead
+of calling the API.
+
+[source,hcl]
+----
+mock_provider "aws" {
+  override_during = plan   # Or `apply` (default).
+}
+----
+
+Unless told otherwise, Terraform auto-generates values for computed
+attributes:
+
+[cols="1,2"]
+|===
+| Type | Generated value
+
+| number | `0`
+| bool | `false`
+| string | random 8-character alphanumeric string
+| set / list / map | empty collection
+| object | required sub-attributes generated recursively
+|===
+
+Narrow the mock with nested `mock_resource` / `mock_data` blocks and a
+`defaults` map for specific attributes:
+
+[source,hcl]
+----
+mock_provider "aws" {
+  mock_resource "aws_s3_bucket" {
+    defaults = {
+      arn = "arn:aws:s3:::mock-bucket"
+    }
+  }
+
+  mock_data "aws_s3_object" {
+    defaults = {
+      body = "mock body"
+    }
+  }
+}
+----
+
+A shared library of mock values MAY be factored out into `.tfmock.hcl` /
+`.tfmock.json` files and pulled in via `source` on `mock_provider`.
+
+=== `override_resource` / `override_data`
+
+Unlike `mock_provider` (which replaces an entire provider), override blocks
+target one specific resource or data source. Terraform does not call the
+underlying provider for the overridden object.
+
+[source,hcl]
+----
+override_resource {
+  target = aws_instance.backend_api
+  values = {
+    id = "i-mockinstance"
+  }
+}
+
+override_data {
+  target = data.aws_ami.backend_api
+  values = {
+    id = "ami-mockimage"
+  }
+}
+
+run "check_backend_api" {
+  assert {
+    condition     = aws_instance.backend_api.tags.Name == "backend"
+    error_message = "Invalid name tag"
+  }
+}
+----
+
+Both blocks accept `override_during = plan|apply` and MAY be declared at
+file level (applies to every run) or nested inside a specific `run` block
+(takes precedence over the file-level definition).
+
+=== `override_module`
+
+Overrides an entire child module's outputs without creating any of the
+module's resources – useful for stubbing out a submodule the test doesn't
+care about.
+
+[source,hcl]
+----
+override_module {
+  target  = module.networking
+  outputs = {
+    vpc_id = "vpc-mock12345"
+  }
+}
+----
+
+[NOTE]
+======
+For resources/attributes involving repeated nested blocks or collections,
+override values apply uniformly to _every_ instance – you cannot supply
+per-instance override values.
+======
+
+=== Worked mocking example
+
+.tests/mocked.tftest.hcl
+[source,hcl]
+----
+mock_provider "aws" {}
+
+override_resource {
+  target = aws_db_instance.backend_api
+  values = {
+    username = "foo"
+  }
+}
+
+run "check_backend_api" {
+  command = plan
+
+  assert {
+    condition     = aws_instance.backend_api.tags.Name == "backend"
+    error_message = "Invalid name tag"
+  }
+
+  assert {
+    condition     = aws_db_instance.backend_api.username == "foo"
+    error_message = "Invalid database username"
+  }
+}
+----
+
+== The `terraform test` command
+
+----
+$ terraform init
+$ terraform test
+----
+
+[cols="1,3"]
+|===
+| Flag | Purpose
+
+| `-filter=<path>`
+| Limit execution to specific test file(s), eg.
+  `-filter=tests/validations.tftest.hcl`. MAY be repeated.
+
+| `-test-directory=<path>`
+| Override the default `tests` discovery directory. Must be a subdirectory
+  of the configuration root.
+
+| `-verbose`
+| Print the plan or state for every `run` block, not just failures.
+
+| `-json`
+| Machine-readable JSON output.
+
+| `-junit-xml=<path>`
+| Write a JUnit XML test report to the given path (for CI integration).
+  Incompatible with `-cloud-run`.
+
+| `-cloud-run=<module-source>`
+| Execute the tests remotely in HCP Terraform against a private registry
+  module, keeping provider credentials off the local machine. Requires
+  `terraform login`.
+
+| `-parallelism=<n>`
+| Max concurrent plan/apply operations across parallel runs. Default `10`.
+|===
+
+Example CI invocation:
+
+----
+$ terraform test -verbose -junit-xml=test-results.xml
+----
+
+Filtering to one file during local iteration:
+
+----
+$ terraform test -filter=tests/website.tftest.hcl
+----
+
+== Best practices
+
+* Tests SHOULD live under `tests/` – Terraform finds them there by default,
+  and it keeps test scaffolding out of the module's primary files.
+* Prefer `command = plan` for logic-only assertions (naming conventions,
+  conditional resource creation, output shaping) – it's fast and needs no
+  provider credentials. Reserve `command = apply` for genuinely verifying
+  provider-side behavior.
+* Use a `tests/setup/` helper module for test-only fixtures (random
+  suffixes, throwaway networking) rather than polluting the module under
+  test with test-only resources or variables.
+* Split unrelated assertions into separate `run` blocks – a failing
+  assertion still reports which run block it belongs to, and separate runs
+  can be given `expect_failures` independently.
+* Mock (`mock_provider` / `override_resource`) any resource that is slow to
+  provision and not itself the subject of the assertion – this keeps unit
+  tests fast without weakening the assertions that matter.
+* Because `apply`-mode tests provision real (if short-lived) resources,
+  ensure the credentials used for local `terraform test` runs are scoped
+  appropriately, or use `-cloud-run` to execute against HCP Terraform
+  instead of storing credentials locally.
+* Remember tests validate module _authors'_ assumptions – they are not a
+  substitute for consumer-facing `validation`, `precondition`,
+  `postcondition`, or `check` blocks, which are the mechanisms that surface
+  errors to a module's _consumers_.
