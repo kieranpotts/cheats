@@ -11,3 +11,10 @@ Trusted Advisor will advise you on:
 * *Performance* best practices.
 * *Security* best practices.
 * How to achieve *fault tolerance*.
+* *Service limits* (quotas approaching their limit).
+
+The number of checks you get access to depends on your AWS Support plan. On
+Basic and Developer support, you only get a small core set of checks (around 6
+security checks and all service-limit checks — no cost, performance, or fault
+tolerance checks). Business and Enterprise support plans unlock the full set of
+checks (over 100) across all five categories.
