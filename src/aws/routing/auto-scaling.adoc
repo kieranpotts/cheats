@@ -30,9 +30,12 @@ Auto-scaling works like this:
 
 * Across AZs, we define an *auto-scaling group (ASG)*.
 
-* In the ASG, we might define that we want four instances within that group, to
-  maintain a steady state. The auto-scaling rules we define in a
-  *scaling policy*.
+* Every ASG has three core sizing parameters: *Minimum capacity* (never scale
+  below this many instances), *Maximum capacity* (never scale above this many),
+  and *Desired capacity* (the target number of instances the ASG tries to
+  maintain right now, somewhere between the min and max). In the ASG, we might
+  define that we want four instances within that group, to maintain a steady
+  state. The auto-scaling rules we define in a *scaling policy*.
 
 * The instances in the ASG send metrics to CloudWatch — every 5 minutes for
   basic monitoring, or every 1 minute for detailed monitoring.
@@ -114,3 +117,11 @@ ASG to behave. There are a few different types of policy.
   again. It takes a while for dynamic scaling to kick-in, so if you can predict
   changes in demand, then scheduled scaling is a good option to maintain high
   availability.
+
+== Scaling Plans
+
+Everything above describes scaling a single ASG. *AWS Auto Scaling* (the
+broader, cross-service console/API, as distinct from "EC2 Auto Scaling") lets
+you define a *Scaling Plan* that manages scaling across multiple resources and
+services together — ASGs, ECS services, DynamoDB tables, Aurora replicas — from
+one place, using target-tracking scaling for all of them.
