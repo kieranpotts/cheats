@@ -1,0 +1,15 @@
+= AWS media services
+
+== Elastic Transcoder
+
+*Elastic Transcoder* converts media files from their source format into
+versions that will play on other devices, eg. smartphones, tablets, and PCs.
+It's a scalable, cost-effective, easy-to-use way to transcode video and audio
+files without having to manage your own transcoding infrastructure.
+
+Elastic Transcoder is AWS's original, simpler media transcoding service. For
+more advanced broadcast and streaming workflows — live streaming, adaptive
+bitrate packaging, more codec/container options — AWS now points customers
+towards the newer *AWS Elemental Media Services* family (MediaConvert for
+file-based transcoding, MediaLive for live video, MediaPackage for
+packaging/origination, and MediaStore for storage optimized for media).

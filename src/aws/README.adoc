@@ -179,3 +179,4 @@
 * link:./miscellany/iot-core.adoc[IoT Core]
 * link:./miscellany/device-farm.adoc[Device Farm]
 * link:./miscellany/amplify-appsync.adoc[Amplify and AppSync]
+* link:./miscellany/media-services.adoc[Media services]
