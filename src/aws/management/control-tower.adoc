@@ -6,14 +6,14 @@ integrates with other services and features to setup the environment for you,
 including:
 
 * AWS Organizations
-* Security Control Policies (SCPs)
+* Service Control Policies (SCPs)
 * Organizational Units
 * AWS CloudTrail
 * Amazon S3
 * Amazon SNS
 * AWS CloudFormation
 * AWS Service Catalog
-* AWS Single Sign-On (SSO)
+* IAM Identity Center (formerly AWS Single Sign-On (SSO))
 
 Some of the guardrails you can configure with AWS Control Tower include:
 

@@ -28,13 +28,19 @@ The CIDR range notation looks like this:
 * `10.0.0.0/16`
 * `10.0.0.0/8`
 
-The digits between the dots are octets, ie. 8-bit integers between 0 and 254.
+The digits between the dots are octets, ie. 8-bit integers between 0 and 255.
 
 The number after the slash is the number of bits that are fixed in the range. So
 if you see `/24` on the end, this means that the first three octets (8 + 8 + 8 =
-24) are fixed, and the last octet can be any number between 0 and 254. If you
-see `/16` on the end, it means the first two octets are locked, and `/8` means
-only the first octet is locked.
+24) are fixed, and the last octet varies across the range. If you see `/16` on
+the end, it means the first two octets are locked, and `/8` means only the
+first octet is locked.
+
+Within an AWS VPC or subnet, the usable host range for the last octet runs
+from `.1` to `.254`, not `.0` to `.255` — AWS reserves the first four addresses
+and the last address of every subnet's CIDR block (eg. the network address, the
+VPC router, DNS, future use, and the broadcast address), so they can't be
+assigned to resources.
 
 |===
 |CIDR range |Min IPv4 |Max IPv4

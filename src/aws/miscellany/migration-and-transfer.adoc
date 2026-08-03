@@ -14,8 +14,11 @@ applications into EC2 instances. This is ideal for "lift and shift" operations,
 in which you replicate a server (its operating system and applications) verbatim
 into EC2 instances. You can do *test* instances and *cutover* migrations.
 
-There is also an *AWS Server Migration Service (SMS)*, and a *VM Import/Export*
-service. These are older services that are still available.
+There was also an *AWS Server Migration Service (SMS)*, but AWS discontinued
+it (support ended March 2022) — use *AWS Application Migration Service (MGN)*
+instead for lift-and-shift migrations. There is also a *VM Import/Export*
+service, an older service that is still available for importing/exporting VM
+images to/from EC2.
 
 The *AWS Database Migration Service (DMS)* can help you migrate databases to
 RDS, Aurora, RedShift, or other solutions. It includes a

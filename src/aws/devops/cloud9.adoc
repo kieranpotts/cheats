@@ -1,5 +1,10 @@
 = AWS Cloud9
 
+CAUTION: Cloud9 has been closed to new customers since July 25, 2024. AWS is
+not adding new features and is steering users towards CloudShell, IDE toolkits
+(eg. the AWS Toolkit for VS Code/JetBrains), or Kiro. Existing Cloud9
+environments continue to work, but don't plan new work around this service.
+
 *AWS Cloud9* is a *cloud IDE* used to write, run, and debug code.
 
 It has all the features of modern IDEs, including syntax highlighting, code

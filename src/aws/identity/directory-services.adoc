@@ -8,8 +8,10 @@ features, but it is lower in cost. It is an AD implementation based on Samba.
 This is good for smaller implementations.
 
 *AWS Managed Microsoft Active Directory*: This is a fully-managed implementation
-of Microsoft Active Directory running on Windows Server 2012 R2 on AWS
-infrastructure. We can use this option to security connect to EC2 Linux and
+of Microsoft Active Directory, running on a current, AWS-maintained Windows
+Server release on AWS infrastructure (AWS periodically upgrades the underlying
+Windows Server version, so don't rely on a specific version number). We can use
+this option to security connect to EC2 Linux and
 Windows instances, and to synchronize users and federated identities with
 Azure/Microsoft 365. There is also integration with services that support
 authentication and authorization using AWS Directory Services, such as Console,

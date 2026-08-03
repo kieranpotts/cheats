@@ -25,6 +25,9 @@ Components of MSK include:
   Clusters typically contain multiple brokers to ensure data reliability and
   availability.
 
-* *Zookeeper nodes*: Manage and coordinate the Kafka brokers. MSK automatically
-  sets up a highly available *Zookeeper ensemble* (ie. Zookeeper nodes) for
-  every Kafka cluster.
+* *Zookeeper nodes*: Historically, Zookeeper nodes managed and coordinated the
+  Kafka brokers, and MSK automatically set up a highly available *Zookeeper
+  ensemble* for every cluster. MSK now also supports *KRaft mode*, which
+  removes the Zookeeper dependency entirely (consistent with the direction
+  upstream Apache Kafka has taken) — new clusters can be created in either mode,
+  and Zookeeper-based clusters are no longer the only option.

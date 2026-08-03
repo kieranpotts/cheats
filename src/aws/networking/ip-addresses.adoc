@@ -25,7 +25,11 @@ Public IP addresses will be lost when the instance is dropped (but they are
 retained when instances are simply rebooted). Also, public IP addresses cannot
 be moved from one instance to another.
 
-Public IP addresses are free of charge.
+CAUTION: Since February 1, 2024, AWS charges an hourly rate (around
+$0.005/hour) for _every_ public IPv4 address — auto-assigned public IPs and
+Elastic IPs alike — whether or not the address is attached to a running
+resource. Public IPv4 addresses are no longer free of charge; only private IP
+addresses and IPv6 addresses remain free.
 
 == Private IP addresses
 
@@ -65,9 +69,12 @@ As with standard public IP addresses, static public addresses are associated
 with the corresponding private IP addresses of the instances to which they are
 assigned.
 
-You are not charged for _using_ elastic IP address, but you are charged for
-_not using_ them. This is indented to discourage hoarding of public IPv4
-addresses, which are in short supply.
+As of February 2024, AWS charges for _all_ public IPv4 addresses, whether
+they're in use or idle (see the caution note above) — the older model, where
+you were only charged for an unattached/idle Elastic IP address, no longer
+applies. The current flat per-address charge is intended to reflect the
+scarcity of public IPv4 addresses generally, not just to discourage hoarding of
+unused ones.
 
 Static IP addresses can be useful where you want to have a fixed address for a
 resource, for example for the purpose of allow-listing a resource in a firewall

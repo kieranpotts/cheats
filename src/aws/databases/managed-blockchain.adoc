@@ -1,5 +1,12 @@
 = AWS Managed Blockchain
 
+CAUTION: AWS announced in 2024 that it is sunsetting the *Hyperledger Fabric*
+framework within Managed Blockchain, on a wind-down timeline. The Ethereum
+Access (managed node/query) side of the service is not affected by this
+announcement. Don't build new private-network Hyperledger Fabric workloads on
+this service — check current AWS documentation for the exact retirement date
+before committing to it.
+
 *Amazon Managed Blockchain* is what it says it is on the tin. It is a
 fully-managed service for joining public and private blockchain networks using
 Hyperledger Fabric and Ethereum.

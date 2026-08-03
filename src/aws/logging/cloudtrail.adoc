@@ -12,8 +12,9 @@ By default, management events are logged and retained for 90 days. But if we
 create a CloudTrail _Trail_, we can capture those events in S3 and retain them
 indefinitely. A Trail can be within a region, or all regions.
 
-*CloudWatch Events* can be triggered based on API calls made to CloudTrail. So,
-when we record in CloudTrail a certain event, we can have CloudWatch Events
-trigger something based on that.
+*Amazon EventBridge* (formerly CloudWatch Events, renamed in 2019) can be
+triggered based on API calls made to CloudTrail. So, when we record in
+CloudTrail a certain event, we can have EventBridge trigger something based on
+that.
 
 CloudTrail events can also be streamed to CloudWatch Logs.

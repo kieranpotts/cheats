@@ -12,9 +12,14 @@ The following services help you to manage security in your AWS environments.
 * You can configure security standards to validate your environments against,
   including:
 
-** AWS Foundational Security Best Practices v1.0.0
-** CIS AWS Foundations Benchmark v1.2.0
-** PCI DSS v3.2.1
+** AWS Foundational Security Best Practices
+** CIS AWS Foundations Benchmark (now on v3.0.0, up from the original v1.2.0/
+   v1.4.0)
+** PCI DSS v4.0/v4.0.1 (v3.2.1 was retired industry-wide in 2024)
+
+NOTE: Check the Security Hub console for the current list and versions of
+supported standards — these are periodically updated by AWS and by the
+standards bodies themselves.
 
 == AWS Security Bulletins
 

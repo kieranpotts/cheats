@@ -11,6 +11,7 @@ The client application sends application logs and/or system logs to CloudWatch.
 Logs can also be sent from AWS Lambda functions, which just require the
 necessary permissions to add CloudWatch Logs.
 
-The *Amazon Elasticsearch Service* can be integrated with CloudWatch to enable
-real-time processing, using something called a *subscription filter*. AWS Lambda
-can also be used for real-time processing.
+*Amazon OpenSearch Service* (formerly Amazon Elasticsearch Service, renamed in
+2021) can be integrated with CloudWatch to enable real-time processing, using
+something called a *subscription filter*. AWS Lambda can also be used for
+real-time processing.

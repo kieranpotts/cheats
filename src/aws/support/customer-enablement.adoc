@@ -5,13 +5,18 @@ following.
 
 == AWS IQ
 
-AWS IQ is a marketplace to help customers find, collaborate with, and pay
-AWS-certified third-party experts for on-demand project work. It's a way to get
-help with your AWS projects from experts who have been vetted by AWS (through
-certification and proof of experience).
+CAUTION: AWS IQ is being retired (fully shut down as of May 28, 2026, following
+a phased wind-down that began in May 2025). AWS points customers to
+*AWS Marketplace Professional Services* as the replacement for finding vetted
+third-party experts.
 
-The platform includes secure collaboration tools, secure messaging, project
-tracking, and other tools. IQ also simplifies the payment process, using AWS's
+AWS IQ was a marketplace to help customers find, collaborate with, and pay
+AWS-certified third-party experts for on-demand project work. It was a way to
+get help with your AWS projects from experts who had been vetted by AWS
+(through certification and proof of experience).
+
+The platform included secure collaboration tools, secure messaging, project
+tracking, and other tools. IQ also simplified the payment process, using AWS's
 secure payment infrastructure.
 
 == AWS Managed Services (AMS)

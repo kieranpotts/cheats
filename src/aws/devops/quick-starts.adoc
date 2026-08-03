@@ -1,6 +1,11 @@
 = AWS Quick Starts
 
-*AWS Quick Starts* are built by AWS solutions architects and partners to help
+CAUTION: The Quick Starts program has been discontinued and superseded by the
+*AWS Solutions Library*, which now hosts the equivalent reference
+deployments/guidance. Treat this entry as historical context rather than a
+description of a current, actively-maintained AWS offering.
+
+*AWS Quick Starts* were built by AWS solutions architects and partners to help
 you deploy popular technologies on AWS, based on AWS best practices for security
 and high availability.
 

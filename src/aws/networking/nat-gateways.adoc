@@ -134,7 +134,7 @@ gateway. But otherwise it works in just the same way as a NAT gateway.
 |Managed by AWS.
 
 |Scale-up manually and use enhanced networking.
-|Elastic scalability up to 45Gbps.
+|Elastic scalability, automatically scaling up to 100Gbps.
 
 |No high availability by default, but you can achieve HA by deploying multiple NATs in multiple subnets.
 |Automatic HA within an availability zone, and can be placed in multiple AZs.

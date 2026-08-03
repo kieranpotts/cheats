@@ -1,10 +1,12 @@
 = AWS FSx
 
-FSx provides fully-managed third-party file systems. Specifically, two types of
-file system are available:
+FSx provides fully-managed third-party file systems. There are four file system
+types available:
 
-* FSX for Windows File Server
-* FSX for Lustre
+* FSx for Windows File Server
+* FSx for Lustre
+* FSx for NetApp ONTAP
+* FSx for OpenZFS
 
 *FSx for Windows File Server* is for Windows-based applications. It provides a
 fully-managed native Windows file system, with full support for the SMB
@@ -25,3 +27,15 @@ clients, via a VPN or a Direct Connection.
   POSIX-compliant file system interface. It can also be accessed via on-premises
   clients, via a VPN or Direct Connection — indeed, this is commonly used for
   *cloud bursting* and *data migration* use cases.
+
+* *FSx for NetApp ONTAP* provides a fully-managed NetApp ONTAP file system,
+  supporting NFS, SMB, and iSCSI protocols simultaneously. It's a good fit for
+  migrating existing on-premises NetApp workloads to AWS, and offers features
+  like storage efficiency (deduplication, compression), snapshots, and
+  cross-region replication.
+
+* *FSx for OpenZFS* provides a fully-managed file system built on the
+  open-source OpenZFS file system, supporting the NFS protocol. It offers high
+  performance, low-latency access, and ZFS features like snapshots and
+  compression — a good option for Linux-based workloads migrating from
+  on-premises ZFS or other NFS file servers.

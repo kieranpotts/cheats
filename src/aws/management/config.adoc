@@ -7,7 +7,7 @@ The primary use case for AWS Config is to evaluate your AWS resource
 configurations against desired configurations. Services such as EC2, ELB, and
 RDS will notify AWS Config of configuration changes. AWS Config will then record
 that information in S3. You can then use AWS Config to send notifications with
-SNS, or send alerts via CloudWatch Events (and maybe trigger Lambda functions,
+SNS, or send alerts via EventBridge (and maybe trigger Lambda functions,
 etc.).
 
 We can also use *Systems Manager Automation* to automatically remediate

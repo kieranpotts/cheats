@@ -26,13 +26,24 @@ database instance.
   and low latency needs. It is possible to failover to a secondary instance in
   another region.
 
-* *Multi-master*: This is a *preview* feature that will allow the scaling out of
-  write operations within a region.
+* *Multi-master*: Aurora MySQL multi-master allowed multiple writer instances
+  in a region. CAUTION: AWS has deprecated this feature — it's no longer
+  offered for new clusters, so don't rely on it in new designs.
 
-* *Serverless*: On-demand, auto-scaling configuration. Does not support read
-  replicas or public IPs. Can access only through VPC or Direct Connect (not a
-  VPN). (Serverless means the database is not running all the time; it gets
-  instantiated only once it starts receiving traffic.)
+* *Serverless*: On-demand, auto-scaling configuration. There are two
+  generations, with quite different capabilities:
++
+--
+** *Serverless v1* (the original version): does not support read replicas or
+   public IPs, and can be accessed only through a VPC or Direct Connect (not a
+   VPN). The database fully pauses when idle and resumes on the next
+   connection.
+** *Serverless v2* (current generation): scales instantly and granularly based
+   on load, supports read replicas, Global Database, and normal VPC networking,
+   and can be mixed with provisioned instances in the same cluster. It doesn't
+   fully pause to zero capacity the way v1 does. For new projects, use
+   Serverless v2.
+--
 ****
 
 There must be a single primary database instance, which is the only instance

@@ -56,6 +56,16 @@ Kibana to search, analyze, and visualize that data.
 * Create the domain with the VPC.
 * For sensitive data, use node-to-node encryption, and encryption at rest.
 
+== OpenSearch Serverless
+
+Alongside the provisioned-domain model described above, there is also
+*OpenSearch Serverless*, which automatically provisions and scales compute and
+storage based on demand — no need to size instances, count nodes, or plan
+storage in advance. It's billed on usage (OpenSearch Compute Units) rather than
+per-instance. The best-practices guidance above (three AZs, dedicated master
+nodes, sizing in multiples of three) applies to provisioned domains; Serverless
+handles that scaling and redundancy for you automatically.
+
 == AWS CloudSearch
 
 *CloudSearch* is an older, simpler managed search service that predates

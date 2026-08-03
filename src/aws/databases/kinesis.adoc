@@ -14,14 +14,16 @@ The commonality here is fairly large but consistent streams of small individual
 units of data. Kinesis is optimized to handle data streams like these.
 
 *Kinesis Data Streams* is a service that allows data producers to store data in
-shards for up to 7 days. Consumers then process the data and save it to another
-service.
+shards, with a default retention of 24 hours, extendable up to 365 days.
+Consumers then process the data and save it to another service.
 
 *Kinesis Data Firehose* serves data directly to another service, eg. S3, Splunk,
-Redshift, or Elasticsearch. It is completely automated, elastically scalable,
+Redshift, or OpenSearch. It is completely automated, elastically scalable,
 and there are no shards — just a stream of data.
 
-*Kinesis Data Analytics* provides real-time SQL processing on streaming data.
+*Kinesis Data Analytics* provided real-time SQL and Apache Flink processing on
+streaming data. AWS rebranded this service to *Amazon Managed Service for
+Apache Flink* in August 2023 — same underlying service, new name.
 
 There is also a *video analytics* service in the Kinesis family.
 

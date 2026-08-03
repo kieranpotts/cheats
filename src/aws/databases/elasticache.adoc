@@ -17,4 +17,8 @@ from a factory floor, and serving that data to real-time dashboards.
 
 ElastiCache can also be used as a conventional key-value store.
 
-ElastiCache runs on EC2 instances.
+ElastiCache traditionally runs on provisioned EC2 instances (nodes), which you
+size and cluster yourself. There is also *ElastiCache Serverless*, which
+automatically scales compute and storage based on your application's traffic
+patterns, with no nodes to provision or manage — a good option when you don't
+want to plan capacity in advance, or when traffic is spiky or unpredictable.

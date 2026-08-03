@@ -4,8 +4,17 @@
 Analytics Processing (OLAP) use cases on very large volumes of aggregated data,
 stored in relational formats.
 
-Redshift runs on EC2 instances, so you scale up by changing the instance type in
-the normal way.
+Redshift traditionally runs on provisioned EC2 instances, so you scale up by
+changing the instance type in the normal way. Modern clusters typically use
+*RA3 node types*, which decouple compute from storage — data lives in managed
+storage backed by S3, with local caching for performance, so you can scale
+compute independently of the amount of data stored.
+
+There is also *Redshift Serverless*, which runs and scales automatically based
+on workload demand, and bills based on capacity used — no cluster/instance
+sizing decisions required. This is a good option when you don't want to manage
+node types and cluster sizing, or when your query workload is intermittent or
+unpredictable.
 
 Redshift automatically keeps three copies of your data, for durability. It can
 also do continuous, incremental backups.

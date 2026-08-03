@@ -4,7 +4,9 @@ The *AWS Code* family is a suite of CI/CD tools that help you automate the
 software release process. The tools in the *AWS Code* family are:
 
 * *AWS CodeCommit*: A fully managed source control service for hosting Git
-  repositories — equivalent to Bitbucket.
+  repositories — equivalent to Bitbucket. CAUTION: closed to new customers
+  since July 25, 2024 — existing repositories continue to work, but don't plan
+  new projects around it.
 
 * *AWS CodeBuild*: CI service to build and test code automatically — equivalent
   to Jenkins.
@@ -17,3 +19,4 @@ software release process. The tools in the *AWS Code* family are:
 
 * *AWS CodeStar*: IDE extension providing a unified user interface to the AWS
   Code family tools, plus other AWS devops tools such as CloudFormation.
+  CAUTION: reached end-of-support for creating new projects on July 31, 2024.

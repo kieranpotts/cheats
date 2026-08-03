@@ -89,8 +89,9 @@ Fargate automatically provisions the compute resources needed to run our
 containers, and you are charged for running tasks (rather than running
 instances).
 
-For file system mounting, only EFS is supported with Fargate. EBS and FSx are
-not supported.
+For file system mounting, EFS is supported with Fargate, as is EBS (added at
+re:Invent 2023) for Fargate tasks that need per-task block storage. FSx is
+still not supported with Fargate.
 
 == IAM roles
 

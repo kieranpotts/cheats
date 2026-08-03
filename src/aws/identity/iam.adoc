@@ -68,8 +68,8 @@ allows all actions on every resource in an AWS account.
 [source,json]
 ----
 {
-  "version": "YYYY-MM-DD",
-  "statement": [
+  "Version": "YYYY-MM-DD",
+  "Statement": [
     {
       "Effect": "Allow", // "Deny always overrides "Allow"
       "Action": "*", // = all actions
@@ -78,6 +78,10 @@ allows all actions on every resource in an AWS account.
   ]
 }
 ----
+
+NOTE: IAM policy documents are case-sensitive. The top-level keys must be
+`Version` and `Statement`, capitalized exactly as shown — lowercase variants
+will cause the policy to be rejected.
 
 There are two categories of policies:
 

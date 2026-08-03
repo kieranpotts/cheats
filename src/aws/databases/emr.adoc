@@ -18,3 +18,9 @@ Data storage options include:
 * DynamoDB
 * RDS
 * HDFS (also from Hadoop)
+
+There is also *EMR Serverless*, which runs Spark and Hive workloads without
+you having to provision, configure, or manage the underlying clusters — you
+just submit a job and pay for the compute and memory resources it consumes.
+This is a good option when you don't want to size and manage EC2 clusters
+yourself, or when your workload is intermittent.

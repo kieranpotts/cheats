@@ -1,6 +1,14 @@
 = AWS QLDB
 
-*Amazon QLDB* is a fully-managed *ledger database* for immutable change history.
+CAUTION: AWS announced the discontinuation of Amazon QLDB in 2024. New
+customer sign-ups were cut off immediately, and existing customers were
+supported only through a wind-down period ending around mid-2025. Don't build
+new solutions on QLDB — AWS suggests self-managed ledger databases or
+alternative approaches (eg. an immutable, cryptographically-verifiable log
+built on top of DynamoDB or S3 Object Lock) for new ledger use cases.
 
-It provides cryptographically verifiable transaction logging — ie. it is a
-ledger that is very difficult to manipulate in any way.
+*Amazon QLDB* was a fully-managed *ledger database* for immutable change
+history.
+
+It provided cryptographically verifiable transaction logging — ie. it was a
+ledger that was very difficult to manipulate in any way.
