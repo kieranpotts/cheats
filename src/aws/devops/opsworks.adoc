@@ -1,0 +1,24 @@
+= AWS OpsWorks
+
+*AWS OpsWorks* is a configuration-management service that provides managed
+*Chef* and *Puppet* instances. It lets you use Chef recipes or Puppet
+manifests you may already have (or want to write) to automate how servers are
+configured, deployed, and maintained — including tasks like software
+installation, OS patching, and backups.
+
+There are three flavours:
+
+* *OpsWorks for Chef Automate*: a fully-managed Chef Automate server, for
+  teams that want to author and run their own Chef recipes.
+* *OpsWorks for Puppet Enterprise*: a fully-managed Puppet Enterprise master,
+  equivalent in purpose to the Chef Automate option but for Puppet users.
+* *OpsWorks Stacks*: AWS's own older, simpler model of "stacks" and "layers"
+  (eg. a load balancer layer, an app server layer, a database layer), using a
+  built-in Chef-based agent — this predates the Chef Automate/Puppet
+  Enterprise options above.
+
+OpsWorks is aimed at organizations already invested in Chef or Puppet
+configuration-management tooling who want to run it on AWS without operating
+the Chef/Puppet servers themselves. If you don't already have Chef/Puppet
+expertise or existing recipes/manifests, other tools (CloudFormation, CDK,
+Elastic Beanstalk, Systems Manager) are usually a simpler starting point.
