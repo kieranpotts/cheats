@@ -26,6 +26,22 @@ standards bodies themselves.
 * Security and privacy events affecting AWS services.
 * Published on a web page, and also available via RSS feed.
 
+== Responding to a suspected account compromise
+
+If you suspect your AWS account or credentials have been compromised, AWS's
+recommended incident-response steps are:
+
+* Rotate the root user's password immediately, and confirm MFA is (still)
+  enabled on the root user.
+* Rotate/deactivate the credentials (passwords and access keys) of any IAM
+  users or roles that may have been affected.
+* Identify and delete/terminate any unauthorized resources that were created
+  by the attacker (eg. rogue EC2 instances, often used for cryptomining).
+* Review CloudTrail for the full history of what the compromised credentials
+  were used to do.
+* Contact AWS Support if you need help, especially if unexpected charges have
+  been incurred as a result of the compromise.
+
 == AWS Trust & Safety Team
 
 You should contact the AWS Trust & Safety Team if you find AWS resources that

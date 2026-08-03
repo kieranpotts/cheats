@@ -21,11 +21,26 @@ which include:
 * Elastic Beanstalk environments
 * Elastic Container Service
 * Fargate
-* Elasticsearch
+* OpenSearch Service (formerly Elasticsearch Service)
 * FSx
 * Transit Gateway
+* Bedrock AgentCore
 * S3-hosted applications (but targeting S3 buckets directly is strictly
   prohibited)
+
+Testing that includes *Command and Control (C2)* activity always requires
+AWS's prior approval, regardless of which service is being tested. Outbound
+penetration testing is specifically prohibited for API Gateway and Bedrock
+AgentCore.
+
+This permitted-services policy only covers testing of your _own_ resources —
+you may never assess AWS's own infrastructure or the underlying AWS services
+themselves. If you're a reseller of AWS services, you're responsible for your
+customers' testing activity too.
+
+You may use whatever tools you like, but you're solely responsible for
+ensuring any DoS-capable functionality in those tools is disabled or otherwise
+rendered harmless before use.
 
 Prohibited activities include:
 
@@ -35,10 +50,23 @@ Prohibited activities include:
 * Port flooding
 * Protocol flooding
 * Request flooding (login request flooding, API request flooding)
+* S3 bucket takeover and subdomain takeover
 
 In addition, Denial of Service (DoS), Distributed Denial of Service (DDoS),
 Simulated DoS, and Simulated DDoS are subject to the DDoS Simulation Testing
 policy, and are essentially all prohibited by default.
+
+== Simulated Events
+
+A separate category of testing — Red/Blue/Purple team exercises with covert
+simulation or C2 hosting, iPerf testing, simulated phishing campaigns, malware
+testing, network stress/load testing, and DDoS simulations — requires
+submitting a *Simulated Events form* to AWS at least *2 weeks* in advance. AWS
+aims to respond within *2 business days*.
+
+If a penetration test uncovers a vulnerability in an AWS tool or service
+itself (as opposed to your own application), you must report it to AWS
+Security within *24 hours* of completing the test.
 
 For more information: +
 https://aws.amazon.com/security/penetration-testing/

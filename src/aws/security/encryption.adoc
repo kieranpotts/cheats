@@ -40,6 +40,11 @@ For example, when we are using CloudFront to distribute content, we can use ACM
 to create a certificate for our domain, and then associate that certificate with
 our CloudFront distribution.
 
+IAM can also store SSL/TLS *server certificates*, but this is a legacy
+capability — AWS recommends using ACM instead wherever it's available, and only
+falling back to storing certificates in IAM for the small number of services or
+regions that don't yet support ACM.
+
 === AWS Key Management Service (KMS)
 
 *AWS Key Management Service (KMS)* is a service that can be used to create and
