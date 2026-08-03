@@ -28,4 +28,23 @@ availability and fault tolerance (if one AZ goes down, you can failover to
 resources in other AZs in the same region). Distributing load across multiple
 AZs also allows for better resource balancing and scaling.
 
-You can create multiple VPCs in a region, up to a maximum of five.
+You can create multiple VPCs in a region, up to a default (raisable) quota of
+five.
+
+== VPC endpoints
+
+A *VPC endpoint* lets resources in a VPC talk privately to supported AWS
+services (eg. S3, DynamoDB) without the traffic ever leaving the AWS network —
+so no internet gateway, NAT gateway, or VPN/Direct Connect is required. There
+are two types:
+
+* *Gateway endpoints*: Used only for S3 and DynamoDB. You add a route to the
+  service in your route table, pointing at the endpoint. Free of charge.
+* *Interface endpoints* (powered by AWS PrivateLink): Create an ENI with a
+  private IP in your subnet for the target service (most other AWS services,
+  and some third-party/partner services). Billed hourly plus per-GB data
+  processing.
+
+VPC endpoints are commonly used to keep traffic to AWS services off the public
+internet entirely, even from resources in private subnets that have no NAT
+gateway at all.
