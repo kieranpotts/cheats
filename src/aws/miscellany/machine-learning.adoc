@@ -3,6 +3,24 @@
 This is a fast-growing area of cloud services. Below are just a few of the
 services available.
 
+* *Amazon Bedrock* is a fully-managed service for building generative AI
+  applications using foundation models (FMs) from AWS and third-party providers
+  (eg. Anthropic, Meta, Mistral, Amazon's own Titan/Nova models) via a single
+  API. It handles model hosting, so you don't manage any infrastructure. It
+  supports fine-tuning FMs with your own data, Retrieval-Augmented Generation
+  (RAG) via *Knowledge Bases*, and building autonomous multi-step *Agents* that
+  can call your own APIs and data sources. This is AWS's primary entry point
+  for generative AI/LLM use cases.
+
+* *Amazon SageMaker* is AWS's flagship end-to-end machine learning platform. It
+  covers the full ML lifecycle: notebooks for data exploration, built-in and
+  custom algorithms for training, automated hyperparameter tuning, one-click
+  model deployment/hosting, and MLOps features (pipelines, model registry,
+  monitoring for data/model drift). Where Bedrock is aimed at consuming
+  pre-built foundation models, SageMaker is aimed at building, training, and
+  operationalizing your own custom ML models (though SageMaker can also be used
+  to fine-tune and deploy foundation models).
+
 * *AWS Rekognition* is used to identify objects, scenes, and text in images and
   videos, and to perform facial analysis.
 

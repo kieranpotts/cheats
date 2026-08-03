@@ -16,7 +16,17 @@ and GuardDuty.
 compromises, instance compromises, bucket compromises, and malicious
 reconnaissance. It does continuous monitoring of events across a number of
 services: CloudTrail Management Events, CloudTrail S3 Data Events, VPC Flow
-Logs, and DNS Logs.
+Logs, and DNS Logs. GuardDuty also offers several optional protection plans
+that extend it beyond these original data sources: Malware Protection (scans
+EBS volumes attached to suspicious EC2/container workloads), EKS Protection,
+RDS Protection, Lambda Protection, and Runtime Monitoring.
+
+*Amazon Inspector* automatically and continuously scans workloads for software
+vulnerabilities and unintended network exposure. It covers EC2 instances,
+container images in ECR, and Lambda functions, and it generates a risk score
+for each finding so you can prioritize remediation. Unlike GuardDuty (which
+looks for signs of active threats/malicious behavior), Inspector is about
+finding vulnerabilities and misconfigurations _before_ they can be exploited.
 
 *Amazon Macie* is a fully-managed data security and data privacy service. It
 uses machine learning and pattern matching to discover, monitor, and protect
