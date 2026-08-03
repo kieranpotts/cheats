@@ -1,0 +1,26 @@
+= AWS Backup
+
+*AWS Backup* is a centralized, fully-managed backup service that lets you
+define and manage backup policies from one place, rather than configuring
+backups separately for each individual service.
+
+You define *backup plans* (schedule, retention, lifecycle rules for moving
+older backups to colder/cheaper storage) and assign resources to them either
+individually or by tag. AWS Backup then handles taking the backups on schedule,
+across a wide range of supported services, including:
+
+* EC2 (as EBS snapshots)
+* EBS volumes
+* RDS and Aurora databases
+* DynamoDB tables
+* EFS file systems
+* FSx file systems
+* Storage Gateway volumes
+
+Backups are stored in *backup vaults*, which can be encrypted with KMS, and
+can be copied cross-region or cross-account for disaster recovery and
+compliance purposes. AWS Backup also provides centralized monitoring, audit
+reporting (for compliance frameworks), and access control (via IAM and vault
+access policies), so you can see and control backup activity across your
+entire account/organization from a single console, instead of piecing it
+together service-by-service.

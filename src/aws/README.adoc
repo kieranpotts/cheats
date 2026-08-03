@@ -101,6 +101,7 @@
 * link:./storage/fsx.adoc[FSx]
 * link:./storage/storage-gateway.adoc[Storage Gateway]
 * link:./storage/drs.adoc[Elastic Disaster Recovery service (DRS)]
+* link:./storage/backup.adoc[AWS Backup]
 
 == Databases
 
