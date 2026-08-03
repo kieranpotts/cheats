@@ -1,0 +1,40 @@
+= AWS Elastic Kubernetes Service (EKS)
+
+*Elastic Kubernetes Service (EKS)* is a managed service for running upstream
+Kubernetes on AWS. Where ECS is AWS's own proprietary container orchestrator,
+EKS runs the same Kubernetes you'd get on-premises or with any other cloud
+provider — it is certified Kubernetes conformant, so existing Kubernetes
+tooling, manifests, and Helm charts work against it largely unchanged.
+
+EKS manages the Kubernetes *control plane* for you: it runs and scales the
+API server and `etcd` across multiple availability zones, and automatically
+detects and replaces unhealthy control plane nodes. You don't manage this
+control plane yourself, but you do pay an hourly charge per cluster for it,
+separate from the cost of the worker nodes.
+
+== Worker nodes
+
+As with ECS, you have a choice of launch types for the worker nodes that
+actually run your pods:
+
+* *Self-managed nodes*: You provision and manage your own EC2 instances (via
+  an Auto Scaling group) and join them to the cluster yourself.
+* *Managed node groups*: EKS provisions and manages the EC2 instances for you,
+  handling provisioning, updates, and graceful termination — but the instances
+  still run in your account and you're billed for them as normal EC2.
+* *Fargate*: Pods run on serverless compute, with no EC2 instances to manage
+  at all, similar to Fargate for ECS.
+
+== EKS Anywhere and EKS Distro
+
+*EKS Distro* is the same Kubernetes distribution that AWS uses for EKS,
+packaged so you can run it yourself, anywhere. *EKS Anywhere* builds on this
+to let you run EKS-consistent clusters on your own on-premises infrastructure.
+
+== EKS vs ECS
+
+Choose EKS over ECS if you need portability with other Kubernetes
+environments, want to use the broader Kubernetes ecosystem (Helm, Operators,
+CRDs, etc.), or are migrating an existing Kubernetes workload into AWS. Choose
+ECS if you want a simpler, AWS-native orchestrator with less operational
+overhead and no Kubernetes concepts to learn.

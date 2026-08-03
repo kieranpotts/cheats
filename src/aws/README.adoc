@@ -89,6 +89,7 @@
 * link:./compute/ec2.adoc[EC2]
 * link:./compute/lightsail.adoc[Lightsail]
 * link:./compute/ecs.adoc[Elastic Container Service (ECS)]
+* link:./compute/eks.adoc[Elastic Kubernetes Service (EKS)]
 * link:./compute/batch.adoc[Batch]
 
 == Storage
