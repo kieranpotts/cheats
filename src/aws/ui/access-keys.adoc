@@ -9,6 +9,12 @@ There are two parts:
 * *Access key ID*
 * *Secret access key*
 
+The secret access key is shown only once, at the moment the key pair is
+created — if you lose it, you can't retrieve it again, only create a new key
+pair. Each IAM user can have a maximum of two access key pairs at a time (this
+limit exists to support key rotation without downtime: create a new key,
+update your application, then deactivate/delete the old one).
+
 Customers should rotate their access keys regularly.
 
 In addition, the AWS *Security Token Service (STS)* can be used to generate
