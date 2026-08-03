@@ -26,6 +26,13 @@ RDS runs in EC2 instances. So you need to choose an instance type when you
 launch a new RDS database. A single EC2 instance may hold one or more
 user-defined databases.
 
+Before you can launch an RDS (or Aurora) instance into a VPC, you need a
+*DB subnet group* — a collection of subnets (spanning at least two AZs) that
+tells RDS which subnets it's allowed to place database instances into. This is
+what makes Multi-AZ failover possible: RDS needs pre-designated subnets in at
+least two AZs to be able to place the standby in a different AZ from the
+primary.
+
 RDS can be scaled _up_ by upgrading the instance type in the normal way. For
 example, you might need to scale up to achieve better write performance. Scaling
 up requires an outage, as you will need to shut down then restart the
