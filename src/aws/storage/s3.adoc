@@ -107,11 +107,36 @@ to enforce data retention compliance requirements.
 
 == S3 lifecycle management
 
-S3 buckets can be transitioned to different storage classes. Generally, you can
-only transition a bucket to a lower-cost storage class, eg. from S3 Standard to
-S3 Standard-IA, and not the other way around.
+Objects (not whole buckets) can be transitioned to different storage classes.
+Transitions only move in one direction, towards lower cost/colder storage —
+eg. from S3 Standard to S3 Standard-IA, and never back the other way. The
+supported transitions form a one-way path: Standard → Standard-IA/
+Intelligent-Tiering/One Zone-IA → Glacier Instant/Flexible Retrieval → Glacier
+Deep Archive. Notably, Glacier Flexible Retrieval can only transition onward to
+Deep Archive (not to any Standard/IA class), and Deep Archive can't transition
+anywhere else at all — to move an object out of Deep Archive you have to
+restore it and copy it into a new object.
 
-You can use *lifecycle management* to set conditions under which buckets should
+By default, objects smaller than *128 KB* are not transitioned by any lifecycle
+rule (small objects rarely save money once archival storage's per-object
+overhead is factored in) — this behavior can be overridden per-rule with
+`ObjectSizeGreaterThan`/`ObjectSizeLessThan` filters, or globally via the
+`x-amz-transition-default-minimum-object-size` setting.
+
+Some storage classes also have a *minimum storage duration* before you can
+transition or delete an object without an early-deletion charge for the
+remaining duration: 90 days for Glacier Instant/Flexible Retrieval, and 180
+days for Glacier Deep Archive. This means you can't chain two transitions in a
+single lifecycle rule faster than these minimums allow — you'd need separate
+rules, and accept the associated charges.
+
+Restoring an object from a Glacier class creates a *temporary* restored copy —
+the object's storage class doesn't actually change during the restore, and
+you're billed for both the archive-rate storage and the temporary
+restored-copy storage. Only one restore request can be in progress for a given
+object at a time.
+
+You can use *lifecycle management* to set conditions under which objects should
 be automatically transitioned to other storage classes.
 
 Lifecycle management can also be used to define when objects should be
