@@ -1,0 +1,20 @@
+= AWS Managed Services (AMS)
+
+*AWS Managed Services (AMS)* is an ongoing, subscription-based service in
+which AWS itself operates your AWS infrastructure on your behalf, following
+ITIL-aligned best practices. It's aimed at enterprises that want to run
+production workloads on AWS without building out their own cloud operations
+team.
+
+AMS takes on day-to-day operational tasks such as:
+
+* Provisioning and change management (via change requests).
+* Monitoring and incident management.
+* Patch management.
+* Security and compliance monitoring.
+* Backup management.
+
+The goal is to reduce the operational overhead and risk of running
+infrastructure yourself, while still giving you the underlying AWS account and
+resources. It's a managed operations layer on top of your existing AWS
+environment, not a separate platform.

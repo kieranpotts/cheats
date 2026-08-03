@@ -43,6 +43,7 @@
 * link:./management/config.adoc[Config]
 * link:./management/health.adoc[Health APIs and dashboards]
 * link:./management/artifact.adoc[AWS Artifact]
+* link:./management/managed-services.adoc[AWS Managed Services (AMS)]
 
 == Optimization tools
 
