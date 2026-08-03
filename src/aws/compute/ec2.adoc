@@ -25,6 +25,10 @@ EC2 instances typically run Linux or Windows. There is also a version that runs
 macOS — but this is basically dedicated hardware and is therefore relatively
 expensive.
 
+See link:../billing/resource-pricing.adoc[Resource pricing] for the EC2
+purchasing options (On-Demand, Reserved Instances, Spot, Dedicated Hosts/
+Instances, Savings Plans).
+
 == EC2 instance types
 
 |===
