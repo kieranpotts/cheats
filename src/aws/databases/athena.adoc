@@ -24,9 +24,21 @@ Athena can query data in CSV, TSV, JSON, Parquet, and ORC formats.
 To optimize Athena for performance you can:
 
 * Partition your data.
-* Use compression (Parquet or ORC are recommended).
-* Optimize file sizes.
+* *Bucket* your data — distribute records into a fixed number of files based
+  on the values of one or more columns, which is especially useful for
+  high-cardinality columns (eg. user or device IDs) that aren't good
+  partitioning candidates.
+* Use compression (Parquet or ORC are recommended). Bear in mind that most
+  compressed text formats aren't splittable, so balance the number of
+  compressed files you have against the parallelism you want.
+* Optimize file sizes — aim for files of around 128MB, to balance per-file
+  read overhead against the degree of parallelism Athena can achieve.
 * Optimize columnar data store generation.
-* Optimize ORDER BY and GROUP BY.
+* Optimize ORDER BY and GROUP BY. For GROUP BY, use the `ARBITRARY()` function
+  to pick any value from a group, rather than including redundant columns in
+  the GROUP BY clause just to satisfy the query.
+* Optimize joins: put the larger table on the left side of the join and the
+  smaller table on the right — Athena builds an in-memory lookup table from
+  the right-side table, so a smaller right-side table uses less memory.
 * Use approximate functions.
 * Only include the columns you need.
