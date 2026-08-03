@@ -8,5 +8,19 @@ Connections are made over the public internet, though encrypted. If this is not
 desirable, for security or performance reasons, you can use *AWS Direct Connect*
 instead.
 
-The AWS VPN is relatively easy to set up and manage, but it has less security
-and performance than Direct Connect, and more limited access to AWS services.
+The AWS VPN is relatively easy to set up and manage, but it has less
+performance and more latency than Direct Connect (being routed over the public
+internet), and more limited access to AWS services.
+
+A Site-to-Site VPN connection has two named endpoints:
+
+* *Virtual Private Gateway (VGW)*: the AWS-side VPN concentrator, attached to
+  your VPC.
+* *Customer Gateway (CGW)*: represents your on-premises VPN device/router — an
+  AWS resource that just records the device's public IP and configuration, it
+  doesn't run anything itself.
+
+*VPN CloudHub* is a way to connect multiple on-premises sites to each other
+_via_ AWS, using a single Virtual Private Gateway with multiple Customer
+Gateways attached — useful for hub-and-spoke connectivity between sites without
+needing a full mesh of site-to-site VPNs.
