@@ -48,3 +48,13 @@ If you try again to SSH into the EC2 instance… it still won't work! This is
 because the subnet does not have a route to the internet gateway. You need to
 give the public subnet a *route* to your internet gateway. This is done using
 something called a *route table*…
+
+== Egress-only internet gateways
+
+An *egress-only internet gateway* is the IPv6 equivalent of a NAT gateway (see
+the NAT gateways page). It's a stateful gateway that allows outbound-only IPv6
+traffic from instances in a VPC to the internet, while blocking inbound
+connections initiated from the internet. Unlike a regular internet gateway
+(which is bidirectional), it exists specifically to give private, IPv6-only
+resources the same "reach out but can't be reached" behavior that a NAT
+gateway gives IPv4 resources.
