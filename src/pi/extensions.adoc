@@ -1,15 +1,18 @@
 = Extensions
 
-Pi is highly extensible. Extensions are TypeScript modules (compiled natively via jiti). Through them you can add to Pi:
+Pi is highly extensible. Extensions are TypeScript modules (compiled natively
+via jiti). Through them you can add to Pi:
 
 * Tools: LLM-callable functions.
 * Commands: your own /command flows.
-* Events: intercept turns and tools (session start, tool calls, message updates, ...).
+* Events: intercept turns and tools (session start, tool calls, message updates,
+  ...).
 * State: control session persistence.
 * Providers: dynamic model sources.
 * UI: prompts, confirms, notifications, widgets, shortcuts.
 
-Common uses: permission gates, path protection, custom compaction, interactive workflows, external integrations.
+Common uses: permission gates, path protection, custom compaction, interactive
+workflows, external integrations.
 
 == Writing and installing
 
@@ -18,7 +21,8 @@ Extensions are auto-discovered in:
 - Global: `~/.pi/agent/extensions/`
 - Project: `.pi/extensions/`
 
-Each exports a default factory function that receives the `ExtensionAPI`. Try one without installing using `pi -e ./path.ts`.
+Each exports a default factory function that receives the `ExtensionAPI`. Try
+one without installing using `pi -e ./path.ts`.
 
 Key API points:
 
@@ -30,11 +34,13 @@ Key API points:
 
 * State via `pi.appendEntry()`.
 
-* Session control (in commands) via `ctx.newSession()` / `ctx.fork()` / `ctx.switchSession()`.
+* Session control (in commands) via `ctx.newSession()` / `ctx.fork()` /
+  `ctx.switchSession()`.
 
 == Ready-made extensions
 
-Bundled and shared as link:./packages.adoc[packages] - browse the gallery at https://pi.dev/packages[pi.dev/packages].
+Bundled and shared as link:./packages.adoc[packages] - browse the gallery at
+https://pi.dev/packages[pi.dev/packages].
 
 Example extensions:
 https://github.com/earendil-works/pi/blob/main/packages/coding-agent/examples/extensions/README.md

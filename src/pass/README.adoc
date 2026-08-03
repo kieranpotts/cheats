@@ -1,6 +1,8 @@
 = `pass` (The Standard Unix Password Manager)
 
-`pass` is the standard unix password manager. It stores passwords in GPG-encrypted files. It's particularly handy for storing personal access tokens and similar secrets locally, securely.
+`pass` is the standard unix password manager. It stores passwords in
+GPG-encrypted files. It's particularly handy for storing personal access tokens
+and similar secrets locally, securely.
 
 See https://www.passwordstore.org/ for more details.
 
@@ -16,12 +18,15 @@ See https://www.passwordstore.org/ for more details.
 
 == Common patterns
 
-* *Organization:* Passwords are stored in a hierarchical structure (e.g., `pass social/twitter`).
-* *Multi-line data:* Use `pass insert --multiline <name>` to store usernames, URLs, and notes alongside the password.
-* *Git Integration:* `pass` integrates natively with Git for synchronization across machines.
-  * `pass git init`
-  * `pass git push`
-  * `pass git pull`
+* *Organization:* Passwords are stored in a hierarchical structure (e.g.,
+  `pass social/twitter`).
+* *Multi-line data:* Use `pass insert --multiline <name>` to store usernames,
+  URLs, and notes alongside the password.
+* *Git Integration:* `pass` integrates natively with Git for synchronization
+  across machines.
+* `pass git init`
+* `pass git push`
+* `pass git pull`
 
 == Useful options
 

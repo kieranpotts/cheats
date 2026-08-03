@@ -1,14 +1,23 @@
 = AWS: VPC Flow Logs
 
-*Route tables*, *security groups* and (to a lesser extent) *NACLs* are the tools you use to control the flow of traffic in and out, and within, your VPCs. *VPC Flow Logs* are the tools you use to monitor that traffic. 
+*Route tables*, *security groups* and (to a lesser extent) *NACLs* are the tools
+you use to control the flow of traffic in and out, and within, your VPCs.
+*VPC Flow Logs* are the tools you use to monitor that traffic.
 
 They are not a security feature, but rather a monitoring feature.
 
-This is about logging what happens in an account's networks — at the VPC, subnet, and instance levels (or, correctly, the network interfaces attached to EC2 instances). You can inspect the logs at those three levels, or all of them, and you can output the logs to CloudWatch Logs or S3.
+This is about logging what happens in an account's networks — at the VPC,
+subnet, and instance levels (or, correctly, the network interfaces attached to
+EC2 instances). You can inspect the logs at those three levels, or all of them,
+and you can output the logs to CloudWatch Logs or S3.
 
-VPC Flow Logs provide *visibility* of network traffic and support *troubleshooting* and *forensics* of network traffic.
+VPC Flow Logs provide *visibility* of network traffic and support
+*troubleshooting* and *forensics* of network traffic.
 
 [IMPORTANT]
 ======
-VPC Flow Logs capture information about network _flows_, and not data from the packets sent over the network. VPC Flow Logs do not capture the content of the packets, but only metadata about the packets, such as source and destination IP addresses, ports, and protocols.
+VPC Flow Logs capture information about network _flows_, and not data from the
+packets sent over the network. VPC Flow Logs do not capture the content of the
+packets, but only metadata about the packets, such as source and destination IP
+addresses, ports, and protocols.
 ======

@@ -1,3 +1,4 @@
 = `z` (zoxide)
 
-Zoxide is a smarter `cd` command that tracks your most used directories and allows you to quickly navigate to them.
+Zoxide is a smarter `cd` command that tracks your most used directories and
+allows you to quickly navigate to them.

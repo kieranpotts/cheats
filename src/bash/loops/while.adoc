@@ -9,4 +9,5 @@ while [ condition ]; do
 done
 ----
 
-`while` loops are useful when you need to wait for a process to finish, to monitor system state, or to continue to read input until a precondition changes.
+`while` loops are useful when you need to wait for a process to finish, to
+monitor system state, or to continue to read input until a precondition changes.

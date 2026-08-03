@@ -1,6 +1,8 @@
 = SSH Config File
 
-The `~/.ssh/config` file allows you to configure SSH connection settings for different hosts, including which key to use, what username to use, and custom port numbers.
+The `~/.ssh/config` file allows you to configure SSH connection settings for
+different hosts, including which key to use, what username to use, and custom
+port numbers.
 
 == Basic configuration
 
@@ -74,7 +76,9 @@ Host *
     ServerAliveCountMax 10
 ----
 
-WARNING: Do NOT use `ForwardAgent yes` with `Host *`. This would share your SSH credentials with every remote server you connect to. See the ForwardAgent section below for secure usage.
+WARNING: Do NOT use `ForwardAgent yes` with `Host *`. This would share your SSH
+credentials with every remote server you connect to. See the ForwardAgent
+section below for secure usage.
 
 == Common options
 
@@ -91,7 +95,9 @@ WARNING: Do NOT use `ForwardAgent yes` with `Host *`. This would share your SSH 
 
 == SSH agent forwarding
 
-SSH agent forwarding allows you to use your local SSH keys on remote servers without storing unencrypted keys there. However, this grants the remote server access to all your SSH credentials.
+SSH agent forwarding allows you to use your local SSH keys on remote servers
+without storing unencrypted keys there. However, this grants the remote server
+access to all your SSH credentials.
 
 *Only enable forwarding for servers you explicitly trust.*
 
@@ -105,7 +111,9 @@ Host trusted-jump-server.example.com
     ForwardAgent yes
 ----
 
-WARNING: Never use `ForwardAgent yes` with a wildcard like `Host *`. This would share your SSH keys with every server you connect to, including potentially compromised ones.
+WARNING: Never use `ForwardAgent yes` with a wildcard like `Host *`. This would
+share your SSH keys with every server you connect to, including potentially
+compromised ones.
 
 === Verify agent forwarding works
 
@@ -116,7 +124,8 @@ On the remote server, check if the SSH agent is accessible:
 echo $SSH_AUTH_SOCK
 ----
 
-If a socket path is shown, agent forwarding is active. Verify your keys are available:
+If a socket path is shown, agent forwarding is active. Verify your keys are
+available:
 
 [source]
 ----

@@ -1,8 +1,10 @@
 = AWS Compute Optimizer
 
-The AWS Compute Optimizer service recommends optimal AWS resources for your workloads, to reduce costs and improve performance.
+The AWS Compute Optimizer service recommends optimal AWS resources for your
+workloads, to reduce costs and improve performance.
 
-It uses machine learning to analyze historical utilization metrics, and recommends optimizations based on that data.
+It uses machine learning to analyze historical utilization metrics, and
+recommends optimizations based on that data.
 
 It offers optimization guidance for:
 

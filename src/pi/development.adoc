@@ -1,6 +1,7 @@
 = Development
 
-Pi is developed in the `earendil-works/pi-mono` monorepo, organized into four packages: `ai` (LLM abstraction), `agent`, `tui`, and `coding-agent` (the CLI).
+Pi is developed in the `earendil-works/pi-mono` monorepo, organized into four
+packages: `ai` (LLM abstraction), `agent`, `tui`, and `coding-agent` (the CLI).
 
 == Build from source
 
@@ -20,4 +21,5 @@ Run the local build from any directory with `./pi-test.sh`.
 
 == Forking
 
-Set your own `name`, `configDir`, and `bin` in `package.json`, and reference package assets via `src/config.ts` rather than `__dirname`.
+Set your own `name`, `configDir`, and `bin` in `package.json`, and reference
+package assets via `src/config.ts` rather than `__dirname`.

@@ -26,9 +26,13 @@ resource "aws_instance" "my_default_server" {
 }
 ----
 
-What if we wanted to deploy additional servers, but into specific regions? This is common in large organizations that have a global presence and therefore need to maintain a multi-region infrastructure.
+What if we wanted to deploy additional servers, but into specific regions? This
+is common in large organizations that have a global presence and therefore need
+to maintain a multi-region infrastructure.
 
-To do this, first we need to define multiple "providers", each with a different region. The `alias` attribute is what will allow us to differentiate between these different configurations for the AWS provider.
+To do this, first we need to define multiple "providers", each with a different
+region. The `alias` attribute is what will allow us to differentiate between
+these different configurations for the AWS provider.
 
 [source,hcl]
 ----
@@ -47,7 +51,9 @@ provider "aws" {
 }
 ----
 
-Then, we can use these providers to create resources in the specified regions. By default, a resource that does not specify `provider`, will use the default provider configuration, which is the one without an `alias`.
+Then, we can use these providers to create resources in the specified regions.
+By default, a resource that does not specify `provider`, will use the default
+provider configuration, which is the one without an `alias`.
 
 [source,hcl]
 ----
@@ -81,7 +87,9 @@ resource "aws_instance" "my_asia_server" {
 }
 ----
 
-Each server will be launched in its respective region, using the latest Ubuntu 20.04 AMI _available in that region_, which is configured in the following `data` blocks:
+Each server will be launched in its respective region, using the latest Ubuntu
+20.04 AMI _available in that region_, which is configured in the following
+`data` blocks:
 
 [source,hcl]
 ----

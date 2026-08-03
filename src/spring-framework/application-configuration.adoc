@@ -1,8 +1,12 @@
 = Spring: Application configuration
 
-Spring Boot simplifies many of the necessary configurations required to build a Spring application. Configuration files are named `application.properties` or `application.yml` and they allow developers to set properties that control behaviors of the application, such as:
+Spring Boot simplifies many of the necessary configurations required to build a
+Spring application. Configuration files are named `application.properties` or
+`application.yml` and they allow developers to set properties that control
+behaviors of the application, such as:
 
-* *Server configuration*: The default port, session settings, and other server parameters.
+* *Server configuration*: The default port, session settings, and other server
+  parameters.
 
 * *Database parameters*: Connection properties and connection pool size.
 

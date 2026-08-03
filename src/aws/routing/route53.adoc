@@ -4,13 +4,23 @@ Route53 is AWS's DNS service. Features include:
 
 * *Domain name registration*.
 
-* *Public hosted zones*. These are created automatically when you register a public domain via Route53. This is where your public DNS records are hosted, and where other DNS servers look up your domain name's DNS records.
+* *Public hosted zones*. These are created automatically when you register a
+  public domain via Route53. This is where your public DNS records are hosted,
+  and where other DNS servers look up your domain name's DNS records.
 
-* *Private hosted zones*. You can also create private hosted zones, which get associated with a VPC so you can maintain DNS records for internal virtual servers.
+* *Private hosted zones*. You can also create private hosted zones, which get
+  associated with a VPC so you can maintain DNS records for internal virtual
+  servers.
 
-* *Health checks*. This service checks that EC2 instances and load balancers, and other IP endpoints, are active. The service can be configured to automatically reroute traffic to a failover region if resources in your primary region become unavailable. This is known as the *active/passive failover* technique. There are a variety of routing options that are available, and are set via *routing policies* — see below.
+* *Health checks*. This service checks that EC2 instances and load balancers,
+  and other IP endpoints, are active. The service can be configured to
+  automatically reroute traffic to a failover region if resources in your
+  primary region become unavailable. This is known as the
+  *active/passive failover* technique. There are a variety of routing options
+  that are available, and are set via *routing policies* — see below.
 
-* *Traffic Flow*: This service allows a bit more logic in terms of how you direct traffic to different resources.
+* *Traffic Flow*: This service allows a bit more logic in terms of how you
+  direct traffic to different resources.
 
 == Route53 routing policies
 

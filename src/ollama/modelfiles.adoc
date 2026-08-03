@@ -1,6 +1,7 @@
 = Modelfiles
 
-A Modelfile defines a custom model variant, specifying a base model, a system prompt, and generation parameters. The syntax is similar to a Dockerfile.
+A Modelfile defines a custom model variant, specifying a base model, a system
+prompt, and generation parameters. The syntax is similar to a Dockerfile.
 
 [source]
 ----

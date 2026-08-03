@@ -8,13 +8,15 @@ Install:
 $ wsl --install
 ----
 
-This will install the latest version of WSL with the default Ubuntu distribution of Linux. To install a distribution other than Ubuntu, use:
+This will install the latest version of WSL with the default Ubuntu distribution
+of Linux. To install a distribution other than Ubuntu, use:
 
 ----
 $ wsl --install <Distro>
 ----
 
-For a valid list of distribution names, available to install from the Microsoft Store:
+For a valid list of distribution names, available to install from the Microsoft
+Store:
 
 ----
 $ wsl --list --online
@@ -26,7 +28,9 @@ To update WSL to the latest version:
 $ wsl --update
 ----
 
-Updating is recommended whenever you have any problems loading WSL – this can fix many common issues, and WSL has a habit of needing an explicit update after a Windows update.
+Updating is recommended whenever you have any problems loading WSL – this can
+fix many common issues, and WSL has a habit of needing an explicit update after
+a Windows update.
 
 Check the current WSL version:
 
@@ -40,7 +44,8 @@ Set default version to WSL 2 (RECOMMENDED):
 $ wsl --set-default-version 2
 ----
 
-Set running version to a particular `<Distro` (eg. `Ubuntu-20.04`) running on WSL 2:
+Set running version to a particular `<Distro` (eg. `Ubuntu-20.04`) running on
+WSL 2:
 
 ----
 $ wsl --set-version <Distro> 2
@@ -66,7 +71,8 @@ To launch into your home directory:
 $ wsl ~
 ----
 
-To run as a specific user, where `<Username>` is the name of the user that exists in the distro:
+To run as a specific user, where `<Username>` is the name of the user that
+exists in the distro:
 
 ----
 $ wsl --user <Username>

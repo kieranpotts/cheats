@@ -1,6 +1,8 @@
 = Terraform: AWS - Data sources
 
-Data sources is a feature to fetch data about AWS resources – which may or may not be managed by Terraform. This is useful for referencing existing resources, such as VPCs, subnets, and security groups.
+Data sources is a feature to fetch data about AWS resources – which may or may
+not be managed by Terraform. This is useful for referencing existing resources,
+such as VPCs, subnets, and security groups.
 
 [source,hcl]
 ----
@@ -55,7 +57,10 @@ data "aws_vpc" "prod" {
 }
 ----
 
-A common use case is to fetch data about a specific resource, as in the example above, and then use that data to do things with the resource. In the examples below, we define subnets for the VPC in the AZs we have retrieved via the data source blocks, above.
+A common use case is to fetch data about a specific resource, as in the example
+above, and then use that data to do things with the resource. In the examples
+below, we define subnets for the VPC in the AZs we have retrieved via the data
+source blocks, above.
 
 [source,hcl]
 ----
@@ -82,7 +87,9 @@ resource "aws_subnet" "subnet2" {
 }
 ----
 
-Another use case for data sources is to dynamically update resources to the latest images (AMIs), rather than relying on maintaining hard-coded values. Examples:
+Another use case for data sources is to dynamically update resources to the
+latest images (AMIs), rather than relying on maintaining hard-coded values.
+Examples:
 
 [source,hcl]
 ----

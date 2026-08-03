@@ -1,6 +1,9 @@
 = Prompts
 
-In Pi, prompts are expanded from slash commands. They're a great choice for recurring project tasks like review, refactor, issue triage. They're plain Markdown text-expansion - lighter than link:./skills.adoc[skills], whose instructions only load on-demand.
+In Pi, prompts are expanded from slash commands. They're a great choice for
+recurring project tasks like review, refactor, issue triage. They're plain
+Markdown text-expansion - lighter than link:./skills.adoc[skills], whose
+instructions only load on-demand.
 
 == Locations
 

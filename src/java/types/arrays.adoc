@@ -1,12 +1,25 @@
 = Java: Arrays
 
-In Java, an array is a data structure that stores a fixed-size sequential collection of elements of the same type. Arrays are part of the core language, provided by the `java.lang` package, which does not need to be explicitly imported.
+In Java, an array is a data structure that stores a fixed-size sequential
+collection of elements of the same type. Arrays are part of the core language,
+provided by the `java.lang` package, which does not need to be explicitly
+imported.
 
-Java's array type is a reference type, ie. the elements of the array are references to objects in heap memory. This design has some downsides. Once you specify the length of an array, you cannot change it. That's because arrays are objects, and thus they are stored as a continuous block in heap memory (this is true of all objects in Java). So, if you wanted to add more elements to an array, you would have to create a new array with a larger size, then copy the elements from the old array to the new array, and then delete the old array.
+Java's array type is a reference type, ie. the elements of the array are
+references to objects in heap memory. This design has some downsides. Once you
+specify the length of an array, you cannot change it. That's because arrays are
+objects, and thus they are stored as a continuous block in heap memory (this is
+true of all objects in Java). So, if you wanted to add more elements to an
+array, you would have to create a new array with a larger size, then copy the
+elements from the old array to the new array, and then delete the old array.
 
-Another (arguable) disadvantage is that arrays can only store elements of the same type. So, if you wanted to store different types of data, you would need to create an array of custom objects, and then cast the elements to their respective types when you retrieve them.
+Another (arguable) disadvantage is that arrays can only store elements of the
+same type. So, if you wanted to store different types of data, you would need to
+create an array of custom objects, and then cast the elements to their
+respective types when you retrieve them.
 
-This is a lot of work! So for more dynamic arrays Java provides alternative APIs: `ArrayLists` and `Collections`.
+This is a lot of work! So for more dynamic arrays Java provides alternative
+APIs: `ArrayLists` and `Collections`.
 
 [source,java]
 ----

@@ -9,7 +9,9 @@ Before generating a new key pair, check if you already have one:
 ls -al ~/.ssh
 ----
 
-Look for files named `id_ed25519.pub`, `id_ecdsa.pub`, or `id_rsa.pub`. If you find any, you may be able to reuse an existing key instead of generating a new one.
+Look for files named `id_ed25519.pub`, `id_ecdsa.pub`, or `id_rsa.pub`. If you
+find any, you may be able to reuse an existing key instead of generating a new
+one.
 
 If the `~/.ssh` directory doesn't exist, you'll need to generate a new key pair.
 
@@ -36,13 +38,17 @@ For older systems without ECDSA support, use 4096-bit RSA:
 ssh-keygen -t rsa -b 4096 -C "Optional description"
 ----
 
-The `-C` flag sets a comment (typically your email or hostname) in the public key.
+The `-C` flag sets a comment (typically your email or hostname) in the public
+key.
 
 == About passphrases
 
-By default, `ssh-keygen` will prompt you to set a passphrase to encrypt your private key. This is recommended for security — if your private key file is compromised, the passphrase prevents unauthorized use without additional effort.
+By default, `ssh-keygen` will prompt you to set a passphrase to encrypt your
+private key. This is recommended for security — if your private key file is
+compromised, the passphrase prevents unauthorized use without additional effort.
 
-If you want to skip the passphrase prompt (not recommended for production systems), use `-N ""`:
+If you want to skip the passphrase prompt (not recommended for production
+systems), use `-N ""`:
 
 [source]
 ----
@@ -58,9 +64,12 @@ ssh-keygen -p -f ~/.ssh/id_ed25519
 
 == Install the public key
 
-Install the public key on the server by copying the contents of the public key file (`~/.ssh/id_ed25519.pub` or `~/.ssh/id_rsa.pub`) to the server's `~/.ssh/authorized_keys` file.
+Install the public key on the server by copying the contents of the public key
+file (`~/.ssh/id_ed25519.pub` or `~/.ssh/id_rsa.pub`) to the server's
+`~/.ssh/authorized_keys` file.
 
-The private key file should be stored securely on the client machine, and never shared.
+The private key file should be stored securely on the client machine, and never
+shared.
 
 == Permissions
 

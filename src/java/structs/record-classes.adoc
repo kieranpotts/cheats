@@ -1,6 +1,10 @@
 = Java: Record classes
 
-In object-oriented programming there will be many use cases when you create *functional classes* that do some sort of processing. Service classes and utility classes fall into this category. But there will be times when you need to create pure *data classes*, which exist only to store data. These types of classes are often called *data carriers* or *data transfer objects* (DTOs).
+In object-oriented programming there will be many use cases when you create
+*functional classes* that do some sort of processing. Service classes and
+utility classes fall into this category. But there will be times when you need
+to create pure *data classes*, which exist only to store data. These types of
+classes are often called *data carriers* or *data transfer objects* (DTOs).
 
 The following code is an example of a simple, immutable data entity type:
 
@@ -52,7 +56,9 @@ Person p = new Person("Alice", 30);
 System.out.println(p.getName() + " is " + p.getAge() + " years old.");
 ----
 
-But that's a lot of boilerplate code to create valid data objects in Java! For example, the `equals()` method is necessary to compare two objects of the same type. Without it, the following code will return `false`.
+But that's a lot of boilerplate code to create valid data objects in Java! For
+example, the `equals()` method is necessary to compare two objects of the same
+type. Without it, the following code will return `false`.
 
 [source,java]
 ----
@@ -62,9 +68,12 @@ Person p2 = new Person("Alice", 30);
 System.out.println(p1.equals(p2)); // true
 ----
 
-Likewise, implementation of the `toString()` method is necessary for a full implementation (it is called by methods such as `System.out.println()` and `String.valueOf()`).
+Likewise, implementation of the `toString()` method is necessary for a full
+implementation (it is called by methods such as `System.out.println()` and
+`String.valueOf()`).
 
-Since Java 17, it is much, _much_ easier to create this kind of class using the `record` keyword. All you need to do is:
+Since Java 17, it is much, _much_ easier to create this kind of class using the
+`record` keyword. All you need to do is:
 
 [source,java]
 ----
@@ -73,9 +82,15 @@ record Person(String name, int age) {}
 
 The arguments are the record's state variables.
 
-Behind the scenes, the Java compiler will generate all the code necessary to create a useful data object, including the constructor and implementations of the `equals()`, `hashCode()`, and `toString()` methods. The state variables will all be `private` and `final`.
+Behind the scenes, the Java compiler will generate all the code necessary to
+create a useful data object, including the constructor and implementations of
+the `equals()`, `hashCode()`, and `toString()` methods. The state variables will
+all be `private` and `final`.
 
-You can override things if you need to. For example, if you wanted to make any of the state variables optional, you could create additional constructors with reduced parameters (or no parameters at all). In the following example, the `age` field becomes optional, defaulting to the value `0` if not provided.
+You can override things if you need to. For example, if you wanted to make any
+of the state variables optional, you could create additional constructors with
+reduced parameters (or no parameters at all). In the following example, the
+`age` field becomes optional, defaulting to the value `0` if not provided.
 
 [source,java]
 ----
@@ -86,9 +101,15 @@ record Person(String name, int age) {
 }
 ----
 
-NOTE: This is called a *non-canonical constructor*, because it does not have the same parameters as the canonical constructor, which is defined on the `record` line. To implement a non-canonical constructor, it is REQUIRED that the canonical constructor be called from within it. This can be done using `this()`.
+NOTE: This is called a *non-canonical constructor*, because it does not have the
+same parameters as the canonical constructor, which is defined on the `record`
+line. To implement a non-canonical constructor, it is REQUIRED that the
+canonical constructor be called from within it. This can be done using `this()`.
 
-You might also want to build in some validation to the constructor. For example, you could check that `age` is a positive number. If it is not, you could throw an `IllegalArgumentException`. This is a good use case for a *compact canonical constructor*. Instead of the following…
+You might also want to build in some validation to the constructor. For example,
+you could check that `age` is a positive number. If it is not, you could throw
+an `IllegalArgumentException`. This is a good use case for a
+*compact canonical constructor*. Instead of the following…
 
 [source,java]
 ----
@@ -103,7 +124,9 @@ record Person(String name, int age) {
 }
 ----
 
-… you can use the compact canonical constructor syntax instead. You're just adding the validation checks that you want to do. If no exceptions are thrown, Java will handle the assignments for you.
+… you can use the compact canonical constructor syntax instead. You're just
+adding the validation checks that you want to do. If no exceptions are thrown,
+Java will handle the assignments for you.
 
 [source,java]
 ----
@@ -115,7 +138,9 @@ record Person(String name, int age) {
 }
 ----
 
-Records can be extended with any custom methods you need, and they can also implement interfaces. Implementation of the `Cloneable` interface, for example, is a common design pattern for immutable data objects in Java.
+Records can be extended with any custom methods you need, and they can also
+implement interfaces. Implementation of the `Cloneable` interface, for example,
+is a common design pattern for immutable data objects in Java.
 
 [source,java]
 ----
@@ -127,7 +152,9 @@ record Person(String name, int age) implements Cloneable {
 }
 ----
 
-Values are accessed using method names that match the field names. For example, to access the `name` field, you would use the `name()` method. To access the `age` field, you would use the `age()` method.
+Values are accessed using method names that match the field names. For example,
+to access the `name` field, you would use the `name()` method. To access the
+`age` field, you would use the `age()` method.
 
 [source,java]
 ----

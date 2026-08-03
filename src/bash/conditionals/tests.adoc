@@ -1,6 +1,8 @@
 = Bash: Tests
 
-The single bracket syntax `[ ... ]` is the original test command in Bourne shell. It is POSIX-compliant and works in all POSIX-compliant shells, including Bash.
+The single bracket syntax `[ ... ]` is the original test command in Bourne
+shell. It is POSIX-compliant and works in all POSIX-compliant shells, including
+Bash.
 
 [source,bash]
 ----
@@ -15,7 +17,11 @@ else
 fi
 ----
 
-But the double bracket syntax `[[ ... ]]`, which is a Bash-specific extension and is not POSIX-compliant, is RECOMMENDED for most use cases. It prevents pathname expansion and word splitting, which eliminates a common class of bugs in shell scripts. It also allows for regular expression matching, which the single bracket syntax does not support.
+But the double bracket syntax `[[ ... ]]`, which is a Bash-specific extension
+and is not POSIX-compliant, is RECOMMENDED for most use cases. It prevents
+pathname expansion and word splitting, which eliminates a common class of bugs
+in shell scripts. It also allows for regular expression matching, which the
+single bracket syntax does not support.
 
 .Examples
 [source,bash]
@@ -48,7 +54,8 @@ then
 fi
 ----
 
-The OR operator is `||`. Use this to evaluate multiple conditions and return `false` if any one condition returns a false result.
+The OR operator is `||`. Use this to evaluate multiple conditions and return
+`false` if any one condition returns a false result.
 
 [source,bash]
 ----
@@ -59,4 +66,7 @@ then
 fi
 ----
 
-It is RECOMMENDED to always use the double bracket syntax `[[ ... ]]` when combining conditional expressions with `&&` or `||`. It's better for backwards compatibility with older implementations of Bash, in which using single bracket syntax with `&&` or `||` could cause syntax issues.
+It is RECOMMENDED to always use the double bracket syntax `[[ ... ]]` when
+combining conditional expressions with `&&` or `||`. It's better for backwards
+compatibility with older implementations of Bash, in which using single bracket
+syntax with `&&` or `||` could cause syntax issues.

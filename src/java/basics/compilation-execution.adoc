@@ -14,9 +14,15 @@ javac <filename>.java
 java <filename>
 ----
 
-The above commands will typically be run on an application's root class file, which contains the `main` method that accepts an array of `String` input arguments from the command line.
+The above commands will typically be run on an application's root class file,
+which contains the `main` method that accepts an array of `String` input
+arguments from the command line.
 
-Alternatively, you can run the `java` program directly on a `*.java` file. This will compile and run the file in one step. This is useful for quick tests or small scripts. It does not produce a built artifact and it works only when there is a single file to compile and execute. This is intended only for use in development.
+Alternatively, you can run the `java` program directly on a `*.java` file. This
+will compile and run the file in one step. This is useful for quick tests or
+small scripts. It does not produce a built artifact and it works only when there
+is a single file to compile and execute. This is intended only for use in
+development.
 
 [source,java]
 ----

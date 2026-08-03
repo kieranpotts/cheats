@@ -1,6 +1,8 @@
 = Terraform: AWS - VPCs, subnets, and route tables
 
-As an absolute minimum, a default VPC must be defined. This is required to create subnets and security group, which cross-references the VPCs to which they belong.
+As an absolute minimum, a default VPC must be defined. This is required to
+create subnets and security group, which cross-references the VPCs to which they
+belong.
 
 == VPCs
 
@@ -10,7 +12,9 @@ As an absolute minimum, a default VPC must be defined. This is required to creat
 resource "aws_default_vpc" "default" {}
 ----
 
-The default VPC is created automatically in each AWS region, but it still must be explicitly referenced in the Terraform config. This is necessary to retrieve the VPC ID, which is required for security groups and subnets.
+The default VPC is created automatically in each AWS region, but it still must
+be explicitly referenced in the Terraform config. This is necessary to retrieve
+the VPC ID, which is required for security groups and subnets.
 
 .main.tf
 [source,hcl]
@@ -29,7 +33,10 @@ resource "aws_security_group" "app_sg" {
 }
 ----
 
-More commonly, rather than using the default VPC, a custom VPC is created. This is done by defining a `aws_vpc` resource. The VPC is created in the region specified in the provider block. CIDR ranges should be defined for custom VPCs, and tags may be applied to VPCs.
+More commonly, rather than using the default VPC, a custom VPC is created. This
+is done by defining a `aws_vpc` resource. The VPC is created in the region
+specified in the provider block. CIDR ranges should be defined for custom VPCs,
+and tags may be applied to VPCs.
 
 .main.tf
 [source,hcl]
@@ -43,7 +50,8 @@ resource "aws_vpc" "my_test_vpc" {
 }
 ----
 
-CIDR ranges and tags are good candidates to extract from infrastructure configuration to variables.
+CIDR ranges and tags are good candidates to extract from infrastructure
+configuration to variables.
 
 .terraform.tfvars
 ----
@@ -90,7 +98,8 @@ resource "aws_subnet" "my_test_subnet" {
 
 == Internet Gateways
 
-An Internet Gateway (IGW) is required to route traffic from public subnets to and from the Internet.
+An Internet Gateway (IGW) is required to route traffic from public subnets to
+and from the Internet.
 
 .terraform.tfvars
 ----
@@ -112,7 +121,9 @@ resource "aws_internet_gateway" "my_ig" {
 
 == Route tables
 
-Route tables are added to VPCs to define how traffic is routed. The following configuration routes all traffic to the Internet Gateway. Here, the route table is assigned the same name tag as the IGW.
+Route tables are added to VPCs to define how traffic is routed. The following
+configuration routes all traffic to the Internet Gateway. Here, the route table
+is assigned the same name tag as the IGW.
 
 .main.tf
 [source,hcl]
@@ -131,7 +142,9 @@ resource "aws_route_table" "public_rt" {
 }
 ----
 
-To complete the configuration, the route table must be associated with the subnet. This is done by creating a `aws_route_table_association` resource, which maps a subnet to a route table.
+To complete the configuration, the route table must be associated with the
+subnet. This is done by creating a `aws_route_table_association` resource, which
+maps a subnet to a route table.
 
 .main.tf
 [source,hcl]

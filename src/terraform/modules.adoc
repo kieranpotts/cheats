@@ -1,10 +1,19 @@
 = Terraform: Modules
 
-In Terraform, modules are used to create reusable infrastructure configurations, so you can define a set of resources and create them – with variable parameters – in different contexts, without duplicating your Terraform config.
+In Terraform, modules are used to create reusable infrastructure configurations,
+so you can define a set of resources and create them – with variable parameters
+– in different contexts, without duplicating your Terraform config.
 
-For example, you might reuse the same module to recreate a production system in development and staging environments, or to deploy the same application in different regions or accounts.
+For example, you might reuse the same module to recreate a production system in
+development and staging environments, or to deploy the same application in
+different regions or accounts.
 
-The following configuration creates network layer resources (VPC, subnets, route tables, NAT gateways) in AWS. It launches two public subnets and two private subnets, each in a different availability zone within the target region. The public subnets are connected to the internet via a single region-level Internet Gateway, while the private subnets use NAT Gateways (one in each AZ) for outbound internet access.
+The following configuration creates network layer resources (VPC, subnets, route
+tables, NAT gateways) in AWS. It launches two public subnets and two private
+subnets, each in a different availability zone within the target region. The
+public subnets are connected to the internet via a single region-level Internet
+Gateway, while the private subnets use NAT Gateways (one in each AZ) for
+outbound internet access.
 
 .variables.tf
 [source,hcl]
@@ -173,7 +182,9 @@ output "private_subnet_ids" {
 }
 ----
 
-To extend this configuration to launch an identical public/private subnet pair in a third availability zone, you would simply add a third CIDR block to the `public_subnet_cidrs` and `private_subnet_cidrs` variables in `variables.tf`.
+To extend this configuration to launch an identical public/private subnet pair
+in a third availability zone, you would simply add a third CIDR block to the
+`public_subnet_cidrs` and `private_subnet_cidrs` variables in `variables.tf`.
 
 .variables.tf
 [source,hcl]
@@ -195,11 +206,16 @@ variable "private_subnet_cidrs" {
 }
 ----
 
-So this is already an extensible configuration. But what if we wanted to replicate this entire network layer for other environments – dev, staging, etc.?
+So this is already an extensible configuration. But what if we wanted to
+replicate this entire network layer for other environments – dev, staging, etc.?
 
 We can use modules for that purpose.
 
-To move the above configuration into a module, we would create a new directory called `modules/<module-name>` and move the `variables.tf`, `main.tf`, and `outputs.tf` files into it. The only change that is required to make the above a valid module is to remove the `provider` block from `main.tf` – delete these three lines:
+To move the above configuration into a module, we would create a new directory
+called `modules/<module-name>` and move the `variables.tf`, `main.tf`, and
+`outputs.tf` files into it. The only change that is required to make the above a
+valid module is to remove the `provider` block from `main.tf` – delete these
+three lines:
 
 [source,hcl]
 ----
@@ -233,9 +249,11 @@ module "my_vpc_default" {
 }
 ----
 
-The `provider` block is reinstated here. The `module` block is used to import modules from another location.
+The `provider` block is reinstated here. The `module` block is used to import
+modules from another location.
 
-Variables MAY be inputted to modules. These will override any defaults defined in `variable` blocks in the module itself:
+Variables MAY be inputted to modules. These will override any defaults defined
+in `variable` blocks in the module itself:
 
 .project-a/main.tf
 [source,hcl]
@@ -261,7 +279,9 @@ module "my_vpc_prod" {
 }
 ----
 
-By default, outputs from modules will NOT be captured. If you want to capture outputs from a module, you effectively need to re-output them from the parent configuration:
+By default, outputs from modules will NOT be captured. If you want to capture
+outputs from a module, you effectively need to re-output them from the parent
+configuration:
 
 .project-a/outputs.tf
 [source,hcl]
@@ -311,7 +331,8 @@ variable "message" {
 variable "subnet_id" {}
 ----
 
-The `main.tf` file provisions a simple web server into a specific subnet, specified by the `subnet_id` variable.
+The `main.tf` file provisions a simple web server into a specific subnet,
+specified by the `subnet_id` variable.
 
 .modules/test-server/main.tf
 [source,hcl]
@@ -398,7 +419,9 @@ Now let's create a new project, Project B, that uses both modules:
 └─ project-b
 ----
 
-The main configuration uses the `network-layer` module to create a VPC with public and private subnets across three availability zones, and then it uses the `test-server` module to launch a web server in one of the public subnets.
+The main configuration uses the `network-layer` module to create a VPC with
+public and private subnets across three availability zones, and then it uses the
+`test-server` module to launch a web server in one of the public subnets.
 
 .project-b/main.tf
 [source,hcl]
@@ -423,7 +446,8 @@ module "server_standalone" {
 }
 ----
 
-We output the public IP address of the standalone test server (which we can use to access the web server via a browser):
+We output the public IP address of the standalone test server (which we can use
+to access the web server via a browser):
 
 .project-b/outputs.tf
 [source,hcl]
@@ -433,7 +457,8 @@ output "server_standalone_ip" {
 }
 ----
 
-You can use loops with modules. In the following example we'll create servers in every public subnet using a loop count.
+You can use loops with modules. In the following example we'll create servers in
+every public subnet using a loop count.
 
 .project-b/main.tf
 [source,hcl]
@@ -499,7 +524,9 @@ output "servers_loop_foreach_ips" {
 
 == Sharing modules
 
-Modules can be shared by uploading them to a hosted version control system (like GitHub) and then importing them into your Terraform configuration using the `source` argument in the `module` block.
+Modules can be shared by uploading them to a hosted version control system (like
+GitHub) and then importing them into your Terraform configuration using the
+`source` argument in the `module` block.
 
 [source,hcl]
 ----
@@ -519,13 +546,17 @@ module "server_standalone" {
 }
 ----
 
-Public Terraform modules are available from GitHub and elsewhere. For example, https://github.com/terraform-aws-modules[Terraform AWS Modules] is a popular repository of reusable Terraform modules for AWS.
+Public Terraform modules are available from GitHub and elsewhere. For example,
+https://github.com/terraform-aws-modules[Terraform AWS Modules] is a popular
+repository of reusable Terraform modules for AWS.
 
 == Advanced example: creating servers in multiple accounts/regions
 
-The following example demonstrates how to use modules to create servers in multiple AWS accounts and regions.
+The following example demonstrates how to use modules to create servers in
+multiple AWS accounts and regions.
 
-Here's the baseline configuration for the accounts into which we want to launch instances:
+Here's the baseline configuration for the accounts into which we want to launch
+instances:
 
 .main.tf
 [source,hcl]
@@ -556,7 +587,8 @@ provider "aws" {
 }
 ----
 
-Let's say we want to create three Ubuntu servers in each account. We'll create a module called `ubuntu-servers`, with the following contents:
+Let's say we want to create three Ubuntu servers in each account. We'll create a
+module called `ubuntu-servers`, with the following contents:
 
 .modules/ubuntu-servers/main.tf
 .variables.tf

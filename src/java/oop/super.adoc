@@ -1,10 +1,14 @@
 = Java: `super()`
 
-Java has a function called `super` that is used internally to call the parent class's constructor from a subclass.
+Java has a function called `super` that is used internally to call the parent
+class's constructor from a subclass.
 
-`super()` is automatically called by the compiler, even if it's not explicitly written.
+`super()` is automatically called by the compiler, even if it's not explicitly
+written.
 
-Although it is not explicit, every class in Java extends from Java's own `Object` class, which is the root of the class hierarchy. Therefore, `super()` is implicitly called in every constructor.
+Although it is not explicit, every class in Java extends from Java's own
+`Object` class, which is the root of the class hierarchy. Therefore, `super()`
+is implicitly called in every constructor.
 
 [source,java]
 ----
@@ -42,7 +46,8 @@ Prints:
 new SubClass(5);
 ----
 
-We could change the behavior of `super()` by explicitly calling it and passing arguments.
+We could change the behavior of `super()` by explicitly calling it and passing
+arguments.
 
 [source,java]
 ----
@@ -67,7 +72,10 @@ Prints:
 new SubClass(5);
 ----
 
-Another way to change the behavior is to write `this()` in the position where `super()` would be implicitly called. In the following example, `this()` will call the first constructor of `SubClass`, which would then implicitly call the first constructor of `SuperClass` as normal.
+Another way to change the behavior is to write `this()` in the position where
+`super()` would be implicitly called. In the following example, `this()` will
+call the first constructor of `SubClass`, which would then implicitly call the
+first constructor of `SuperClass` as normal.
 
 [source,java]
 ----

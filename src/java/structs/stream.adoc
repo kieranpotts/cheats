@@ -1,12 +1,19 @@
 = Java: Stream API
 
-Java 8 introduced the Stream API, which is used to process collections of objects. The following is an example use case. We have a list of numbers. We want to filter out only the even numbers, double their values, then reduce the list to a single number that is a sum of all the processed values.
+Java 8 introduced the Stream API, which is used to process collections of
+objects. The following is an example use case. We have a list of numbers. We
+want to filter out only the even numbers, double their values, then reduce the
+list to a single number that is a sum of all the processed values.
 
-The Stream API allows us to do this sort of thing in a more declarative style, rather than the imperative style that was previously more commonly used in Java.
+The Stream API allows us to do this sort of thing in a more declarative style,
+rather than the imperative style that was previously more commonly used in Java.
 
-What's also nice about the Stream API is that the values are transferred to the stream and processed, but the original list is a separate object and is not modified. Thus, streams can be used to make our code more thread-safe.
+What's also nice about the Stream API is that the values are transferred to the
+stream and processed, but the original list is a separate object and is not
+modified. Thus, streams can be used to make our code more thread-safe.
 
-Once you have used a stream, you can't reuse it. Thus you could not use `forEach()`, for example, twice on the same stream.
+Once you have used a stream, you can't reuse it. Thus you could not use
+`forEach()`, for example, twice on the same stream.
 
 [source,java]
 ----

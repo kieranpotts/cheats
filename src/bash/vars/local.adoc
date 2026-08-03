@@ -1,6 +1,7 @@
 = Bash: Local variables
 
-Bash supports `local` variables, which are variables scoped to the function they are declared in.
+Bash supports `local` variables, which are variables scoped to the function they
+are declared in.
 
 [source,bash]
 ----
@@ -15,7 +16,8 @@ function hello {
 echo "${hello}" # → "hello" (unchanged)
 ----
 
-Local variables may be declared, then subsequently assigned. This is a common pattern.
+Local variables may be declared, then subsequently assigned. This is a common
+pattern.
 
 [source,bash]
 ----

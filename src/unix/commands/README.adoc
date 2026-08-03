@@ -1,10 +1,15 @@
 = Unix commands
 
-The following commands can be found on most Unix-like operating systems. These are "mandatory" commands, built-in to Unix shells, as specified in the Single Unix Specification (SUS) – a family of standards for computer operating systems, compliance with which is required to qualify for using the "UNIX" trademark.
+The following commands can be found on most Unix-like operating systems. These
+are "mandatory" commands, built-in to Unix shells, as specified in the Single
+Unix Specification (SUS) – a family of standards for computer operating systems,
+compliance with which is required to qualify for using the "UNIX" trademark.
 
-See also link:../utilities/README.adoc[Unix utilities] for simple, single-purpose command line programs such as `ping`, `rsync`, and `wget`.
+See also link:../utilities/README.adoc[Unix utilities] for simple,
+single-purpose command line programs such as `ping`, `rsync`, and `wget`.
 
-See also the https://archive.org/details/unixtoolbox[Unix Toolbox] by Colin Barschel (archived).
+See also the https://archive.org/details/unixtoolbox[Unix Toolbox] by Colin
+Barschel (archived).
 
 == Shell programming
 
@@ -86,7 +91,8 @@ See also the https://archive.org/details/unixtoolbox[Unix Toolbox] by Colin Bars
 * `expand` — Convert tabs to spaces.
 * `fold` — Filter for folding lines.
 * link:./grep.adoc[`grep`] — Search text for a pattern.
-* link:./head-tail.adoc[`head`] — Copy the first part of files. Opposite to `tail`.
+* link:./head-tail.adoc[`head`] — Copy the first part of files. Opposite to
+  `tail`.
 * `iconv` — Codeset conversion.
 * `join` — Merges two sorted text files based on the presence of a common field.
 * link:./less.adoc[`less`] — Page through a text file.
@@ -96,7 +102,8 @@ See also the https://archive.org/details/unixtoolbox[Unix Toolbox] by Colin Bars
 * `pr` — Print files.
 * `sed` — Stream editor.
 * `sort` — Sort, merge or sequence check text files.
-* link:./head-tail.adoc[`tail`] — Copy the last part of a file. Opposite to `head`.
+* link:./head-tail.adoc[`tail`] — Copy the last part of a file. Opposite to
+  `head`.
 * `tr` — Translate characters.
 * `tsort` — Topological sort.
 * `unexpand` — Convert spaces to tabs.
@@ -132,7 +139,9 @@ See also the https://archive.org/details/unixtoolbox[Unix Toolbox] by Colin Bars
 * `uname` — Return system name.
 
 ****
-To find out more about any Unix command or program, view its man pages with the command `man <command>`. In addition, most commands accept the `--help` option, which will output a short summary of their available arguments.
+To find out more about any Unix command or program, view its man pages with the
+command `man <command>`. In addition, most commands accept the `--help` option,
+which will output a short summary of their available arguments.
 
 ----
 grep --help

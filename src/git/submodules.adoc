@@ -1,8 +1,11 @@
 = Submodules
 
-Submodules allow you to attach an external repository within another repository at a specific path.
+Submodules allow you to attach an external repository within another repository
+at a specific path.
 
-The parent repo stores a pointer to a specific commit in the submodule, not a branch — so submodule updates must be explicitly pulled and then committed to the parent.
+The parent repo stores a pointer to a specific commit in the submodule, not a
+branch — so submodule updates must be explicitly pulled and then committed to
+the parent.
 
 == Adding a submodule
 
@@ -11,11 +14,14 @@ The parent repo stores a pointer to a specific commit in the submodule, not a br
 git submodule add <repository-url> <local-path>
 ----
 
-This creates a `.gitmodules` file (if one doesn't already exist) containing the submodule's path and remote URL, and stages both the `.gitmodules` file and the new submodule directory for commit.
+This creates a `.gitmodules` file (if one doesn't already exist) containing the
+submodule's path and remote URL, and stages both the `.gitmodules` file and the
+new submodule directory for commit.
 
 == Cloning a repo that contains submodules
 
-After cloning a repository that contains submodules, the submodule directories will be empty. Run the following commands to populate them:
+After cloning a repository that contains submodules, the submodule directories
+will be empty. Run the following commands to populate them:
 
 [source,bash]
 ----
@@ -23,7 +29,9 @@ git submodule init
 git submodule update
 ----
 
-`git submodule init` copies the submodule entries from `.gitmodules` into `.git/config`. `git submodule update` checks out the commit recorded in the parent repo for each submodule.
+`git submodule init` copies the submodule entries from `.gitmodules` into
+`.git/config`. `git submodule update` checks out the commit recorded in the
+parent repo for each submodule.
 
 Alternatively, you can clone and initialize all submodules in one step:
 
@@ -42,7 +50,8 @@ git submodule update --init --recursive "<path>"
 
 == Updating a submodule
 
-Submodules are pinned to a specific commit (not to branches). To update a submodule to a newer commit:
+Submodules are pinned to a specific commit (not to branches). To update a
+submodule to a newer commit:
 
 [source,bash]
 ----
@@ -57,7 +66,8 @@ git commit -m "Update <submodule-name> submodule"
 
 == Removing a submodule
 
-Git has no built-in command to remove a submodule. You need to take several steps to manually remove a submodule:
+Git has no built-in command to remove a submodule. You need to take several
+steps to manually remove a submodule:
 
 [source,sh]
 ----

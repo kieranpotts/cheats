@@ -1,6 +1,7 @@
 = `mv`
 
-The `mv` command is used to move or rename files. The following command renames the file `temp` to `temp2`.
+The `mv` command is used to move or rename files. The following command renames
+the file `temp` to `temp2`.
 
 ----
 mv temp temp2

@@ -2,7 +2,10 @@
 
 In Pi, skills and prompts serve different purposes.
 
-Skills are self-contained capability packages the agent loads on-demand: workflows, setup instructions, helper scripts, references. Only each skill's *description* sits in the system prompt. Pi loads the full instructions on-demand when it judges the skill relevant (progressive disclosure).
+Skills are self-contained capability packages the agent loads on-demand:
+workflows, setup instructions, helper scripts, references. Only each skill's
+*description* sits in the system prompt. Pi loads the full instructions
+on-demand when it judges the skill relevant (progressive disclosure).
 
 == Invoking
 
@@ -13,7 +16,8 @@ The agent can load a skill itself, or you can load one explicitly:
 /skill:pdf-tools extract
 ----
 
-Parameters can be passed to the skill. The `/skill:` commands require `"enableSkillCommands": true` (set it via `/settings` or `settings.json`).
+Parameters can be passed to the skill. The `/skill:` commands require
+`"enableSkillCommands": true` (set it via `/settings` or `settings.json`).
 
 == Locations
 
@@ -44,4 +48,5 @@ description: ...         # up to 1024 chars: what it does and when to use it
 ---
 ----
 
-Optional fields: `license`, `compatibility`, `metadata`, `allowed-tools`, `disable-model-invocation`.
+Optional fields: `license`, `compatibility`, `metadata`, `allowed-tools`,
+`disable-model-invocation`.

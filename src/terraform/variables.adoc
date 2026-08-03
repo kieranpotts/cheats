@@ -1,26 +1,42 @@
 = Terraform: Variables
 
-In Terraform, there are two main files involved in setting input variables: `variables.tf` and `terraform.tfvars`.
+In Terraform, there are two main files involved in setting input variables:
+`variables.tf` and `terraform.tfvars`.
 
-The `variables.tf` file is used to declare variables and set their default values. In contains `variable` blocks that define the name, description, type, and default value of each variable. This file is normally committed to version control, as it serves as documentation for the variables used in the Terraform configuration.
+The `variables.tf` file is used to declare variables and set their default
+values. In contains `variable` blocks that define the name, description, type,
+and default value of each variable. This file is normally committed to version
+control, as it serves as documentation for the variables used in the Terraform
+configuration.
 
-The `terraform.tfvars` file is used to assign values to the variables declared in `variables.tf`, as an alternative to inputting the variables via the command line. This file is often excluded from version control, as it may contain sensitive data.
+The `terraform.tfvars` file is used to assign values to the variables declared
+in `variables.tf`, as an alternative to inputting the variables via the command
+line. This file is often excluded from version control, as it may contain
+sensitive data.
 
-Variables are accessed in `*.tf` files via the `var.[name]` syntax. For example, if you have a variable named `vpc_cidr` declared in `variables.tf`, you can reference it in your infrastructure-as-code files via `var.vpc_cidr`.
+Variables are accessed in `*.tf` files via the `var.[name]` syntax. For example,
+if you have a variable named `vpc_cidr` declared in `variables.tf`, you can
+reference it in your infrastructure-as-code files via `var.vpc_cidr`.
 
 In summary:
 
-* Variables are specified in `variables.tf`. Default values may be specified. Required input variables are given no default values.
-* Variables are optionally assigned values in `terraform.tfvars` and/or via command-line input.
+* Variables are specified in `variables.tf`. Default values may be specified.
+  Required input variables are given no default values.
+* Variables are optionally assigned values in `terraform.tfvars` and/or via
+  command-line input.
 * The values are accessed in the Terraform configuration via `var.[name]`.
 
 This separation makes it easier to maintain a strict variable interface.
 
-It is RECOMMENDED to define variables for all values that are likely to change between environments, and between deployments to the same environment. If variables are well-designed, it will be easier to vary the infrastructure configure between environments and deployments.
+It is RECOMMENDED to define variables for all values that are likely to change
+between environments, and between deployments to the same environment. If
+variables are well-designed, it will be easier to vary the infrastructure
+configure between environments and deployments.
 
 == variables.tf
 
-The `variables.tf` file defines the structure and metadata of input variables. It contains:
+The `variables.tf` file defines the structure and metadata of input variables.
+It contains:
 
 * Variable names and types
 * Descriptions
@@ -76,7 +92,8 @@ variable "ec2_name" {
 
 == terraform.tfvars
 
-The `terraform.tfvars` file provides actual values for the variables defined in `variables.tf`. This file contains:
+The `terraform.tfvars` file provides actual values for the variables defined in
+`variables.tf`. This file contains:
 
 * Simple variable assignments
 * Environment-specific settings
@@ -100,35 +117,50 @@ ec2_ami = "ami-03c6b308140d10488"
 ec2_name = "MyTestEC2"
 ----
 
-You MAY change the name of the `terraform.tfvars` file to something else. Terraform will automatically import variables from any file with the naming convention `*.auto.tfvars` or `*.auto.tfvars.json`.
+You MAY change the name of the `terraform.tfvars` file to something else.
+Terraform will automatically import variables from any file with the naming
+convention `*.auto.tfvars` or `*.auto.tfvars.json`.
 
-Sometimes you don't want Terraform to automatically import variables. Instead, you want to explicitly specify the file to use. This is done using the `-var-file` command-line option.
+Sometimes you don't want Terraform to automatically import variables. Instead,
+you want to explicitly specify the file to use. This is done using the
+`-var-file` command-line option.
 
 ----
 $ terraform apply -var-file="staging.tfvars"
 ----
 
-This can be useful for separating environment-specific variables from the main/default configuration.
+This can be useful for separating environment-specific variables from the
+main/default configuration.
 
 == Command-line input
 
-If a variable does not have a default value, and if no value is assigned to it in `terraform.tfvars`, Terraform will prompt for a value when the configuration is applied using `terraform apply`.
+If a variable does not have a default value, and if no value is assigned to it
+in `terraform.tfvars`, Terraform will prompt for a value when the configuration
+is applied using `terraform apply`.
 
-Alternatively, users can explicitly input required values using the `-var` command-line option.
+Alternatively, users can explicitly input required values using the `-var`
+command-line option.
 
 ----
 $ terraform apply -var="password=abcdefghik"
 ----
 
-Variables inputted via the command line will override any values set in `terraform.tfvars`, which in turn overrides any default values set in `variables.tf`.
+Variables inputted via the command line will override any values set in
+`terraform.tfvars`, which in turn overrides any default values set in
+`variables.tf`.
 
 == Environment variables
 
-An alternative way for users to set variable values is to use environment variables.
+An alternative way for users to set variable values is to use environment
+variables.
 
-This is particularly useful for setting sensitive values, such as passwords or API keys, without exposing them in the command line or in the `terraform.tfvars` file.
+This is particularly useful for setting sensitive values, such as passwords or
+API keys, without exposing them in the command line or in the `terraform.tfvars`
+file.
 
-Environment variables with the `TF_VAR_` prefix will be automatically picked up and the values "auto-filled" by Terraform. The following example shows how to set the `password` variable using an environment variable:
+Environment variables with the `TF_VAR_` prefix will be automatically picked up
+and the values "auto-filled" by Terraform. The following example shows how to
+set the `password` variable using an environment variable:
 
 ----
 export TF_VAR_password=abcdefghik
@@ -138,19 +170,23 @@ export TF_VAR_password=abcdefghik
 
 It is RECOMMENDED that all variables have default values.
 
-This allows the configuration to be used without requiring any command-line input from the user.
+This allows the configuration to be used without requiring any command-line
+input from the user.
 
-Having default values for everything also makes it easier to automate deployment to different environments (eg. to test and staging environments).
+Having default values for everything also makes it easier to automate deployment
+to different environments (eg. to test and staging environments).
 
 == Variable precedence
 
-Terraform loads variables in the following order. Later sources will override and extend earlier sources.
+Terraform loads variables in the following order. Later sources will override
+and extend earlier sources.
 
 * Default values set in `variables.tf`.
 * Environment variables.
 * The `terraform.tfvars` file, if present.
 * The `terraform.tfvars.json` file, if present.
-* Any `*.auto.tfvars` or `*.auto.tfvars.json` files, if present, in the lexical order of their file names.
+* Any `*.auto.tfvars` or `*.auto.tfvars.json` files, if present, in the lexical
+  order of their file names.
 * Any `-var` or `-var-file` command-line options specified on the command line.
 
 == Advanced variable usage
@@ -190,7 +226,8 @@ dynamic "ingress" {
 }
 ----
 
-Variable values can also be maps, allowing for things like tags to be extracted to variables:
+Variable values can also be maps, allowing for things like tags to be extracted
+to variables:
 
 .main.tf
 [source,hcl]
@@ -215,7 +252,8 @@ variable "tags" {
 }
 ----
 
-You can also extend maps using the `merge()` function. This is useful for adding tags to resources without having to modify the original map.
+You can also extend maps using the `merge()` function. This is useful for adding
+tags to resources without having to modify the original map.
 
 .main.tf
 [source,hcl]
@@ -228,11 +266,15 @@ resource "aws_eip" "web" {
 }
 ----
 
-The above example also demonstrates how you can inject the values of variables into string values, using the `${var}` syntax. This is useful for creating dynamic values based on the values of other variables.
+The above example also demonstrates how you can inject the values of variables
+into string values, using the `${var}` syntax. This is useful for creating
+dynamic values based on the values of other variables.
 
 == Secrets
 
-Variables that hold secrets should be marked as sensitive. This prevents Terraform from displaying the values in the console output. (It does not stop secrets leaking into the Terraform state file, however.)
+Variables that hold secrets should be marked as sensitive. This prevents
+Terraform from displaying the values in the console output. (It does not stop
+secrets leaking into the Terraform state file, however.)
 
 [source,hcl]
 ----
@@ -246,7 +288,9 @@ variable "key_pair" {
 
 == Validation
 
-Validation blocks can be nested in variable block. Each validation block defines a condition that assigned values must meet. If the condition is not met, an error message is displayed and `terraform apply` will not run.
+Validation blocks can be nested in variable block. Each validation block defines
+a condition that assigned values must meet. If the condition is not met, an
+error message is displayed and `terraform apply` will not run.
 
 [source,hcl]
 ----
@@ -263,7 +307,9 @@ variable "password" {
 
 == Local values
 
-Local values are a way to assign a value to a variable that is only used within the scope of the module it is defined in. This is useful for creating temporary values that are not intended to be passed to other modules or resources.
+Local values are a way to assign a value to a variable that is only used within
+the scope of the module it is defined in. This is useful for creating temporary
+values that are not intended to be passed to other modules or resources.
 
 Consider the following example:
 
@@ -324,7 +370,9 @@ resource "aws_vpc" "main" {
 }
 ----
 
-Multiple `locals` blocks can be defined in each module. Values themselves can be maps, and this is useful for defining tags and other things that exist as map structures.
+Multiple `locals` blocks can be defined in each module. Values themselves can be
+maps, and this is useful for defining tags and other things that exist as map
+structures.
 
 [source,hcl]
 ----

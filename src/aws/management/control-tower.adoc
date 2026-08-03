@@ -1,6 +1,9 @@
 = AWS Control Tower
 
-AWS Control Tower simplifies the process of creating multi-account environments. It sets up the governance, compliance, and security guardrails for you. It integrates with other services and features to setup the environment for you, including:
+AWS Control Tower simplifies the process of creating multi-account environments.
+It sets up the governance, compliance, and security guardrails for you. It
+integrates with other services and features to setup the environment for you,
+including:
 
 * AWS Organizations
 * Security Control Policies (SCPs)

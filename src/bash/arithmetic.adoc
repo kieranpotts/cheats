@@ -9,7 +9,8 @@ $ echo 1 + 1
 
 The output will be "1 + 1". In Bash, all values are strings by default.
 
-To evaluate arithmetic expressions, you need to encapsulate those expressions using the following syntax:
+To evaluate arithmetic expressions, you need to encapsulate those expressions
+using the following syntax:
 
 [source,bash]
 ----

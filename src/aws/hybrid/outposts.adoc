@@ -1,10 +1,16 @@
 = AWS Outposts
 
-If you have a corporate data center, you can install a piece of hardware that connects it to the AWS cloud. This is called an *AWS Outpost*.
+If you have a corporate data center, you can install a piece of hardware that
+connects it to the AWS cloud. This is called an *AWS Outpost*.
 
-This is a *hybrid cloud* solution. You have a *private cloud* in your own data center, and a *public cloud* in AWS, and connectivity between the two using a network connection — usually *AWS Managed VPN* or *AWS Direct Connect* will be used for this purpose.
+This is a *hybrid cloud* solution. You have a *private cloud* in your own data
+center, and a *public cloud* in AWS, and connectivity between the two using a
+network connection — usually *AWS Managed VPN* or *AWS Direct Connect* will be
+used for this purpose.
 
-AWS Outposts essentially allows you to extend the functionality of your own data center with AWS services. Only a subset of AWS services are supported however, including:
+AWS Outposts essentially allows you to extend the functionality of your own data
+center with AWS services. Only a subset of AWS services are supported however,
+including:
 
 * EC2
 * EBS
@@ -14,4 +20,6 @@ AWS Outposts essentially allows you to extend the functionality of your own data
 * EMR
 * … and more services will be added with time.
 
-With an Outpost, you can actually deploy VPCs across both your public and private cloud services, and you can run things like EC2 instances directly on your own hardware.
+With an Outpost, you can actually deploy VPCs across both your public and
+private cloud services, and you can run things like EC2 instances directly on
+your own hardware.

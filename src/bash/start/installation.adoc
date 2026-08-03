@@ -1,12 +1,14 @@
 = Bash: Installation
 
-Bash is bundled with most mainstream Linux distributions. You can check which version you have by typing:
+Bash is bundled with most mainstream Linux distributions. You can check which
+version you have by typing:
 
 ----
 bash --version
 ----
 
-Bash is bundled with macOS, but since Catalina (v10.15) it is not the default shell (which was changed to Zsh). To switch to the Bash shell on macOS, type:
+Bash is bundled with macOS, but since Catalina (v10.15) it is not the default
+shell (which was changed to Zsh). To switch to the Bash shell on macOS, type:
 
 ----
 bash
@@ -18,7 +20,8 @@ To make Bash the default shell again:
 chsh -s /bin/bash
 ----
 
-On Windows, it is recommended to install Windows Subsystem for Linux, as the Bash implementation in Ubuntu is more complete than emulators like Git Bash.
+On Windows, it is recommended to install Windows Subsystem for Linux, as the
+Bash implementation in Ubuntu is more complete than emulators like Git Bash.
 
 ----
 wsl --install

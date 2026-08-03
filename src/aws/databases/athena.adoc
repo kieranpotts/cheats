@@ -1,6 +1,7 @@
 = AWS Athena
 
-*AWS Athena* is a serverless service to run SQL queries against data stored in places like:
+*AWS Athena* is a serverless service to run SQL queries against data stored in
+places like:
 
 - S3
 - MySQL
@@ -14,7 +15,9 @@
 - Apache HBase
 - _Etc._
 
-You will need a Lambda function to connect Athena to your source (if not S3). You then map the data from the source into tables in Athena, and from there it can be queried.
+You will need a Lambda function to connect Athena to your source (if not S3).
+You then map the data from the source into tables in Athena, and from there it
+can be queried.
 
 Athena can query data in CSV, TSV, JSON, Parquet, and ORC formats.
 

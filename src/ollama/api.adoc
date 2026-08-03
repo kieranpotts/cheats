@@ -1,6 +1,8 @@
 = API
 
-Ollama exposes a local REST API on port 11434 by default. It is compatible with the OpenAI API format, which means tools and libraries built for OpenAI can be pointed at Ollama with minimal changes.
+Ollama exposes a local REST API on port 11434 by default. It is compatible with
+the OpenAI API format, which means tools and libraries built for OpenAI can be
+pointed at Ollama with minimal changes.
 
 [source,sh]
 ----

@@ -1,6 +1,7 @@
 = Terraform: AWS - Resources
 
-A minimal definition for a resource that will run a web server on an EC2 instance.
+A minimal definition for a resource that will run a web server on an EC2
+instance.
 
 .main.tf
 [source,hcl]
@@ -11,11 +12,14 @@ resource "aws_instance" "web_server" {
 }
 ----
 
-The "aws_instance" resource type refers to an EC2 instance. The "web_server" bit can be whatever value we want to identify the resource in the rest of your infrastructure-as-code artifacts.
+The "aws_instance" resource type refers to an EC2 instance. The "web_server" bit
+can be whatever value we want to identify the resource in the rest of your
+infrastructure-as-code artifacts.
 
 == Tags
 
-Optionally, tags may be added to resources. Tags are key-value pairs that can be used to identify and organize resources.
+Optionally, tags may be added to resources. Tags are key-value pairs that can be
+used to identify and organize resources.
 
 .main.tf
 [source,hcl]
@@ -30,7 +34,9 @@ resource "aws_instance" "web_server" {
 }
 ----
 
-Amazon Machine Image (AMI) codes can be found at https://console.aws.amazon.com/ec2/. These values are another good candidate to extract to variables.
+Amazon Machine Image (AMI) codes can be found at
+https://console.aws.amazon.com/ec2/. These values are another good candidate to
+extract to variables.
 
 .terraform.tfvars
 [source,hcl]
@@ -55,7 +61,8 @@ resource "aws_instance" "web_server" {
 
 == Security groups
 
-All resources should be added to at least one security group. Security groups are referenced via their IDs.
+All resources should be added to at least one security group. Security groups
+are referenced via their IDs.
 
 .main.tf
 [source,hcl]
@@ -70,7 +77,9 @@ resource "aws_instance" "web_server" {
 
 == Public IP address assignment
 
-By default, EC2 instances are assigned a private IP address. If you want to assign a public IP address, you must set the `associate_public_ip_address` argument to `true`.
+By default, EC2 instances are assigned a private IP address. If you want to
+assign a public IP address, you must set the `associate_public_ip_address`
+argument to `true`.
 
 .main.tf
 [source,hcl]
@@ -86,7 +95,9 @@ resource "aws_instance" "web_server" {
 
 == User data
 
-User data is a script that runs when an instance is launched. This example installs a web server and creates a simple HTML page with the instance's private IP address; it shows how to use heredoc syntax to define multi-line scripts.
+User data is a script that runs when an instance is launched. This example
+installs a web server and creates a simple HTML page with the instance's private
+IP address; it shows how to use heredoc syntax to define multi-line scripts.
 
 .main.tf
 [source,hcl]
@@ -113,7 +124,9 @@ EOF
 }
 ----
 
-Alternatively, rather than inlining user data scripts, you can load them from separate files. Note the inclusion of the `user_data_replace_on_change` argument – this is required.
+Alternatively, rather than inlining user data scripts, you can load them from
+separate files. Note the inclusion of the `user_data_replace_on_change` argument
+– this is required.
 
 .main.tf
 [source,hcl]
@@ -145,9 +158,11 @@ chkconfig httpd on
 
 ----
 
-Alternatively, template files can be used. This is useful if you want to use variables in the user data script.
+Alternatively, template files can be used. This is useful if you want to use
+variables in the user data script.
 
-The `file()` function is swapped for `templatefile()`. It is not required to use the `.tpl` file extension for template files.
+The `file()` function is swapped for `templatefile()`. It is not required to use
+the `.tpl` file extension for template files.
 
 .main.tf
 [source,hcl]

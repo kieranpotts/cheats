@@ -1,10 +1,15 @@
 = Docker Compose
 
-When working with multiple containers that need to communicate with each other, it's easier to use Docker Compose. This is a tool for defining and running multi-container applications.
+When working with multiple containers that need to communicate with each other,
+it's easier to use Docker Compose. This is a tool for defining and running
+multi-container applications.
 
-With Docker Compose, you use a YAML file to configure your application's services, networks, and volumes. Then, with a single command, you create and start all the containers ("services") from your configuration.
+With Docker Compose, you use a YAML file to configure your application's
+services, networks, and volumes. Then, with a single command, you create and
+start all the containers ("services") from your configuration.
 
-The manual configuration described in the link:./networking.adoc[networking] section can be mapped to a static configuration like this:
+The manual configuration described in the link:./networking.adoc[networking]
+section can be mapped to a static configuration like this:
 
 .`docker-compose.yml`
 [source,yaml]
@@ -31,27 +36,35 @@ services:
       - ME_CONFIG_MONGODB_ADMIN_USERPASSWORD=password
 ----
 
-By default, `docker compose` (`docker-compose` in earlier versions of Docker) will automatically create a common network for all containers defined in a `docker-compose.yml` file. This is another advantage of using a `docker-compose.yml` file – we don't need to manually create a network.
+By default, `docker compose` (`docker-compose` in earlier versions of Docker)
+will automatically create a common network for all containers defined in a
+`docker-compose.yml` file. This is another advantage of using a
+`docker-compose.yml` file – we don't need to manually create a network.
 
-To start the containers using the `docker-compose.yml` configuration in the current working directory, run the following command:
+To start the containers using the `docker-compose.yml` configuration in the
+current working directory, run the following command:
 
 ----
 docker compose up
 ----
 
-Because there will be multiple containers, you'd typically run them in detached mode:
+Because there will be multiple containers, you'd typically run them in detached
+mode:
 
 ----
 docker compose up -d
 ----
 
-If you change the name of the `docker-compose.yml` file, or if it exists in another directory, you will need to specify the file name in the command, eg.:
+If you change the name of the `docker-compose.yml` file, or if it exists in
+another directory, you will need to specify the file name in the command, eg.:
 
 ----
 docker compose -d -f mongo.yml up
 ----
 
-Environment variables can be used in the `docker-compose.yml` file. If a `.env` file exists in the same directory, Docker will automatically read these in. Here's an example for a Postgres database:
+Environment variables can be used in the `docker-compose.yml` file. If a `.env`
+file exists in the same directory, Docker will automatically read these in.
+Here's an example for a Postgres database:
 
 .`docker-compose.yml`
 [source,yaml]
@@ -69,7 +82,8 @@ services:
       - POSTGRES_DB=${DB_NAME}
 ----
 
-Below is a more advanced configuration for a distributed system with a client application, a server application, and a server-side database.
+Below is a more advanced configuration for a distributed system with a client
+application, a server application, and a server-side database.
 
 .Dockerfile for back-end application
 [source,Dockerfile]
@@ -102,7 +116,8 @@ EXPOSE 3000
 CMD [ "npm", "run", "dev" ]
 ----
 
-For the MongoDB database, we don't need to create a Dockerfile for that, because we can just pull a ready-made image from Docker Hub.
+For the MongoDB database, we don't need to create a Dockerfile for that, because
+we can just pull a ready-made image from Docker Hub.
 
 .docker-compose.yml file
 [source,yaml]
@@ -148,7 +163,10 @@ networks:
     driver: bridge
 ----
 
-With the inter-service communication enabled using Docker's network bridge, we can configure the individual applications to communicate with each other. Configurations will vary depending on how the applications are coded, but something like this:
+With the inter-service communication enabled using Docker's network bridge, we
+can configure the individual applications to communicate with each other.
+Configurations will vary depending on how the applications are coded, but
+something like this:
 
 .Front-end .env file
 [source,env]
@@ -163,9 +181,11 @@ MONGODB_URI=mongodb://mongo-db:27017/to-do-app
 PORT=4000
 ----
 
-Notice that the hostname for the MongoDB is the container name for the MongoDB service: "mongo-db".
+Notice that the hostname for the MongoDB is the container name for the MongoDB
+service: "mongo-db".
 
-To run all the services together, from the directory of the `docker-compose.yml` file, run:
+To run all the services together, from the directory of the `docker-compose.yml`
+file, run:
 
 ----
 docker compose up -d

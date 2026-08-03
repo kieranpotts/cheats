@@ -1,6 +1,8 @@
 = Java: toString() and hashCode()
 
-The `toString()` method is used to get a string representation of an object. The default implementation of the `toString()` method returns the class name and the hash code of the object.
+The `toString()` method is used to get a string representation of an object. The
+default implementation of the `toString()` method returns the class name and the
+hash code of the object.
 
 [source,java]
 ----
@@ -11,14 +13,18 @@ System.out.println(obj); // "java.lang.Object@15db9742"
 System.out.println(obj.toString()); // "java.lang.Object@15db9742"
 ----
 
-The `hashCode()` method is used to get the hash code of an object. The default implementation of the `hashCode()` method returns a unique integer value (hexadecimal format) for each object. The hash is based on the values of the object.
+The `hashCode()` method is used to get the hash code of an object. The default
+implementation of the `hashCode()` method returns a unique integer value
+(hexadecimal format) for each object. The hash is based on the values of the
+object.
 
 [source,java]
 ----
 System.out.println(obj.hashCode()); // "366712642"
 ----
 
-Both the `toString()` and `hashCode()` methods can be overridden in a class to provide a more meaningful string representation and hash code.
+Both the `toString()` and `hashCode()` methods can be overridden in a class to
+provide a more meaningful string representation and hash code.
 
 [source,java]
 ----
@@ -50,7 +56,9 @@ System.out.println(laptop1);            // "Model: Dell XPS 15, Price: 2000"
 System.out.println(laptop1.toString()); // "Model: Dell XPS 15, Price: 2000"
 ----
 
-However, there is a problem with the above implementation. If we add the following code, we expect `laptop1.equals(laptop2)` to return `true`, because both laptops are exactly the same model and have the same price.
+However, there is a problem with the above implementation. If we add the
+following code, we expect `laptop1.equals(laptop2)` to return `true`, because
+both laptops are exactly the same model and have the same price.
 
 [source,java]
 ----
@@ -62,7 +70,12 @@ boolean result = laptop1.equals(laptop2);
 System.out.println(result); // false
 ----
 
-To fix this, we also need to override the `equals()` method. Internally, the `equals()` method uses the `hashCode()` method to compare if two objects encapsulate the same data (since the hashcode is based on the values of the object). Therefore, if we implement a custom `hashCode()` method, we should also override the default logic for `equals()` to maintain the contract between the two methods.
+To fix this, we also need to override the `equals()` method. Internally, the
+`equals()` method uses the `hashCode()` method to compare if two objects
+encapsulate the same data (since the hashcode is based on the values of the
+object). Therefore, if we implement a custom `hashCode()` method, we should also
+override the default logic for `equals()` to maintain the contract between the
+two methods.
 
 Here's the full implementation:
 
@@ -107,4 +120,6 @@ class Laptop {
 }
 ----
 
-There's a lot of boilerplate here, but IDEs can auto-generate these kinds of methods. In VS Code, for example, go to *Context Menu* > *Source Action* > *Generate hashcode() and equals()...*.
+There's a lot of boilerplate here, but IDEs can auto-generate these kinds of
+methods. In VS Code, for example, go to *Context Menu* > *Source Action* >
+*Generate hashcode() and equals()...*.

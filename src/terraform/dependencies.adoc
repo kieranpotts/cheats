@@ -1,8 +1,12 @@
 = Terraform: Dependencies
 
-By default, Terraform will try to infer dependencies between resources, determining the order in which changes are applied. Otherwise, Terraform will try to create resources in parallel.
+By default, Terraform will try to infer dependencies between resources,
+determining the order in which changes are applied. Otherwise, Terraform will
+try to create resources in parallel.
 
-You can use Terraform configuration to control the sequencing of changes. In the following example, we have three servers, and one security group that is applied to all of the servers.
+You can use Terraform configuration to control the sequencing of changes. In the
+following example, we have three servers, and one security group that is applied
+to all of the servers.
 
 [source,hcl]
 ----
@@ -60,11 +64,17 @@ resource "aws_security_group" "general" {
 }
 ----
 
-The only implicit dependency is between each of the three resources and the security group. Because the security group is referenced from all the server resources, Terraform will redeploy the security group before deploying any updates to the servers.
+The only implicit dependency is between each of the three resources and the
+security group. Because the security group is referenced from all the server
+resources, Terraform will redeploy the security group before deploying any
+updates to the servers.
 
-Terraform will try to deploy updates to the servers in parallel. If we want to control the order in which the servers are deployed, we can use the `depends_on` argument to define explicit dependencies.
+Terraform will try to deploy updates to the servers in parallel. If we want to
+control the order in which the servers are deployed, we can use the `depends_on`
+argument to define explicit dependencies.
 
-The following changes will ensure that the database server is deployed first, followed by the application server, and finally the web server.
+The following changes will ensure that the database server is deployed first,
+followed by the application server, and finally the web server.
 
 [source,hcl]
 ----

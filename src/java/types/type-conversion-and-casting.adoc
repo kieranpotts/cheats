@@ -1,6 +1,8 @@
 = Java: Type conversion and casting
 
-The following code will not compile, because variable `a` (4 bytes) has a bigger range of possible values than variable `b` (1 byte). Therefore data could be lost via the assignment operation.
+The following code will not compile, because variable `a` (4 bytes) has a bigger
+range of possible values than variable `b` (1 byte). Therefore data could be
+lost via the assignment operation.
 
 [source,java]
 ----
@@ -18,7 +20,8 @@ double d = 4.5;
 int i = d; // Type mismatch: cannot convert from double to int.
 ----
 
-The following example will compile, because `b` has a smaller range of possible values than `a`, so will fit into it. This is an *implicit conversion*.
+The following example will compile, because `b` has a smaller range of possible
+values than `a`, so will fit into it. This is an *implicit conversion*.
 
 [source,java]
 ----
@@ -29,7 +32,8 @@ a = b;
 System.out.println(a); // 127
 ----
 
-If you are *explicit* about the type conversion, the code will compile, even if you risk losing data through the conversion.
+If you are *explicit* about the type conversion, the code will compile, even if
+you risk losing data through the conversion.
 
 [source,java]
 ----
@@ -49,18 +53,27 @@ int i = (int) d;
 System.out.println(i); // 4
 ----
 
-This is called *casting* or *typecasting*. In this case you are explicitly casting an integer value to a byte. The typecasting syntax tells the compiler that you know what you are doing, and that you understand that you might lose data in this operation.
+This is called *casting* or *typecasting*. In this case you are explicitly
+casting an integer value to a byte. The typecasting syntax tells the compiler
+that you know what you are doing, and that you understand that you might lose
+data in this operation.
 
-After this operation, `b` will be 1, because 257 % 256 = 1. The modular operator `%` returns the remainder after dividing the first operand by the second operand. 257 is the value of `a`. 256 is the maximum number of possible values in a byte (the values range from from -128 to +127).
+After this operation, `b` will be 1, because 257 % 256 = 1. The modular operator
+`%` returns the remainder after dividing the first operand by the second
+operand. 257 is the value of `a`. 256 is the maximum number of possible values
+in a byte (the values range from from -128 to +127).
 
-The following code also will not compile, because you are trying to assign a double value to an int variable.
+The following code also will not compile, because you are trying to assign a
+double value to an int variable.
 
 [source,java]
 ----
 int x = 5.6;
 ----
 
-You need to be explicit if you want to assign a float/double value to an integer, because in doing this operation you will lose the precision after the decimal point.
+You need to be explicit if you want to assign a float/double value to an
+integer, because in doing this operation you will lose the precision after the
+decimal point.
 
 [source,java]
 ----
@@ -69,7 +82,10 @@ int x = (int) f;
 System.out.println(x); // 5
 ----
 
-Results of operations must be saved in data types that are capable of holding the result data. In the following example, even though the operands are bytes, the result of the multiplication is an int, so Java will automatically promote the result to an int value. This is called *type promotion*.
+Results of operations must be saved in data types that are capable of holding
+the result data. In the following example, even though the operands are bytes,
+the result of the multiplication is an int, so Java will automatically promote
+the result to an int value. This is called *type promotion*.
 
 [source,java]
 ----
@@ -80,7 +96,8 @@ int result1 = ten * thirty;
 System.out.println(result1); // 300
 ----
 
-This will not compile, because you're trying to assign an int value to a byte variable:
+This will not compile, because you're trying to assign an int value to a byte
+variable:
 
 [source,java]
 ----

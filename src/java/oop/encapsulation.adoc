@@ -1,10 +1,17 @@
 = Java: Encapsulation
 
-A principle of good object-oriented design is encapsulation. This means that the internal state of an object should be hidden from the outside world, and can only be accessed or modified through a well-defined interface, and not directly via the instance variables.
+A principle of good object-oriented design is encapsulation. This means that the
+internal state of an object should be hidden from the outside world, and can
+only be accessed or modified through a well-defined interface, and not directly
+via the instance variables.
 
-THe following class demonstrates encapsulation in Java. The `age` and `name` variables are private, so they can only be accessed from within the class. To access them from outside the class, you need to use the public getter and setter methods.
+THe following class demonstrates encapsulation in Java. The `age` and `name`
+variables are private, so they can only be accessed from within the class. To
+access them from outside the class, you need to use the public getter and setter
+methods.
 
-It is best practice to make all instance variables private, and provide public getter and setter methods for them.
+It is best practice to make all instance variables private, and provide public
+getter and setter methods for them.
 
 [source,java]
 ----

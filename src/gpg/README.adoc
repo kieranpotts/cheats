@@ -1,32 +1,57 @@
 = GPG (GNU Privacy Guard)
 
-https://www.ietf.org/rfc/rfc4880.txt[OpenPGP] is a standard for cryptographic privacy and authentication. The standard contains specifications on algorithms, encodings, etc. for encrypting and signing data, and other use cases for cryptography. OpenPGP specifies a decentralized trust model, in which pairs of public and private keys are managed by the users of those keys themselves, rather than by a central authority.
+https://www.ietf.org/rfc/rfc4880.txt[OpenPGP] is a standard for cryptographic
+privacy and authentication. The standard contains specifications on algorithms,
+encodings, etc. for encrypting and signing data, and other use cases for
+cryptography. OpenPGP specifies a decentralized trust model, in which pairs of
+public and private keys are managed by the users of those keys themselves,
+rather than by a central authority.
 
-https://www.gnupg.org/[GPG] is a free, open source implementation of the OpenPGP standard. It is a command line tool, widely available on all major operating systems. It is widely trusted because it is open source, follows established cryptographic standards, and has been thoroughly audited by security experts over many years.
+https://www.gnupg.org/[GPG] is a free, open source implementation of the OpenPGP
+standard. It is a command line tool, widely available on all major operating
+systems. It is widely trusted because it is open source, follows established
+cryptographic standards, and has been thoroughly audited by security experts
+over many years.
 
 == How GPG works
 
-GPG implements key-based asymmetric cryptography. You use the `gpg` utility to create two mathematically related keys:
+GPG implements key-based asymmetric cryptography. You use the `gpg` utility to
+create two mathematically related keys:
 
-* A *public key*, which you share openly, and which is used by others to encrypt messages that they send to you, or to verify your signatures.
+* A *public key*, which you share openly, and which is used by others to encrypt
+  messages that they send to you, or to verify your signatures.
 
-* A *private key*, which you keep secret, and which you use to decrypt messages that are sent to you, or to create digital signatures for your own messages.
+* A *private key*, which you keep secret, and which you use to decrypt messages
+  that are sent to you, or to create digital signatures for your own messages.
 
-Thus, when someone wants to send you a secure message – whether by email or any other insecure channel – they use your public key to encrypt it. Only you can decrypt it with your private key.
+Thus, when someone wants to send you a secure message – whether by email or any
+other insecure channel – they use your public key to encrypt it. Only you can
+decrypt it with your private key.
 
-You can also "sign" your own files and messages. This is done to prove the authenticity of those files and messages – to prove that they really came from you and haven't been tampered with by others. This works the other way around: you sign a message with your private key, and recipients of the message use your public key to verify the message's signature.
+You can also "sign" your own files and messages. This is done to prove the
+authenticity of those files and messages – to prove that they really came from
+you and haven't been tampered with by others. This works the other way around:
+you sign a message with your private key, and recipients of the message use your
+public key to verify the message's signature.
 
-When you sign a message, you're adding a cryptographically-strong proof that you – or someone in possession of your private key – wrote the message, and that the message was not tampered with. The steps to add a signature are:
+When you sign a message, you're adding a cryptographically-strong proof that you
+– or someone in possession of your private key – wrote the message, and that the
+message was not tampered with. The steps to add a signature are:
 
-1. You calculate a hash (or checksum) of the message, using a hashing function such as SHA-256. Hashing functions are one-way operations that generate a unique set of bytes from a message.
-2. You use your private key to sign the calculated hash, using algorithms like RSA.
+1. You calculate a hash (or checksum) of the message, using a hashing function
+   such as SHA-256. Hashing functions are one-way operations that generate a
+   unique set of bytes from a message.
+2. You use your private key to sign the calculated hash, using algorithms like
+   RSA.
 3. You send the signature with the original clear-text (unencrypted) message.
 
-It is possible to use RSA to both sign and encrypt a message. This is called "authenticated encryption".
+It is possible to use RSA to both sign and encrypt a message. This is called
+"authenticated encryption".
 
 == Use cases
 
-GPG can be used to encrypt, decrypt, sign, and verify any arbitrary data. Common use cases include:
+GPG can be used to encrypt, decrypt, sign, and verify any arbitrary data. Common
+use cases include:
 
 * Secure email
 * File encryption
@@ -36,14 +61,23 @@ GPG can be used to encrypt, decrypt, sign, and verify any arbitrary data. Common
 
 === Package managers
 
-For example, when adding packages from third-party repositories in Linux, GPG keys tend to be used to verify the authenticity of the downloaded packages. It works like this:
+For example, when adding packages from third-party repositories in Linux, GPG
+keys tend to be used to verify the authenticity of the downloaded packages. It
+works like this:
 
-1. Third-party package providers sign their packages, adding a signature to the package metadata using their private GPG key.
-2. The third-party repository publishes its public GPG key at a publicly accessible web address.
+1. Third-party package providers sign their packages, adding a signature to the
+   package metadata using their private GPG key.
+2. The third-party repository publishes its public GPG key at a publicly
+   accessible web address.
 3. You download and add the public key to your system's trusted keyring.
-4. When you install packages from the third-party repository, your package manager verifies the authenticity of the downloaded packages by verifying the packages' signatures with the public key. Only valid packages are installed.
+4. When you install packages from the third-party repository, your package
+   manager verifies the authenticity of the downloaded packages by verifying the
+   packages' signatures with the public key. Only valid packages are installed.
 
-In the following code example, Docker's public GPG key is downloaded and added to APT's keyring. Docker's own package repository is then added as a source for APT to install packages from, and APT is configured to use Docker's public key to verify packages downloaded from that repository.
+In the following code example, Docker's public GPG key is downloaded and added
+to APT's keyring. Docker's own package repository is then added as a source for
+APT to install packages from, and APT is configured to use Docker's public key
+to verify packages downloaded from that repository.
 
 ----
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor --yes --output /etc/apt/keyrings/docker.gpg
@@ -80,7 +114,10 @@ sec   rsa4096/3AA5C34371567BD2 2025-09-15 [SC]
       C142F66F50AC8C832C8CF7553AA5C34371567BD2
 ----
 
-If you already have a key you can reuse – one that matches the email address associated with your GitHub/GitLab account – then use the following command to export the public key, and copy the output into your GitHub/GitLab account (in Settings → SSH and GPG keys).
+If you already have a key you can reuse – one that matches the email address
+associated with your GitHub/GitLab account – then use the following command to
+export the public key, and copy the output into your GitHub/GitLab account (in
+Settings → SSH and GPG keys).
 
 ----
 $ gpg --armor --export <key-id>
@@ -92,21 +129,29 @@ If you don't already have a GPG key, create one with the following command.
 $ gpg --full-generate-key
 ----
 
-At the prompts, choose RSA, 4096 bits, and set an expiration date. For your uid, use the same email address you use to create Git commits that will be pushed to GitHub/GitLab. If you use a private email alias provided by GitHub, use that.
+At the prompts, choose RSA, 4096 bits, and set an expiration date. For your uid,
+use the same email address you use to create Git commits that will be pushed to
+GitHub/GitLab. If you use a private email alias provided by GitHub, use that.
 
-Optionally, you can set a passphrase to protect your private key. If you set a passphrase, you'll need to enter it each time you use the key (though the GPG agent can cache it for a while). You may also need to add the following line to your `~/.bashrc` or `~/.zshrc` file. This tells GPG to use the current terminal for passphrase prompts.
+Optionally, you can set a passphrase to protect your private key. If you set a
+passphrase, you'll need to enter it each time you use the key (though the GPG
+agent can cache it for a while). You may also need to add the following line to
+your `~/.bashrc` or `~/.zshrc` file. This tells GPG to use the current terminal
+for passphrase prompts.
 
 ----
 export GPG_TTY=$(tty)
 ----
 
-Before adding the GPG key to your Git config, check that you've configured your key correctly. You can do this by using it to sign an arbitrary piece of text:
+Before adding the GPG key to your Git config, check that you've configured your
+key correctly. You can do this by using it to sign an arbitrary piece of text:
 
 ----
 echo "test" | gpg --clearsign
 ----
 
-You should be prompted for your GPG key's passphrase (if set) and you will see the signed text output.
+You should be prompted for your GPG key's passphrase (if set) and you will see
+the signed text output.
 
 Now you can add your key ID to your Git config:
 
@@ -121,14 +166,18 @@ git commit -S -m "Your commit message"
 git tag -s v1.0 -m "Version 1.0"
 ----
 
-Once you've verified this works as expected, you can make this the default behavior for all commits and all tags:
+Once you've verified this works as expected, you can make this the default
+behavior for all commits and all tags:
 
 ----
 $ git config --global commit.gpgsign true
 $ git config --global tag.gpgsign true
 ----
 
-Finally, before you push any signed commits, you need to export your public key, and copy the output into your GitHub/GitLab account (in Settings → SSH and GPG keys). Once set up, a "verified" badge will be shown next to your signed commits in the upstream repository's GUI.
+Finally, before you push any signed commits, you need to export your public key,
+and copy the output into your GitHub/GitLab account (in Settings → SSH and GPG
+keys). Once set up, a "verified" badge will be shown next to your signed commits
+in the upstream repository's GUI.
 
 ----
 $ gpg --armor --export <key-id>
@@ -136,9 +185,15 @@ $ gpg --armor --export <key-id>
 
 ==== WSL-specific configuration
 
-The above configuration works fine when using Git exclusively in the WSL environment. But if you are committing from a Windows GUI client (eg. VS Code's built-in Git client, or GitHub Desktop), you will need some additional configuration so that you are prompted for your GPG key's passphrase via the Windows GUI.
+The above configuration works fine when using Git exclusively in the WSL
+environment. But if you are committing from a Windows GUI client (eg. VS Code's
+built-in Git client, or GitHub Desktop), you will need some additional
+configuration so that you are prompted for your GPG key's passphrase via the
+Windows GUI.
 
-The solution is to download and install https://www.gpg4win.org[GPG4Win], and configure Git in WSL to use GPG4Win's `gpg.exe` Windows binary, rather than the `gpg` binary installed in WSL.
+The solution is to download and install https://www.gpg4win.org[GPG4Win], and
+configure Git in WSL to use GPG4Win's `gpg.exe` Windows binary, rather than the
+`gpg` binary installed in WSL.
 
 In WSL, create a wrapper script for GPG4Win's `gpg.exe`:
 
@@ -166,7 +221,11 @@ Configure Git to use the wrapper script instead of the default `gpg` binary:
 $ git config --global gpg.program /usr/local/bin/gpgwin
 ----
 
-This configuration means that only Git will use GPG4Win's `gpg.exe` binary, and not the Linux `gpg` binary installed in WSL – typically found at `/usr/bin/gpg`. If you saved the Windows wrapper as `/usr/local/bin/gpg`, this would take precedence over the `/usr/bin/gpg` binary, and thus all `gpg` executions in WSL would use the wrapper.
+This configuration means that only Git will use GPG4Win's `gpg.exe` binary, and
+not the Linux `gpg` binary installed in WSL – typically found at `/usr/bin/gpg`.
+If you saved the Windows wrapper as `/usr/local/bin/gpg`, this would take
+precedence over the `/usr/bin/gpg` binary, and thus all `gpg` executions in WSL
+would use the wrapper.
 
 Export your GPG key pair from WSL, and import the keys into GPG4Win:
 
@@ -177,7 +236,10 @@ $ gpg --armor --export YOUR_EMAIL > public.key
 
 Copy the files to somewhere on the Windows filesystem.
 
-Open Kleopatra, an OpenPGP certificate and key management utility that is installed with GPG4Win. Go to *File -> Import Certificates*, and import both the `public.key` and `private.key` files you exported from WSL. The keys should now be listed in Kleopatra, under *Certificates*.
+Open Kleopatra, an OpenPGP certificate and key management utility that is
+installed with GPG4Win. Go to *File -> Import Certificates*, and import both the
+`public.key` and `private.key` files you exported from WSL. The keys should now
+be listed in Kleopatra, under *Certificates*.
 
 Alternatively, you can import the keys via the command line:
 
@@ -203,10 +265,15 @@ Verify the import:
 
 [IMPORTANT]
 ======
-Delete the original `public.key` and `private.key` files after importing them into GPG.
+Delete the original `public.key` and `private.key` files after importing them
+into GPG.
 ======
 
-To test the configuration, make a commit from a Windows GUI Git client, and you should be prompted for your GPG key's passphrase via a Windows GUI dialog. Also test via WSL, using either of the below commands; because this is expected to use the native `gpg` binary installed in WSL, and you will see the default terminal prompt for your passphrase.
+To test the configuration, make a commit from a Windows GUI Git client, and you
+should be prompted for your GPG key's passphrase via a Windows GUI dialog. Also
+test via WSL, using either of the below commands; because this is expected to
+use the native `gpg` binary installed in WSL, and you will see the default
+terminal prompt for your passphrase.
 
 ----
 # Sign an arbitrary piece of text.
@@ -218,26 +285,33 @@ git commit --allow-empty -m "test signed commit"
 
 [TIP]
 ======
-Your passphrase is held in memory by the GPG agent. You need to restart the agent to clear the cached passphrase. For the native Linux agent you would use:
+Your passphrase is held in memory by the GPG agent. You need to restart the
+agent to clear the cached passphrase. For the native Linux agent you would use:
 
 ----
 $ gpgconf --kill gpg-agent
 ----
 
-But of course you're now using the Windows agent, so you need to issue the following command from Powershell or the regular Command Prompt:
+But of course you're now using the Windows agent, so you need to issue the
+following command from Powershell or the regular Command Prompt:
 
 ----
 taskkill /f /im gpg-agent.exe
 ----
 
-On the next GPG command, it will take a few seconds for the agent to start up, and then you will be prompted for your passphrase again.
+On the next GPG command, it will take a few seconds for the agent to start up,
+and then you will be prompted for your passphrase again.
 ======
 
 == Passphrase caching
 
-When you use your GPG private key, you may be prompted for your passphrase. To avoid having to enter your passphrase every time, you can use the GPG agent to cache your passphrase for a configurable amount of time. There will usually be a default cache time, typically an hour.
+When you use your GPG private key, you may be prompted for your passphrase. To
+avoid having to enter your passphrase every time, you can use the GPG agent to
+cache your passphrase for a configurable amount of time. There will usually be a
+default cache time, typically an hour.
 
-To change the cache time, on Linux create or edit the `~/.gnupg/gpg-agent.conf` file, adding the following lines:
+To change the cache time, on Linux create or edit the `~/.gnupg/gpg-agent.conf`
+file, adding the following lines:
 
 ----
 # Cache passphrase for 1 hour (3600 seconds).
@@ -247,18 +321,26 @@ default-cache-ttl 3600
 max-cache-ttl 7200
 ----
 
-The following optional settings apply only if you're using gpg-agent for SSH authentication:
+The following optional settings apply only if you're using gpg-agent for SSH
+authentication:
 
 ----
 default-cache-ttl-ssh 3600
 max-cache-ttl-ssh 7200
 ----
 
-For Kleopatra on Windows, open Kleopatra, go to *Settings -> Configure Kleopatra -> GnuPG System -> Private Keys (or GPG Agent)*. Locate the option *Expire cached PINs after N seconds* and set it to your desired value (eg. 600). Click *OK* to save the changes.
+For Kleopatra on Windows, open Kleopatra, go to
+*Settings -> Configure Kleopatra -> GnuPG System -> Private Keys (or GPG Agent)*.
+Locate the option *Expire cached PINs after N seconds* and set it to your
+desired value (eg. 600). Click *OK* to save the changes.
 
-You can adjust the values to your desired length. For instance, 86400 is the number of seconds in one day. Setting the value to 0 will disable the cache entirely, meaning you will be prompted for your passphrase every time you use your private key.
+You can adjust the values to your desired length. For instance, 86400 is the
+number of seconds in one day. Setting the value to 0 will disable the cache
+entirely, meaning you will be prompted for your passphrase every time you use
+your private key.
 
-After changing the setting, you may need to restart the GPG agent for the changes to take effect. You can do this by killing the current agent process:
+After changing the setting, you may need to restart the GPG agent for the
+changes to take effect. You can do this by killing the current agent process:
 
 ----
 $ gpgconf --kill gpg-agent

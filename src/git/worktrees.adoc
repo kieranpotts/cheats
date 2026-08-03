@@ -29,13 +29,13 @@ git worktree prune                     # Clean up stale entries.
 
 == Bare repository
 
-A bare repository has no working directory, so there's nothing to "check out"
-in the usual sense. You can't switch branches in a bare repository as you
-would a normal repository.
+A bare repository has no working directory, so there's nothing to "check out" in
+the usual sense. You can't switch branches in a bare repository as you would a
+normal repository.
 
-However, you can set the bare repository's default branch as you would any
-other repository. This is the branch that gets checked out when someone clones
-a bare repository. It's what is shown in the terminal prompt, where supported.
+However, you can set the bare repository's default branch as you would any other
+repository. This is the branch that gets checked out when someone clones a bare
+repository. It's what is shown in the terminal prompt, where supported.
 
 [source,sh]
 ----
@@ -51,8 +51,7 @@ git symbolic-ref HEAD
 
 [TIP]
 ======
-If you change the default branch in the upstream repository (eg. via the
-GitHub UI), it is RECOMMENDED to update the symbolic ref for `HEAD`,
-effectively changing the default branch name, in all cloned repositories
-downstream, too.
+If you change the default branch in the upstream repository (eg. via the GitHub
+UI), it is RECOMMENDED to update the symbolic ref for `HEAD`, effectively
+changing the default branch name, in all cloned repositories downstream, too.
 ======

@@ -1,10 +1,14 @@
 = Terraform: HashiCorp Configuration Language (HCL)
 
-All `*.tf` files are written in HCL, which is a domain-specific language designed for describing infrastructure resources in a declarative manner.
+All `*.tf` files are written in HCL, which is a domain-specific language
+designed for describing infrastructure resources in a declarative manner.
 
 HCL is designed to be human-readable and editable.
 
-Terraform configurations can also be written in JSON, but HCL is generally preferred because it is more concise and easier to read. It is specifically designed for describing infrastructure resources, making it a better fit for Terraform's use case.
+Terraform configurations can also be written in JSON, but HCL is generally
+preferred because it is more concise and easier to read. It is specifically
+designed for describing infrastructure resources, making it a better fit for
+Terraform's use case.
 
 .Basic structure and syntax
 [source,hcl]

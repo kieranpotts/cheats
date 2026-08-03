@@ -19,4 +19,5 @@
 
 * `Super+w`: Show workspace switcher.
 * `Super+<number>`: Switch to the nth workspace.
-* `Super+Shift+<number>`: Move the current window to the nth workspace, and switch to that workspace.
+* `Super+Shift+<number>`: Move the current window to the nth workspace, and
+  switch to that workspace.

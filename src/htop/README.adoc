@@ -11,8 +11,16 @@ htop
 
 You can quit at any time by pressing `F10` or `q`.
 
-The memory utilization graph displays used memory, buffered memory, and cached memory. The numbers displayed at the end of this graph reflect the total amount of memory available and the total amount of memory on the system as reported by the kernel.
+The memory utilization graph displays used memory, buffered memory, and cached
+memory. The numbers displayed at the end of this graph reflect the total amount
+of memory available and the total amount of memory on the system as reported by
+the kernel.
 
-The default configuration of htop presents all application threads as independent processes. You can disable this by pressing `F2` to open Setup, then selecting "Display Options", and then toggling the "Hide userland threads" option.
+The default configuration of htop presents all application threads as
+independent processes. You can disable this by pressing `F2` to open Setup, then
+selecting "Display Options", and then toggling the "Hide userland threads"
+option.
 
-Press `F5` to toggle the tree view, which displays the processes in a hierarchy, showing which processes were spawned by which other processes. This is helpful for identifying process relationships.
+Press `F5` to toggle the tree view, which displays the processes in a hierarchy,
+showing which processes were spawned by which other processes. This is helpful
+for identifying process relationships.

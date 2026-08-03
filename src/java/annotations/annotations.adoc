@@ -1,8 +1,15 @@
 = Java: Annotations
 
-In Java, annotations are used to provide metadata about the program to the compiler or runtime. Annotations don't change how the program works, they just provide extra information about the program to the environment that will run it.
+In Java, annotations are used to provide metadata about the program to the
+compiler or runtime. Annotations don't change how the program works, they just
+provide extra information about the program to the environment that will run it.
 
-Java has quite a few built-in annotations, and some such as `@Override` and `@Deprecated` are used quite frequently. You can also create your own annotations, and most Java application frameworks use annotations extensively. For example, a great deal of the Spring framework is driven by annotations. So more likely you will use framework-specific annotations rather than Java ones or your own ones.
+Java has quite a few built-in annotations, and some such as `@Override` and
+`@Deprecated` are used quite frequently. You can also create your own
+annotations, and most Java application frameworks use annotations extensively.
+For example, a great deal of the Spring framework is driven by annotations. So
+more likely you will use framework-specific annotations rather than Java ones or
+your own ones.
 
 [source,java]
 ----

@@ -2,11 +2,14 @@
 
 == Terminal
 
-Pi relies on the https://sw.kovidgoyal.net/kitty/keyboard-protocol/[Kitty keyboard protocol] to detect modifier keys reliably.
+Pi relies on the
+https://sw.kovidgoyal.net/kitty/keyboard-protocol/[Kitty keyboard protocol] to
+detect modifier keys reliably.
 
 - Full support: Kitty, iTerm2, Ghostty, WezTerm, Alacritty.
 - Apple Terminal: works with a macOS fallback (local only, not over SSH).
-- VS Code and Windows Terminal: need manual keybinding remaps (eg. forward `Shift+Enter` / `Alt+Enter`).
+- VS Code and Windows Terminal: need manual keybinding remaps (eg. forward
+  `Shift+Enter` / `Alt+Enter`).
 - xfce4-terminal, terminator: limited - prefer an alternative.
 
 == tmux
@@ -23,17 +26,21 @@ Without this, `Shift+Enter` and `Ctrl+Enter` collapse to a plain `Enter`.
 
 == Windows
 
-Pi needs a Bash shell. It checks, in order: `shellPath` in settings -> Git Bash (`C:\Program Files\Git\bin\bash.exe`) -> `bash.exe` on `PATH` (Cygwin / MSYS2 / WSL). Installing *Git for Windows* is usually enough.
+Pi needs a Bash shell. It checks, in order: `shellPath` in settings -> Git Bash
+(`C:\Program Files\Git\bin\bash.exe`) -> `bash.exe` on `PATH` (Cygwin / MSYS2 /
+WSL). Installing *Git for Windows* is usually enough.
 
 == Termux (Android)
 
 - Install Termux + Termux:API from F-Droid / GitHub (not Google Play).
 - `pkg install nodejs termux-api git`, then `termux-setup-storage` once.
-- No image clipboard (text only); ARM64 native binaries are skipped automatically.
+- No image clipboard (text only); ARM64 native binaries are skipped
+  automatically.
 
 == Shell aliases
 
-Pi runs Bash non-interactively, so aliases aren't expanded by default. Source them via `shellCommandPrefix` in `~/.pi/agent/settings.json`:
+Pi runs Bash non-interactively, so aliases aren't expanded by default. Source
+them via `shellCommandPrefix` in `~/.pi/agent/settings.json`:
 
 [source,json]
 ----

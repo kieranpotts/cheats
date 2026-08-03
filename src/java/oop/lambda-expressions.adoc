@@ -1,6 +1,8 @@
 = Java: Lambda expressions
 
-Java 8 introduced lambda expressions, which provide a shorthand for creating anonymous classes that implement functional interfaces. In fact, lambda expressions can *only* be used with functional interfaces!
+Java 8 introduced lambda expressions, which provide a shorthand for creating
+anonymous classes that implement functional interfaces. In fact, lambda
+expressions can *only* be used with functional interfaces!
 
 [source,java]
 ----
@@ -20,7 +22,8 @@ interface C {
 }
 ----
 
-The following code is an example of implementing a functional interface as an inner class.
+The following code is an example of implementing a functional interface as an
+inner class.
 
 [source,java]
 ----
@@ -32,7 +35,9 @@ A a = new A() {
 a.show(); // "Inner"
 ----
 
-A lambda expression is a shorthand for creating an anonymous class that implements a functional interface. It's just a more compact way of writing the above code.
+A lambda expression is a shorthand for creating an anonymous class that
+implements a functional interface. It's just a more compact way of writing the
+above code.
 
 [source,java]
 ----
@@ -40,7 +45,8 @@ A a2 = () -> System.out.println("Lambda");
 a2.show(); // "Lambda"
 ----
 
-If the method is composed of multiple statement, curly braces must enclose the body of the method.
+If the method is composed of multiple statement, curly braces must enclose the
+body of the method.
 
 [source,java]
 ----
@@ -51,7 +57,10 @@ A a3 = () -> {
 a3.show(); // "Multiple\nStatements"
 ----
 
-Lambda expressions can also take arguments. The method does not need to specify the types of the arguments, as the interface definition already does that. If there is just one argument, you can omit the parentheses around the lambda expression.
+Lambda expressions can also take arguments. The method does not need to specify
+the types of the arguments, as the interface definition already does that. If
+there is just one argument, you can omit the parentheses around the lambda
+expression.
 
 [source,java]
 ----
@@ -59,7 +68,8 @@ B b = s -> System.out.println(s);
 b.show("Hello"); // "Hello"
 ----
 
-If the functional method returns a value, the lambda expression must return a value of the correct type.
+If the functional method returns a value, the lambda expression must return a
+value of the correct type.
 
 [source,java]
 ----

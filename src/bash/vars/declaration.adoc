@@ -1,6 +1,7 @@
 = Bash: Declaring variables
 
-You don't need to declare variables. You just assign a value to a reference, and that is enough to create the variable.
+You don't need to declare variables. You just assign a value to a reference, and
+that is enough to create the variable.
 
 [source,bash]
 ----
@@ -8,9 +9,11 @@ str="Hello, World!"
 echo "${str}"
 ----
 
-IMPORTANT: Unlike most programming languages, there MUST NOT be spaces around the assignment operator (`=`).
+IMPORTANT: Unlike most programming languages, there MUST NOT be spaces around
+the assignment operator (`=`).
 
-You MAY declare a value and then subsequently assign a value to it. This pattern is commonly used for `local` variables.
+You MAY declare a value and then subsequently assign a value to it. This pattern
+is commonly used for `local` variables.
 
 [source,bash]
 ----

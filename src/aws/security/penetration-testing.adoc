@@ -1,8 +1,14 @@
 = AWS: Rules governing penetration testing
 
-Penetration testing is the practice of testing your application's security by simulating an attack, with the aim of identifying vulnerabilities that could be exploited in a real attack. Pen testing is typically undertaken by security experts.
+Penetration testing is the practice of testing your application's security by
+simulating an attack, with the aim of identifying vulnerabilities that could be
+exploited in a real attack. Pen testing is typically undertaken by security
+experts.
 
-AWS has a customer support policy for penetration testing which, in summary, says that customers are allowed to carry out pen tests on their own AWS resources, without prior approval, for a specific set of permitted services, which include:
+AWS has a customer support policy for penetration testing which, in summary,
+says that customers are allowed to carry out pen tests on their own AWS
+resources, without prior approval, for a specific set of permitted services,
+which include:
 
 * EC2, WAF, NAT gateways, and ELB
 * RDS
@@ -18,7 +24,8 @@ AWS has a customer support policy for penetration testing which, in summary, say
 * Elasticsearch
 * FSx
 * Transit Gateway
-* S3-hosted applications (but targeting S3 buckets directly is strictly prohibited)
+* S3-hosted applications (but targeting S3 buckets directly is strictly
+  prohibited)
 
 Prohibited activities include:
 
@@ -29,7 +36,9 @@ Prohibited activities include:
 * Protocol flooding
 * Request flooding (login request flooding, API request flooding)
 
-In addition, Denial of Service (DoS), Distributed Denial of Service (DDoS), Simulated DoS, and Simulated DDoS are subject to the DDoS Simulation Testing policy, and are essentially all prohibited by default.
+In addition, Denial of Service (DoS), Distributed Denial of Service (DDoS),
+Simulated DoS, and Simulated DDoS are subject to the DDoS Simulation Testing
+policy, and are essentially all prohibited by default.
 
 For more information: +
 https://aws.amazon.com/security/penetration-testing/

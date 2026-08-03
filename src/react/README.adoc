@@ -2,7 +2,9 @@
 
 [NOTE]
 ======
-Most code examples in this documentation is correct for React v17. Some documentation notes differences in React v18 and extensions that are coming to React v19.
+Most code examples in this documentation is correct for React v17. Some
+documentation notes differences in React v18 and extensions that are coming to
+React v19.
 ======
 
 * link:./basics.adoc[React basics]
@@ -16,8 +18,8 @@ Most code examples in this documentation is correct for React v17. Some document
 * link:./js-in-jsx.adoc[JS in JSX]
 * link:./forms.adoc[Forms]
 * link:./hooks/README.adoc[Hooks]
-  ** link:./hooks/state.adoc[State]
-  ** link:./hooks/effects.adoc[Effects]
-  ** link:./hooks/transitions.adoc[Transitions]
-  ** link:./hooks/actions.adoc[Actions]
+** link:./hooks/state.adoc[State]
+** link:./hooks/effects.adoc[Effects]
+** link:./hooks/transitions.adoc[Transitions]
+** link:./hooks/actions.adoc[Actions]
 * link:./compiler.adoc[React compiler]

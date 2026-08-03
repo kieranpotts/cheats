@@ -1,6 +1,8 @@
 = SSH Agent
 
-SSH agent is a helper program that manages your SSH keys in memory. Once you've authenticated with your key's passphrase, the agent stores the decrypted key, so you won't need to re-enter your passphrase for subsequent SSH connections.
+SSH agent is a helper program that manages your SSH keys in memory. Once you've
+authenticated with your key's passphrase, the agent stores the decrypted key, so
+you won't need to re-enter your passphrase for subsequent SSH connections.
 
 == Start the SSH agent
 
@@ -40,14 +42,16 @@ fi
 
 === On macOS
 
-Use the `--apple-use-keychain` flag to store your passphrase in the macOS keychain:
+Use the `--apple-use-keychain` flag to store your passphrase in the macOS
+keychain:
 
 [source]
 ----
 ssh-add --apple-use-keychain ~/.ssh/id_ed25519
 ----
 
-Then, modify `~/.ssh/config` to automatically load your key and use keychain storage:
+Then, modify `~/.ssh/config` to automatically load your key and use keychain
+storage:
 
 [source]
 ----
@@ -75,7 +79,8 @@ Replace `YOU` with your username.
 ssh-add ~/.ssh/id_ed25519
 ----
 
-You will be prompted for your key's passphrase. Once entered, the agent stores the decrypted key.
+You will be prompted for your key's passphrase. Once entered, the agent stores
+the decrypted key.
 
 === All platforms
 
@@ -118,7 +123,8 @@ ssh-add -D
 
 == SSH config integration
 
-You can configure SSH to automatically add keys to the agent. Add this to `~/.ssh/config`:
+You can configure SSH to automatically add keys to the agent. Add this to
+`~/.ssh/config`:
 
 [source]
 ----
@@ -127,4 +133,5 @@ Host *
     IdentityFile ~/.ssh/id_ed25519
 ----
 
-With `AddKeysToAgent yes`, your key will be automatically added to the agent on first connection.
+With `AddKeysToAgent yes`, your key will be automatically added to the agent on
+first connection.

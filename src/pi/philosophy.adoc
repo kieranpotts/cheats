@@ -2,7 +2,9 @@
 
 Pi is a minimal, unopinionated, terminal-based agent harness for programming.
 
-It is better to think of it as a baseline framework for developing your own custom agent UIs. That's because Pi is a very small core with programmable edges.
+It is better to think of it as a baseline framework for developing your own
+custom agent UIs. That's because Pi is a very small core with programmable
+edges.
 
 Out-of-the-box, Pi has only a minimal toolset:
 
@@ -12,9 +14,13 @@ Out-of-the-box, Pi has only a minimal toolset:
 - bash
 - sessions
 
-Workflow-specific behavior moves into extensions, AGENTS.md and skills, prompt templates, themes and packages.
+Workflow-specific behavior moves into extensions, AGENTS.md and skills, prompt
+templates, themes and packages.
 
-Unusually for coding agent harnesses, Pi has no built-in plan mode. If you wanted that, you'd have to build your own extension, or download an existing package. In the real world, not everyone uses plan mode - hence it's been taken out of the core.
+Unusually for coding agent harnesses, Pi has no built-in plan mode. If you
+wanted that, you'd have to build your own extension, or download an existing
+package. In the real world, not everyone uses plan mode - hence it's been taken
+out of the core.
 
 Other things that Pi leaves out:
 
@@ -24,6 +30,10 @@ Other things that Pi leaves out:
 - To-Dos
 - Built-in MCP
 
-A few non-obvious capabilities that _are_ core, though: link:./sessions.adoc[tree-structured sessions] and automatic link:./compaction.adoc[context compaction].
+A few non-obvious capabilities that _are_ core, though:
+link:./sessions.adoc[tree-structured sessions] and automatic
+link:./compaction.adoc[context compaction].
 
-The idea is individual programmers should shape their coding agent harness to fit their own unique workflow. You end up with a personalized agent that only has the features you use and none that you don't.
+The idea is individual programmers should shape their coding agent harness to
+fit their own unique workflow. You end up with a personalized agent that only
+has the features you use and none that you don't.

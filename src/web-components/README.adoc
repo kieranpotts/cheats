@@ -1,6 +1,7 @@
 = Web Components
 
-Web components are a set of web platform APIs that allow you to create custom, reusable HTML elements using the native capabilities of web browsers.
+Web components are a set of web platform APIs that allow you to create custom,
+reusable HTML elements using the native capabilities of web browsers.
 
 * link:./custom-elements.adoc[Custom elements]
 * link:./shadow-dom.adoc[Shadow DOM]
@@ -14,4 +15,5 @@ Web components are a set of web platform APIs that allow you to create custom, r
 == References
 
 * https://learn-wcs.com/[Learn Web Components] - A free roadmap.
-* https://thomaswilburn.github.io/wc-book/[Web Components at Work] by Thomas Wilburn.
+* https://thomaswilburn.github.io/wc-book/[Web Components at Work] by Thomas
+  Wilburn.

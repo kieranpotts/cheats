@@ -1,6 +1,7 @@
 = Java: Method overriding
 
-Methods can override methods defined in subclasses. The `@Override annotation is optional but RECOMMENDED.
+Methods can override methods defined in subclasses. The `@Override annotation is
+optional but RECOMMENDED.
 
 [source,java]
 ----

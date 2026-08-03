@@ -1,6 +1,7 @@
 = Docker shortcut scripts
 
-The following are handy scripts to make it easier to work with Docker containers.
+The following are handy scripts to make it easier to work with Docker
+containers.
 
 == `install`
 
@@ -18,9 +19,11 @@ docker compose build --pull
 docker compose up -d
 ----
 
-You can then run `./install` to build and start the containers defined in `docker-compose.yml`.
+You can then run `./install` to build and start the containers defined in
+`docker-compose.yml`.
 
-Extend the script to declare environment variables that are required by `docker-compose.yml`, eg.:
+Extend the script to declare environment variables that are required by
+`docker-compose.yml`, eg.:
 
 [source,bash]
 ----
@@ -52,9 +55,11 @@ set -e
 docker compose exec -it <container-name> "${@:1}"
 ----
 
-You can then run `./run <command> <args...>` to execute a command in the named container.
+You can then run `./run <command> <args...>` to execute a command in the named
+container.
 
-Additional scripts can be created as shortcuts for running specific commands. For example, to run PHP's `composer`:
+Additional scripts can be created as shortcuts for running specific commands.
+For example, to run PHP's `composer`:
 
 .`composer`
 [source,bash]
@@ -76,11 +81,11 @@ And a further shortcut to update dependencies using Composer:
 
 == `start`
 
-The following script starts a container and keeps it running in the background indefinitely -
-like a daemon process. `/bin/sh -c "sleep infinity"` is run inside the container. This keeps the
-container running indefinitely by executing a shell that sleeps forever. This setup is useful for
-creating a persistent environment in which you can execute one-off commands (eg. build steps)
-quickly.
+The following script starts a container and keeps it running in the background
+indefinitely - like a daemon process. `/bin/sh -c "sleep infinity"` is run
+inside the container. This keeps the container running indefinitely by executing
+a shell that sleeps forever. This setup is useful for creating a persistent
+environment in which you can execute one-off commands (eg. build steps) quickly.
 
 .`start`
 [source,sh]

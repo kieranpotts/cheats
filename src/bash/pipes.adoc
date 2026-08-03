@@ -2,7 +2,9 @@
 
 Pipes let you use the output of one program as the input of another.
 
-In the following example the following happens: first, the command `ls -l` is executed, and its output, instead of being printed, is piped to the `sed` program.
+In the following example the following happens: first, the command `ls -l` is
+executed, and its output, instead of being printed, is piped to the `sed`
+program.
 
 [source,bash]
 ----

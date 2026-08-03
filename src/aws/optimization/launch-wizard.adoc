@@ -1,6 +1,7 @@
 = AWS Launch Wizard
 
-This is a relatively new service that offers a guided way of sizing, configuring, and deploying AWS resources for third-party applications.
+This is a relatively new service that offers a guided way of sizing,
+configuring, and deploying AWS resources for third-party applications.
 
 It focuses on the deployment of enterprise applications like:
 
@@ -12,14 +13,21 @@ It focuses on the deployment of enterprise applications like:
 * Exchange Server
 * Microsoft Active Directory
 
-The Launch Wizard will automatically identify and deploy the most cost-effective and optimal resources for your application, based on your input and requirements.
+The Launch Wizard will automatically identify and deploy the most cost-effective
+and optimal resources for your application, based on your input and
+requirements.
 
 Why use it — rather than do everything yourself?
 
-* *Simplified deployments*: Offers a straightforward solution to deploy complex applications, removing the traditional complexities involved if you tried to do it all yourself.
+* *Simplified deployments*: Offers a straightforward solution to deploy complex
+  applications, removing the traditional complexities involved if you tried to
+  do it all yourself.
 
-* *Resource optimization*: Ensures that you get the best utilization of AWS resources tailored to your application needs.
+* *Resource optimization*: Ensures that you get the best utilization of AWS
+  resources tailored to your application needs.
 
-* *Quick start*: It facilitates a quick start to application deployment, helping businesses to get their applications up and running in a shorter timeframe.
+* *Quick start*: It facilitates a quick start to application deployment, helping
+  businesses to get their applications up and running in a shorter timeframe.
 
-AWS Launch Wizard is a free service. You pay only for the resources provisioned through the service, such as EC2, EBS, and VPC resources.
+AWS Launch Wizard is a free service. You pay only for the resources provisioned
+through the service, such as EC2, EBS, and VPC resources.

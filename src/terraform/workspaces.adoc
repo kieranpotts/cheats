@@ -1,6 +1,7 @@
 = Terraform: Workspaces
 
-Terraform Workspaces is a feature that allows you to manage multiple identical resources using the same configuration.
+Terraform Workspaces is a feature that allows you to manage multiple identical
+resources using the same configuration.
 
 Workspaces is a CLI feature with five main commands:
 
@@ -10,7 +11,8 @@ Workspaces is a CLI feature with five main commands:
 * `terraform workspace show` – shows the current workspace
 * `terraform workspace delete` – deletes a workspace
 
-In Terraform, you always work in workspaces. By default, you start in the `default` workspace.
+In Terraform, you always work in workspaces. By default, you start in the
+`default` workspace.
 
 ----
 $ terraform workspace show
@@ -29,7 +31,8 @@ eg.
 $ terraform workspace new staging
 ----
 
-Terraform will create a new workspace with the name `staging`, and switch to it automatically.
+Terraform will create a new workspace with the name `staging`, and switch to it
+automatically.
 
 ----
 $ terraform workspace list
@@ -51,11 +54,20 @@ terraform {
 }
 ----
 
-Now that you have switched to the `staging` workspace, Terraform will create a new state file in the same S3 bucket, but its key will be `env:/staging/prod/terraform.tfstate`. The `env:/<workspace-name>/` prefix is automatically added to the key to distinguish the state files for different workspaces.
+Now that you have switched to the `staging` workspace, Terraform will create a
+new state file in the same S3 bucket, but its key will be
+`env:/staging/prod/terraform.tfstate`. The `env:/<workspace-name>/` prefix is
+automatically added to the key to distinguish the state files for different
+workspaces.
 
-If you ran `terraform apply` now, in the `staging` workspace, it would create from scratch all the resources defined in your Terraform configuration – effectively creating a duplicate of all the resources managed in the `default` workspace.
+If you ran `terraform apply` now, in the `staging` workspace, it would create
+from scratch all the resources defined in your Terraform configuration –
+effectively creating a duplicate of all the resources managed in the `default`
+workspace.
 
-If you use workspaces, it is RECOMMENDED to include the workspace name in the resource names, so that in your cloud provider you can easily distinguish between resources that are managed by different Terraform workspaces.
+If you use workspaces, it is RECOMMENDED to include the workspace name in the
+resource names, so that in your cloud provider you can easily distinguish
+between resources that are managed by different Terraform workspaces.
 
 [source,hcl]
 ----
@@ -67,7 +79,9 @@ resource "aws_instance" "web" {
 }
 ----
 
-By default, you cannot delete a workspace that would leave resources "dangling" in your cloud provider, unmanaged by Terraform. You SHOULD first destroy all the resources in a workspace before deleting the workspace itself.
+By default, you cannot delete a workspace that would leave resources "dangling"
+in your cloud provider, unmanaged by Terraform. You SHOULD first destroy all the
+resources in a workspace before deleting the workspace itself.
 
 ----
 $ terraform workspace select <workspace-name>
@@ -81,7 +95,8 @@ $ terraform workspace select default
 $ terraform workspace delete <workspace-name>
 ----
 
-If you really want to delete a workspace without destroying its resources, you can use the `-force` flag:
+If you really want to delete a workspace without destroying its resources, you
+can use the `-force` flag:
 
 ----
 $ terraform workspace delete <workspace-name> -force
@@ -89,5 +104,9 @@ $ terraform workspace delete <workspace-name> -force
 
 [IMPORTANT]
 ======
-Workspaces SHOULD be used only for testing infrastructure deployments, not for managing different environments (eg. production, staging, development). To manage different environments, you SHOULD use separate Terraform configurations, in different directories for each environment. Common configurations can be shared using Terraform modules.
+Workspaces SHOULD be used only for testing infrastructure deployments, not for
+managing different environments (eg. production, staging, development). To
+manage different environments, you SHOULD use separate Terraform configurations,
+in different directories for each environment. Common configurations can be
+shared using Terraform modules.
 ======

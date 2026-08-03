@@ -1,8 +1,11 @@
 = AWS CLI
 
-To use the *AWS CLI*, you need to authenticate with a user that has *access keys*.
+To use the *AWS CLI*, you need to authenticate with a user that has
+*access keys*.
 
-You can create access keys via the Identity and Access Management (IAM) service. In the IAM web console, go to *Security credentials* for your user, then *Access keys* > *Create access key*. Follow the steps to generate an access key.
+You can create access keys via the Identity and Access Management (IAM) service.
+In the IAM web console, go to *Security credentials* for your user, then
+*Access keys* > *Create access key*. Follow the steps to generate an access key.
 
 Then run the following from your terminal:
 
@@ -35,4 +38,5 @@ aws_access_key_id = AKIA...
 aws_secret_access_key = ...
 ----
 
-Now, anything that the IAM user can do in the AWS Management Console, you can do from the CLI.
+Now, anything that the IAM user can do in the AWS Management Console, you can do
+from the CLI.

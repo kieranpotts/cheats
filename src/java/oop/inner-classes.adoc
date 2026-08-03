@@ -1,6 +1,7 @@
 = Java: Inner classes
 
-In Java, it is possible to define a class within another class. These are called *inner classes*.
+In Java, it is possible to define a class within another class. These are called
+*inner classes*.
 
 [source,java]
 ----
@@ -32,7 +33,8 @@ A.B b = a.new B();
 b.display(); // "World"
 ----
 
-Inner classes can be static, too. Only inner classes can be static; it is not possible to create an outer static class.
+Inner classes can be static, too. Only inner classes can be static; it is not
+possible to create an outer static class.
 
 [source,java]
 ----
@@ -45,7 +47,8 @@ class A {
 }
 ----
 
-Static inner classes are not bound to an instance of the outer class, so the access syntax is different.
+Static inner classes are not bound to an instance of the outer class, so the
+access syntax is different.
 
 [source,java]
 ----
@@ -53,7 +56,10 @@ A.C c = new A.C();
 c.print(); // "Print"
 ----
 
-You can have anonymous inner classes, too. This is useful when you know a subclass will be used once only, and you don't want to define a separate class for it. The syntax is unusual. You define the design of the subclass (technically, an inner class) _after_ its instantiation!
+You can have anonymous inner classes, too. This is useful when you know a
+subclass will be used once only, and you don't want to define a separate class
+for it. The syntax is unusual. You define the design of the subclass
+(technically, an inner class) _after_ its instantiation!
 
 [source,java]
 ----
@@ -66,4 +72,5 @@ A a2 = new A() {
 a2.show(); // "Hello from the anonymous class"
 ----
 
-You can use anonymous inner classes to implement abstract classes and then immediately instantiate them. This is a common pattern.
+You can use anonymous inner classes to implement abstract classes and then
+immediately instantiate them. This is a common pattern.

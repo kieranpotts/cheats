@@ -1,3 +1,4 @@
 = `ranger`
 
-https://github.com/ranger/ranger[`ranger`] is like a GUI file manager, but for the terminal. Inspired by VIM, it support VI key bindings.
+https://github.com/ranger/ranger[`ranger`] is like a GUI file manager, but for
+the terminal. Inspired by VIM, it support VI key bindings.

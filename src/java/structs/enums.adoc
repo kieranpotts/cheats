@@ -2,9 +2,13 @@
 
 Enums are named groups of constants.
 
-In Java, enums are a special kind of class, with methods. They are a special type of class because they can't, for example, be extended from other classes. But you can do lots of things with enums like define variables inside them, and even define custom constructors. 
+In Java, enums are a special kind of class, with methods. They are a special
+type of class because they can't, for example, be extended from other classes.
+But you can do lots of things with enums like define variables inside them, and
+even define custom constructors.
 
-And enums extend `Object`, like classes do, so you can all the usual methods like `toString()`, `equals()`, etc.
+And enums extend `Object`, like classes do, so you can all the usual methods
+like `toString()`, `equals()`, etc.
 
 All the possible values of an enum are also individual objects.
 

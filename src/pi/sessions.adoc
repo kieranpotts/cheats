@@ -1,12 +1,19 @@
 = Session management
 
-An innovation in Pi's architecture is the design of sessions as trees rather than a flat hierarchy. With the `/tree` command, you can jump back to an earlier message, edit it, then resubmit. This creates a new branch in the session tree. The original path is maintained in the same session file.
+An innovation in Pi's architecture is the design of sessions as trees rather
+than a flat hierarchy. With the `/tree` command, you can jump back to an earlier
+message, edit it, then resubmit. This creates a new branch in the session tree.
+The original path is maintained in the same session file.
 
 image::./_/sessions.svg[]
 
-When we create forks in the session history, we're not also changing the code - it's not Git! We're just changing the conversation history. To undo changes in code, you should use Git, or a Pi extension that implements checkpoints (another feature not natively supported by Pi).
+When we create forks in the session history, we're not also changing the code -
+it's not Git! We're just changing the conversation history. To undo changes in
+code, you should use Git, or a Pi extension that implements checkpoints (another
+feature not natively supported by Pi).
 
-When switching branches, Pi can optionally summarize the abandoned branch so its context isn't lost.
+When switching branches, Pi can optionally summarize the abandoned branch so its
+context isn't lost.
 
 == CLI session control
 
@@ -38,10 +45,15 @@ While in interactive mode, use the following commands to manage your history:
 
 == Storage and format
 
-Sessions and configuration are stored locally in `~/.pi/agent/`. This directory persists after uninstalling the Pi binary. Session files are JSONL (one JSON object per line), organized by working directory:
+Sessions and configuration are stored locally in `~/.pi/agent/`. This directory
+persists after uninstalling the Pi binary. Session files are JSONL (one JSON
+object per line), organized by working directory:
 
 ----
 ~/.pi/agent/sessions/--<path>--/<timestamp>_<uuid>.jsonl
 ----
 
-The first line is a header (metadata). Every later entry carries an `id` and `parentId`, which is how the tree - and in-place branching - is represented within a single file. The format evolved v1 (linear) -> v2 (tree) -> v3 (current). Older sessions auto-migrate on load.
+The first line is a header (metadata). Every later entry carries an `id` and
+`parentId`, which is how the tree - and in-place branching - is represented
+within a single file. The format evolved v1 (linear) -> v2 (tree) -> v3
+(current). Older sessions auto-migrate on load.

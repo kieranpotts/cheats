@@ -2,9 +2,11 @@
 
 == Beans
 
-Beans are the fundamental building blocks of a Spring application, and form the basis of the dependency injection system.
+Beans are the fundamental building blocks of a Spring application, and form the
+basis of the dependency injection system.
 
-A bean is an object that is instantiated, assembled, and manages throughout its lifecycle by the Spring IoC (Inversion of Control) container.
+A bean is an object that is instantiated, assembled, and manages throughout its
+lifecycle by the Spring IoC (Inversion of Control) container.
 
 A bean can be defined using Java annotations:
 
@@ -58,7 +60,8 @@ public class MyClass {
 }
 ----
 
-Alternatively, the dependency can be passed in via a constructor – no annotation required:
+Alternatively, the dependency can be passed in via a constructor – no annotation
+required:
 
 [source,java]
 ----
@@ -91,6 +94,10 @@ public class MyClass {
 }
 ----
 
-So, constructor injection is the default way to wire beans together in Spring, and no annotations are required to make this work. Field injection and setter injection are offered as alternative patterns, but require the `@Autowired` annotation to work.
+So, constructor injection is the default way to wire beans together in Spring,
+and no annotations are required to make this work. Field injection and setter
+injection are offered as alternative patterns, but require the `@Autowired`
+annotation to work.
 
-Constructor injection SHOULD be preferred, and field injection SHOULD be avoided.
+Constructor injection SHOULD be preferred, and field injection SHOULD be
+avoided.

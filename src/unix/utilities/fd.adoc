@@ -1,3 +1,5 @@
 = `fd`
 
-https://github.com/sharkdp/fd[`fd`] is an alternative to `find` – finding entries in your filesystem. It is written in Rust and is designed to be fast and user-friendly.
+https://github.com/sharkdp/fd[`fd`] is an alternative to `find` – finding
+entries in your filesystem. It is written in Rust and is designed to be fast and
+user-friendly.

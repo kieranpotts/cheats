@@ -1,6 +1,7 @@
 = Terraform: Logs
 
-To enable detailed log output from `terraform` commands, set the `TF_LOG` environment variable:
+To enable detailed log output from `terraform` commands, set the `TF_LOG`
+environment variable:
 
 ----
 $ export TF_LOG=TRACE
@@ -14,7 +15,8 @@ The available log levels are, from most to least verbose:
 * WARN
 * ERROR
 
-Set `TF_LOG_PATH` to specify a file to write the logs to, instead of the console:
+Set `TF_LOG_PATH` to specify a file to write the logs to, instead of the
+console:
 
 ----
 $ export TF_LOG_PATH=/path/to/terraform.log

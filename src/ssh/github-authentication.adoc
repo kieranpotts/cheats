@@ -1,16 +1,24 @@
 = SSH Authentication with GitHub
 
-You've already been added to the `hacksltd` GitHub organization – else you wouldn't be seeing this page. If you haven't already, you should generate an SSH key pair on your computer, and add the public key to GitHub as an SSH authentication key. You will need to have this in place before you can clone our repositories onto your computer.
+You've already been added to the `hacksltd` GitHub organization – else you
+wouldn't be seeing this page. If you haven't already, you should generate an SSH
+key pair on your computer, and add the public key to GitHub as an SSH
+authentication key. You will need to have this in place before you can clone our
+repositories onto your computer.
 
 == Prerequisites
 
-First, check if you already have an SSH key. See link:./key-generation.adoc[Key generation] for detailed instructions on checking for and creating keys.
+First, check if you already have an SSH key. See
+link:./key-generation.adoc[Key generation] for detailed instructions on checking
+for and creating keys.
 
-If you don't have a key yet, generate one using link:./key-generation.adoc[the key generation guide].
+If you don't have a key yet, generate one using
+link:./key-generation.adoc[the key generation guide].
 
 == Copy your public key
 
-Copy the contents of your public key file to your clipboard using the command for your platform:
+Copy the contents of your public key file to your clipboard using the command
+for your platform:
 
 === On macOS
 
@@ -37,20 +45,23 @@ Then select and copy the output manually.
 
 === If you used a different algorithm
 
-If you generated an ECDSA or RSA key instead of ed25519, replace `id_ed25519` with `id_ecdsa` or `id_rsa` respectively.
+If you generated an ECDSA or RSA key instead of ed25519, replace `id_ed25519`
+with `id_ecdsa` or `id_rsa` respectively.
 
 == Add the public key to GitHub
 
 === Via web interface
 
-1. Go to your GitHub account **Settings** (click your profile picture, select **Settings**)
+1. Go to your GitHub account **Settings** (click your profile picture, select
+   **Settings**)
 2. In the left sidebar, click **SSH and GPG keys**
 3. Click **New SSH key** (or **Add SSH key**)
 4. Give the key a descriptive title (e.g., "Personal laptop", "Work desktop")
 5. For **Key type**, select one of:
-   - **Authentication Key** — for Git operations (cloning, pushing, pulling). Choose this unless you have a specific reason otherwise.
-   - **Signing Key** — for signing commits with your SSH key
-   - **Authentication and signing** — if you want both capabilities
+- **Authentication Key** — for Git operations (cloning, pushing, pulling).
+  Choose this unless you have a specific reason otherwise.
+- **Signing Key** — for signing commits with your SSH key
+- **Authentication and signing** — if you want both capabilities
 6. Paste your public key into the **Key** field
 7. Click **Add SSH key** and authenticate if prompted
 
@@ -86,8 +97,12 @@ If you see an error instead, verify:
 
 == Secure your private key
 
-Keep your private key secure on your computer. If it leaks, you should revoke the corresponding public key from your GitHub account, and generate a new key pair.
+Keep your private key secure on your computer. If it leaks, you should revoke
+the corresponding public key from your GitHub account, and generate a new key
+pair.
 
 == Key maintenance
 
-GitHub automatically deletes SSH keys that haven't been used for one year as a security precaution. If you haven't used a key in that time, you'll need to add it again or generate a new one.
+GitHub automatically deletes SSH keys that haven't been used for one year as a
+security precaution. If you haven't used a key in that time, you'll need to add
+it again or generate a new one.

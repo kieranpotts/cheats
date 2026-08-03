@@ -1,6 +1,7 @@
 = Bash conditionals: `if`
 
-The `if` statement is used for control flow. It works by executing commands based on the evaluation of conditional expressions.
+The `if` statement is used for control flow. It works by executing commands
+based on the evaluation of conditional expressions.
 
 The syntax is as follows:
 
@@ -44,11 +45,16 @@ else
 fi
 ----
 
-The `elif` and `else` blocks are optional. There may be zero, one, or multiple `elif` blocks, but there can be only one `if` block and exactly zero or one `else` blocks.
+The `elif` and `else` blocks are optional. There may be zero, one, or multiple
+`elif` blocks, but there can be only one `if` block and exactly zero or one
+`else` blocks.
 
-Conditional constructs are terminated by `fi`, meaning "finish" or "if" backwards – however you like to think of it!
+Conditional constructs are terminated by `fi`, meaning "finish" or "if"
+backwards – however you like to think of it!
 
-Multiple statements may be included within each conditional block. As a matter of style, inner statements SHOULD be indented from their containing conditional construct.
+Multiple statements may be included within each conditional block. As a matter
+of style, inner statements SHOULD be indented from their containing conditional
+construct.
 
 == Nesting
 
@@ -66,4 +72,6 @@ else
 fi
 ----
 
-However, nesting reduces readability and understandability. It increases the risk of errors, and it makes debugging harder. Work to refactor complex conditional logic.
+However, nesting reduces readability and understandability. It increases the
+risk of errors, and it makes debugging harder. Work to refactor complex
+conditional logic.

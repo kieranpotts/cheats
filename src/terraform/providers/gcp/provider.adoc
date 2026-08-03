@@ -9,7 +9,8 @@ The following four parameters are required:
 * `region` - The GCP region.
 * `zone` - The GCP zone.
 
-These parameters may be set in the provider block, or they may be set as environment variables in the environment in which Terraform is run.
+These parameters may be set in the provider block, or they may be set as
+environment variables in the environment in which Terraform is run.
 
 [source,hcl]
 ----

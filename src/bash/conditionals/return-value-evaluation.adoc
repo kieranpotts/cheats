@@ -1,6 +1,7 @@
 = Bash: Evaluating return values
 
-A common use case for conditionals is to check the result of some command, and take action based on whether it succeeded or failed.
+A common use case for conditionals is to check the result of some command, and
+take action based on whether it succeeded or failed.
 
 [source,bash]
 ----
@@ -20,7 +21,8 @@ if ! mv "${file_list}" "${dest_dir}/" ; then
 fi
 ----
 
-For un-piped commands, you can instead use `$?` to check the return value of the command, like this:
+For un-piped commands, you can instead use `$?` to check the return value of the
+command, like this:
 
 [source,bash]
 ----
@@ -31,7 +33,9 @@ if [[ "$?" -ne "0" ]]; then
 fi
 ----
 
-For piped commands, Bash has the `PIPESTATUS` variable that allows checking of the return code from all parts of a pipe. If it's only necessary to check the success or failure of the whole pipe, then the following is acceptable:
+For piped commands, Bash has the `PIPESTATUS` variable that allows checking of
+the return code from all parts of a pipe. If it's only necessary to check the
+success or failure of the whole pipe, then the following is acceptable:
 
 [source,bash]
 ----
@@ -41,7 +45,11 @@ if [[ "${PIPESTATUS[0]}" -ne 0 || "${PIPESTATUS[1]}" -ne 0 ]]; then
 fi
 ----
 
-However, as `PIPESTATUS` will be overwritten as soon as you do any other command, if you need to act differently on errors based on where it happened in the pipe, you'll need to assign `PIPESTATUS` to another variable immediately after running the command. Don't forget that `[` itself is a command, and it will therefore wipe out `PIPESTATUS`.)
+However, as `PIPESTATUS` will be overwritten as soon as you do any other
+command, if you need to act differently on errors based on where it happened in
+the pipe, you'll need to assign `PIPESTATUS` to another variable immediately
+after running the command. Don't forget that `[` itself is a command, and it
+will therefore wipe out `PIPESTATUS`.)
 
 [source,bash]
 ----

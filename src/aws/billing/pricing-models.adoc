@@ -2,12 +2,22 @@
 
 AWS pricing is based on three things:
 
-1. *Compute*: The amount of resources used, such as CPU and RAM, by the duration of time (normally in minutes) the resources are in use.
+1. *Compute*: The amount of resources used, such as CPU and RAM, by the duration
+   of time (normally in minutes) the resources are in use.
 
 2. *Storage*: The quantity of data stored or allocated.
 
-3. *Outbound data transfer*: The quantity of data that is transferred _out_ from an availability zone or region.
+3. *Outbound data transfer*: The quantity of data that is transferred _out_ from
+   an availability zone or region.
 
-For storage, you are normally paid for _utilization_. This is the case for S3, for example. But in some cases the price is based on storage _allocation_. This is the case for EBS volumes, for example. So, when you launch an EC2 instance, you will choose an instance type which determines the amount of CPU, RAM, and storage that is allocated to the instance. If you shut down the instance, you will no longer be billed for CPU and RAM time, but you will continue to be billed for the associated EBS storage.
+For storage, you are normally paid for _utilization_. This is the case for S3,
+for example. But in some cases the price is based on storage _allocation_. This
+is the case for EBS volumes, for example. So, when you launch an EC2 instance,
+you will choose an instance type which determines the amount of CPU, RAM, and
+storage that is allocated to the instance. If you shut down the instance, you
+will no longer be billed for CPU and RAM time, but you will continue to be
+billed for the associated EBS storage.
 
-Typically, data that goes _in_ to AWS is not charged. So, for S3 you pay for the storage and for getting data out, but not for uploading data to buckets in the first place.
+Typically, data that goes _in_ to AWS is not charged. So, for S3 you pay for the
+storage and for getting data out, but not for uploading data to buckets in the
+first place.

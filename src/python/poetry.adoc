@@ -2,7 +2,8 @@
 
 Poetry is a dependency management and packaging tool for Python projects.
 
-Production dependencies are added to the `pyproject.toml` file using the command:
+Production dependencies are added to the `pyproject.toml` file using the
+command:
 
 [source]
 ----
@@ -16,7 +17,8 @@ Development dependencies are added using the command:
 $ poetry add --group dev <package-name>
 ----
 
-Linting, testing, and build tools should generally be added to a group called "dev".
+Linting, testing, and build tools should generally be added to a group called
+"dev".
 
 You can install specific versions of packages, eg.:
 
@@ -25,7 +27,8 @@ You can install specific versions of packages, eg.:
 $ poetry add --group dev ruff@^0.1.0
 ----
 
-Alternatively you can manually edit Poetry's `pyproject.toml` file to add dependencies:
+Alternatively you can manually edit Poetry's `pyproject.toml` file to add
+dependencies:
 
 [source, toml]
 ----
@@ -43,7 +46,8 @@ Then run the following command to install the dependencies:
 $ poetry install
 ----
 
-The CLIs of packages that are managed by Poetry can be accessed via the `poetry run` command, eg.:
+The CLIs of packages that are managed by Poetry can be accessed via the
+`poetry run` command, eg.:
 
 [source]
 ----
@@ -58,14 +62,17 @@ You can check if a dependency is installed:
 poetry show ruff
 ----
 
-Poetry uses virtual environments to isolate project dependencies. You can check which virtual environment Poetry is using for the current project with the command:
+Poetry uses virtual environments to isolate project dependencies. You can check
+which virtual environment Poetry is using for the current project with the
+command:
 
 [source]
 ----
 poetry env info
 ----
 
-If you want to do a clean `poetry install` of all your project's dependencies, you can remove the existing virtual environment with the following command:
+If you want to do a clean `poetry install` of all your project's dependencies,
+you can remove the existing virtual environment with the following command:
 
 [source]
 ----

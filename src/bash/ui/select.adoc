@@ -1,8 +1,11 @@
 = Bash: User selections (`select`)
 
-Bash offers the `select` construct, which is designed specifically for user-driven, interactive scripts. It provides a simple text-based menu from which the user chooses an option from a list of available options.
+Bash offers the `select` construct, which is designed specifically for
+user-driven, interactive scripts. It provides a simple text-based menu from
+which the user chooses an option from a list of available options.
 
-It tends to be used in conjunction with a nested `case` statement (but you could equally use `if` conditionals), to handle the user's input choice.
+It tends to be used in conjunction with a nested `case` statement (but you could
+equally use `if` conditionals), to handle the user's input choice.
 
 [source,bash]
 ----

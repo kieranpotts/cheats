@@ -1,10 +1,14 @@
 = Packages
 
-Packages bundle link:./extensions.adoc[extensions], link:./skills.adoc[skills], link:./prompts.adoc[prompt templates], and link:./themes.adoc[themes] for sharing. They're distributed via npm, git, or local paths.
+Packages bundle link:./extensions.adoc[extensions], link:./skills.adoc[skills],
+link:./prompts.adoc[prompt templates], and link:./themes.adoc[themes] for
+sharing. They're distributed via npm, git, or local paths.
 
 [WARNING]
 ====
-Pi packages run with full system access. Extensions execute arbitrary code, and skills can instruct the model to run any executable. Review the source before installing third-party packages.
+Pi packages run with full system access. Extensions execute arbitrary code, and
+skills can instruct the model to run any executable. Review the source before
+installing third-party packages.
 ====
 
 == Commands
@@ -24,6 +28,9 @@ Pi packages run with full system access. Extensions execute arbitrary code, and 
 
 == Discovery and authoring
 
-The gallery at https://pi.dev/packages[pi.dev/packages] lists packages tagged `pi-package`. To author one, declare resources under a `pi` key in `package.json`, or use the convention directories `extensions/`, `skills/`, `prompts/`, `themes/`.
+The gallery at https://pi.dev/packages[pi.dev/packages] lists packages tagged
+`pi-package`. To author one, declare resources under a `pi` key in
+`package.json`, or use the convention directories `extensions/`, `skills/`,
+`prompts/`, `themes/`.
 
 Installed resources live in `~/.pi/agent/` (global) or `.pi/` (project).

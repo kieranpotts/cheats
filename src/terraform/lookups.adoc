@@ -1,8 +1,11 @@
 = Terraform: Lookups
 
-Another way to avoid hard-coded values in Terraform is to use the `lookup()` function. This dynamically retrieves values from maps or lists, making your Terraform configuration more flexible and reusable.
+Another way to avoid hard-coded values in Terraform is to use the `lookup()`
+function. This dynamically retrieves values from maps or lists, making your
+Terraform configuration more flexible and reusable.
 
-In the following example, we want to use `lookup()` to dynamically generate the list of allowed ingress ports based on the environment.
+In the following example, we want to use `lookup()` to dynamically generate the
+list of allowed ingress ports based on the environment.
 
 .main.tf
 [source,hcl]
@@ -60,7 +63,8 @@ resource "aws_security_group" "my_server" {
 }
 ----
 
-To do that, we define two lists: one list of ports to open in production, and another list of ports to be allowed in all other environments.
+To do that, we define two lists: one list of ports to open in production, and
+another list of ports to be allowed in all other environments.
 
 .variables.tf
 [source,hcl]
@@ -73,7 +77,10 @@ variable "allow_port" {
 }
 ----
 
-We can now swap the hard-coded list of ports for a dynamic lookup based on the environment variable. If the name of the environment matches one of the keys in the `allow_port` map, it will use that list; otherwise, it will default to the "rest" list in the same map.
+We can now swap the hard-coded list of ports for a dynamic lookup based on the
+environment variable. If the name of the environment matches one of the keys in
+the `allow_port` map, it will use that list; otherwise, it will default to the
+"rest" list in the same map.
 
 .main.tf
 [source,hcl]
@@ -101,9 +108,12 @@ resource "aws_security_group" "my_server" {
 }
 ----
 
-Next, we want to replace the hard-coded AMI IDs and instance types with dynamic values based on the region and environment respectively. This allows us to customize our infrastructure based on the target environment and region.
+Next, we want to replace the hard-coded AMI IDs and instance types with dynamic
+values based on the region and environment respectively. This allows us to
+customize our infrastructure based on the target environment and region.
 
-To start, we create variables that map environments to instance types, and regions to AMI IDS:
+To start, we create variables that map environments to instance types, and
+regions to AMI IDS:
 
 .variables.tf
 [source,hcl]
@@ -129,9 +139,12 @@ variable "ami_id_per_region" {
 }
 ----
 
-To dynamically inject the AMI ID, we can use a simple map lookup, passing the current region (made available via a data attribute) as the key.
+To dynamically inject the AMI ID, we can use a simple map lookup, passing the
+current region (made available via a data attribute) as the key.
 
-For the instance type, we can use the `lookup()` function to retrieve the value based on the environment variable, with a default value if the environment is not found in the map.
+For the instance type, we can use the `lookup()` function to retrieve the value
+based on the environment variable, with a default value if the environment is
+not found in the map.
 
 .main.tf
 [source,hcl]
@@ -162,7 +175,10 @@ resource "aws_instance" "my_server" {
 }
 ----
 
-Using `lookup()` with a default fallback value is good practice if the configuration depends on an environment variable, or other variable that is not guaranteed to be valid as it is defined outside of the scope of the Terraform configuration.
+Using `lookup()` with a default fallback value is good practice if the
+configuration depends on an environment variable, or other variable that is not
+guaranteed to be valid as it is defined outside of the scope of the Terraform
+configuration.
 
 [source,hcl]
 ----

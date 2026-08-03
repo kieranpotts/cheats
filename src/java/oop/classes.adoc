@@ -1,6 +1,8 @@
 = Java: Classes
 
-Java is an object-oriented programming language, and classes are the fundamental building blocks of Java programs. A class is a blueprint for creating *objects*, which are said to be *instances* of their class.
+Java is an object-oriented programming language, and classes are the fundamental
+building blocks of Java programs. A class is a blueprint for creating *objects*,
+which are said to be *instances* of their class.
 
 .A simple class
 [source,java]
@@ -26,7 +28,10 @@ public class ClassesInJava {
 }
 ----
 
-In the above example, the `Calculator` class is just a container for a group of standalone functions that do not share any state. More commonly, methods operate on instance variables, which are properties of the class that hold data relevant to a particular instance.
+In the above example, the `Calculator` class is just a container for a group of
+standalone functions that do not share any state. More commonly, methods operate
+on instance variables, which are properties of the class that hold data relevant
+to a particular instance.
 
 [source,java]
 ----
@@ -60,7 +65,8 @@ class MyClass {
 }
 ----
 
-Static variables are accessed via the class name, rather than an instance object.
+Static variables are accessed via the class name, rather than an instance
+object.
 
 [source,java]
 ----
@@ -74,7 +80,12 @@ public class ClassesInJava {
 }
 ----
 
-A *static block* can be used to initialize variables. A static block is called once only, when the class is loaded into memory - but not when you subsequently create instances of the class. Static blocks are useful for initializing static variables, which are shared across all instances of the class. But in most use cases it is sufficient to assign a static variable's value with the variable declaration.
+A *static block* can be used to initialize variables. A static block is called
+once only, when the class is loaded into memory - but not when you subsequently
+create instances of the class. Static blocks are useful for initializing static
+variables, which are shared across all instances of the class. But in most use
+cases it is sufficient to assign a static variable's value with the variable
+declaration.
 
 [source,java]
 ----
@@ -87,7 +98,11 @@ class MyClass {
 }
 ----
 
-If you want to "load a class" without actually creating an instance of it, you need to use `Class.forName("ClassName")`. You will typically call this from another class. This is necessary if you want to initialize static variables in a class (by executing its static blocks) but you don't want to create an instance of the class. This feature is used rarely.
+If you want to "load a class" without actually creating an instance of it, you
+need to use `Class.forName("ClassName")`. You will typically call this from
+another class. This is necessary if you want to initialize static variables in a
+class (by executing its static blocks) but you don't want to create an instance
+of the class. This feature is used rarely.
 
 Constructors must be used to initialize instance variables.
 
@@ -102,7 +117,9 @@ class MyClass {
 }
 ----
 
-You can also initialize static variables from constructors, but it's not a common pattern because it doesn't really make sense logically. Best practice is to set static variables directly or via static blocks.
+You can also initialize static variables from constructors, but it's not a
+common pattern because it doesn't really make sense logically. Best practice is
+to set static variables directly or via static blocks.
 
 [source,java]
 ----
@@ -115,7 +132,9 @@ class MyClass {
 }
 ----
 
-In Java, you can have multiple methods of the same name, as long as they have different parameters. Return types may vary. This is called *method overloading*.
+In Java, you can have multiple methods of the same name, as long as they have
+different parameters. Return types may vary. This is called
+*method overloading*.
 
 [source,java]
 ----
@@ -130,7 +149,9 @@ class Calculator {
 }
 ----
 
-Methods can be static, too. You cannot access instance variables from static methods. If you wanted to do this, you'd need to pass in an instance of the class, and access the instance variables via that instance.
+Methods can be static, too. You cannot access instance variables from static
+methods. If you wanted to do this, you'd need to pass in an instance of the
+class, and access the instance variables via that instance.
 
 [source,java]
 ----
@@ -141,7 +162,8 @@ class Calculator {
 }
 ----
 
-Static methods are accessed via the class name, rather than an instance object, using the same notation as for static variables.
+Static methods are accessed via the class name, rather than an instance object,
+using the same notation as for static variables.
 
 [source,java]
 ----

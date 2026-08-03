@@ -23,7 +23,9 @@ if [[ -f "$config_file" && -r "$config_file" ]]; then
 fi
 ----
 
-Some operators, like `<` and `>`, behave differently depending on whether they are used in string tests in `[[ ... ]]` or `[ ... ]`, or in arithmetic contexts in `(( ... ))`.
+Some operators, like `<` and `>`, behave differently depending on whether they
+are used in string tests in `[[ ... ]]` or `[ ... ]`, or in arithmetic contexts
+in `(( ... ))`.
 
 == Arithmetic comparison operators
 
@@ -36,7 +38,11 @@ Used to test numbers in `[[ ... ]]`, `[ ... ]`, or `(( ... ))`.
 [[ $num -eq 5 ]]  # true if $num equals 5
 ----
 
-This construct is commonly used in conjunction with output from other built-in commands or external programs. Consider the following example. The `grep -ic` command tells `grep` to look for the string (case-insensitive search), and to count the results. This is a simple and fast way of checking whether a string exists within a file, and to perform some action if it does.
+This construct is commonly used in conjunction with output from other built-in
+commands or external programs. Consider the following example. The `grep -ic`
+command tells `grep` to look for the string (case-insensitive search), and to
+count the results. This is a simple and fast way of checking whether a string
+exists within a file, and to perform some action if it does.
 
 [source,bash]
 ----
@@ -197,7 +203,8 @@ Used in `(( ... ))` for C-style arithmetic expressions.
 [[ -n "$input" ]]  # true if $input has content
 ----
 
-The `-n` operator is commonly used to check if an optional input variable has been provided.
+The `-n` operator is commonly used to check if an optional input variable has
+been provided.
 
 [source,bash]
 ----
@@ -207,7 +214,8 @@ then
 fi
 ----
 
-While `-z` is commonly used to check for the existence of mandatory input arguments.
+While `-z` is commonly used to check for the existence of mandatory input
+arguments.
 
 [source,bash]
 ----
@@ -218,7 +226,8 @@ then
 fi
 ----
 
-The `-z` operator is the opposite of the `-n` operator. The behavior is the same if you negate the `-n` result using the `!` (NOT) operator.
+The `-z` operator is the opposite of the `-n` operator. The behavior is the same
+if you negate the `-n` result using the `!` (NOT) operator.
 
 [source,bash]
 ----
@@ -229,7 +238,8 @@ then
 fi
 ----
 
-The following syntax also achieves the same result, but using `-n`/`-z` is preferred for clarity.
+The following syntax also achieves the same result, but using `-n`/`-z` is
+preferred for clarity.
 
 [source,bash]
 ----
@@ -238,7 +248,9 @@ if [[ "${my_var}" == "" ]]; then
 fi
 ----
 
-Prefer to use the string equality and inequality operators only to check that a value matches (or mismatches) a particular sequence of characters. Keep use of `-n`/`-z` specifically for testing empty and non-empty values.
+Prefer to use the string equality and inequality operators only to check that a
+value matches (or mismatches) a particular sequence of characters. Keep use of
+`-n`/`-z` specifically for testing empty and non-empty values.
 
 [source,bash]
 ----

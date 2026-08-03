@@ -1,6 +1,10 @@
 = Multi-stage builds
 
-Multi-stage builds are a feature of Docker that allow you to use multiple `FROM` instructions in a single Dockerfile. This is useful where you need extra steps to prepare an image for production, eg. building production-grade artifacts, rather than running the application directly from the source code, as you would in development environments.
+Multi-stage builds are a feature of Docker that allow you to use multiple `FROM`
+instructions in a single Dockerfile. This is useful where you need extra steps
+to prepare an image for production, eg. building production-grade artifacts,
+rather than running the application directly from the source code, as you would
+in development environments.
 
 Example:
 
@@ -36,7 +40,9 @@ FROM base as prod
 COPY --from=build /app/dist /app
 ----
 
-These stages can then be referenced from the `docker-compose.yml` file. Convention is to use different docker-compose files for different environments, eg. `docker-compose.dev.yml` and `docker-compose.prod.yml`.
+These stages can then be referenced from the `docker-compose.yml` file.
+Convention is to use different docker-compose files for different environments,
+eg. `docker-compose.dev.yml` and `docker-compose.prod.yml`.
 
 .`docker-compose.dev.yml`
 [source,yaml]
@@ -110,7 +116,9 @@ services:
       - ./db-data:/var/lib/postgresql/data
 ----
 
-You can simplify these configurations by extracting the common `db` service to a base configuration, and then having the dev and prod configurations extend that base configuration.
+You can simplify these configurations by extracting the common `db` service to a
+base configuration, and then having the dev and prod configurations extend that
+base configuration.
 
 .`docker-compose.base.yml`
 [source,yaml]

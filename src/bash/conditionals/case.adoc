@@ -4,7 +4,10 @@
 
 == Select options
 
-Case conditionals are perhaps most useful when combined with the `select` built-in. This is designed specifically for user-driven, interactive scripts. It provides a simple text-based menu from which the user chooses an option from a list of available options.
+Case conditionals are perhaps most useful when combined with the `select`
+built-in. This is designed specifically for user-driven, interactive scripts. It
+provides a simple text-based menu from which the user chooses an option from a
+list of available options.
 
 [source,bash]
 ----

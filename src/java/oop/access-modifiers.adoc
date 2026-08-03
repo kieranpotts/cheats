@@ -1,20 +1,30 @@
 = Java: Access modifiers
 
-In Java, access modifiers can be applied to classes and their members (ie. their attributes, methods, and constructors).
+In Java, access modifiers can be applied to classes and their members (ie. their
+attributes, methods, and constructors).
 
-For classes, there's only one access modifier: `public`. By default, without a modifier, a class is accessible only within its package. Adding the `public` modifier makes the class accessible from absolutely everywhere.
+For classes, there's only one access modifier: `public`. By default, without a
+modifier, a class is accessible only within its package. Adding the `public`
+modifier makes the class accessible from absolutely everywhere.
 
-Class members have three access modifiers: `private`, `protected`, and `public`. The default behavior is that members (without modifiers) are quasi-public, in the sense that they are accessible from anywhere within the same package (which is the same default behavior as classes themselves).
+Class members have three access modifiers: `private`, `protected`, and `public`.
+The default behavior is that members (without modifiers) are quasi-public, in
+the sense that they are accessible from anywhere within the same package (which
+is the same default behavior as classes themselves).
 
-Adding one of the three access modifiers changes the scope of access to the member, as follows:
+Adding one of the three access modifiers changes the scope of access to the
+member, as follows:
 
 * `private` members can be accessed only from within the same class.
 
-* `protected` members can be accessed from anywhere within the same package (the default behavior), and in addition they can be accessed from any subclass – including subclasses defined in other packages.
+* `protected` members can be accessed from anywhere within the same package (the
+  default behavior), and in addition they can be accessed from any subclass –
+  including subclasses defined in other packages.
 
 * `public` members can be accessed from absolutely everywhere.
 
-The following table summarizes the access levels for class members (the default and `public` options are also relevant for classes themselves):
+The following table summarizes the access levels for class members (the default
+and `public` options are also relevant for classes themselves):
 
 |===
 |Accessible from | `public` | `protected` | Default * | `private`

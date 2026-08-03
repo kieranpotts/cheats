@@ -1,8 +1,10 @@
 = Hardware
 
-Ollama automatically uses GPU acceleration where available (NVIDIA via CUDA, AMD via ROCm, Apple Silicon via Metal). It falls back to CPU if no GPU is detected.
+Ollama automatically uses GPU acceleration where available (NVIDIA via CUDA, AMD
+via ROCm, Apple Silicon via Metal). It falls back to CPU if no GPU is detected.
 
-The primary constraint on performance is VRAM. Models that fit entirely in VRAM run fast; overflow into system RAM causes a 5–20x performance drop.
+The primary constraint on performance is VRAM. Models that fit entirely in VRAM
+run fast; overflow into system RAM causes a 5–20x performance drop.
 
 == Model size vs hardware requirements
 
@@ -39,7 +41,8 @@ The primary constraint on performance is VRAM. Models that fit entirely in VRAM 
 |Recommended for cloud/enterprise use
 |===
 
-(* Assuming Q4 quantization (4-bit precision). Full precision models require ~4x more RAM.)
+(* Assuming Q4 quantization (4-bit precision). Full precision models require ~4x
+more RAM.)
 
 == GPU
 
@@ -52,27 +55,36 @@ VRAM-to-model-size mapping:
 
 Consumer GPU options, roughly in order of price:
 
-* RTX 3090 (24 GB) — runs up to 34B models; 70B with low quantization. Available second-hand.
-* Dual RTX 3090s (48 GB combined) — runs 70B models; typically cheaper than a single RTX 5090.
+* RTX 3090 (24 GB) — runs up to 34B models; 70B with low quantization. Available
+  second-hand.
+* Dual RTX 3090s (48 GB combined) — runs 70B models; typically cheaper than a
+  single RTX 5090.
 * RTX 4090 (24 GB) — ~128 tok/s on 8B models.
-* RTX 5090 (32 GB) — ~213 tok/s on 8B models; runs Llama 3.1 405B at 15–20 tok/s with quantization.
+* RTX 5090 (32 GB) — ~213 tok/s on 8B models; runs Llama 3.1 405B at 15–20 tok/s
+  with quantization.
 * RTX 6000 Ada (48 GB) — unlocks 70B models comfortably.
 
-Nvidia is recommended — its CUDA ecosystem has the most mature AI software support. AMD ROCm is an alternative but lags in performance and compatibility. Intel oneAPI is not currently supported by Ollama.
+Nvidia is recommended — its CUDA ecosystem has the most mature AI software
+support. AMD ROCm is an alternative but lags in performance and compatibility.
+Intel oneAPI is not currently supported by Ollama.
 
-TIP: Choose a motherboard with room for a second GPU later. The AMD Threadripper platform is a good choice for dual-GPU or expandable builds.
+TIP: Choose a motherboard with room for a second GPU later. The AMD Threadripper
+platform is a good choice for dual-GPU or expandable builds.
 
 == System RAM
 
-Aim for at least 64 GB. 128–256 GB allows running very large quantized models that overflow VRAM, though they will run slowly.
+Aim for at least 64 GB. 128–256 GB allows running very large quantized models
+that overflow VRAM, though they will run slowly.
 
 == CPU
 
-Once the model is loaded into VRAM, the GPU handles 95% of the work. An Intel i5 or Ryzen 5 is sufficient; an i7 or Ryzen 7 is more than enough.
+Once the model is loaded into VRAM, the GPU handles 95% of the work. An Intel i5
+or Ryzen 5 is sufficient; an i7 or Ryzen 7 is more than enough.
 
 == Storage
 
-A fast NVMe SSD (1–2 TB) is important. Models are 4–40 GB each and load slowly from spinning disks.
+A fast NVMe SSD (1–2 TB) is important. Models are 4–40 GB each and load slowly
+from spinning disks.
 
 == PSU
 
@@ -80,12 +92,16 @@ Size to your GPU — 850W for an RTX 3090/4090 build, 1000W+ for an RTX 5090.
 
 == Cooling and noise
 
-Dual GPUs generate significant heat. Use a large case with good airflow and large fans running at low speed to minimize noise.
+Dual GPUs generate significant heat. Use a large case with good airflow and
+large fans running at low speed to minimize noise.
 
 == Case
 
-For a modular, expandable AI workstation: full tower or rack-convertible. Options include the Fractal Design Define 7 XL, Corsair 1000D, and SilverStone RM510.
+For a modular, expandable AI workstation: full tower or rack-convertible.
+Options include the Fractal Design Define 7 XL, Corsair 1000D, and SilverStone
+RM510.
 
 == OS
 
-Mainstream Linux distributions are recommended — driver support is excellent and Ollama runs natively with full CUDA acceleration.
+Mainstream Linux distributions are recommended — driver support is excellent and
+Ollama runs natively with full CUDA acceleration.

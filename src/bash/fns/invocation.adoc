@@ -23,4 +23,6 @@ function print_me {
 print_me "Hello, World!"
 ----
 
-A variable number of arguments can be passed to any function (or program or built-in command). It is up to the function or program to verify that any required arguments have been provided.
+A variable number of arguments can be passed to any function (or program or
+built-in command). It is up to the function or program to verify that any
+required arguments have been provided.

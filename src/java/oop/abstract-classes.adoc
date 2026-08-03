@@ -47,4 +47,6 @@ class Mondeo extends Car {
 }
 ----
 
-It is not compulsory to have abstract methods in an abstract class. The only requirement is that all the abstract methods be implemented in whatever subclass that gets instantiated.
+It is not compulsory to have abstract methods in an abstract class. The only
+requirement is that all the abstract methods be implemented in whatever subclass
+that gets instantiated.

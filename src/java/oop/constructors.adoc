@@ -1,8 +1,11 @@
 = Java: Constructors
 
-In Java, constructors are special methods used to initialize objects. They have the same name as the class and they do not explicitly specify a return type.
+In Java, constructors are special methods used to initialize objects. They have
+the same name as the class and they do not explicitly specify a return type.
 
-Constructors can be parameterized or non-parameterized. A class can have multiple constructors, allowing for different ways to create an instance of the class (ie. the class can have variadic parameters).
+Constructors can be parameterized or non-parameterized. A class can have
+multiple constructors, allowing for different ways to create an instance of the
+class (ie. the class can have variadic parameters).
 
 [source,java]
 ----
@@ -42,7 +45,8 @@ class Human {
 }
 ----
 
-The `Human()` constructor requires exactly one or two parameters. It cannot have none.
+The `Human()` constructor requires exactly one or two parameters. It cannot have
+none.
 
 [source,java]
 ----

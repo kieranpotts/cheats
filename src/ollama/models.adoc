@@ -1,6 +1,7 @@
 = Models
 
-Models are pulled from https://ollama.com/library, which lists all available models.
+Models are pulled from https://ollama.com/library, which lists all available
+models.
 
 [source,sh]
 ----
@@ -17,13 +18,22 @@ ollama list
 ollama rm <model>
 ----
 
-Model names follow the format `<name>:<tag>`, where the tag identifies the variant (typically size and quantisation level, eg. `llama3:8b`). Omitting the tag pulls the default variant.
+Model names follow the format `<name>:<tag>`, where the tag identifies the
+variant (typically size and quantisation level, eg. `llama3:8b`). Omitting the
+tag pulls the default variant.
 
 [TIP]
 ======
-Start small when testing a new setup — a 1B parameter model like `gemma3:1b` is a fast way to verify everything is working before downloading larger models.
+Start small when testing a new setup — a 1B parameter model like `gemma3:1b` is
+a fast way to verify everything is working before downloading larger models.
 ======
 
-For a new setup, starting with a 3-8B model on a machine with 16-32GB RAM gives the best balance of quality and speed with minimal setup risk. See link:./hardware.adoc[Hardware] for a full breakdown of model size vs hardware requirements.
+For a new setup, starting with a 3-8B model on a machine with 16-32GB RAM gives
+the best balance of quality and speed with minimal setup risk. See
+link:./hardware.adoc[Hardware] for a full breakdown of model size vs hardware
+requirements.
 
-Popular model families include Llama (Meta), Qwen (Alibaba), Gemma (Google), Mistral, and DeepSeek. Most have variants across a range of sizes. For coding tasks specifically, fine-tuned variants such as Qwen Coder, CodeLlama, and DeepSeek Coder tend to outperform general-purpose models.
+Popular model families include Llama (Meta), Qwen (Alibaba), Gemma (Google),
+Mistral, and DeepSeek. Most have variants across a range of sizes. For coding
+tasks specifically, fine-tuned variants such as Qwen Coder, CodeLlama, and
+DeepSeek Coder tend to outperform general-purpose models.

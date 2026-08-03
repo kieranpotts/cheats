@@ -1,12 +1,15 @@
 = Pi
 
-Pi is a lightweight coding agent harness designed to be extended via custom prompts, skills, and project-level instructions.
+Pi is a lightweight coding agent harness designed to be extended via custom
+prompts, skills, and project-level instructions.
 
 == Quick start
 
 1. *Install*: `npm install -g --ignore-scripts @earendil-works/pi-coding-agent`
 
-2. *Auth*: Run `pi` then use `/login` to authenticate with your model provider, else set your API key in environment variables, eg. `export ANTHROPIC_API_KEY=...`.
+2. *Auth*: Run `pi` then use `/login` to authenticate with your model provider,
+   else set your API key in environment variables, eg.
+   `export ANTHROPIC_API_KEY=...`.
 
 3. *Run*: `pi` in your project directory.
 

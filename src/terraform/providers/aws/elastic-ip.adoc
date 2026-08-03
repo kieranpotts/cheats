@@ -20,11 +20,19 @@ By default, instances will be assigned a public IP address.
 
 Unfortunately, there are some limitations with this configuration:
 
-* Whenever we make changes to the configuration and `apply` those changes, the instance will be replaced. There will be downtime while the old instance is being stopped and the new instance is being started. (This is Terraform's default behavior: when a resource needs to be updated, it first terminates the existing resource before creating a replacement one.)
+* Whenever we make changes to the configuration and `apply` those changes, the
+  instance will be replaced. There will be downtime while the old instance is
+  being stopped and the new instance is being started. (This is Terraform's
+  default behavior: when a resource needs to be updated, it first terminates the
+  existing resource before creating a replacement one.)
 
-* The public IP address will change every time the instance is replaced. This means that if we have a DNS record pointing to the public IP address, we will need to update the DNS record every time the instance is replaced.
+* The public IP address will change every time the instance is replaced. This
+  means that if we have a DNS record pointing to the public IP address, we will
+  need to update the DNS record every time the instance is replaced.
 
-We can fix the second issue by assigning an Elastic IP address to the instance. An Elastic IP address is a static public IP address that can persist across instance replacements.
+We can fix the second issue by assigning an Elastic IP address to the instance.
+An Elastic IP address is a static public IP address that can persist across
+instance replacements.
 
 [source,hcl]
 ----
@@ -42,7 +50,12 @@ resource "aws_instance" "web" {
 }
 ----
 
-To solve the first issue, we can use the `lifecycle` block and an argument that specifies that replacement resources must be created before the old resources are destroyed – ensuring minimal downtime when instances are replaced. (A few users may loose connection in the few seconds it takes to reassign the Elastic IP address to the new instance. Also the new instance may not have yet finished its startup scripts, ready to receive traffic.)
+To solve the first issue, we can use the `lifecycle` block and an argument that
+specifies that replacement resources must be created before the old resources
+are destroyed – ensuring minimal downtime when instances are replaced. (A few
+users may loose connection in the few seconds it takes to reassign the Elastic
+IP address to the new instance. Also the new instance may not have yet finished
+its startup scripts, ready to receive traffic.)
 
 [source,hcl]
 ----

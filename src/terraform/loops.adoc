@@ -4,7 +4,9 @@ Terraform supports a few loop constructs.
 
 == Loops using resource counts
 
-Looks are particularly useful for creating multiple instances of a resource. The `count` argument allows you to specify how many instances of a resource to create.
+Looks are particularly useful for creating multiple instances of a resource. The
+`count` argument allows you to specify how many instances of a resource to
+create.
 
 [source,hcl]
 ----
@@ -20,9 +22,11 @@ resource "aws_instance" "servers" {
 
 The `count` argument can be used with any Terraform resource.
 
-The `count.index` variable is available within the resource block and represents the current index of the resource being created, starting from 0.
+The `count.index` variable is available within the resource block and represents
+the current index of the resource being created, starting from 0.
 
-By dynamically generating the `count` value from a variable, you can conditionally provision resources based on the value of that variable:
+By dynamically generating the `count` value from a variable, you can
+conditionally provision resources based on the value of that variable:
 
 [source,hcl]
 ----
@@ -38,7 +42,8 @@ resource "aws_instance" "bastion_server" {
 }
 ----
 
-To output the instance IDs and public IP addresses of the created instances, you can define output blocks like this:
+To output the instance IDs and public IP addresses of the created instances, you
+can define output blocks like this:
 
 [source,hcl]
 ----
@@ -55,9 +60,12 @@ output "bastion_public_ip" {
 }
 ----
 
-Notice the conditional expression used in the `bastion_public_ip` output. This is necessary because `aws_instance.bastion_server[0] ` may not exist, and if it doesn't Terraform will throw an error on the `terraform apply` command.
+Notice the conditional expression used in the `bastion_public_ip` output. This
+is necessary because `aws_instance.bastion_server[0] ` may not exist, and if it
+doesn't Terraform will throw an error on the `terraform apply` command.
 
-The following example creates multiple IAM users using a list of usernames defined in a variable. The ARNs of all the created users are outputted.
+The following example creates multiple IAM users using a list of usernames
+defined in a variable. The ARNs of all the created users are outputted.
 
 [source,hcl]
 ----
@@ -112,9 +120,16 @@ resource "aws_route_table_association" "public_routes" {
 ----
 ****
 
-But there's a problem with this approach: if you remove a user from the list, Terraform will destroy the _last user in the list_ (even if that's not the one you removed from the list) and it will try to reassign email addresses to the remaining users. This is because, if you delete Kevin from the list, it just means Jessy moves up to index 2, previously occupied by Kevin.
+But there's a problem with this approach: if you remove a user from the list,
+Terraform will destroy the _last user in the list_ (even if that's not the one
+you removed from the list) and it will try to reassign email addresses to the
+remaining users. This is because, if you delete Kevin from the list, it just
+means Jessy moves up to index 2, previously occupied by Kevin.
 
-So, indexed lists are really only good for configuring multiple instances of a resource that is essentially the same. If you need to manage resources individually (like you do with users), you MUST NOT build those resources from a list. Better to use a set or a map – see below.
+So, indexed lists are really only good for configuring multiple instances of a
+resource that is essentially the same. If you need to manage resources
+individually (like you do with users), you MUST NOT build those resources from a
+list. Better to use a set or a map – see below.
 
 == Loops using `for_each`
 
@@ -132,7 +147,8 @@ resource "aws_iam_user" "user" {
 }
 ----
 
-We start by creating a variable that contains a list of usernames that we want to use to create IAM users.
+We start by creating a variable that contains a list of usernames that we want
+to use to create IAM users.
 
 .variables.tf
 [source,hcl]
@@ -152,7 +168,8 @@ variable "aws_users" {
 }
 ----
 
-Now we can add a `for_each` argument to the `aws_iam_user` resource block to create a user for each item in the list.
+Now we can add a `for_each` argument to the `aws_iam_user` resource block to
+create a user for each item in the list.
 
 .main.tf
 [source,hcl]
@@ -167,11 +184,19 @@ resource "aws_iam_user" "user" {
 }
 ----
 
-The `toset()` function is used to convert the list of usernames into a set, which is required by the `for_each` argument. The `each.value` variable represents the current item in the `for_each` iteration.
+The `toset()` function is used to convert the list of usernames into a set,
+which is required by the `for_each` argument. The `each.value` variable
+represents the current item in the `for_each` iteration.
 
-Sets are unordered collections of unique items. Unlike lists, sets are not indexed, but are keyed (like maps). The `toset()` function sets the value also as the key. Sets are a safer choice than lists when you want to manage users (or other resources) individually. For example, if you deleted "katie@example.com" from the list, and ran `terraform apply`, only one IAM user would be removed and no other user resources would be mutated.
+Sets are unordered collections of unique items. Unlike lists, sets are not
+indexed, but are keyed (like maps). The `toset()` function sets the value also
+as the key. Sets are a safer choice than lists when you want to manage users (or
+other resources) individually. For example, if you deleted "katie@example.com"
+from the list, and ran `terraform apply`, only one IAM user would be removed and
+no other user resources would be mutated.
 
-To print the ARNs of all the created users, we can define an output block like this:
+To print the ARNs of all the created users, we can define an output block like
+this:
 
 .output.tf
 [source,hcl]
@@ -181,7 +206,10 @@ output "user_arns" {
 }
 ----
 
-The `toset()` function can also take a hard-coded list of values, which is useful for creating multiple instances of a resource with basically the same configuration. For example, if we want to create three servers in different environments (Dev, Staging, Prod), we can do it like this:
+The `toset()` function can also take a hard-coded list of values, which is
+useful for creating multiple instances of a resource with basically the same
+configuration. For example, if we want to create three servers in different
+environments (Dev, Staging, Prod), we can do it like this:
 
 .main.tf
 [source,hcl]
@@ -220,7 +248,8 @@ output "instances_public_ips" {
 }
 ----
 
-If you want to provide multiple attributes for each instance, you can use a map, instead of a set, to define the configuration for each server.
+If you want to provide multiple attributes for each instance, you can use a map,
+instead of a set, to define the configuration for each server.
 
 First, extract the configuration of the servers into a variable.
 
@@ -246,7 +275,10 @@ variable "servers_settings" {
 }
 ----
 
-Then use the `for_each` argument to create an instance for each server defined in the variable. The `each.value` variable will contain the configuration for the current server, and you can access its attributes using the keys defined in the map.
+Then use the `for_each` argument to create an instance for each server defined
+in the variable. The `each.value` variable will contain the configuration for
+the current server, and you can access its attributes using the keys defined in
+the map.
 
 .main.tf
 [source,hcl]
@@ -271,7 +303,10 @@ resource "aws_instance" "server" {
 }
 ----
 
-`for_each` can also be used to conditionally create resources based on the value of a variable – as an alternative to using `count` (see above). For example, if you want to create a bastion server only if a certain variable is set to "YES", you can do it like this:
+`for_each` can also be used to conditionally create resources based on the value
+of a variable – as an alternative to using `count` (see above). For example, if
+you want to create a bastion server only if a certain variable is set to "YES",
+you can do it like this:
 
 .variables.tf
 [source,hcl]
@@ -305,9 +340,12 @@ output "bastion_public_ip" {
 
 == Loops using `for in`
 
-You can use the `for in` expression to create a new list or map, but you cannot use it to create resources directly. It is useful for defining maps from which resources are created, or for defining outputs.
+You can use the `for in` expression to create a new list or map, but you cannot
+use it to create resources directly. It is useful for defining maps from which
+resources are created, or for defining outputs.
 
-Consider the following example, which creates some users and instances using loops:
+Consider the following example, which creates some users and instances using
+loops:
 
 .main.tf
 [source,hcl]
@@ -350,7 +388,8 @@ variable "aws_users" {
 }
 ----
 
-The following example shows how to use the `for in` expression to output some full sentences about the created users and instances.
+The following example shows how to use the `for in` expression to output some
+full sentences about the created users and instances.
 
 .outputs.tf
 [source,hcl]
@@ -416,7 +455,10 @@ server_id_ip_map = {
 ]
 ----
 
-The following example creates a map of user unique IDs to their names, but only for users whose names are shorter than 7 characters. This demonstrates how to use a conditional expression within a `for in` loop to filter the data assigned to a map.
+The following example creates a map of user unique IDs to their names, but only
+for users whose names are shorter than 7 characters. This demonstrates how to
+use a conditional expression within a `for in` loop to filter the data assigned
+to a map.
 
 .outputs.tf
 [source,hcl]

@@ -2,27 +2,35 @@
 
 Pi talks to 30+ providers, via either:
 
-- Subscriptions: eg. Claude Pro/Max (but Anthropic will charge by usage if you use a third-party front-end); ChatGPT Plus/Pro; GitHub Copilot.
+- Subscriptions: eg. Claude Pro/Max (but Anthropic will charge by usage if you
+  use a third-party front-end); ChatGPT Plus/Pro; GitHub Copilot.
 
-- API keys: eg. Anthropic, OpenAI, Gemini, Mistral, Groq, xAI (Grok), DeepSeek, OpenRouter, Together, Hugging Face, Fireworks.
+- API keys: eg. Anthropic, OpenAI, Gemini, Mistral, Groq, xAI (Grok), DeepSeek,
+  OpenRouter, Together, Hugging Face, Fireworks.
 
 - Cloud platforms: Azure OpenAI, Amazon Bedrock, Google Vertex AI, Cloudflare.
 
-It also talks to local model servers - Ollama, LM Studio, vLLM, any OpenAI API-compatible proxy - configured in `models.json` (see link:./models.adoc[Models]).
+It also talks to local model servers - Ollama, LM Studio, vLLM, any OpenAI
+API-compatible proxy - configured in `models.json` (see
+link:./models.adoc[Models]).
 
 == Authenticating
 
-* Subscriptions: `/login` runs an OAuth flow; tokens auto-refresh and are stored in `~/.pi/agent/auth.json`.
+* Subscriptions: `/login` runs an OAuth flow; tokens auto-refresh and are stored
+  in `~/.pi/agent/auth.json`.
 
-* API keys: set an env var (eg. `export ANTHROPIC_API_KEY=sk-ant-...`), or store the key in `auth.json` via `/login`.
+* API keys: set an env var (eg. `export ANTHROPIC_API_KEY=sk-ant-...`), or store
+  the key in `auth.json` via `/login`.
 
 * `/logout` clears stored credentials.
 
-Resolution order: CLI `--api-key` -> `auth.json` -> environment variable -> custom-provider config.
+Resolution order: CLI `--api-key` -> `auth.json` -> environment variable ->
+custom-provider config.
 
 == Custom providers
 
-Register an OpenAI-compatible (or other) endpoint from an link:./extensions.adoc[extension] with `pi.registerProvider()`:
+Register an OpenAI-compatible (or other) endpoint from an
+link:./extensions.adoc[extension] with `pi.registerProvider()`:
 
 [source,js]
 ----
@@ -42,4 +50,5 @@ pi.registerProvider("my-provider", {
 });
 ----
 
-Use an async extension factory if you need to fetch and register models dynamically before startup.
+Use an async extension factory if you need to fetch and register models
+dynamically before startup.

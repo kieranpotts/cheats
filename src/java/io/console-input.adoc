@@ -2,7 +2,8 @@
 
 There are several APIs to read user input in Java.
 
-The most basic API is `System.in.read()`, which captured the ASCII value of only the first inputted character.
+The most basic API is `System.in.read()`, which captured the ASCII value of only
+the first inputted character.
 
 [source,java]
 ----
@@ -18,7 +19,9 @@ try {
 }
 ----
 
-`BufferedReader` is more commonly used for reading lines of text input from the console. `BufferedReader` is a built-in class specifically designed for working with IO.
+`BufferedReader` is more commonly used for reading lines of text input from the
+console. `BufferedReader` is a built-in class specifically designed for working
+with IO.
 
 [source,java]
 ----
@@ -42,11 +45,19 @@ try {
 }
 ----
 
-`BufferReader` can also capture input from files and networks and other sources of input to a program. In the above example, `InputStreamReader` is used to read input from the console.
+`BufferReader` can also capture input from files and networks and other sources
+of input to a program. In the above example, `InputStreamReader` is used to read
+input from the console.
 
-`BufferedReader` instances are a type of *resource*. Whenever you open a resource – like a file, network connection, or database – it is your responsibility to close it again, when you are done with it. This is best practice to free-up resources for optimization.
+`BufferedReader` instances are a type of *resource*. Whenever you open a
+resource – like a file, network connection, or database – it is your
+responsibility to close it again, when you are done with it. This is best
+practice to free-up resources for optimization.
 
-Finally, since Java v1.5, there is a newer API for reading input from the console. It is a utility class called `Scanner`. The `System.in` argument refers to input captured from the console rather than, say, a file or network connection.
+Finally, since Java v1.5, there is a newer API for reading input from the
+console. It is a utility class called `Scanner`. The `System.in` argument refers
+to input captured from the console rather than, say, a file or network
+connection.
 
 [source,java]
 ----

@@ -18,4 +18,6 @@ for ((i=0; i<10; i++)); do
 done
 ----
 
-`for` loops are great for looping through dynamically-generated lists of things, like files found on the local filesystem, or for repeating a task a fixed number of times.
+`for` loops are great for looping through dynamically-generated lists of things,
+like files found on the local filesystem, or for repeating a task a fixed number
+of times.

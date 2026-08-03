@@ -1,6 +1,8 @@
 = Debian
 
-These cheats cover Debian and Debian-based Linux distributions such as Ubuntu and Pop OS. See also link:../popos/[Pop OS] for cheats specific to that distribution.
+These cheats cover Debian and Debian-based Linux distributions such as Ubuntu
+and Pop OS. See also link:../popos/[Pop OS] for cheats specific to that
+distribution.
 
 == Hostname
 
@@ -11,28 +13,34 @@ Use this command to reveal the hostname of your machine:
 hostnamectl
 ----
 
-To change the hostname on Debian or Ubuntu, you have a few options depending on whether you want the change to persist across reboots. The cleanest method also uses `hostnamectl`, which is available on most modern systems running systemd:
+To change the hostname on Debian or Ubuntu, you have a few options depending on
+whether you want the change to persist across reboots. The cleanest method also
+uses `hostnamectl`, which is available on most modern systems running systemd:
 
 [source,sh]
 ----
 sudo hostnamectl set-hostname <new-hostname>
 ----
 
-This updates the hostname immediately and persistently, no reboot required. If you're on an older system without `hostnamectl`, edit two files manually — first,  First, `/etc/hostname`:
+This updates the hostname immediately and persistently, no reboot required. If
+you're on an older system without `hostnamectl`, edit two files manually —
+first, First, `/etc/hostname`:
 
 [source,sh]
 ----
 sudo nano /etc/hostname
 ----
 
-Replace the existing content with your new hostname, save, and close. Then update `/etc/hosts` so the new hostname resolves correctly to localhost:
+Replace the existing content with your new hostname, save, and close. Then
+update `/etc/hosts` so the new hostname resolves correctly to localhost:
 
 [source,sh]
 ----
 sudo nano /etc/hosts
 ----
 
-Find the line referencing your old hostname (usually next to 127.0.1.1) and replace it with the new one. After editing both files, apply the change with:
+Find the line referencing your old hostname (usually next to 127.0.1.1) and
+replace it with the new one. After editing both files, apply the change with:
 
 [source,sh]
 ----
@@ -41,11 +49,13 @@ sudo hostname <new-hostname>
 
 Or simply reboot.
 
-Hostnames should use only lowercase letters, numbers, and hyphens (no underscores or spaces), and shouldn't start or end with a hyphen.
+Hostnames should use only lowercase letters, numbers, and hyphens (no
+underscores or spaces), and shouldn't start or end with a hyphen.
 
 == Changing passwords
 
-You can change user passwords via the GUI (eg. the Cosmic Settings app) or the terminal. To change your own password:
+You can change user passwords via the GUI (eg. the Cosmic Settings app) or the
+terminal. To change your own password:
 
 ----
 passwd
@@ -63,11 +73,19 @@ To change the root password:
 sudo passwd root
 ----
 
-When you restart, you might see the error "The password you use to login to your computer no longer matches that of your login keyring". This error occurs when your user login password and the saved keyring password (used to auto-unlock stored credentials) become de-synchronized. When you see this message, you can simply enter your _old_ keyring password (which will match your _old_ system password), and the keyring password will be automatically updated to match your _new_ system password.
+When you restart, you might see the error "The password you use to login to your
+computer no longer matches that of your login keyring". This error occurs when
+your user login password and the saved keyring password (used to auto-unlock
+stored credentials) become de-synchronized. When you see this message, you can
+simply enter your _old_ keyring password (which will match your _old_ system
+password), and the keyring password will be automatically updated to match your
+_new_ system password.
 
-To avoid this error in the first place, change the keyring password to match your current login password using the "Passwords and Keys" (aka. seahorse) app:
+To avoid this error in the first place, change the keyring password to match
+your current login password using the "Passwords and Keys" (aka. seahorse) app:
 
-1. Open the application menu and search for "seahorse". Select the "Passwords and Keys" app.
+1. Open the application menu and search for "seahorse". Select the "Passwords
+   and Keys" app.
 2. Select the "Login" keyring on the left panel.
 3. Right-click on it and choose "Change Password".
 4. Enter the old login password (the one the keyring is asking for).
@@ -77,19 +95,25 @@ To avoid this error in the first place, change the keyring password to match you
 
 === Booting
 
-If Debian fails to start – you're seeing a blank screen with no prompt – you have the following options:
+If Debian fails to start – you're seeing a blank screen with no prompt – you
+have the following options:
 
-* Reboot the computer, and hold (or press repeatedly) either `Shift` or `Esc` after the BIOS splash.
+* Reboot the computer, and hold (or press repeatedly) either `Shift` or `Esc`
+  after the BIOS splash.
 
 * Boot the OS from a USB stick.
 
-Choose the option to boot the OS in recovery mode. This will load the OS in memory but not install it. If the live session works, the problem is with the installed OS, not your hardware.
+Choose the option to boot the OS in recovery mode. This will load the OS in
+memory but not install it. If the live session works, the problem is with the
+installed OS, not your hardware.
 
-You can then use the option to fix the current installation, rather than installing a new one.
+You can then use the option to fix the current installation, rather than
+installing a new one.
 
 === Slow boot, laggy performance
 
-On Debian-based systems, boot can become extremely slow if systemd is waiting for a mount point, container, or service that no longer exists.
+On Debian-based systems, boot can become extremely slow if systemd is waiting
+for a mount point, container, or service that no longer exists.
 
 Some useful checks, to identify what is delaying boot, are:
 
@@ -121,7 +145,10 @@ Remove it if no longer required:
 sudo rm /path/to/broken/link
 ----
 
-Another possibility is a stale mount definition in `/etc/fstab`. Systemd will wait for missing devices, NFS shares, Docker volumes, or bind mounts that are references here. Check for entries that reference paths that no longer exists. To see what systemd is currently waiting on:
+Another possibility is a stale mount definition in `/etc/fstab`. Systemd will
+wait for missing devices, NFS shares, Docker volumes, or bind mounts that are
+references here. Check for entries that reference paths that no longer exists.
+To see what systemd is currently waiting on:
 
 [source,sh]
 ----
@@ -131,8 +158,18 @@ journalctl -b -p warning
 
 === Application icons
 
-To fix a missing application icon in the launcher, edit the application's `StartupWMClass` setting in its `.desktop` configuration file, so that it matches the actual window class of the application.
+To fix a missing application icon in the launcher, edit the application's
+`StartupWMClass` setting in its `.desktop` configuration file, so that it
+matches the actual window class of the application.
 
-To find an application's window class, open the Looking Glass tool. Open the application. Then press `Alt+F2`, type `lg`, and press Enter. In the "Windows" tab, find the application in the list of running applications, and note its window class. For example, for Firefox Developer Edition, the window class is `firefox-dev`.
+To find an application's window class, open the Looking Glass tool. Open the
+application. Then press `Alt+F2`, type `lg`, and press Enter. In the "Windows"
+tab, find the application in the list of running applications, and note its
+window class. For example, for Firefox Developer Edition, the window class is
+`firefox-dev`.
 
-Locate the application's `.desktop` file, which is usually in `/usr/share/applications` or `~/.local/share/applications`. Open the file in a text editor, with superuser privileges. Add or modify the line `StartupWMClass=` to reference the correct window class, eg. `StartupWMClass=firefox-dev` rather than `StartupWMClass=firefox-aurora`.
+Locate the application's `.desktop` file, which is usually in
+`/usr/share/applications` or `~/.local/share/applications`. Open the file in a
+text editor, with superuser privileges. Add or modify the line `StartupWMClass=`
+to reference the correct window class, eg. `StartupWMClass=firefox-dev` rather
+than `StartupWMClass=firefox-aurora`.

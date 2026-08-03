@@ -2,9 +2,11 @@
 
 == Initializing
 
-Whenever you create a new Terraform config, you need to run `terraform init` from the directory containing the config files.
+Whenever you create a new Terraform config, you need to run `terraform init`
+from the directory containing the config files.
 
-This "initializes the back-end", which is to say it downloads and enabled the plugins (binary files) necessary to interact with your infrastructure provider.
+This "initializes the back-end", which is to say it downloads and enabled the
+plugins (binary files) necessary to interact with your infrastructure provider.
 
 ----
 $ terraform init
@@ -16,24 +18,35 @@ Initializing provider plugins...
 - Installing hashicorp/aws v4.53.0...
 ----
 
-This generates a lock file called `.terraform.lock.hcl`. It is RECOMMENDED to commit this to source control, which guarantees that everyone will install the exact same dependencies (ie. the same versions of the cloud providers) when they run `terraform init` at the same revision.
+This generates a lock file called `.terraform.lock.hcl`. It is RECOMMENDED to
+commit this to source control, which guarantees that everyone will install the
+exact same dependencies (ie. the same versions of the cloud providers) when they
+run `terraform init` at the same revision.
 
 [IMPORTANT]
 ======
-It is RECOMMENDED to always run `terraform init` before running any additional `terraform` commands, after pulling changes from source control.
+It is RECOMMENDED to always run `terraform init` before running any additional
+`terraform` commands, after pulling changes from source control.
 ======
 
-Use `terraform init -upgrade` to update the lock file and install the latest versions of your cloud providers.
+Use `terraform init -upgrade` to update the lock file and install the latest
+versions of your cloud providers.
 
 == Validating
 
-The `terraform validate` command checks the syntax and validity of your Terraform configuration files. For example, it will check that all required attributes are set, and all cross-referenced resources are defined.
+The `terraform validate` command checks the syntax and validity of your
+Terraform configuration files. For example, it will check that all required
+attributes are set, and all cross-referenced resources are defined.
 
-Planning and applying does this anyway, but it can be useful to run `terraform validate` incrementally as you make changes to your configuration files, to catch mistakes early.
+Planning and applying does this anyway, but it can be useful to run
+`terraform validate` incrementally as you make changes to your configuration
+files, to catch mistakes early.
 
 == Planning
 
-Run `terraform plan` to see what changes are required to update your infrastructure to match the desired state, as specified in your infrastructure-as-code. This is called an *execution plan*.
+Run `terraform plan` to see what changes are required to update your
+infrastructure to match the desired state, as specified in your
+infrastructure-as-code. This is called an *execution plan*.
 
 Pass an `-out` option to output the execution plan to a file.
 
@@ -45,24 +58,34 @@ Run `terraform apply` to apply the execution plan to your infrastructure.
 
 [IMPORTANT]
 ======
-It is RECOMMENDED to always run `terraform plan` before running `terraform apply`, to see what changes will be made. However, the `apply` operation will also ask you to confirm the changes before proceeding.
+It is RECOMMENDED to always run `terraform plan` before running
+`terraform apply`, to see what changes will be made. However, the `apply`
+operation will also ask you to confirm the changes before proceeding.
 ======
 
-When applying, you can override any default values for variables – declared via `variables.tf` or `terraform.tfvars` – and used within the Terraform files, eg.:
+When applying, you can override any default values for variables – declared via
+`variables.tf` or `terraform.tfvars` – and used within the Terraform files, eg.:
 
 ----
 $ terraform apply -var "instance_name="MyNewNameEC2"
 ----
 
-If you have more than a few variables to set, better to create a file called `terraform.tfvars` and set the variables there – that's the purpose of this file. You can still override some of those variables via command-line input.
+If you have more than a few variables to set, better to create a file called
+`terraform.tfvars` and set the variables there – that's the purpose of this
+file. You can still override some of those variables via command-line input.
 
-If there are changes to be made, `terraform apply` will prompt you to confirm the changes before proceeding. If you want to skip the confirmation prompt, you can use the `-auto-approve` option. This can be useful in automated scripts or CI/CD pipelines.
+If there are changes to be made, `terraform apply` will prompt you to confirm
+the changes before proceeding. If you want to skip the confirmation prompt, you
+can use the `-auto-approve` option. This can be useful in automated scripts or
+CI/CD pipelines.
 
 ----
 $ terraform apply -auto-approve
 ----
 
-If you want to incrementally apply changes, you can use the `-target` option to specify a particular resource or module to apply changes to, rather than applying all changes at once.
+If you want to incrementally apply changes, you can use the `-target` option to
+specify a particular resource or module to apply changes to, rather than
+applying all changes at once.
 
 ----
 $ terraform apply -target=aws_instance.node2
@@ -70,17 +93,23 @@ $ terraform apply -target=aws_instance.node2
 
 == Destroying
 
-Running `terraform destroy` will destroy all of the infrastructure that is managed by the current Terraform config.
+Running `terraform destroy` will destroy all of the infrastructure that is
+managed by the current Terraform config.
 
-Do this whenever you have finished using resources, so you don't get charged for them.
+Do this whenever you have finished using resources, so you don't get charged for
+them.
 
 Obviously, this is a destructive operation, so be careful when running it!
 
 == Taint
 
-`terraform taint` marks a resource as "tainted", which means that it will be destroyed and recreated the next time you run `terraform apply`, regardless of whether the configuration for the resource has changed or not.
+`terraform taint` marks a resource as "tainted", which means that it will be
+destroyed and recreated the next time you run `terraform apply`, regardless of
+whether the configuration for the resource has changed or not.
 
-This is super helpful when you want to force a resource to be recreated, for example if you think it is in a bad state or has become corrupted, without having to change its configuration.
+This is super helpful when you want to force a resource to be recreated, for
+example if you think it is in a bad state or has become corrupted, without
+having to change its configuration.
 
 For example, to mark the following resource as tainted:
 
@@ -99,30 +128,44 @@ $ terraform taint aws_instance.node2
 Resource instance aws_instance.node2 has been marked as tainted.
 ----
 
-Run `terraform plan` to verify that the resource will be destroyed and recreated, before implementing the change with `terraform apply`.
+Run `terraform plan` to verify that the resource will be destroyed and
+recreated, before implementing the change with `terraform apply`.
 
 == Replace
 
-Another way to recreate a resource is to use `terraform apply -replace <resource-name>`, which will destroy the resource and create a new one with the same configuration.
+Another way to recreate a resource is to use
+`terraform apply -replace <resource-name>`, which will destroy the resource and
+create a new one with the same configuration.
 
 ----
 $ terraform apply -replace aws_instance.node2
 ----
 
-This will `apply` changes as normal, but it will also destroy and recreate the specified resource, regardless of whether its configuration has changed or not.
+This will `apply` changes as normal, but it will also destroy and recreate the
+specified resource, regardless of whether its configuration has changed or not.
 
-You can also preview the changes that will be made by running `terraform plan -replace <resource-name>`.
+You can also preview the changes that will be made by running
+`terraform plan -replace <resource-name>`.
 
 == Refresh
 
-If you `apply` changes to your infrastructure, but then you make changes outside of Terraform (eg. manually in the cloud provider's console), there will be "drift" between the actual state of the infrastructure and the state that Terraform knows about.
+If you `apply` changes to your infrastructure, but then you make changes outside
+of Terraform (eg. manually in the cloud provider's console), there will be
+"drift" between the actual state of the infrastructure and the state that
+Terraform knows about.
 
-To refresh Terraform's state file and bring it in line with the actual state of the infrastructure, you can use the `terraform refresh` command.
+To refresh Terraform's state file and bring it in line with the actual state of
+the infrastructure, you can use the `terraform refresh` command.
 
 == Other useful CLI commands
 
 * `terraform fmt` formats your Terraform files according to the standard style.
-* `terraform output` displays the outputs defined in your Terraform configuration, from the last `apply` run.
+* `terraform output` displays the outputs defined in your Terraform
+  configuration, from the last `apply` run.
 * `terraform show` displays the current configuration (with default values).
 
-Terraform has a lot of https://developer.hashicorp.com/terraform/language/functions[built-in functions] for manipulating data. To experiment with them, you can use the `terraform console` command, which opens an interactive console where you can evaluate expressions and see their results.
+Terraform has a lot of
+https://developer.hashicorp.com/terraform/language/functions[built-in functions]
+for manipulating data. To experiment with them, you can use the
+`terraform console` command, which opens an interactive console where you can
+evaluate expressions and see their results.

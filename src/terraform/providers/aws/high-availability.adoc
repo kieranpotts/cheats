@@ -1,8 +1,10 @@
 = Terraform: AWS - High availability configurations
 
-This section contains example Terraform configurations for high availability services.
+This section contains example Terraform configurations for high availability
+services.
 
-We'll configure a HA web cluster into the default VPC in the `ca-central-1` region. The cluster will consist of:
+We'll configure a HA web cluster into the default VPC in the `ca-central-1`
+region. The cluster will consist of:
 
 * A security group for the web servers and ELB
 * Launch configuration with auto AMI lookup
@@ -10,7 +12,8 @@ We'll configure a HA web cluster into the default VPC in the `ca-central-1` regi
 * A classic load balancer in 2 availability zones
 * The web servers will be updated via a green/blue deployment strategy
 
-Here's some initial configuration to define the provider, region, and to create a reference to the default VPC (which already exists).
+Here's some initial configuration to define the provider, region, and to create
+a reference to the default VPC (which already exists).
 
 [source,hcl]
 ----
@@ -42,7 +45,8 @@ data "aws_ami" "latest_amazon_linux" {
 }
 ----
 
-Next, we need to create a security group, which will be used for the web servers and load balancer.
+Next, we need to create a security group, which will be used for the web servers
+and load balancer.
 
 [source,hcl]
 ----
@@ -69,7 +73,10 @@ resource "aws_security_group" "web" {
 }
 ----
 
-Next, we will define the launch configuration. This will be used to create the web servers in the auto scaling group. The launch configuration will use the latest Amazon Linux AMI, and will use a user data script to install and configure the web server.
+Next, we will define the launch configuration. This will be used to create the
+web servers in the auto scaling group. The launch configuration will use the
+latest Amazon Linux AMI, and will use a user data script to install and
+configure the web server.
 
 [source,hcl]
 ----
@@ -190,7 +197,9 @@ resource "aws_elb" "web" {
 }
 ----
 
-Finally, we need to create references to the default subnets in the two availability zones. These resources already exist - we're just "adopting" them into our Terraform configuration.
+Finally, we need to create references to the default subnets in the two
+availability zones. These resources already exist - we're just "adopting" them
+into our Terraform configuration.
 
 [source,hcl]
 ----
@@ -203,7 +212,8 @@ resource "aws_default_subnet" "default_az2" {
 }
 ----
 
-Finally, we need to output the load balancer DNS name, so we can access it via a web browser.
+Finally, we need to output the load balancer DNS name, so we can access it via a
+web browser.
 
 [source,hcl]
 ----
@@ -214,9 +224,11 @@ output "web_loadbalancer_url" {
 
 == Using Launch Templates
 
-To use Launch Templates instead of Launch Configurations (which is an older system with fewer options), we need to make a few changes to the configuration.
+To use Launch Templates instead of Launch Configurations (which is an older
+system with fewer options), we need to make a few changes to the configuration.
 
-We replace the "aws_launch_configuration" resource with an "aws_launch_template" resource:
+We replace the "aws_launch_configuration" resource with an "aws_launch_template"
+resource:
 
 [source,hcl]
 ----

@@ -2,7 +2,9 @@
 
 == Run a basic Java container
 
-This is useful for just experimenting with Java code in a containerized environment, so you don't need to install a Java runtime directly on your host machine.
+This is useful for just experimenting with Java code in a containerized
+environment, so you don't need to install a Java runtime directly on your host
+machine.
 
 [source,java]
 ----

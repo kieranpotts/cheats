@@ -2,7 +2,8 @@
 
 In HCL, a _block_ is a container for content.
 
-Every block has a _type_, which is the keyword that opens the block. The following block it of type `resource`:
+Every block has a _type_, which is the keyword that opens the block. The
+following block it of type `resource`:
 
 [source,hcl]
 ----
@@ -16,15 +17,25 @@ resource "aws_instance" "web_server" {
 }
 ----
 
-The values after the type, but before the opening brace, are _labels_. The number of labels, and their semantics, vary depending on the block type. In the example above, there are two labels: "aws_instance" and "web server". The first label is specific to the AWS provider and it specifies the type of the resource to create. The second label is an arbitrary name for the resource, which is used to refer to the resource in other parts of the configuration.
+The values after the type, but before the opening brace, are _labels_. The
+number of labels, and their semantics, vary depending on the block type. In the
+example above, there are two labels: "aws_instance" and "web server". The first
+label is specific to the AWS provider and it specifies the type of the resource
+to create. The second label is an arbitrary name for the resource, which is used
+to refer to the resource in other parts of the configuration.
 
-You can create multiple instances of the same block type and differentiate them by giving each instance a unique name.
+You can create multiple instances of the same block type and differentiate them
+by giving each instance a unique name.
 
-After the block type keyword and any labels, the block body is delimited by the `{` and `}` characters. Within the block body, further arguments (aka. variable assignments) and blocks may be nested.
+After the block type keyword and any labels, the block body is delimited by the
+`{` and `}` characters. Within the block body, further arguments (aka. variable
+assignments) and blocks may be nested.
 
 == Dynamic blocks
 
-Imagine you need to specify twenty different ingress rules for a security group. You could write them all out as static `ingress` blocks, but better to use a dynamic block to generate them programmatically. Example:
+Imagine you need to specify twenty different ingress rules for a security group.
+You could write them all out as static `ingress` blocks, but better to use a
+dynamic block to generate them programmatically. Example:
 
 [source,hcl]
 ----

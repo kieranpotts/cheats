@@ -2,7 +2,9 @@
 
 A functional interface is an interface with exactly one abstract method.
 
-The `@FunctionalInterface` annotation is optional, but it is a good practice to use it. It is used to ensure that the interface has only one abstract method. If you try to add another abstract method, the compiler will raise an error.
+The `@FunctionalInterface` annotation is optional, but it is a good practice to
+use it. It is used to ensure that the interface has only one abstract method. If
+you try to add another abstract method, the compiler will raise an error.
 
 [source,java]
 ----

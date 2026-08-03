@@ -1,10 +1,16 @@
 = Terraform: AWS - Security groups
 
-Security groups are virtual firewalls that control inbound and outbound traffic to AWS resources.
+Security groups are virtual firewalls that control inbound and outbound traffic
+to AWS resources.
 
-In Terraform, they are typically defined in the same file as the resources they are associated with. This is because security groups are often created and modified alongside the resources they protect. But this is optional – you may define all security groups centrally, in a single file.
+In Terraform, they are typically defined in the same file as the resources they
+are associated with. This is because security groups are often created and
+modified alongside the resources they protect. But this is optional – you may
+define all security groups centrally, in a single file.
 
-The following security group allows all inbound HTTP and HTTPS traffic, and all outbound traffic (on any protocol). This is a common configuration for web servers.
+The following security group allows all inbound HTTP and HTTPS traffic, and all
+outbound traffic (on any protocol). This is a common configuration for web
+servers.
 
 .main.tf
 [source,hcl]
@@ -43,9 +49,15 @@ resource "aws_security_group" "web_sg" {
 }
 ----
 
-Notice the inclusion of the `vpc_id` argument. This is required since AWS provider v4.29. The VPC ID is the ID of the default VPC, which is created automatically in each AWS region. The `aws_default_vpc` resource, which references the default VPC, is needed to retrieve the VPC ID.
+Notice the inclusion of the `vpc_id` argument. This is required since AWS
+provider v4.29. The VPC ID is the ID of the default VPC, which is created
+automatically in each AWS region. The `aws_default_vpc` resource, which
+references the default VPC, is needed to retrieve the VPC ID.
 
-It is RECOMMENDED to provide descriptions for security groups, and each rule within them. This is not required, but it removes the necessity for inline comments and the descriptions are displayed in the AWS console. The descriptions are also useful for auditing purposes.
+It is RECOMMENDED to provide descriptions for security groups, and each rule
+within them. This is not required, but it removes the necessity for inline
+comments and the descriptions are displayed in the AWS console. The descriptions
+are also useful for auditing purposes.
 
 .main.tf
 [source,hcl]

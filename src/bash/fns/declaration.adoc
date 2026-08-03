@@ -1,6 +1,7 @@
 = Bash: Declaring functions
 
-As in other scripting and programming languages, in Bash you use functions to group pieces of code in a logical way, and to implement recursion.
+As in other scripting and programming languages, in Bash you use functions to
+group pieces of code in a logical way, and to implement recursion.
 
 You declare a function with the following syntax:
 
@@ -10,7 +11,8 @@ function [function_name] {
 }
 ----
 
-This is an _explicit_ function declaration. _Implicit_ function declarations are possible with the following syntax:
+This is an _explicit_ function declaration. _Implicit_ function declarations are
+possible with the following syntax:
 
 ----
 [function_name] {
@@ -32,7 +34,8 @@ some_function () {
 }
 ----
 
-The explicit alternative gives more readability, but the implicit one is the POSIX standard so it is more portable.
+The explicit alternative gives more readability, but the implicit one is the
+POSIX standard so it is more portable.
 
 The function body is placed inside the curly braces.
 

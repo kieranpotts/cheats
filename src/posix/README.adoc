@@ -1,6 +1,7 @@
 = POSIX
 
-See also Dylan Araps's https://github.com/dylanaraps/pure-sh-bible[Pure SH Bible].
+See also Dylan Araps's
+https://github.com/dylanaraps/pure-sh-bible[Pure SH Bible].
 
 == Conditional expressions
 
