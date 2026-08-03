@@ -27,6 +27,7 @@ Cheat sheets and study notes for various tools, technologies, and languages.
 - [Linux](./src/linux)
 - [Monit](./src/monit)
 - [Munin](./src/munin)
+- [Neovim](./src/neovim)
 - [Nginx](./src/nginx)
 - [Ollama](./src/ollama)
 - [pass](./src/pass)
