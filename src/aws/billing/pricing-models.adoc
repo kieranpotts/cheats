@@ -21,3 +21,22 @@ billed for the associated EBS storage.
 Typically, data that goes _in_ to AWS is not charged. So, for S3 you pay for the
 storage and for getting data out, but not for uploading data to buckets in the
 first place.
+
+== Snowball pricing
+
+The Snowball family (see the migration and transfer services page) is billed
+differently from most AWS services — you pay a flat *service fee per job*
+(varying by device size), plus the cost of *shipping* the device. Up to 10 days
+of onsite usage of the device is included free with each job; extra days are
+charged daily. Transferring data _onto_ AWS via Snowball (inbound transfer) is
+free.
+
+== Always-free services
+
+A handful of services never contribute to your bill, regardless of usage,
+because they're either free by design or their cost is folded into other
+billed resources: *VPC*, *IAM*, *AWS Organizations* / Consolidated Billing,
+*AWS CloudFormation*, *Auto Scaling*, and *Elastic Beanstalk* itself (though the
+EC2/ELB/etc. resources it provisions on your behalf are billed normally). Worth
+remembering when reasoning about where costs actually originate in an
+architecture.
