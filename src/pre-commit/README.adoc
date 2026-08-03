@@ -6,7 +6,7 @@ Install the framework:
 
 [source,sh]
 ----
-pipx install pre-commit
+pip|pipx install pre-commit
 ----
 
 Install the Git hook scripts:
@@ -80,3 +80,10 @@ pre-commit clean
 Uninstalling pre-commit hooks removes them from the whole Git repository,
 including all Git worktrees (the hook configuration is in the main repository,
 in the `--git-common-dir` path).
+
+To uninstall the framework itself:
+
+[source,sh]
+----
+pip|pipx uninstall pre-commit
+----
