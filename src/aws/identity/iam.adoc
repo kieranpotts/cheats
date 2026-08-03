@@ -137,6 +137,55 @@ resources and services from your applications that run in EC2 instances. See the
 documentation on EC2 for more information.
 ======
 
+== Least privilege
+
+*Least privilege* is the practice of granting an identity only the specific
+permissions it needs to do its job, and no more — rather than starting broad
+and hoping to narrow things down later. In practice this means:
+
+* Starting with AWS managed policies (broad, maintained by AWS, good for
+  getting going quickly), then narrowing down to your own *customer managed
+  policies* as your understanding of the actual required permissions matures.
+* Using policy *conditions* (the `Condition` element) to further restrict when
+  a permission applies — eg. only over TLS, only from a specific IP range, or
+  only when MFA is present.
+* Using *permissions boundaries* — a policy attached to a user or role that
+  sets the maximum permissions that identity can ever have, regardless of what
+  its identity-based policies grant. This is distinct from SCPs (which apply
+  at the AWS Organizations account/OU level) and *Resource Control Policies
+  (RCPs)* (which apply org-wide on the resource side, restricting what
+  principals — including those outside the organization — can do to
+  resources).
+* Using *IAM Access Analyzer* to: generate a least-privilege policy based on a
+  role or user's actual CloudTrail activity; validate policies against 100+
+  automated checks before applying them; and monitor/preview S3 buckets, IAM
+  roles, and other resources for unintended public or cross-account access.
+* Reviewing *last accessed information* (in the IAM console, or via credential
+  reports) to find and remove permissions, roles, and credentials that haven't
+  actually been used.
+
+For workloads that can't use in-account `sts:AssumeRole` — eg. servers running
+outside AWS — AWS provides other federation mechanisms towards the same
+short-term-credentials goal: *IAM Roles Anywhere* (for on-premises/other-cloud
+workloads with X.509 certificates), and the `sts:AssumeRoleWithSAML` /
+`sts:AssumeRoleWithWebIdentity` API calls (for SAML and OIDC/web-identity
+federation respectively).
+
+== Password policies
+
+An account-wide *password policy* can be configured to enforce requirements on
+IAM user passwords — minimum length, required character types (uppercase,
+lowercase, numbers, symbols), expiration/rotation periods, password reuse
+prevention, and whether users can reset their own expired passwords.
+
+== IAM Policy Simulator
+
+The *IAM Policy Simulator* is a tool (console and API) for testing and
+troubleshooting the effect of identity-based and resource-based policies,
+without actually making live requests against AWS resources. It's the standard
+way to work out _why_ a particular action is being denied for a user, group, or
+role, before you go ahead and change the real policy.
+
 == Service Control Policies (SCPs)
 
 *Service Control Policies (SCPs)* are a feature of *AWS Organizations*. They
