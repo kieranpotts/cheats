@@ -1,5 +1,35 @@
 = pre-commit
 
+== Install
+
+Install the framework:
+
+[source,sh]
+----
+pipx install pre-commit
+----
+
+Install the Git hook scripts:
+
+[source,sh]
+----
+pre-commit install
+----
+
+Install, but allow the `.pre-commit-config.yaml` file to be missing:
+
+[source,sh]
+----
+pre-commit install --allow-missing-config
+----
+
+Run against all files (useful after adding new hooks):
+
+[source,sh]
+----
+pre-commit run --all-files
+----
+
 == Uninstall
 
 To remove pre-commit hooks from a specific repository, from that repository's root directory run:
@@ -19,6 +49,20 @@ pre-commit uninstall --hook-type commit-msg
 pre-commit uninstall --hook-type pre-push
 ----
 
+Or:
+
+[source,sh]
+----
+pre-commit uninstall -t commit-msg -t pre-push
+----
+
+To verify:
+
+[source,sh]
+----
+ls $(git rev-parse --git-common-dir)/hooks/
+----
+
 To remove all traces from the repository, delete the config file:
 
 [source,sh]
@@ -32,3 +76,7 @@ And optionally clear cached environments globally:
 ----
 pre-commit clean
 ----
+
+Uninstalling pre-commit hooks removes them from the whole Git repository,
+including all Git worktrees (the hook configuration is in the main repository,
+in the `--git-common-dir` path).
