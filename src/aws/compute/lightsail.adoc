@@ -14,3 +14,16 @@ like auto-scaling.
 
 Lightsail is a good choice if you do not require the high-end compute power of
 EC2, and you do not need EC2's advanced optimization features.
+
+Lightsail also offers pre-built *application blueprints* (eg. WordPress, LAMP,
+MEAN, Plesk, cPanel) that let you launch a ready-configured instance in a few
+clicks, rather than installing the stack yourself.
+
+In addition to compute instances, Lightsail offers *managed databases* — MySQL
+and PostgreSQL, with automatic daily backups and 7-day point-in-time restore.
+There are two plan tiers: *Standard* (single node) and *High Availability*
+(with a standby replica in another AZ).
+
+Lightsail's plans also come with fixed account-level limits (number of
+instances, static IPs, DNS zones, load balancers, etc.), which is part of what
+keeps its pricing simple compared to EC2.
