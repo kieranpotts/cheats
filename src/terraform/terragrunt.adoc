@@ -1,0 +1,466 @@
+= Terraform: Terragrunt
+
+Terragrunt is a thin orchestration wrapper around Terraform and OpenTofu,
+maintained by Gruntwork. It does not replace either tool — it generates and
+injects configuration (backend blocks, provider blocks, variables) into a
+working directory, then shells out to the underlying `tofu` or `terraform`
+binary to do the actual work. Its purpose is to keep large, multi-environment,
+multi-module Terraform estates DRY: without it, every root module (per
+environment, per region, per component) ends up with near-identical, hand-copied
+`provider`, `backend`, and version-constraint boilerplate.
+
+== The problem it solves
+
+A typical Terraform estate with several environments (dev/staging/prod), each in
+one or more regions, each composed of several components (VPC, RDS, EKS, ...),
+requires a separate Terraform root module per component per environment. Plain
+Terraform has no mechanism for one root module to inherit configuration from
+another — every root module must redeclare its own `terraform { backend {} }`
+block, its own `provider` blocks, and its own version constraints. Terraform
+workspaces do not solve this either: a workspace shares a single root module and
+swaps out only the state file, so it cannot express environments that are
+genuinely different in shape (eg. a smaller RDS instance class in dev than in
+prod).
+
+Terragrunt addresses this by letting root-module-level configuration (backend,
+providers, common inputs) live in one place and be inherited by every child
+module, while the actual resource logic still lives in ordinary Terraform/
+OpenTofu modules referenced by source.
+
+== How it works
+
+Terragrunt reads a `terragrunt.hcl` config file (and any parent configs it
+`include`s), resolves `dependency` blocks against other Terragrunt modules,
+generates any files described by `generate` and `remote_state` blocks into a
+working directory, and then invokes the underlying `tofu` (or `terraform`)
+binary against that directory with the resolved `inputs` passed through as
+`-var` equivalents.
+
+Because it is only a wrapper, `terragrunt plan`, `terragrunt apply`,
+`terragrunt destroy`, and `terragrunt output` all proxy directly to their
+Terraform/OpenTofu equivalents, operating on a single module. Terragrunt's own
+value-add is everything needed to keep multiple modules DRY and to orchestrate
+operations across many of them at once.
+
+== OpenTofu and Terraform
+
+Terragrunt supports OpenTofu and Terraform as first-class alternatives. As of
+current releases, the *default* binary Terragrunt shells out to is `tofu`, not
+`terraform` — this is a change from Terragrunt's history and MUST be accounted
+for in teams still standardised on Terraform.
+
+To pin the binary explicitly, set `terraform_binary` in `terragrunt.hcl` (or a
+parent config it inherits from):
+
+[source,hcl]
+----
+terraform_binary = "terraform" # Override the tofu default.
+----
+
+Precedence, highest first: `--tf-path` CLI flag, `TG_TF_PATH` environment
+variable, `terraform_binary` attribute in the unit's own config, `terraform_binary`
+in an included parent config.
+
+`terraform_version_constraint` and `terragrunt_version_constraint` can be set
+alongside this to fail fast if the wrong tool version is installed:
+
+[source,hcl]
+----
+terraform_version_constraint  = ">= 1.5.0"
+terragrunt_version_constraint = ">= 0.60.0"
+----
+
+== The `terragrunt.hcl` file
+
+Every directory that represents a deployable unit (a "module" in Terragrunt's
+terminology) contains a `terragrunt.hcl` file. Terragrunt-generated repos
+increasingly name the *shared, inherited* config `root.hcl` rather than
+`terragrunt.hcl`, to remove ambiguity between "the config every child includes"
+and "a leaf module's own config" — this is a naming convention, not a required
+filename, and either name works with `include`/`find_in_parent_folders()`.
+
+=== `terraform` block
+
+Declares the source module and any hooks/extra arguments around the underlying
+Terraform commands. `source` uses the same syntax as Terraform's own module
+source addresses (`//` for a subdirectory, `?ref=` for a version/tag).
+
+[source,hcl]
+----
+terraform {
+  source = "git::git@github.com:example/infra-modules.git//vpc?ref=v1.4.0"
+
+  extra_arguments "common_vars" {
+    commands = ["plan", "apply"]
+
+    arguments = [
+      "-lock-timeout=20m",
+    ]
+
+    optional_var_files = [
+      "${get_terragrunt_dir()}/extra.tfvars",
+    ]
+  }
+
+  before_hook "notify_start" {
+    commands = ["apply"]
+    execute  = ["echo", "Starting apply in ${path_relative_to_include()}"]
+  }
+
+  after_hook "notify_done" {
+    commands     = ["apply"]
+    execute      = ["echo", "Apply finished"]
+    run_on_error = false
+  }
+
+  error_hook "notify_error" {
+    commands  = ["apply"]
+    execute   = ["echo", "Apply failed"]
+    on_errors = [".*"]
+  }
+}
+----
+
+`before_hook`/`after_hook`/`error_hook` each accept `commands` (which Terragrunt
+commands trigger the hook), `execute` (argv-style command to run),
+`run_on_error`, and `working_dir`.
+
+=== `remote_state` block
+
+Auto-generates the backend configuration for the module, rather than requiring
+a hand-written `terraform { backend {} }` block in every root module.
+
+.root.hcl
+[source,hcl]
+----
+remote_state {
+  backend = "s3"
+
+  config = {
+    bucket         = "acme-terraform-state"
+    key            = "${path_relative_to_include()}/terraform.tfstate"
+    region         = "eu-west-1"
+    encrypt        = true
+    dynamodb_table = "acme-terraform-locks"
+  }
+
+  generate = {
+    path      = "backend.tf"
+    if_exists = "overwrite_terragrunt"
+  }
+}
+----
+
+`backend` accepts any backend Terraform/OpenTofu supports (`s3`, `gcs`,
+`azurerm`, `local`, ...). `key` is typically built from
+`path_relative_to_include()` so that every child module gets a unique state
+path without hardcoding it per module.
+
+=== `include` block
+
+Lets a child `terragrunt.hcl` inherit an ancestor config (typically the
+`remote_state` and `generate` blocks defined at the repo root), located via
+`find_in_parent_folders()`.
+
+.live/prod/eu-west-1/vpc/terragrunt.hcl
+[source,hcl]
+----
+include "root" {
+  path           = find_in_parent_folders("root.hcl")
+  expose         = true
+  merge_strategy = "shallow"
+}
+----
+
+`find_in_parent_folders(name, [fallback])` walks up the directory tree looking
+for `name`. `expose = true` makes the parsed parent config available as
+`include.root.<attribute>` in the child file. `merge_strategy` controls how the
+child's own blocks combine with the parent's: `shallow` (default — child
+top-level keys override the parent's), `deep` (recursive merge of nested maps/
+blocks), or `no_merge` (parent is parsed but not merged in at all).
+
+=== `dependency` block
+
+References another Terragrunt module's outputs. Terragrunt runs
+`terragrunt output` against the dependency to fetch real values; `mock_outputs`
+supplies placeholder values so `plan` (and other whitelisted commands) still
+work before the dependency has ever been applied — eg. on a first-time
+`run --all plan` across a brand-new environment.
+
+.live/prod/eu-west-1/rds/terragrunt.hcl
+[source,hcl]
+----
+include "root" {
+  path = find_in_parent_folders("root.hcl")
+}
+
+dependency "vpc" {
+  config_path = "../vpc"
+
+  mock_outputs = {
+    vpc_id             = "vpc-00000000"
+    private_subnet_ids = ["subnet-00000000", "subnet-11111111"]
+  }
+
+  mock_outputs_allowed_terraform_commands = ["validate", "plan"]
+}
+
+terraform {
+  source = "git::git@github.com:example/infra-modules.git//rds?ref=v2.1.0"
+}
+
+inputs = {
+  vpc_id     = dependency.vpc.outputs.vpc_id
+  subnet_ids = dependency.vpc.outputs.private_subnet_ids
+}
+----
+
+`mock_outputs_allowed_terraform_commands` SHOULD be kept narrow (typically just
+`validate` and `plan`) so that `apply` is never accidentally run against fake
+values. `skip_outputs = true` MAY be set for a dependency that is only needed
+for ordering, not for its output values (though a plain `dependencies` block is
+usually a better fit for that case).
+
+=== `dependencies` block
+
+A lighter-weight alternative to `dependency` that only affects execution
+*ordering* for `run --all` — it does not expose outputs. Use it when a module
+must run after another but doesn't consume any of its output values.
+
+[source,hcl]
+----
+dependencies {
+  paths = ["../vpc", "../rds"]
+}
+----
+
+=== `generate` block
+
+Writes an arbitrary file into the module's working directory before Terraform/
+OpenTofu runs — commonly used for `provider.tf`, since provider configuration
+cannot be inherited natively by Terraform itself.
+
+.root.hcl
+[source,hcl]
+----
+generate "provider" {
+  path      = "provider.tf"
+  if_exists = "overwrite_terragrunt"
+
+  contents = <<-EOF
+    provider "aws" {
+      region = "eu-west-1"
+
+      default_tags {
+        tags = {
+          ManagedBy = "terragrunt"
+        }
+      }
+    }
+  EOF
+}
+----
+
+`if_exists` controls what happens if the target file already exists:
+`overwrite`, `overwrite_terragrunt` (only overwrite files Terragrunt itself
+generated), `skip`, or `error`.
+
+=== `inputs` block
+
+A flat map that is passed through to the underlying module as Terraform/
+OpenTofu input variables — the Terragrunt equivalent of a `.tfvars` file, but
+composable via `include` and populated from `dependency` outputs, `locals`, or
+environment-specific values.
+
+[source,hcl]
+----
+inputs = {
+  instance_class    = "db.t3.medium"
+  multi_az          = true
+  backup_retention  = 14
+}
+----
+
+=== `locals` block
+
+A free-form key/value map, referenced elsewhere in the same file as
+`local.<name>`. Commonly used to derive environment/region names from the
+directory path.
+
+.live/prod/eu-west-1/vpc/terragrunt.hcl
+[source,hcl]
+----
+locals {
+  environment = "prod"
+  region      = "eu-west-1"
+}
+
+inputs = {
+  name = "${local.environment}-${local.region}-vpc"
+}
+----
+
+=== Key built-in functions
+
+* `find_in_parent_folders(name, [fallback])` — locate a named file up the
+  directory tree (used almost exclusively for locating the root config).
+* `path_relative_to_include([include_name])` — the path from the included
+  parent config to the current file; commonly used to build unique state
+  `key`s.
+* `get_terragrunt_dir()` — absolute path of the directory containing the
+  current config file.
+* `read_terragrunt_config(path, [default])` — parses another `terragrunt.hcl`/
+  `root.hcl` and returns its contents as a map, for cases where `include`'s
+  merge semantics are not flexible enough.
+* `run_cmd(cmd, arg1, ...)` — shells out and returns stdout; results are
+  cached by default within a single Terragrunt invocation.
+
+== Recommended directory layout
+
+The conventional "live infrastructure" repo layout nests
+environment/region/component directories, each holding a `terragrunt.hcl` that
+includes a single shared root config:
+
+----
+infrastructure-live/
+├── root.hcl                       # Shared remote_state + provider generation.
+├── prod/
+│   └── eu-west-1/
+│       ├── vpc/
+│       │   └── terragrunt.hcl
+│       ├── rds/
+│       │   └── terragrunt.hcl
+│       └── eks/
+│           └── terragrunt.hcl
+└── staging/
+    └── eu-west-1/
+        ├── vpc/
+        │   └── terragrunt.hcl
+        ├── rds/
+        │   └── terragrunt.hcl
+        └── eks/
+            └── terragrunt.hcl
+----
+
+`root.hcl` holds the `remote_state` block (backend bucket/table, with the
+`key` templated from `path_relative_to_include()`) and any `generate` blocks
+for provider configuration shared by every module. Each leaf `terragrunt.hcl`
+`include`s the root config and points `terraform.source` at a versioned module,
+typically one maintained in a separate module repository.
+
+This layout is RECOMMENDED over a flatter structure because it makes the
+environment and region of any given module unambiguous from its path alone, and
+because `path_relative_to_include()` gives every module a unique, predictable
+state key without any manual bookkeeping.
+
+== CLI commands
+
+Single-module commands proxy directly to the underlying binary and behave
+exactly as the Terraform/OpenTofu equivalents, run from within the module's
+working directory:
+
+----
+$ terragrunt plan
+$ terragrunt apply
+$ terragrunt destroy
+$ terragrunt output
+$ terragrunt init
+----
+
+=== Multi-module orchestration: `run --all`
+
+To operate across every module in (and below) the current directory, use
+`terragrunt run --all` followed by the Terraform/OpenTofu subcommand:
+
+----
+$ terragrunt run --all plan
+$ terragrunt run --all apply
+$ terragrunt run --all destroy
+$ terragrunt run --all output
+----
+
+[IMPORTANT]
+======
+`terragrunt run-all <cmd>` (hyphenated, no `--all` flag) is the *older* syntax
+and is deprecated in current Terragrunt releases in favour of
+`terragrunt run --all <cmd>`. The old form still works for now but SHOULD NOT be
+used in new configs or scripts, since it is scheduled for removal.
+======
+
+`run --all apply` and `run --all destroy` automatically add `-auto-approve`,
+since per-module interactive confirmation is not practical across many modules
+at once — review with `run --all plan` first.
+
+=== Execution order
+
+Terragrunt builds a dependency graph from each module's `dependency` and
+`dependencies` blocks. For `plan` and `apply`, modules run in dependency order
+(a module runs only once all of the modules it depends on have completed). For
+`destroy`, the order is reversed — dependents are destroyed before the modules
+they depend on.
+
+Other command surface worth knowing (all recent renames — older equivalents in
+parentheses are deprecated):
+
+----
+$ terragrunt run --graph            # (previously: terragrunt graph)
+$ terragrunt hcl fmt                # (previously: terragrunt hclfmt)
+$ terragrunt hcl validate           # (previously: terragrunt hclvalidate)
+$ terragrunt dag graph              # (previously: terragrunt graph-dependencies)
+$ terragrunt info print             # (previously: terragrunt terragrunt-info)
+----
+
+== Excluding modules and preventing destroy
+
+`skip` (a boolean attribute) is deprecated in favour of the more flexible
+`exclude` block, which supports conditional logic and per-action granularity:
+
+[source,hcl]
+----
+exclude {
+  if      = local.environment == "prod"
+  actions = ["destroy"]
+  no_run  = true
+}
+----
+
+`prevent_destroy` blocks `destroy` (including under `run --all destroy`) for a
+specific module outright:
+
+[source,hcl]
+----
+prevent_destroy = true
+----
+
+This SHOULD be set on any module holding stateful resources (databases,
+persistent volumes) that must never be destroyed by an errant
+`run --all destroy`.
+
+== Other configuration
+
+`download_dir` overrides where Terragrunt downloads/copies the source module
+before invoking the underlying binary (default: `.terragrunt-cache` inside the
+module directory). Precedence: `--download-dir` flag, `TG_DOWNLOAD_DIR`
+environment variable, the attribute in the module's own config, then any
+included parent config.
+
+Environment variables and flags now use a `TG_` prefix and no `--terragrunt-`
+prefix (eg. `TG_NON_INTERACTIVE`, `--non-interactive`) — the older
+`TERRAGRUNT_`/`--terragrunt-` forms are deprecated.
+
+== Terragrunt vs. Terraform workspaces and native modules
+
+Terraform workspaces let a single root module manage multiple state instances,
+swapping only the state file — they do not help when environments genuinely
+differ in shape (different instance sizes, different module versions, extra
+resources in prod). Terraform's native module system lets you reuse resource
+logic, but every _root_ module still needs its own `provider`/`backend`/
+version-constraint blocks written out in full — Terraform has no mechanism for
+a root module to inherit that boilerplate from another.
+
+Terragrunt sits above both: each environment is its own root module (its own
+state, its own inputs, potentially its own module version), but the repetitive
+backend/provider/version scaffolding is written once, in one parent config, and
+inherited via `include`. The actual infrastructure logic remains ordinary
+Terraform/OpenTofu, referenced via `terraform.source` — Terragrunt itself
+contains no resource definitions.
