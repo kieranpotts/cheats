@@ -148,3 +148,48 @@ power.
 Customers are responsible for sustainability _in_ the cloud — optimizing
 workflows and resource utilization, and minimizing the total resources required
 to be deployed for your workloads.
+
+== General cloud design principles
+
+Beyond the six pillars, a handful of recurring design principles cut across
+most well-architected AWS systems:
+
+* *Loose coupling*: Design components with well-defined interfaces so they can
+  be changed, scaled, or replaced independently, without one component's
+  failure cascading into others. Asynchronous integration (eg. via SQS or
+  EventBridge, rather than direct synchronous calls) is a common way to
+  achieve this — a failure or slowdown downstream doesn't immediately break
+  the upstream component.
+
+* *Disposable resources / immutable infrastructure*: Treat individual servers
+  as temporary and replaceable, not as long-lived "pets" that get patched and
+  reconfigured in place. Instead of updating a running instance, replace it
+  with a new instance built from an updated image/template (eg. via Auto
+  Scaling and a new Launch Template version). This eliminates configuration
+  drift between instances over time.
+
+* *Design for failure, and statelessness enables horizontal scaling*:
+  Horizontal scaling (adding more instances) generally scales further and
+  recovers more easily than vertical scaling (making one instance bigger,
+  which has hard ceilings and requires a restart). But horizontal scaling
+  only works cleanly if your application instances are *stateless* — session
+  state and other per-request data need to live somewhere shared (eg.
+  ElastiCache, DynamoDB), not on the instance itself, so that any instance can
+  handle any request and be replaced at any time.
+
+* *Replication strategy*: Choose between *synchronous* replication (every
+  write is confirmed on all replicas before it succeeds — favors data
+  integrity/consistency, at the cost of write latency, eg. RDS Multi-AZ) and
+  *asynchronous* replication (writes succeed immediately on the primary and
+  propagate afterwards — favors availability and read-scaling, at the cost of
+  potential data loss/lag on failover, eg. RDS read replicas).
+
+* *Security as code*: Codify security policy (IAM policies, SCPs, network
+  rules, compliance checks) as version-controlled infrastructure-as-code,
+  and validate it continuously (eg. via CI/CD pipelines or AWS Config rules),
+  rather than treating security configuration as a manual, one-off task.
+
+* *Caching*: Add caching at multiple layers to reduce latency and load on
+  backend systems — in-memory application caching (eg. ElastiCache) in front
+  of databases, and edge caching (eg. CloudFront) in front of
+  content/APIs — rather than serving every request from the origin.
