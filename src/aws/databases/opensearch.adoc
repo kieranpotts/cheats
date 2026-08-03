@@ -55,3 +55,16 @@ Kibana to search, analyze, and visualize that data.
   fine-grained access controls.
 * Create the domain with the VPC.
 * For sensitive data, use node-to-node encryption, and encryption at rest.
+
+== AWS CloudSearch
+
+*CloudSearch* is an older, simpler managed search service that predates
+OpenSearch. It handles the setup, scaling, and maintenance of a search
+solution for you, and supports search features like highlighting,
+autocomplete, and geospatial search across 34 languages.
+
+CloudSearch is far more limited than OpenSearch — it doesn't give you direct
+access to the underlying Elasticsearch/OpenSearch API, and it's not suited to
+log analytics or general-purpose data visualization. For new projects, AWS
+points customers toward OpenSearch Service instead; CloudSearch is really
+only still relevant if you already have an existing CloudSearch domain.
