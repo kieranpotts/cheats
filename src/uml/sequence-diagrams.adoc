@@ -32,7 +32,7 @@ An *execution specification* (activation bar) is drawn as a thin rectangle
 overlaid on a lifeline, indicating the period during which the object is
 performing an action.
 
-[source, plantuml]
+[plantuml]
 ....
 Client -> Server : request()
 activate Server
@@ -58,7 +58,7 @@ Combined fragments group interactions and specify control logic:
 | `ref`   | Reference to an interaction defined in another diagram.
 |===
 
-[source, plantuml]
+[plantuml]
 ....
 Client -> Server : login(user, pass)
 alt Password valid

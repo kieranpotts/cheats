@@ -33,7 +33,7 @@ Special internal transitions:
 | `do / activity`   | Executed while in the state.
 |===
 
-[source, plantuml]
+[plantuml]
 ....
 [*] --> Idle
 

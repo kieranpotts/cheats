@@ -23,7 +23,7 @@ flowchart but supports parallel flows.
 Guards (conditions) are written in square brackets on outgoing flows from
 decision nodes, eg. `[condition]`.
 
-[source, plantuml]
+[plantuml]
 ....
 start
 :Submit order;

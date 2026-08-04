@@ -16,7 +16,7 @@ view of the system's functional requirements from the user's perspective.
 
 * An *association* between an actor and a use case is drawn as a solid line.
 
-[source, plantuml]
+[plantuml]
 ....
 left to right direction
 actor Customer

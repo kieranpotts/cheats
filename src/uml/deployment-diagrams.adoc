@@ -15,7 +15,7 @@ Artifacts (deployable units such as JAR files, WAR files, or executables) are
 drawn as rectangles with a `<<artifact>>` stereotype and a dog-eared corner
 icon.
 
-[source, plantuml]
+[plantuml]
 ....
 node "App Server" {
   artifact app.jar

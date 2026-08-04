@@ -14,7 +14,7 @@ overlapping the left edge) and an optional `<<component>>` stereotype.
 Interfaces are drawn as a "lollipop" (a circle on a stick) for provided
 interfaces, or as a socket (a half-circle on a stick) for required interfaces.
 
-[source, plantuml]
+[plantuml]
 ....
 component OrderService {
 }

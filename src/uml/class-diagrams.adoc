@@ -14,7 +14,7 @@ A class is drawn as a rectangle divided into three compartments:
 2. The middle compartment lists the attributes.
 3. The bottom compartment lists the operations.
 
-[source,plantuml]
+[plantuml]
 ....
 class ClassName {
   - attribute: Type

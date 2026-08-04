@@ -21,7 +21,7 @@ A communication diagram conveys the same information as a sequence diagram, but
 the two emphasize different aspects: sequence diagrams show time order clearly,
 while communication diagrams show structural relationships clearly.
 
-[source, plantuml]
+[plantuml]
 ....
 Client "1" -- "1" Server : 1: request()
 Server "1" -- "1" Database : 1.1: query()

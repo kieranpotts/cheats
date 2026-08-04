@@ -10,7 +10,7 @@ with the package name in the tab.
 
 Dependencies between packages are drawn as dashed arrows.
 
-[source, plantuml]
+[plantuml]
 ....
 package com.app
 package org.util
