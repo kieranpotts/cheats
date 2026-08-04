@@ -1,0 +1,52 @@
+= Installation
+
+Git is a distributed version control system for tracking changes in source code
+during software development.
+
+== Debian-based distributions
+
+On Debian-based distributions such as Debian and Ubuntu, install Git with APT.
+
+```
+sudo apt-get update
+sudo apt-get install git
+```
+
+== RPM-based distributions
+
+On RPM-based distributions such as CentOS and AlmaLinux, install Git with YUM.
+
+```
+sudo yum install git
+```
+
+On newer Fedora distributions, use DNF instead.
+
+```
+sudo dnf install git
+```
+
+== Build from source
+
+To install a specific version of Git that is not provided by your package
+manager, build it from source.
+
+```
+wget https://github.com/git/git/archive/refs/tags/v2.31.1.tar.gz
+tar -zxf v2.31.1.tar.gz
+cd git-2.31.1
+
+# Install build dependencies (Debian-based distributions)
+sudo apt-get install libz-dev libssl-dev libcurl4-gnutls-dev libexpat1-dev gettext cmake gcc
+
+make prefix=/usr/local all
+sudo make prefix=/usr/local install
+```
+
+== Verify the installation
+
+Check that Git is installed and print its version number.
+
+```
+git --version
+```
