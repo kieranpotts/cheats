@@ -1,0 +1,30 @@
+= `sed`
+
+The `sed` ("stream editor") command performs text transformations on an input
+stream, one line at a time.
+
+.Example: substitute the first match on each line
+----
+$ echo "foo bar foo" | sed 's/foo/baz/'
+baz bar foo
+----
+
+.Example: substitute all matches on each line
+----
+$ echo "foo bar foo" | sed 's/foo/baz/g'
+baz bar baz
+----
+
+.Example: delete lines matching a pattern
+----
+sed '/^#/d' file
+----
+
+.Example: edit a file in place
+----
+sed -i 's/foo/bar/g' file
+----
+
+NOTE: GNU `sed` (Linux) requires no argument after `-i` to edit in place; BSD
+`sed` (macOS) requires an explicit backup suffix, eg. `sed -i '' 's/foo/bar/g'
+file`.

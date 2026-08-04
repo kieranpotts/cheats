@@ -1,0 +1,14 @@
+= `hostname`
+
+The `hostname` command displays or sets the system's host name.
+
+.Example: print the current host name
+----
+$ hostname
+my-machine
+----
+
+.Example: print the fully qualified domain name
+----
+hostname -f
+----

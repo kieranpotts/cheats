@@ -1,0 +1,16 @@
+= `bc`
+
+The `bc` command is an arbitrary-precision calculator language. It can be used
+interactively or by piping expressions to it.
+
+.Example: evaluate an expression
+----
+$ echo "5 + 3" | bc
+8
+----
+
+.Example: evaluate with decimal precision
+----
+$ echo "scale=2; 10 / 3" | bc
+3.33
+----

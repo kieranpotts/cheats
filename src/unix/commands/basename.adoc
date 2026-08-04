@@ -1,0 +1,18 @@
+= `basename`
+
+The `basename` command strips the directory portion and, optionally, a suffix
+from a pathname, returning just the file's base name.
+
+.Example: get the file name from a path
+----
+$ basename /usr/local/bin/tool
+tool
+----
+
+.Example: strip a suffix
+----
+$ basename /usr/local/bin/tool.sh .sh
+tool
+----
+
+See also `dirname`, which returns the directory portion of a pathname.

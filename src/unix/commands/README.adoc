@@ -21,10 +21,10 @@ Barschel (archived).
 * `fg` — Runs a program in the foreground. See also bg.
 * `getopts` — Parse utility options.
 * `logger` — Log messages.
-* `printf` — Write formatted output.
-* `read` — Read a line from standard input.
+* link:../../bash/printf.adoc[`printf`] — Write formatted output.
+* link:../../bash/ui/read.adoc[`read`] — Read a line from standard input.
 * `sh` — Shell, the standard command language interpreter.
-* `sleep` — Suspend execution for an interval.
+* link:./sleep.adoc[`sleep`] — Suspend execution for an interval.
 * `tee` — Duplicate the standard output.
 * `test` — Evaluate expression.
 * `true` — Return true value.
@@ -34,10 +34,10 @@ Barschel (archived).
 
 * `at` — Execute commands at a later time.
 * `batch` — Schedule commands to be executed in a batch queue.
-* `kill` — Terminate or signal processes.
+* link:./kill.adoc[`kill`] — Terminate or signal processes.
 * `nice` — Invoke a utility with an altered nice value.
 * `nohup` — Invoke a utility immune to hangups.
-* `ps` — Report process status.
+* link:./ps.adoc[`ps`] — Report process status.
 * `renice` — Set nice values of running processes.
 * `time` — Time a simple command.
 * `wait` — Await process completion.
@@ -52,9 +52,9 @@ Barschel (archived).
 
 == Filesystem commands
 
-* `basename` — Return non-directory portion of a pathname.
+* link:./basename.adoc[`basename`] — Return non-directory portion of a pathname.
 * link:./cat.adoc[`cat`] — Concatenate and print files.
-* `cd` — Change the working directory.
+* link:./cd.adoc[`cd`] — Change the working directory.
 * link:./chgrp.adoc[`chgrp`] — Change the file group ownership.
 * link:./chmod.adoc[`chmod`] — Change the file modes/attributes/permissions.
 * link:./chown.adoc[`chown`] — Change the file ownership.
@@ -73,10 +73,10 @@ Barschel (archived).
 * `mkfifo` — Make FIFO special files.
 * link:./mv.adoc[`mv`] — Move or rename files.
 * `pathchk` — Check pathnames.
-* `pwd` — Returns the "present working directory".
+* link:./pwd.adoc[`pwd`] — Returns the "present working directory".
 * link:./rm.adoc[`rm`] — Remove directory entries.
 * `rmdir` — Remove directories, if they are empty.
-* `touch` — Change file access and modification times.
+* link:./touch.adoc[`touch`] — Change file access and modification times.
 * `uudecode` — Decode a binary file.
 * `uuencode` — Encode a binary file.
 
@@ -85,7 +85,7 @@ Barschel (archived).
 * `awk` — Pattern scanning and processing language.
 * `comm` — Select or reject lines common to two files.
 * `csplit` — Split files based on context.
-* `cut` — Cut out selected fields of each line of a file.
+* link:./cut.adoc[`cut`] — Cut out selected fields of each line of a file.
 * `diff` — Compare two files.
 * `ed` — The standard text editor.
 * `expand` — Convert tabs to spaces.
@@ -93,30 +93,28 @@ Barschel (archived).
 * link:./grep.adoc[`grep`] — Search text for a pattern.
 * link:./head-tail.adoc[`head`] — Copy the first part of files. Opposite to
   `tail`.
-* `iconv` — Codeset conversion.
 * `join` — Merges two sorted text files based on the presence of a common field.
 * link:./less.adoc[`less`] — Page through a text file.
 * link:./lp.adoc[`lp`] — Send files to a printer.
 * `paste` — Merge corresponding or subsequent lines of files.
 * `patch` — Apply changes to files.
 * `pr` — Print files.
-* `sed` — Stream editor.
-* `sort` — Sort, merge or sequence check text files.
+* link:./sed.adoc[`sed`] — Stream editor.
+* link:./sort.adoc[`sort`] — Sort, merge or sequence check text files.
 * link:./head-tail.adoc[`tail`] — Copy the last part of a file. Opposite to
   `head`.
-* `tr` — Translate characters.
+* link:./tr.adoc[`tr`] — Translate characters.
 * `tsort` — Topological sort.
 * `unexpand` — Convert spaces to tabs.
-* `uniq` — Report or filter out repeated lines in a file.
-* `wc` — Line, word and byte or character count.
+* link:./uniq.adoc[`uniq`] — Report or filter out repeated lines in a file.
+* link:./wc.adoc[`wc`] — Line, word and byte or character count.
 
 == Other Unix commands
 
 * `alias` — Define or display aliases.
 * `ar` — Create and maintain library archives.
-* `bc` — Arbitrary-precision arithmetic language.
 * link:./crontab.adoc[`crontab`] — Schedule periodic background work.
-* `date` — Display the current date and time.
+* link:./date.adoc[`date`] — Display the current date and time.
 * `env` — Set the environment for command invocation.
 * `gencat` — Generate a formatted message catalog.
 * `getconf` — Get configuration values.
@@ -125,7 +123,7 @@ Barschel (archived).
 * `localedef` — Define locale environment.
 * `m4` — Macro processor.
 * `malix` — Process messages.
-* `man` — Display system documentation.
+* link:./man.adoc[`man`] — Display system documentation.
 * `mesg` — Permit or deny messages.
 * `od` — Dump files in various formats.
 * `pax` — Portable archive interchange.

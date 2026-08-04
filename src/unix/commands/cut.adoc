@@ -1,0 +1,22 @@
+= `cut`
+
+The `cut` command extracts sections from each line of input, selected by byte
+position, character position, or delimited field.
+
+.Example: select a field by delimiter
+----
+$ echo "a:b:c" | cut -d ':' -f 2
+b
+----
+
+.Example: select a range of fields
+----
+$ echo "a:b:c:d" | cut -d ':' -f 2-3
+b:c
+----
+
+.Example: select a range of characters
+----
+$ echo "hello" | cut -c 1-3
+hel
+----

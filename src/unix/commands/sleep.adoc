@@ -1,0 +1,14 @@
+= `sleep`
+
+The `sleep` command suspends execution for a specified interval.
+
+.Example: pause for 5 seconds
+----
+sleep 5
+----
+
+.Example: pause using a unit suffix (GNU `sleep`)
+----
+sleep 2m
+sleep 1h
+----

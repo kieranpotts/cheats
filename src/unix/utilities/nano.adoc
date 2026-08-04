@@ -1,0 +1,18 @@
+= `nano`
+
+The `nano` command is a simple, terminal-based text editor, commonly installed
+by default on Linux distributions.
+
+.Example: open a file for editing
+----
+nano file.txt
+----
+
+Common key bindings, shown at the bottom of the `nano` interface (`^` denotes
+`Ctrl`):
+
+* `Ctrl+O` — Save the file (write out).
+* `Ctrl+X` — Exit `nano`.
+* `Ctrl+K` — Cut the current line.
+* `Ctrl+U` — Paste the cut line(s).
+* `Ctrl+W` — Search for text.

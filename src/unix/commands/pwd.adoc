@@ -1,0 +1,13 @@
+= `pwd`
+
+The `pwd` command prints the absolute path of the current working directory.
+
+.Example: print the working directory
+----
+$ pwd
+/home/user/projects
+----
+
+By default, `pwd` resolves symbolic links. Use `-L` to print the logical path
+(as `cd` would have set it, following symlinks in the path as typed) or `-P`
+to print the physical path (with all symlinks resolved).

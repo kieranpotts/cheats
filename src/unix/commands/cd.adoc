@@ -1,0 +1,25 @@
+= `cd`
+
+The `cd` command changes the shell's current working directory. It is a shell
+built-in, not an external program.
+
+.Example: change to a directory
+----
+cd /var/log
+----
+
+.Example: change to the home directory
+----
+cd
+cd ~
+----
+
+.Example: change to the previous directory
+----
+cd -
+----
+
+.Example: change to the parent directory
+----
+cd ..
+----

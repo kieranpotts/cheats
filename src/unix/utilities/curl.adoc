@@ -1,0 +1,30 @@
+= `curl`
+
+The `curl` command transfers data to or from a server, supporting HTTP(S), FTP,
+and many other protocols.
+
+.Example: fetch a URL and print the response body
+----
+curl https://example.com
+----
+
+.Example: save the response to a file
+----
+curl -o output.html https://example.com
+----
+
+.Example: follow redirects
+----
+curl -L https://example.com
+----
+
+.Example: send a POST request with a JSON body
+----
+curl -X POST -H "Content-Type: application/json" \
+  -d '{"key":"value"}' https://example.com/api
+----
+
+.Example: include response headers in the output
+----
+curl -i https://example.com
+----

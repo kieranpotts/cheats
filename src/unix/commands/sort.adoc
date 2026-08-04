@@ -1,0 +1,28 @@
+= `sort`
+
+The `sort` command sorts the lines of its input.
+
+.Example: sort a file's lines alphabetically
+----
+sort file
+----
+
+.Example: sort numerically
+----
+sort -n file
+----
+
+.Example: sort in reverse order
+----
+sort -r file
+----
+
+.Example: sort and remove duplicate lines
+----
+sort -u file
+----
+
+.Example: sort by a specific field
+----
+sort -k 2 file
+----

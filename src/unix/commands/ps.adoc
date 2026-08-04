@@ -1,0 +1,20 @@
+= `ps`
+
+The `ps` command reports a snapshot of currently running processes.
+
+.Example: list processes running in the current shell
+----
+ps
+----
+
+.Example: list all processes for all users
+----
+ps aux
+----
+
+.Example: list all processes in standard format
+----
+ps -ef
+----
+
+See also `top`/`htop` for a live, continuously updating view of processes.

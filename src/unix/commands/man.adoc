@@ -1,0 +1,22 @@
+= `man`
+
+The `man` command displays the manual page for a command, program, or system
+call.
+
+.Example: view the manual page for a command
+----
+man ls
+----
+
+Manual pages are organized into numbered sections, eg. `1` for user commands
+and `5` for file formats. When a name appears in more than one section, specify
+the section number to disambiguate:
+
+----
+man 5 passwd
+----
+
+.Example: search manual page descriptions by keyword
+----
+man -k <keyword>
+----

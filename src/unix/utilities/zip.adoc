@@ -1,0 +1,15 @@
+= `zip`
+
+The `zip` command creates ZIP archives.
+
+.Example: create an archive from files
+----
+zip archive.zip file1 file2
+----
+
+.Example: create an archive from a directory, recursively
+----
+zip -r archive.zip directory/
+----
+
+See also `unzip`, for extracting ZIP archives.

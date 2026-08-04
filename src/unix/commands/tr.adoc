@@ -1,0 +1,21 @@
+= `tr`
+
+The `tr` command translates or deletes characters from its input.
+
+.Example: translate lowercase to uppercase
+----
+$ echo "hello" | tr 'a-z' 'A-Z'
+HELLO
+----
+
+.Example: delete characters
+----
+$ echo "hello world" | tr -d 'lo'
+he wrd
+----
+
+.Example: squeeze repeated characters into one
+----
+$ echo "aaabbbccc" | tr -s 'a-z'
+abc
+----

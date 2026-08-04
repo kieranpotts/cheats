@@ -1,0 +1,21 @@
+= `kill`
+
+The `kill` command sends a signal to a process, identified by its process ID
+(PID). Despite the name, the default signal (`TERM`) merely requests that the
+process terminate gracefully.
+
+.Example: request graceful termination
+----
+kill <pid>
+----
+
+.Example: force-kill a process
+----
+kill -9 <pid>
+kill -KILL <pid>
+----
+
+.Example: list available signals
+----
+kill -l
+----

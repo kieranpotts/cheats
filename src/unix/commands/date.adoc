@@ -1,0 +1,19 @@
+= `date`
+
+The `date` command displays or sets the system date and time.
+
+.Example: print the current date and time
+----
+$ date
+Tue Aug  4 10:15:00 UTC 2026
+----
+
+.Example: print with a custom format
+----
+$ date +"%Y-%m-%d"
+2026-08-04
+----
+
+NOTE: Format specifiers differ between GNU `date` (Linux) and BSD `date`
+(macOS). GNU `date` also supports relative dates via `-d`, eg. `date -d
+"yesterday"`; BSD `date` uses `-v` instead, eg. `date -v-1d`.

@@ -1,0 +1,20 @@
+= `uniq`
+
+The `uniq` command filters out repeated, adjacent lines from its input. Input
+is usually piped from `sort`, since `uniq` only detects duplicates that are
+next to each other.
+
+.Example: remove adjacent duplicate lines
+----
+sort file | uniq
+----
+
+.Example: count occurrences of each line
+----
+sort file | uniq -c
+----
+
+.Example: show only duplicated lines
+----
+sort file | uniq -d
+----

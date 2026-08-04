@@ -1,0 +1,23 @@
+= `seq`
+
+The `seq` command prints a sequence of numbers.
+
+.Example: print numbers 1 to 5
+----
+$ seq 5
+1
+2
+3
+4
+5
+----
+
+.Example: print a range with a start and end
+----
+seq 2 10
+----
+
+.Example: print a range with a step increment
+----
+seq 0 2 10
+----

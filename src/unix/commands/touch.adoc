@@ -1,0 +1,14 @@
+= `touch`
+
+The `touch` command updates a file's access and modification times to the
+current time. If the file does not exist, `touch` creates it as an empty file.
+
+.Example: create an empty file, or update its timestamp
+----
+touch file.txt
+----
+
+.Example: set a specific timestamp
+----
+touch -t 202601010000 file.txt
+----

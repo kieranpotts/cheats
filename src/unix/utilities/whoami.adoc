@@ -1,0 +1,9 @@
+= `whoami`
+
+The `whoami` command prints the username of the current effective user.
+
+.Example: print the current user
+----
+$ whoami
+kieran
+----

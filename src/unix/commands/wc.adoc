@@ -1,0 +1,20 @@
+= `wc`
+
+The `wc` ("word count") command counts lines, words, and bytes/characters in
+its input.
+
+.Example: count lines, words, and bytes
+----
+$ wc file.txt
+  10  42 231 file.txt
+----
+
+.Example: count only lines
+----
+wc -l file.txt
+----
+
+.Example: count only words
+----
+wc -w file.txt
+----
