@@ -30,11 +30,33 @@ The visibility of an attribute or operation is indicated by a prefix:
 |===
 | Symbol | Visibility
 
-| `+`    | Public
-| `-`    | Private
-| `#`    | Protected
-| `~`    | Package
+| `+`    | Public — visible to all classes
+| `-`    | Private — visible only within the class
+| `#`    | Protected — visible to subclasses
+| `~`    | Package — visible to classes in the same package
 |===
+
+=== Parameter directionality
+
+Method parameters can be annotated with directionality to indicate the flow of
+information:
+
+[cols="1,3"]
+|===
+| Notation | Meaning
+
+| `in`     | Input parameter — passed from the caller to the method
+| `out`    | Output parameter — returned from the method to the caller
+| `inout`  | Both input and output — passed in and returned back
+|===
+
+[plantuml]
+....
+class Calculator {
+  +add(int a, int b): int
+  +calculate(int value): void
+}
+....
 
 == Relationships
 
@@ -80,3 +102,23 @@ relationship. It is written near the end of the association line.
 | `1..*`    | One or more
 | `n..m`    | Between n and m
 |===
+
+== Advantages
+
+Class diagrams offer several benefits for system design and development:
+
+* Helps in faster and more efficient system design and analysis.
+* Improves understanding of object-oriented programming (OOP) concepts.
+* Enhances communication between developers, designers, and stakeholders.
+* Supports forward and reverse engineering during software development.
+* Provides proper documentation of the system structure and components.
+
+== Applications
+
+Class diagrams are widely used across the software development lifecycle:
+
+* Software design and system architecture planning.
+* Database modeling and representing data structures.
+* System documentation and maintenance.
+* Object-oriented analysis and design (OOAD).
+* Enterprise and large-scale application development.
