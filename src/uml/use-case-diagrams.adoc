@@ -1,0 +1,44 @@
+# Use case diagrams
+
+A use case diagram shows the actors in a system, the use cases (goals) they
+participate in, and the relationships between them. It provides a high-level
+view of the system's functional requirements from the user's perspective.
+
+== Notation
+
+* An *actor* is drawn as a stick figure. An actor represents a role played by
+  a user or an external system.
+
+* A *use case* is drawn as an ellipse labeled with a verb phrase describing the
+  goal.
+
+* The *system boundary* is drawn as a rectangle enclosing the use cases.
+
+* An *association* between an actor and a use case is drawn as a solid line.
+
+[source, plantuml]
+....
+left to right direction
+actor Customer
+usecase "Place Order" as place
+usecase "Pay" as pay
+
+Customer --> place
+place ..> pay : <<include>>
+....
+
+== Relationships between use cases
+
+[cols="1,3"]
+|===
+| Relationship | Description
+
+| `<<include>>`
+| One use case always includes the behavior of another. Drawn as a dashed arrow labeled `<<include>>`.
+
+| `<<extend>>`
+| One use case conditionally extends the behavior of another. Drawn as a dashed arrow labeled `<<extend>>`, pointing from the extending use case to the extended one.
+
+| Generalization
+| One use case inherits and specializes another. Drawn as a solid line with a hollow triangle arrowhead.
+|===

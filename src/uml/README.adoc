@@ -1,0 +1,35 @@
+= UML
+
+The Unified Modeling Language (UML) is a general-purpose visual modeling
+language for specifying, visualizing, constructing, and documenting the
+artifacts of software-intensive systems. It is maintained by the
+https://www.omg.org/spec/UML[Object Management Group (OMG)].
+
+UML defines a set of graphical notation elements and rules for assembling them
+into diagrams. The current version of the specification is UML 2.5.1.
+
+UML diagrams are divided into two broad categories:
+
+* *Structural diagrams* describe the static, organizational aspects of a
+  system — what things exist and how they are related.
+
+* *Behavioral diagrams* describe the dynamic aspects of a system — how things
+  behave and interact over time.
+
+The most useful diagrams are documented here.
+
+== Structural diagrams
+
+* link:./class-diagrams.adoc[Class diagrams]
+* link:./object-diagrams.adoc[Object diagrams]
+* link:./component-diagrams.adoc[Component diagrams]
+* link:./deployment-diagrams.adoc[Deployment diagrams]
+* link:./package-diagrams.adoc[Package diagrams]
+
+== Behavioral diagrams
+
+* link:./use-case-diagrams.adoc[Use case diagrams]
+* link:./activity-diagrams.adoc[Activity diagrams]
+* link:./state-machine-diagrams.adoc[State machine diagrams]
+* link:./sequence-diagrams.adoc[Sequence diagrams]
+* link:./communication-diagrams.adoc[Communication diagrams]

@@ -1,0 +1,23 @@
+# Deployment diagrams
+
+A deployment diagram shows the physical deployment of artifacts onto nodes —
+the hardware or software execution environments on which components run.
+
+Deployment diagrams are used to model the deployment view of a system.
+
+== Notation
+
+A node is drawn as a three-dimensional box (a perspective cube) labeled with
+the node name and an optional `<<device>>` or `<<execution environment>>`
+stereotype.
+
+Artifacts (deployable units such as JAR files, WAR files, or executables) are
+drawn as rectangles with a `<<artifact>>` stereotype and a dog-eared corner
+icon.
+
+[source, plantuml]
+....
+node "App Server" {
+  artifact app.jar
+}
+....

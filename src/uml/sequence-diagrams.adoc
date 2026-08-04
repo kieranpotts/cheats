@@ -1,0 +1,70 @@
+# Sequence diagrams
+
+A sequence diagram shows the interactions between objects arranged in time
+sequence. It highlights the order in which messages are exchanged between
+collaborating objects to accomplish a task.
+
+== Notation
+
+* A *lifeline* is drawn as a vertical dashed line descending from each
+  participant (object or actor) at the top of the diagram.
+
+* A *participant* is drawn as a rectangle at the top of its lifeline, labeled
+  with the object name (`instanceName: ClassName`).
+
+* A *message* is drawn as a horizontal arrow from the sender's lifeline to the
+  receiver's lifeline, labeled with the message name.
+
+== Message types
+
+[cols="1,3"]
+|===
+| Notation | Message type
+
+| Solid arrowhead        | Synchronous call — the sender waits for a response.
+| Open (stick) arrowhead | Asynchronous call — the sender does not wait.
+| Dashed arrow           | Reply or return message.
+|===
+
+== Execution specifications
+
+An *execution specification* (activation bar) is drawn as a thin rectangle
+overlaid on a lifeline, indicating the period during which the object is
+performing an action.
+
+[source, plantuml]
+....
+Client -> Server : request()
+activate Server
+Server -> Database : query()
+Database --> Server : data
+Server --> Client : response()
+deactivate Server
+....
+
+== Combined fragments
+
+Combined fragments group interactions and specify control logic:
+
+[cols="1,3"]
+|===
+| Operator | Meaning
+
+| `alt`   | Alternative — mutually conditional branches, separated by dashed lines.
+| `opt`   | Optional — a single branch executed only if a condition is true.
+| `loop`  | Iteration — the fragment repeats, with an optional guard.
+| `break` | The fragment executes instead of the remainder if a condition is true.
+| `par`   | Parallel — the fragments execute concurrently.
+| `ref`   | Reference to an interaction defined in another diagram.
+|===
+
+[source, plantuml]
+....
+Client -> Server : login(user, pass)
+alt Password valid
+  Server --> Client : token
+else Password invalid
+  Server --> Client : error
+end
+....
+

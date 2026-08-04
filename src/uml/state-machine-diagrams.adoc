@@ -1,0 +1,46 @@
+# State machine diagrams
+
+A state machine diagram shows the states an object can be in, the transitions
+between those states, and the events that trigger them. It is useful for
+modeling the lifecycle of an object with complex behavior.
+
+== Notation
+
+[cols="1,3"]
+|===
+| Element | Notation
+
+| Initial state   | A filled circle.
+| State           | A rounded rectangle labeled with the state name.
+| Final state     | A filled circle inside an unfilled circle.
+| Transition      | A directed arrow labeled with `event [guard] / action`.
+|===
+
+A state may have three compartments separated by horizontal lines:
+
+. State name
+. State variables (optional)
+. Internal transitions (optional), written as `event [guard] / action`
+
+Special internal transitions:
+
+[cols="1,3"]
+|===
+| Pseudostate | Meaning
+
+| `entry / action`  | Executed when entering the state.
+| `exit / action`   | Executed when leaving the state.
+| `do / activity`   | Executed while in the state.
+|===
+
+[source, plantuml]
+....
+[*] --> Idle
+
+Idle --> Processing : submit
+Processing --> Idle : complete
+Processing --> Failed : error
+
+Idle : entry / reset
+Processing : do / process
+....

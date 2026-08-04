@@ -1,0 +1,19 @@
+# Package diagrams
+
+A package diagram shows the packages (namespaces) in a system and their
+dependencies. A package is a grouping mechanism for organizing model elements.
+
+== Notation
+
+A package is drawn as a large folder-shaped rectangle — a tabbed box — labeled
+with the package name in the tab.
+
+Dependencies between packages are drawn as dashed arrows.
+
+[source, plantuml]
+....
+package com.app
+package org.util
+
+com.app ..> org.util
+....

@@ -1,0 +1,23 @@
+# Component diagrams
+
+A component diagram shows the components that make up a system and their
+dependencies on each other. A component is a modular, deployable, and
+replaceable part of a system that provides a set of interfaces.
+
+Component diagrams are used to model the implementation view of a system.
+
+== Notation
+
+A component is drawn as a rectangle with a component icon (two small rectangles
+overlapping the left edge) and an optional `<<component>>` stereotype.
+
+Interfaces are drawn as a "lollipop" (a circle on a stick) for provided
+interfaces, or as a socket (a half-circle on a stick) for required interfaces.
+
+[source, plantuml]
+....
+component OrderService {
+}
+OrderService -() OrderRepository
+....
+

@@ -1,0 +1,82 @@
+# Class diagrams
+
+A class diagram is the most common type of UML diagram. It describes the
+static structure of a system by showing the system's classes, their attributes
+and operations (methods), and the relationships between them.
+
+Class diagrams are used both for conceptual modeling and for detailed design.
+
+== Classes
+
+A class is drawn as a rectangle divided into three compartments:
+
+1. The top compartment shows the class name, centered and in bold.
+2. The middle compartment lists the attributes.
+3. The bottom compartment lists the operations.
+
+[source,plantuml]
+....
+class ClassName {
+  - attribute: Type
+  + attribute: Type
+  + operation(): Type
+  - operation(): Type
+}
+....
+
+The visibility of an attribute or operation is indicated by a prefix:
+
+[cols="1,3"]
+|===
+| Symbol | Visibility
+
+| `+`    | Public
+| `-`    | Private
+| `#`    | Protected
+| `~`    | Package
+|===
+
+== Relationships
+
+[cols="1,3"]
+|===
+| Relationship | Description
+
+| Association
+| A general "uses-a" relationship between two classes.
+
+| Directed association
+| An association with a navigable direction, drawn as a solid line with an open arrowhead.
+
+| Aggregation
+| A "has-a" relationship where the part can exist independently of the whole. Drawn as a solid line with an open diamond at the whole end.
+
+| Composition
+| A strong "owns-a" relationship where the part cannot exist without the whole. Drawn as a solid line with a filled diamond at the whole end.
+
+| Generalization
+| An "is-a" inheritance relationship. Drawn as a solid line with a hollow triangle arrowhead pointing at the superclass.
+
+| Realization
+| An "implements" relationship, typically between a class and an interface. Drawn as a dashed line with a hollow triangle arrowhead.
+
+| Dependency
+| A "depends-on" relationship where a change in one class may affect another. Drawn as a dashed line with an open arrowhead.
+|===
+
+== Multiplicity
+
+Multiplicity indicates how many instances of a class participate in a
+relationship. It is written near the end of the association line.
+
+[cols="1,3"]
+|===
+| Notation | Meaning
+
+| `1`       | Exactly one
+| `0..1`    | Zero or one (optional)
+| `0..*`    | Zero or more (many)
+| `*`       | Zero or more (many)
+| `1..*`    | One or more
+| `n..m`    | Between n and m
+|===

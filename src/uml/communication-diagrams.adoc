@@ -1,0 +1,30 @@
+# Communication diagrams
+
+A communication diagram (formerly called a collaboration diagram) shows the
+interactions between objects and the links between them, emphasizing the
+structural relationships among the objects rather than the time ordering of
+messages.
+
+== Notation
+
+* Objects are drawn as rectangles labeled with the object name
+  (`instanceName: ClassName`), connected by lines representing the links
+  (associations) between them.
+
+* Messages are drawn as labeled arrows along the links. Each message is
+  prefixed with a sequence number to indicate the order of the interaction.
+
+Sequence numbering uses a hierarchical dot notation, eg. `1`, `1.1`, `1.2`,
+`2`, `2.1`, to convey the nesting of calls.
+
+A communication diagram conveys the same information as a sequence diagram, but
+the two emphasize different aspects: sequence diagrams show time order clearly,
+while communication diagrams show structural relationships clearly.
+
+[source, plantuml]
+....
+Client "1" -- "1" Server : 1: request()
+Server "1" -- "1" Database : 1.1: query()
+Database "1" -- "1" Server : 1.2: data()
+Server "1" -- "1" Client : 2: response()
+....

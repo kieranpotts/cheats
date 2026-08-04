@@ -43,6 +43,7 @@ Cheat sheets and study notes for various tools, technologies, and languages.
 - [SSL/TLS](./src/ssl-tls)
 - [Terraform](./src/terraform)
 - [tmux](./src/tmux)
+- [UML](./src/uml)
 - [Unix](./src/unix)
 - [Web Components](./src/web-components)
 - [Windows Subsystem for Linux (WSL)](./src/wsl)

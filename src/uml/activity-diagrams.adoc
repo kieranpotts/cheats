@@ -1,0 +1,36 @@
+# Activity diagrams
+
+An activity diagram shows the flow of control (or data) from one activity to
+another, describing the dynamic behavior of a system. It is similar to a
+flowchart but supports parallel flows.
+
+== Notation
+
+[cols="1,3"]
+|===
+| Element | Notation
+
+| Initial node   | A filled circle.
+| Activity       | A rounded rectangle labeled with the action name.
+| Decision node  | A diamond with labeled outgoing flows (guards).
+| Merge node     | A diamond that combines multiple incoming flows into one.
+| Fork node      | A bold horizontal bar that splits a flow into parallel flows.
+| Join node      | A bold horizontal bar that synchronizes parallel flows into one.
+| Final node     | A filled circle inside an unfilled circle (activity final).
+| Flow final     | A circle with an X inside, indicating one flow ends but the activity continues.
+|===
+
+Guards (conditions) are written in square brackets on outgoing flows from
+decision nodes, eg. `[condition]`.
+
+[source, plantuml]
+....
+start
+:Submit order;
+if (Payment approved?) then (yes)
+  :Confirm order;
+else (no)
+  :Cancel order;
+endif
+stop
+....

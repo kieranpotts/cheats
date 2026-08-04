@@ -1,0 +1,25 @@
+# Object diagrams
+
+An object diagram shows a snapshot of the instances of the classes in a system
+at a specific point in time, along with the values of their attributes and the
+links between them. It is effectively an instance of a class diagram.
+
+Object diagrams are useful for illustrating complex data structures and for
+validating class diagrams by example.
+
+== Notation
+
+An object is drawn as a rectangle, similar to a class, but the name is
+underlined and takes the form `objectName: ClassName`. The attributes
+compartment shows the current values of the object's attributes.
+
+[source, plantuml]
+....
+object alice : User {
+  name = "Alice"
+  age = 30
+}
+....
+
+An anonymous object (an instance whose name is not significant) is written as
+`: ClassName`.
