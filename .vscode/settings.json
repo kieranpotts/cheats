@@ -59,4 +59,15 @@
     },
   },
 
+  /*
+  Asciidoc extension settings.
+  https://marketplace.visualstudio.com/items?itemName=asciidoctor.asciidoctor-vscode
+  */
+
+  /* Enable support for embedded diagrams in AsciiDoc, via Kroki */
+  "asciidoc.extensions.enableKroki": true,
+  "asciidoc.preview.asciidoctorAttributes": {
+    "kroki-server-url": "http://localhost:8088",
+  },
+
 }
