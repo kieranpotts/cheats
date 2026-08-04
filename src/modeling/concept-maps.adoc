@@ -1,0 +1,154 @@
+= Concept Maps
+
+A *concept map* (or conceptual diagram) is a diagram that depicts suggested
+relationships between concepts. It typically represents ideas and information
+as boxes or circles (nodes), connected with labeled arrows (links) that
+describe the relationship between concepts — often in a downward-branching
+hierarchical structure but also in free-form maps.
+
+Concept mapping was developed by education professor
+https://en.wikipedia.org/wiki/Joseph_D._Novak[Joseph D. Novak] and his
+research team at Cornell University in the 1970s, based on the cognitive
+theories of https://en.wikipedia.org/wiki/David_Ausubel[David Ausubel].
+It is grounded in the learning movement called
+https://en.wikipedia.org/wiki/Constructivism_(learning_theory)[constructivism].
+
+== Components
+
+=== Concepts
+
+A *concept* is a perceived regularity in events or objects, or a record of
+events or objects, designated by a label. Concepts are typically enclosed in
+boxes or circles (nodes).
+
+Examples: `Gravity`, `Photosynthesis`, `Customer`, `Database`.
+
+=== Linking phrases
+
+A *linking phrase* (or linking word) is a word or short phrase written on a
+line (arrow) that connects two concepts, describing the relationship between
+them. The combination of two concepts and a linking phrase forms a
+*proposition* — a meaningful statement.
+
+Examples of linking phrases: `causes`, `requires`, `such as`, `contributes
+to`, `is a type of`, `leads to`, `depends on`.
+
+=== Propositions
+
+A *proposition* is a statement about some object or event in the universe,
+formed by two or more concepts connected by linking words. Propositions are the
+fundamental unit of meaning in a concept map.
+
+Example: `Gravity` --(causes)--> `Objects to fall` forms the proposition
+"Gravity causes objects to fall."
+
+=== Cross-links
+
+A *cross-link* is a relationship between concepts in different segments or
+domains of the concept map. Cross-links help illustrate how knowledge in one
+area relates to knowledge in another, and are often a sign of deeper
+understanding.
+
+== Structure
+
+Concept maps typically follow a hierarchical structure:
+
+* The most general, inclusive concepts are placed at the *top*.
+* More specific, less general concepts are arranged *below*.
+* The map is read from top to bottom.
+
+However, unlike mind maps (which radiate from a single central concept),
+concept maps can have *multiple hubs and clusters*, forming a network rather
+than a strict tree.
+
+== How to construct a concept map
+
+1. **Identify a focus question** — a clear question that the concept map will
+   help answer (e.g., "What is water?", "What causes the seasons?").
+2. **Brainstorm concepts** — list 15-25 key concepts relevant to the focus
+   question.
+3. **Rank concepts** — order them from most general/inclusive to most
+   specific.
+4. **Build the map** — place the most general concept at the top, then add
+   more specific concepts below, connecting them with linking phrases.
+5. **Add cross-links** — look for relationships between concepts in different
+   parts of the map.
+6. **Revise** — refine the map as understanding deepens.
+
+== Uses
+
+Concept maps are widely used in education and business for:
+
+* **Note taking and summarizing** — gleaning key concepts and their
+  relationships from documents and source materials.
+* **Knowledge creation** — transforming tacit knowledge into an organizational
+  resource.
+* **Knowledge preservation** — eliciting and mapping expert knowledge before
+  employee retirement.
+* **Collaborative knowledge modeling** — creating shared understanding within
+  a team.
+* **Instructional design** — serving as "advance organizers" that provide an
+  initial conceptual frame for learning.
+* **Training** — representing the context and relationship of training to
+  organizational goals.
+* **Communicating complex ideas** — exposing the structure of an argument or
+  train of thought.
+* **Assessment** — evaluating learner understanding of concepts and their
+  relationships.
+* **Ontology building** — a first step in defining the ontology of a domain.
+
+== Concept maps vs. other visualizations
+
+[cols="1,3"]
+|===
+| Type | Characteristics
+
+| **Concept map**
+| Multiple hubs and clusters; labeled relationships; hierarchical or
+  free-form; propositions as fundamental units.
+
+| **Mind map**
+| Single central concept; tree structure radiating outward; primarily
+  associative; no explicit linking phrases.
+
+| **Topic map**
+| Developed for information management; focuses on semantic interoperability
+  of data; originated for book indices.
+
+| **Argument map**
+| Formal representation of reasoning; shows premises, conclusions, and
+  objections.
+
+| **ER diagram**
+| Entities, attributes, and relationships for database design; formal
+  cardinality notation.
+
+| **UML class diagram**
+| Classes, attributes, operations, and relationships for object-oriented
+  software design.
+|===
+
+== Guidelines
+
+* Formulate a clear **focus question** before starting.
+* Use **short labels** for concepts (1-4 words).
+* Use **precise linking phrases** that form meaningful propositions when read
+  with the connected concepts.
+* Place the most **general concepts at the top** and more specific ones below.
+* Add **cross-links** to show connections across different domains.
+* Keep the map **simple enough** to be understood by its intended audience.
+* **Revise and refine** the map as understanding evolves.
+* Concept maps are often **personal and idiosyncratic** — there is no single
+  "correct" map.
+
+== References
+
+* https://en.wikipedia.org/wiki/Concept_map[Concept map - Wikipedia]
+* Novak, J.D. (2009) [1998]. *Learning, Creating, and Using Knowledge:
+  Concept Maps as Facilitative Tools in Schools and Corporations* (2nd ed.).
+  Routledge. ISBN 9780415991858.
+* Novak, J.D.; Gowin, D.B. (1984). *Learning How to Learn*. Cambridge
+  University Press. ISBN 9780521319263.
+* Novak, Joseph D.; Cañas, Alberto J. (2008). *The Theory Underlying Concept
+  Maps and How to Construct and Use Them*. Institute for Human and Machine
+  Cognition (IHMC).

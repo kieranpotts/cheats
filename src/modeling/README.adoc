@@ -2,3 +2,4 @@
 
 * link:./uml/[UML]
 * link:./er-diagrams.adoc[Entity-Relationship (ER) Diagrams]
+* link:./concept-maps.adoc[Concept Maps]
