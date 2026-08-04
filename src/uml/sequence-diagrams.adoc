@@ -4,29 +4,52 @@ A sequence diagram shows the interactions between objects arranged in time
 sequence. It highlights the order in which messages are exchanged between
 collaborating objects to accomplish a task.
 
+Sequence diagrams are organized along two dimensions:
+
+* **Horizontal axis** — the objects (or actors) that participate in the
+  interaction, listed from left to right according to when they take part.
+* **Vertical axis** — time, progressing from top to bottom. Time in a sequence
+  diagram is about ordering, not duration.
+
+== Purpose
+
+Sequence diagrams are used to:
+
+* Model high-level interactions between active objects in a system.
+* Model the interaction between object instances within a collaboration that
+  realizes a use case.
+* Model the interaction between objects within a collaboration that realizes an
+  operation.
+* Document how objects in an existing (legacy) system currently interact.
+* Provide a more formal refinement of use cases during the requirements phase.
+
 == Notation
 
-* A *lifeline* is drawn as a vertical dashed line descending from each
-  participant (object or actor) at the top of the diagram.
+=== Actors
 
-* A *participant* is drawn as a rectangle at the top of its lifeline, labeled
-  with the object name (`instanceName: ClassName`).
+An *actor* represents a role played by a user, system, or external entity that
+interacts with the system. Actors exist outside the system boundary and can be
+human users, external systems, devices, or organizations.
 
-* A *message* is drawn as a horizontal arrow from the sender's lifeline to the
-  receiver's lifeline, labeled with the message name.
+=== Lifelines
 
-== Message types
+A *lifeline* represents an individual participant in the interaction. It is
+drawn as a rectangle at the top with a vertical dashed line descending from it.
+The lifeline's name follows the format `instanceName: ClassName`. An anonymous
+instance is written as just `: ClassName`.
 
-[cols="1,3"]
-|===
-| Notation | Message type
+[plantuml]
+....
+actor User
+participant ":System" as system
+participant "Database" as db
+User -> system : login()
+system -> db : query()
+db --> system : data
+system --> User : success
+....
 
-| Solid arrowhead        | Synchronous call — the sender waits for a response.
-| Open (stick) arrowhead | Asynchronous call — the sender does not wait.
-| Dashed arrow           | Reply or return message.
-|===
-
-== Execution specifications
+=== Execution specifications
 
 An *execution specification* (activation bar) is drawn as a thin rectangle
 overlaid on a lifeline, indicating the period during which the object is
@@ -42,9 +65,88 @@ Server --> Client : response()
 deactivate Server
 ....
 
+== Message types
+
+[cols="1,3"]
+|===
+| Notation | Message type
+
+| Solid arrowhead        | Synchronous call — the sender waits for a response.
+| Open (stick) arrowhead | Asynchronous call — the sender does not wait.
+| Dashed arrow           | Reply or return message.
+|===
+
+=== Synchronous message
+
+A synchronous message requires the sender to wait until the receiver finishes
+processing and sends a response. Most method calls in object-oriented programming
+are synchronous. Drawn as a solid line with a filled arrowhead.
+
+=== Asynchronous message
+
+An asynchronous message does not require the sender to wait. The sender
+continues execution while the receiver processes the message independently.
+Drawn as a solid line with an open (stick) arrowhead.
+
+=== Reply message
+
+A reply (return) message passes information back to the caller. Reply messages
+are optional — they are useful when finer detail is required. Drawn as a dashed
+line with an open arrowhead.
+
+=== Self message
+
+A self message represents an object sending a message to itself, for example to
+invoke an internal method. Drawn as a U-shaped arrow.
+
+[plantuml]
+....
+participant Server
+Server -> Server : selfCheck()
+activate Server
+Server --> Server : ok
+deactivate Server
+....
+
+=== Create message
+
+A create message instantiates a new object during the interaction. Drawn as a
+dashed arrow labeled `create`.
+
+=== Delete message
+
+A delete message destroys an object. The lifeline ends with an X at the point
+of destruction.
+
+=== Found message
+
+A found message comes from an unknown source. Drawn as an arrow directed toward
+a lifeline from an endpoint.
+
+=== Lost message
+
+A lost message is sent to an unknown recipient. Drawn as an arrow directed away
+from a lifeline to an endpoint.
+
+== Guards
+
+A *guard* is a condition that must be met for a message to be sent. It is
+written in square brackets `[condition]` on the message arrow.
+
+[plantuml]
+....
+User -> ATM : withdraw(amount)
+ATM -> Account : getBalance()
+Account --> ATM : balance
+ATM -> Account : [balance >= amount] debit(amount)
+ATM --> User : cash
+....
+
 == Combined fragments
 
-Combined fragments group interactions and specify control logic:
+Combined fragments group interactions and specify control logic. A fragment is
+drawn as a box (frame) with the operator name in a small pentagon in the top
+left corner.
 
 [cols="1,3"]
 |===
@@ -53,10 +155,22 @@ Combined fragments group interactions and specify control logic:
 | `alt`   | Alternative — mutually conditional branches, separated by dashed lines.
 | `opt`   | Optional — a single branch executed only if a condition is true.
 | `loop`  | Iteration — the fragment repeats, with an optional guard.
-| `break` | The fragment executes instead of the remainder if a condition is true.
+| `break` | The fragment executes instead of the remainder if a condition is true; the enclosing interaction is then exited.
 | `par`   | Parallel — the fragments execute concurrently.
 | `ref`   | Reference to an interaction defined in another diagram.
+| `critical` | Critical region — only one thread may execute this fragment at a time.
+| `neg`   | Negative — the fragment shows an invalid or disallowed interaction.
+| `assert` | Assertion — the fragment specifies a valid interaction that must hold.
+| `strict` | Strict sequencing — messages must occur in the exact order specified.
+| `seq`   | Weak sequencing — the order of messages on different lifelines may vary.
+| `ignore` | Ignore — a set of message types that are not shown in this fragment.
+| `consider` | Consider — only the listed message types are relevant in this fragment.
 |===
+
+=== Alternative (`alt`)
+
+Models an "if then else" decision. Each operand has a guard condition; the
+operand whose guard is true executes.
 
 [plantuml]
 ....
@@ -67,4 +181,70 @@ else Password invalid
   Server --> Client : error
 end
 ....
+
+=== Option (`opt`)
+
+Models a simple "if then" — the fragment executes only if the guard condition is
+true.
+
+[plantuml]
+....
+Client -> Server : request()
+opt Cache enabled
+  Server -> Cache : lookup()
+  Cache --> Server : cachedData
+end
+Server --> Client : response()
+....
+
+=== Loop (`loop`)
+
+Models a repeating sequence. The guard can specify minimum iterations
+(`minint = N`) and maximum iterations (`maxint = N`).
+
+[plantuml]
+....
+Client -> Server : poll()
+loop until done
+  Server -> Queue : fetch()
+  Queue --> Server : item
+  Server --> Client : result()
+end
+....
+
+=== Break (`break`)
+
+Models exception handling. When the break fragment executes, the remainder of
+the enclosing interaction is skipped.
+
+=== Parallel (`par`)
+
+Models concurrent processing. Each operand represents a thread of execution that
+runs in parallel.
+
+== Interaction occurrences
+
+An *interaction occurrence* allows one sequence diagram to reference another.
+It is drawn as a frame with `ref` in the namebox, containing the name of the
+referenced diagram and any parameters.
+
+== Gates
+
+A *gate* is a message with one end connected to the diagram's frame edge and
+the other end connected to a lifeline. Gates model the passing of information
+between a sequence diagram and its context.
+
+== Challenges
+
+Sequence diagrams can become difficult to manage in large and complex systems:
+
+* **Complexity and size** — large systems can result in lengthy diagrams that are
+  hard to read and maintain.
+* **Dynamic nature** — diagrams require frequent updates as requirements change.
+* **Ambiguity in messages** — unclear message definitions can lead to
+  misunderstandings.
+* **Concurrency and parallelism** — representing multiple simultaneous
+  interactions increases complexity.
+* **Real-time constraints** — modeling precise timing may require additional
+  documentation.
 
