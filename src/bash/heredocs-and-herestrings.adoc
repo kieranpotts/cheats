@@ -1,0 +1,62 @@
+= Bash: Heredocs and herestrings
+
+A *heredoc* redirects multiple lines of literal text into a command's
+`stdin`, up to a terminating word.
+
+[source,bash]
+----
+cat <<EOF
+Line one.
+Line two.
+EOF
+----
+
+By default, variables and command substitutions inside the heredoc ARE
+expanded. Quoting the terminator disables that, giving you the text verbatim.
+
+[source,bash]
+----
+name="World"
+
+cat <<EOF
+Hello, ${name}!
+EOF
+# Prints: Hello, World!
+
+cat <<'EOF'
+Hello, ${name}!
+EOF
+# Prints literally: Hello, ${name}!
+----
+
+Prefixing the terminator with `-` (`<<-`) allows the body and terminator to be
+indented with tabs, which are then stripped. This is useful for keeping a
+heredoc readable inside an indented `if` block or function.
+
+[source,bash]
+----
+if true; then
+	cat <<-EOF
+	This line's leading tab is stripped.
+	EOF
+fi
+----
+
+A *herestring* (`<<<`) is a one-line shortcut for feeding a single string to a
+command's `stdin`, without needing a separate `echo` and pipe.
+
+[source,bash]
+----
+cat <<< "Hello, World!"
+
+# Equivalent to, but shorter than:
+echo "Hello, World!" | cat
+----
+
+Herestrings are commonly used with `read`, since it must read from `stdin`
+rather than accept a value as an argument.
+
+[source,bash]
+----
+read -r name <<< "$1"
+----

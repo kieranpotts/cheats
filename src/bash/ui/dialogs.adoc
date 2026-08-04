@@ -1,0 +1,89 @@
+= Bash: Dialog boxes (`whiptail`)
+
+`whiptail` draws simple text-mode dialog boxes from within a script – useful
+for interactive installers and admin tools. It's not part of Bash itself, but
+it ships by default on Debian and derivatives, and is drop-in compatible with
+the older `dialog` command. Check for it before relying on it:
+
+[source,bash]
+----
+command -v whiptail >/dev/null || { echo "whiptail not found" >&2; exit 1; }
+----
+
+Every dialog takes a title, a message, and a box height/width (in
+characters), followed by any box-specific arguments.
+
+== Message boxes
+
+[source,bash]
+----
+whiptail --title "Example" --msgbox "Setup complete." 8 40
+whiptail --title "Example" --infobox "Working..." 8 40 # no OK button, non-blocking
+----
+
+== Yes/no confirmation
+
+The result is the exit status, not stdout – `0` for "yes", `1` for "no":
+
+[source,bash]
+----
+if whiptail --title "Confirm" --yesno "Proceed with install?" 8 40; then
+  echo "Confirmed"
+else
+  echo "Cancelled"
+fi
+----
+
+== Capturing input
+
+Boxes that return a value (`--inputbox`, `--passwordbox`, `--menu`,
+`--checklist`, `--radiolist`) print it to stderr, not stdout, so it must be
+redirected before it can be captured with command substitution:
+
+[source,bash]
+----
+name=$(whiptail --title "Name" --inputbox "What's your name?" 8 40 3>&1 1>&2 2>&3)
+----
+
+`3>&1 1>&2 2>&3` swaps stdout and stderr: whiptail's own dialog drawing still
+goes to the terminal (fd 1), while its result (fd 2) ends up where `$(...)`
+can capture it (fd 1, via the temporary fd 3).
+
+== Menus and lists
+
+[source,bash]
+----
+choice=$(whiptail --title "Menu" --menu "Choose one" 15 40 4 \
+  1 "Option one" \
+  2 "Option two" \
+  3 "Quit" \
+  3>&1 1>&2 2>&3)
+
+selected=$(whiptail --title "Checklist" --checklist "Pick packages" 15 40 4 \
+  git    "Git"    ON \
+  vim    "Vim"    OFF \
+  tmux   "Tmux"   OFF \
+  3>&1 1>&2 2>&3)
+----
+
+`--menu` returns the single chosen tag; `--checklist` returns a
+space-separated, quoted list of chosen tags; `--radiolist` is like
+`--checklist` but restricted to one selection.
+
+== Progress gauges
+
+`--gauge` reads percentage values (0-100) from stdin, one per line, and
+updates the bar as they arrive:
+
+[source,bash]
+----
+{
+  for pct in 0 25 50 75 100; do
+    echo "${pct}"
+    sleep 1
+  done
+} | whiptail --gauge "Installing..." 8 40 0
+----
+
+TIP: If dialogs render with garbled borders over a serial console or basic
+terminal emulator, try `TERM=ansi whiptail ...`.

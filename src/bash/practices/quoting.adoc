@@ -1,0 +1,71 @@
+= Bash: Quoting
+
+Unquoted variable expansions are subject to *word splitting* (breaking the
+value into separate words at each `$IFS` character, usually space/tab/newline)
+and *globbing* (expanding `*`, `?`, etc. against the filesystem). Both are
+common sources of bugs, and both are avoided by quoting.
+
+[source,bash]
+----
+file="my report.txt"
+
+# Wrong: word-splits into two arguments, "my" and "report.txt".
+cat $file
+
+# Right: treated as a single argument.
+cat "$file"
+----
+
+[source,bash]
+----
+pattern="*.txt"
+
+# Wrong: if any .txt files exist in the current directory, $pattern is
+# replaced by their names instead of the literal string "*.txt".
+if [ $pattern = "*.txt" ]; then
+
+# Right.
+if [ "$pattern" = "*.txt" ]; then
+----
+
+Double-quote every variable and command substitution, unless you specifically
+want word splitting or globbing to happen (rare, and worth a comment when it's
+intentional).
+
+[source,bash]
+----
+"$var"        # Not $var
+"${array[@]}" # Not ${array[@]}
+"$(command)"  # Not $(command)
+----
+
+Single quotes prevent ALL expansion, including variables – use them for
+literal text that must not be interpreted:
+
+[source,bash]
+----
+echo 'The price is $5, not a variable'
+awk '{print $1}'  # $1 here is awk's field reference, not a Bash variable.
+----
+
+The same word-splitting bites inside `[ ... ]`: an unquoted variable that holds
+more than one word expands into more arguments than the test command expects,
+producing a "too many arguments" error rather than a comparison result.
+
+[source,bash]
+----
+X="i am awesome"
+Y="i am the best"
+
+# Wrong: expands to [ i am awesome = i am the best ], too many arguments.
+if [ $X = $Y ]; then
+
+# Right.
+if [ "$X" = "$Y" ]; then
+----
+
+Prefer `[[ ... ]]` over `[ ... ]` where available – it doesn't word-split or
+glob its operands even when unquoted, which removes a whole class of quoting
+mistakes (see link:../conditionals/tests.adoc[Tests]). This safety doesn't
+extend to `case`, `for`, or plain command arguments, though, so quoting
+discipline is still needed everywhere else.

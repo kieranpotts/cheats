@@ -17,3 +17,16 @@ select option in "Option 1" "Option 2" "Quit"; do
   esac
 done
 ----
+
+Set `PS3` to customize the selection prompt (it defaults to `#? `).
+
+[source,bash]
+----
+PS3="Please choose an option: "
+----
+
+A `select` loop only terminates via `break` or an interrupt – it does not stop
+on its own. Nest it inside `while true; do ... done` to build a menu that
+redisplays after each choice, using `break 2` (see
+link:../loops/nesting.adoc[Nested loops]) to exit both loops together when the
+user picks "Quit".

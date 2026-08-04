@@ -1,0 +1,35 @@
+= Bash: Choosing your shell
+
+Bash is a reasonable default for scripts that only ever need to run on Linux
+or a developer's own machine. But it's not the only option, and it isn't
+always the right one.
+
+* If a script needs to run on the widest possible range of Unix-like systems,
+  including minimal containers or embedded systems, write it against POSIX
+  `sh` instead – Bash isn't guaranteed to be present, whereas a POSIX-compliant
+  shell (`dash`, `ash`, etc.) usually is. This means giving up Bash-only
+  features like `[[ ... ]]`, arrays, and `local`.
+* If a script depends on a Bash-only feature (arrays, `[[ ... ]]`, process
+  substitution, `${var//pattern/replacement}`), say so explicitly with a
+  `#!/usr/bin/env bash` shebang, and don't assume `sh script.sh` will work –
+  on some systems `/bin/sh` is `dash`, not `bash`.
+* macOS ships an old Bash (3.2) for licensing reasons, well behind Linux's
+  Bash 5.x. Features from Bash 4+ (associative arrays, `mapfile`, `**`
+  globstar) will silently fail or behave differently unless the user has
+  installed a newer Bash themselves (e.g. via Homebrew).
+* For anything beyond straightforward scripting – structured data, real error
+  handling, non-trivial string manipulation – consider whether a general-
+  purpose language (Python, etc.) would be more maintainable than pushing Bash
+  further than it comfortably goes.
+
+Check the Bash version a feature requires before relying on it:
+
+[source,bash]
+----
+echo "${BASH_VERSION}"
+
+if ((BASH_VERSINFO[0] < 4)); then
+  echo "This script requires Bash 4 or later" >&2
+  exit 1
+fi
+----

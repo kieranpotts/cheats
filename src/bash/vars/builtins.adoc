@@ -23,3 +23,39 @@ $_              # Last argument of the previously executed command,
 
 These special variables MAY also be written using the bracketed syntax, eg.
 `${0}`, but they tend not to be.
+
+== Other built-in shell variables
+
+Beyond the positional/status variables above, Bash maintains a set of
+built-in variables that describe the shell's own state, rather than the
+current command's:
+
+[source,bash]
+----
+$IFS            # Internal Field Separator, used for word splitting on
+                #   unquoted expansion (default: space, tab, newline).
+$RANDOM         # A new pseudo-random integer (0-32767) every time it's read.
+$SECONDS        # Seconds elapsed since the shell started.
+$BASH_VERSION   # The running Bash version, e.g. "5.2.15(1)-release".
+$LINES          # Terminal height, in rows (interactive shells only).
+$COLUMNS        # Terminal width, in columns (interactive shells only).
+----
+
+`RANDOM` and `SECONDS` are ordinary variables, not read-only – assigning to
+either resets its baseline for future reads:
+
+[source,bash]
+----
+SECONDS=0
+long_running_task
+echo "Took ${SECONDS} seconds"
+----
+
+Changing `IFS` temporarily, for a single command, is a common pattern for
+splitting on something other than whitespace:
+
+[source,bash]
+----
+IFS=',' read -ra fields <<< "a,b,c"
+echo "${fields[1]}" # "b"
+----

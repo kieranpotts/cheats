@@ -1,0 +1,21 @@
+= `history`
+
+The `history` built-in displays or modifies Bash's command history list.
+
+.Example: list the command history
+----
+history
+----
+
+.Example: list the last 10 commands
+----
+history 10
+----
+
+.Example: clear the history list
+----
+history -c
+----
+
+See also `!!` (repeat last command) and `!<n>` (repeat command number `n` from
+the history list).

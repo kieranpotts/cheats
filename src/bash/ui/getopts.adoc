@@ -1,0 +1,60 @@
+= Bash: Parsing options (`getopts`)
+
+`getopts` is Bash's built-in command-line option parser. It only understands
+single-character options (`-f`, `-x value`), not GNU-style long options
+(`--file`); it's called repeatedly, usually in a `while` loop, until it has
+consumed all the options.
+
+[source,bash]
+----
+while getopts ":af:" opt; do
+  case "${opt}" in
+    a) echo "-a was given" ;;
+    f) echo "-f was given, argument: ${OPTARG}" ;;
+    \?) echo "Invalid option: -${OPTARG}" >&2; exit 1 ;;
+    :) echo "Option -${OPTARG} requires an argument" >&2; exit 1 ;;
+  esac
+done
+
+shift $((OPTIND - 1)) # Remove parsed options, leaving remaining args in "$@".
+----
+
+== The option string
+
+Each character in the option string is a recognized flag. A colon after a
+character means that flag takes an argument (available afterwards in
+`OPTARG`):
+
+[source,bash]
+----
+"af:" # -a takes no argument; -f expects one (e.g. -f value).
+----
+
+A LEADING colon (`":af:"` above) switches `getopts` into *silent* error
+handling: invalid options and missing arguments are reported through `opt`
+(`?` or `:`) and `OPTARG`, instead of `getopts` printing its own error message.
+This is RECOMMENDED for scripts, so errors can be handled and worded
+consistently with the rest of the script.
+
+== Built-in variables
+
+[source,bash]
+----
+$OPTIND  # Index of the next argument to process. Starts at 1; re-set it to 1
+         #   to parse a new set of arguments with getopts again.
+$OPTARG  # The argument for the option just parsed, or the offending option
+         #   character on error.
+$OPTERR  # 0/1, whether Bash prints its own errors (non-silent mode only).
+----
+
+`getopts` never modifies the positional parameters itself. After the loop,
+`shift $((OPTIND - 1))` is the standard way to discard everything `getopts`
+already consumed, leaving any remaining non-option arguments in `"$@"` – see
+link:../vars/positional-parameters.adoc[Positional parameters].
+
+`getopts` stops parsing at the first argument that doesn't look like an
+option, or at a literal `--`, which conventionally marks the end of options.
+
+TIP: `getopts` also accepts an explicit list of words to parse instead of
+`"$@"`, e.g. `getopts ":f:" opt "${my_array[@]}"` – useful for parsing
+something other than the script's own arguments.

@@ -11,3 +11,39 @@ done
 
 `while` loops are useful when you need to wait for a process to finish, to
 monitor system state, or to continue to read input until a precondition changes.
+
+Conditions can be combined with `&&` and `||`, and can use C-style arithmetic
+via `((...))` instead of `[ ... ]`.
+
+[source,bash]
+----
+while ((count < 5)); do
+  # Runs while the arithmetic expression is non-zero (true).
+  ((count++))
+done
+----
+
+`while :` (or the equivalent `while true`) creates an infinite loop, since `:`
+is a built-in that always returns a zero (successful) exit status. This is a
+common pattern for daemons, polling loops, and menus that run until a `break`.
+
+[source,bash]
+----
+while :; do
+  # Runs forever, until `break` is called.
+done
+----
+
+The most common use of `while` is reading a file line by line, using `read`
+with the loop condition:
+
+[source,bash]
+----
+while IFS= read -r line; do
+  echo "$line"
+done < "$filename"
+----
+
+Setting `IFS=` and using `read -r` preserves leading/trailing whitespace and
+backslashes in each line. See link:../ui/read.adoc[Reading user input] for more
+on `read`.

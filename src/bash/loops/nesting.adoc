@@ -18,3 +18,18 @@ for log_file in $log_files; do
   done
 done
 ----
+
+By default, `break` and `continue` only affect the innermost loop. Both accept
+an optional numeric argument, `n`, to act on the `n`th enclosing loop instead –
+useful for aborting an entire nested search as soon as a match is found.
+
+[source,bash]
+----
+for outer in a b c; do
+  for inner in 1 2 3; do
+    if [[ "$outer$inner" == "b2" ]]; then
+      break 2 # Exits both loops, not just the inner one.
+    fi
+  done
+done
+----

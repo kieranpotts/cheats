@@ -11,3 +11,64 @@ ${arr[0]}  # Access the first element.
 ${arr[@]}  # Access all elements.
 ${#arr[@]} # Get the length of the array.
 ----
+
+Always quote `"${arr[@]}"` when expanding – this preserves each element as a
+separate word, even if it contains spaces. Without quotes, elements are subject
+to word splitting and globbing, just like any other unquoted expansion.
+
+[source,bash]
+----
+for item in "${arr[@]}"; do
+  echo "${item}"
+done
+----
+
+Arrays can also be built from a glob, or from another command's output.
+
+[source,bash]
+----
+files=(*.txt)                 # One element per matching filename.
+mapfile -t lines < input.txt  # One element per line of the file.
+----
+
+`mapfile`/`readarray` split on newlines by default, which breaks if any line
+itself contains a newline (impossible) or if filenames contain them (possible,
+if rare). For robustness against arbitrary input – e.g. filenames – use a NUL
+delimiter instead:
+
+[source,bash]
+----
+mapfile -d '' -t files < <(find . -type f -print0)
+----
+
+== Indices
+
+`${!arr[@]}` expands to the array's indices rather than its values. This is
+useful for iterating in step with a second, parallel array, or when the array
+is sparse (see below).
+
+[source,bash]
+----
+for i in "${!arr[@]}"; do
+  echo "${i}: ${arr[${i}]}"
+done
+----
+
+== Sparse arrays
+
+Indexed arrays don't have to be contiguous. Unsetting an element, or assigning
+to a specific high index, leaves "holes" in the sequence.
+
+[source,bash]
+----
+arr=("a" "b" "c")
+unset 'arr[1]'
+
+echo "${#arr[@]}"     # 2 – the count of set elements, not the highest index.
+echo "${!arr[@]}"     # 0 2 – the indices that are actually set.
+echo "${arr[1]:-gap}" # "gap" – index 1 is unset.
+----
+
+Because `${#arr[@]}` counts elements rather than reporting the highest index,
+never assume indices run from `0` to `` ${#arr[@]}-1 `` once an array might be
+sparse – iterate over `"${!arr[@]}"` instead.

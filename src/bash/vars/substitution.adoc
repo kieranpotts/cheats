@@ -61,3 +61,50 @@ ${var//a/b} # Replace all "a" with "b".
 # Set a default value, which is used if `var` is unset.
 ${var:-default}
 ----
+
+== Anchored replacement and case conversion
+
+`/#` and `/%` restrict a replacement to the start or end of the value only,
+rather than the first match anywhere:
+
+[source,bash]
+----
+var="foobar"
+
+${var/#foo/baz} # "bazbar" – "foo" only replaced if it's a prefix.
+${var/%bar/baz} # "foobaz" – "bar" only replaced if it's a suffix.
+----
+
+Case-conversion operators change the letter case of a value without calling
+out to `tr` or `awk`:
+
+[source,bash]
+----
+var="Hello World"
+
+${var^}   # "Hello World" – first character to uppercase.
+${var^^}  # "HELLO WORLD" – all characters to uppercase.
+${var,}   # "hello World" – first character to lowercase.
+${var,,}  # "hello world" – all characters to lowercase.
+----
+
+== The `:-`/`:=`/`:?`/`:+` family
+
+These four operators all test whether a variable is unset or empty, but differ
+in what happens next:
+
+[source,bash]
+----
+${var:-default}  # Expands to "default" if var is unset/empty. var unchanged.
+${var:=default}  # Same, but ALSO assigns "default" to var.
+${var:?message}  # Prints "message" to stderr and exits, if var is unset/empty.
+${var:+value}    # Expands to "value" if var IS set/non-empty, else "".
+----
+
+`${var:?message}` is a convenient way to guard a script against a required
+variable being missing, without a separate `if`/`exit` block:
+
+[source,bash]
+----
+: "${API_KEY:?API_KEY must be set}"
+----

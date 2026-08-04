@@ -1,0 +1,78 @@
+= Bash: Signal handling (`trap`)
+
+`trap` installs a handler that runs when the shell receives a signal or hits
+one of Bash's pseudo-signal events. Without arguments, `trap` (or `trap -p`)
+lists the handlers currently installed.
+
+[source,bash]
+----
+trap 'echo "Caught SIGINT"; exit 1' INT
+
+trap
+----
+
+The signal/event may be given with or without its `SIG` prefix (`SIGTERM` or
+`TERM`), or as its number (`trap ... 15`). `trap -l` lists all signal names and
+numbers.
+
+== Pseudo-signal events
+
+Beyond real Unix signals, Bash defines a few special events that aren't
+signals at all, but can be trapped the same way:
+
+[source,bash]
+----
+EXIT    # Runs when the shell (or a function's shell) exits, for any reason.
+DEBUG   # Runs before every simple command.
+RETURN  # Runs when a function or sourced script finishes.
+ERR     # Runs whenever a command's failure would trigger `set -e`.
+----
+
+`EXIT` is the most commonly used – it's the standard way to guarantee cleanup
+code runs regardless of how a script terminates:
+
+[source,bash]
+----
+tmpfile=$(mktemp)
+trap 'rm -f "${tmpfile}"' EXIT
+
+# ... use "${tmpfile}" ...
+# It's removed on normal exit, an error, or a signal – no need to repeat the
+# cleanup at every possible exit point.
+----
+
+== Ignoring and resetting signals
+
+An empty-string argument makes the shell ignore the signal entirely, rather
+than running any code for it:
+
+[source,bash]
+----
+trap '' INT  # Ctrl-C no longer interrupts this script.
+----
+
+Omitting the argument (or passing `-`) resets the signal to its original,
+default disposition:
+
+[source,bash]
+----
+trap - INT   # Restore the default SIGINT behavior.
+----
+
+== Notes
+
+`DEBUG` and `RETURN` traps are inherited by shell functions and sourced
+scripts by default, unless `set -T`/`shopt -s functrace` was enabled first for
+`DEBUG`, or the trap is set with `trap -p` visibility in mind; this is a
+frequent source of surprise when a `DEBUG` trap installed for debugging a
+function keeps firing long after that function returns.
+
+A `trap ... ERR` handler only fires for failures that would cause `set -e` to
+exit the shell – it's skipped for commands whose exit status is checked
+directly (e.g. inside an `if` or `&&`/`||` chain). See
+link:./practices/debugging.adoc[Debugging] for using `trap ... ERR` together
+with `${BASH_SOURCE}`/`${LINENO}` to report where a failure occurred.
+
+`trap` handlers registered in the current shell are NOT inherited across
+`exec` or by background jobs started with `&` unless re-installed there – each
+subshell starts with the default dispositions unless it explicitly re-traps.

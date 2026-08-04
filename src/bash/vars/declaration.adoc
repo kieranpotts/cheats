@@ -10,7 +10,15 @@ echo "${str}"
 ----
 
 IMPORTANT: Unlike most programming languages, there MUST NOT be spaces around
-the assignment operator (`=`).
+the assignment operator (`=`). None of these mistakes are syntax errors, so
+Bash won't warn you – each just does something different and unwanted:
+
+[source,bash]
+----
+VARIABLE= 2   # Runs a command "2" with VARIABLE set to "" in its environment.
+VARIABLE =2   # Tries to run a command named "VARIABLE" with argument "=2".
+VARIABLE = 2  # Tries to run a command named "VARIABLE" with arguments "=" "2".
+----
 
 You MAY declare a value and then subsequently assign a value to it. This pattern
 is commonly used for `local` variables.

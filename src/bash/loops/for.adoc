@@ -21,3 +21,17 @@ done
 `for` loops are great for looping through dynamically-generated lists of things,
 like files found on the local filesystem, or for repeating a task a fixed number
 of times.
+
+Omitting all three C-style expressions creates an infinite loop, which runs
+until a `break` or an external interrupt (`Ctrl+C`) stops it.
+
+[source,bash]
+----
+for (( ; ; )); do
+  # Runs forever, until `break` is called.
+done
+----
+
+See link:../patterns/brace-expansion.adoc[Brace expansion] for generating
+numeric or alphabetic ranges to iterate over (e.g. `for i in {1..5}`), and
+link:../vars/arrays.adoc[Arrays] for iterating over array elements.

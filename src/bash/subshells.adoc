@@ -1,0 +1,40 @@
+= Bash: Subshells
+
+Wrapping commands in parentheses `( )` runs them in a *subshell*: a separate,
+child copy of the current shell. Any changes the subshell makes to variables,
+the working directory, or `set`/`shopt` options are discarded once it exits –
+they never affect the parent shell.
+
+[source,bash]
+----
+pwd            # /home/user
+
+(cd /tmp && pwd)  # /tmp, but only inside the subshell.
+
+pwd            # /home/user – unchanged.
+----
+
+This makes subshells a convenient way to run something "in isolation" without
+having to manually restore state afterwards, e.g. `cd` somewhere temporarily:
+
+[source,bash]
+----
+(cd /tmp && tar -xzf archive.tar.gz)
+# No need to `cd` back – the parent shell's working directory never changed.
+----
+
+Subshells are also created implicitly – for example, each side of a pipe runs
+in its own subshell. This is why a variable assigned inside a `| while read`
+loop doesn't persist after the loop (see
+link:./process-substitution.adoc[process substitution] for the usual fix):
+
+[source,bash]
+----
+count=0
+echo -e "a\nb\nc" | while read -r line; do
+  ((count++))
+done
+echo "${count}" # 0 – the increments happened in a subshell.
+----
+
+Backgrounding a command with `&` also runs it in a subshell.

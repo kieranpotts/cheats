@@ -1,0 +1,96 @@
+= Bash: Variable attributes (`declare`/`typeset`)
+
+`declare` (its old `typeset` synonym is obsolete – prefer `declare`) attaches
+*attributes* to a variable name, changing how assignments to it are
+interpreted. Several attributes have their own dedicated built-ins covered
+elsewhere – `export` (see link:./environment.adoc[Environment variables]),
+`readonly` (see link:./readonly.adoc[Read-only variables]), `-a`/`-A` (see
+link:./arrays.adoc[Arrays] and link:./associative-arrays.adoc[Associative
+arrays]) – but `declare` can set the same attributes directly:
+
+[source,bash]
+----
+declare -x API_KEY="secret"   # Same as `export API_KEY=...`.
+declare -r PI="3.14159"       # Same as `readonly PI=...`.
+declare -a list               # Same as declaring an indexed array.
+declare -A map                # Same as declaring an associative array.
+----
+
+== Integer attribute (`-i`)
+
+`-i` makes Bash evaluate every assignment to the variable as an arithmetic
+expression, rather than storing it as a plain string:
+
+[source,bash]
+----
+declare -i count
+count="2 + 2"
+echo "${count}" # 4, not the literal string "2 + 2".
+----
+
+== Case-conversion attributes (`-l`, `-u`)
+
+`-l` and `-u` force every assignment to lower-case or upper-case respectively:
+
+[source,bash]
+----
+declare -u shout
+shout="hello"
+echo "${shout}" # HELLO
+----
+
+== Global attribute (`-g`)
+
+Inside a function, `declare` creates a *local* variable by default. `-g`
+overrides this, creating (or assigning to) a variable in the global scope
+instead:
+
+[source,bash]
+----
+function set_it {
+  declare -g result="done"
+}
+set_it
+echo "${result}" # "done" – visible outside the function.
+----
+
+== Nameref attribute (`-n`)
+
+`-n` (Bash 4.3+) makes a variable a *reference* to another variable, named by
+its current value – similar to a pointer or pass-by-reference parameter. This
+is the standard way to let a function write into a variable named by its
+caller:
+
+[source,bash]
+----
+function set_message {
+  local -n ref=$1   # `local -n` and `declare -n` behave the same here.
+  ref="Hello, World!"
+}
+
+set_message greeting
+echo "${greeting}" # "Hello, World!"
+----
+
+`${!ref}` reveals the name of the variable a nameref currently points to:
+
+[source,bash]
+----
+echo "${!ref}" # "greeting"
+----
+
+IMPORTANT: Avoid naming the nameref the same as any variable you expect to be
+passed in – if a caller passes a variable with that exact name, the nameref
+ends up referring to itself, causing a circular-reference error at
+assignment.
+
+== `-p`: inspect attributes and value
+
+`declare -p NAME` prints a variable's current attributes and value, formatted
+so it can be re-used as input to the shell:
+
+[source,bash]
+----
+declare -i count=5
+declare -p count # declare -i count="5"
+----

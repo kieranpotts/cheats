@@ -1,0 +1,40 @@
+= Bash: Tilde expansion
+
+A leading `~` in a word expands to the current user's home directory. This
+happens early in parsing, before word splitting or pathname expansion, and
+does not require anything to actually exist on the filesystem.
+
+[source,bash]
+----
+cd ~           # Same as: cd "$HOME"
+echo ~/notes   # Expands to, e.g. /home/kieran/notes
+----
+
+`~username` expands to that user's home directory, as looked up from the
+system's user database, not the current user's:
+
+[source,bash]
+----
+echo ~root     # /root
+echo ~alice    # /home/alice
+----
+
+Two special forms refer to shell state rather than a user:
+
+[source,bash]
+----
+~+   # The current working directory (same as $PWD).
+~-   # The previous working directory (same as $OLDPWD).
+----
+
+Tilde expansion only happens at the start of a word (or right after `:` or `=`
+in an assignment) – `~` appearing anywhere else in a string is left as a
+literal character. It's also not performed at all inside single or double
+quotes.
+
+[source,bash]
+----
+echo "~"      # Literal ~, not expanded – quoting disables it.
+path=~/bin    # Expands, because it's the start of the assigned value.
+export PATH="$PATH:~/bin" # Does NOT expand – ~ is mid-string here.
+----

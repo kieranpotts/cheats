@@ -1,0 +1,80 @@
+= Bash: `printf`
+
+`printf` prints formatted text, modeled on the C `printf()` function. POSIX
+recommends it over `echo`, since `echo`'s handling of flags (`-n`, `-e`) and
+backslash escapes differs across shells and even across Bash versions/builds,
+whereas `printf`'s behavior is consistent.
+
+[source,bash]
+----
+printf "Name: %s, Age: %d\n" "Alice" 30
+----
+
+== Format specifiers
+
+[source,bash]
+----
+%s   # String, printed literally.
+%d   # Signed decimal integer (%i is identical).
+%u   # Unsigned decimal integer.
+%o   # Unsigned octal.
+%x   # Unsigned hex, lower-case digits (%X for upper-case).
+%f   # Floating point.
+%e   # Scientific notation (%E for upper-case "E").
+%c   # Only the first character of the argument.
+%b   # Like %s, but interprets backslash escapes (\n, \t, ...) in the argument.
+%q   # Shell-quotes the argument so it's safe to re-use as shell input.
+%%   # A literal percent sign; takes no argument.
+----
+
+If there are more arguments than format specifiers, the format string is
+*reused* until every argument has been consumed – useful for printing arrays
+without an explicit loop:
+
+[source,bash]
+----
+printf "%s\n" "${array[@]}"
+----
+
+If there are fewer arguments than specifiers, missing numeric arguments
+default to `0` and missing string arguments default to `""`.
+
+== Field width and precision
+
+[source,bash]
+----
+printf "%10s\n" "hi"    # Right-padded to a 10-character field, with spaces.
+printf "%-10s|\n" "hi"  # Left-aligned instead (note the trailing "|").
+printf "%05d\n" 7       # Zero-padded: "00007".
+printf "%.2f\n" 3.14159 # Precision for floats: "3.14".
+printf "%.3s\n" "hello" # Precision for strings: max characters printed ("hel").
+printf "%*d\n" 6 42     # Width taken from an argument instead of the literal.
+----
+
+== Writing into a variable (`-v`)
+
+`-v NAME` assigns the formatted output to a variable instead of printing it –
+comparable to `sprintf()`:
+
+[source,bash]
+----
+printf -v greeting "Hello, %s!" "World"
+echo "${greeting}" # "Hello, World!"
+----
+
+IMPORTANT: Never build the FORMAT argument itself from untrusted input – a
+format string like `-vx[$(malicious command)]` can inject an array index and
+run arbitrary code. Always use a hard-coded format string, or `--` before it,
+when the format could otherwise come from user input.
+
+== `%q` for safe re-use
+
+`%q` is the standard way to safely embed a value in a string that will later
+be evaluated as shell code (e.g. writing out a config file of `KEY=value`
+assignments, or logging a reconstructible command line):
+
+[source,bash]
+----
+file="my report (final).txt"
+printf "cat %q\n" "${file}" # cat my\ report\ \(final\).txt
+----

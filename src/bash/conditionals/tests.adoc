@@ -41,6 +41,19 @@ if [ "filename" == f* ]; then
 fi
 ----
 
+`[`, `[[`, and `test` are ordinary commands (or, for `[[`, a keyword parsed
+like one), so the usual rule that arguments must be space-separated from the
+command name still applies. Missing a space produces either an error or a
+silent wrong result, rather than a syntax error every time:
+
+[source,bash]
+----
+[[Jack = Jane]]  # Error: no command named "[[Jack".
+[[Jack=Jane]]    # No error, but WRONG: this is a single, non-empty argument
+                 # ("Jack=Jane"), so the test always evaluates to true.
+[[ Jack = Jane ]] # Correct: properly spaced, evaluates to false.
+----
+
 == Combining conditions
 
 Use the AND operator, `&&`, to combine conditional expressions.

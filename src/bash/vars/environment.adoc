@@ -1,0 +1,51 @@
+= Bash: Environment variables
+
+Every process has an *environment*: a set of key/value pairs inherited from its
+parent process. A plain shell variable is only visible in the current shell; an
+*exported* variable is copied into the environment of every child process
+launched from that shell.
+
+[source,bash]
+----
+name="local only"       # A regular shell variable.
+export API_KEY="secret" # Copied into the environment of child processes.
+
+./my-script.sh          # Can read $API_KEY, but not $name.
+----
+
+You can export an existing variable without reassigning it:
+
+[source,bash]
+----
+db_host="localhost"
+export db_host
+----
+
+`env` and `printenv` list the current environment. `export -p` lists just the
+variables exported from the current shell.
+
+[source,bash]
+----
+env
+printenv HOME
+export -p
+----
+
+Environment variables are commonly used to configure the behavior of tools and
+the user's own preferences, rather than being set directly by scripts:
+
+[source,bash]
+----
+$PATH    # Directories searched for executables.
+$HOME    # The current user's home directory.
+$USER    # The current user's username.
+$EDITOR  # The user's preferred text editor, e.g. used by `crontab -e`.
+$SHELL   # The user's default login shell.
+$PWD     # The current working directory.
+----
+
+Changes a child process makes to an inherited variable (exported or not) never
+propagate back up to the parent shell. This is why
+link:../files/sourcing.adoc[sourcing] a script, rather than executing it, is
+required when you need its variable assignments to persist in your current
+shell.

@@ -1,0 +1,56 @@
+= Bash: Debugging
+
+`set -x` (or running the whole script with `bash -x script.sh`) turns on
+*execution tracing*: every command is printed, with expansions already
+resolved, before it runs. This is usually the fastest way to see what a script
+is actually doing, as opposed to what it was written to do.
+
+[source,bash]
+----
+set -x
+value=$((1 + 1))
+echo "${value}"
+set +x   # Turn tracing back off.
+----
+
+[source]
+----
++ value=2
++ echo 2
+2
+----
+
+`PS4` controls the prefix used in trace output (default `+`). Including the
+line number makes traces far easier to map back to the source:
+
+[source,bash]
+----
+export PS4='+ ${BASH_SOURCE}:${LINENO}: '
+----
+
+Trace only a section of a script by toggling `set -x`/`set +x` around it,
+rather than the whole file – this keeps the output readable in a long script.
+
+Other useful debugging aids:
+
+[source,bash]
+----
+set -u   # Error on use of an unset variable, instead of silently using "".
+set -e   # Exit immediately if any command fails (exit code != 0).
+set -o pipefail  # A pipeline fails if ANY of its commands fail, not just the last.
+bash -n script.sh  # Syntax-check the script without running it.
+----
+
+When something fails and the cause isn't obvious, minimize the reproduction
+first: strip the script down to the smallest snippet that still shows the
+problem, rather than debugging the full script in place. It's much faster to
+reason about ten lines than a hundred.
+
+`caller` prints the file and line number of whatever called the current
+function – useful inside a `trap` handler or an error path, to report where a
+failure originated:
+
+[source,bash]
+----
+trap 'echo "Error near ${BASH_SOURCE}:${LINENO}"' ERR
+----

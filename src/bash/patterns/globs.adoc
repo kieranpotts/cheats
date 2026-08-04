@@ -1,0 +1,94 @@
+= Bash: Glob patterns
+
+A *glob* is a pattern made of special characters that Bash expands into matching
+filenames before a command ever runs. This is different to a regular expression:
+globs match against the filesystem (or against strings, when used in `[[ ... ]]`
+or `case`), not against arbitrary text.
+
+[source,bash]
+----
+*        # Matches any string, including an empty string.
+?        # Matches any single character.
+[abc]    # Matches one character: a, b, or c.
+[a-z]    # Matches one character in the range a to z.
+[^abc]   # Matches one character that is NOT a, b, or c.
+----
+
+[source,bash]
+----
+ls *.txt      # All files ending in .txt in the current directory.
+ls file?.log  # file1.log, file2.log, fileA.log, etc.
+ls [abc]*     # Files starting with a, b, or c.
+----
+
+Prefer globs over parsing the output of `ls`. Globs are expanded by the shell
+itself, so there's no risk of misinterpreting filenames that contain spaces or
+special characters.
+
+[source,bash]
+----
+# Do this:
+for file in *.txt; do
+  echo "${file}"
+done
+
+# Not this:
+for file in $(ls *.txt); do
+  echo "${file}"
+done
+----
+
+If a glob matches nothing, it expands to itself (the literal pattern text)
+unless the `nullglob` shell option is enabled.
+
+[source,bash]
+----
+shopt -s nullglob
+
+for file in *.missing; do
+  echo "${file}"
+done
+# Loop body never runs, instead of running once with the literal string
+# "*.missing".
+----
+
+Globs are also used for pattern matching against strings, not just filenames,
+when used with `case` or `[[ ... ]]`.
+
+[source,bash]
+----
+case "$1" in
+  *.tar.gz) echo "gzipped tarball" ;;
+  *.zip)    echo "zip archive" ;;
+esac
+----
+
+== Other glob-related shell options
+
+Besides `nullglob`, a handful of other `shopt` options change how globs
+behave:
+
+[source,bash]
+----
+shopt -s dotglob     # Include dotfiles (e.g. ".bashrc") in glob results.
+                     #   Off by default, so *.txt never matches ".hidden.txt".
+shopt -s globstar    # Enable "**" to match directories recursively.
+shopt -s nocaseglob  # Case-insensitive matching (e.g. *.txt also matches FOO.TXT).
+shopt -s failglob    # A non-matching glob is a hard error, instead of expanding
+                     #   to the literal pattern text.
+----
+
+[source,bash]
+----
+shopt -s globstar
+
+for file in **/*.log; do
+  echo "${file}" # Matches "app.log" as well as "logs/2024/app.log".
+done
+----
+
+IMPORTANT: `shopt` options that change parsing (like `extglob`, see
+link:./extended-globs.adoc[Extended globs]) must be set in a separate command
+BEFORE the line that uses the new syntax – Bash parses a whole line before
+executing any of it, so `shopt -s extglob; echo !(*.txt)` on one line still
+fails.

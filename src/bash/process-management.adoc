@@ -97,3 +97,50 @@ Other useful commands are:
 * `fg %1`: Brings job 1 back to the foreground.
 * `bg %1`: Resumes a stopped job in the background.
 * `kill -9 <PID>`: Forcefully kills a process if regular kill doesn't work.
+
+== Job control theory
+
+Jobs are only tracked by an *interactive* shell, and only when job control is
+enabled (the default in interactive shells; `set -m` enables it explicitly in
+a script). Each job is a *process group* – the job's own process plus any
+children it spawns – which lets the shell signal all of them together.
+
+Certain keypresses in the terminal send signals to the foreground job's
+process group, rather than being read as input:
+
+[source,bash]
+----
+Ctrl-Z   # Sends SIGTSTP: suspends the foreground job (it becomes "Stopped").
+Ctrl-C   # Sends SIGINT: interrupts (usually terminates) the foreground job.
+Ctrl-\   # Sends SIGQUIT: terminates the foreground job and dumps core.
+----
+
+A suspended job (from Ctrl-Z) isn't running at all until you resume it with
+`fg` or `bg` – it's paused, not backgrounded.
+
+== Job specifications
+
+Jobspecs let you refer to a specific job in commands like `fg`, `bg`, and
+`kill`:
+
+[source,bash]
+----
+%1      # Job number 1.
+%str    # The most recent job whose command starts with "str".
+%?str   # The most recent job whose command contains "str" anywhere.
+%%      # Or %+: the current (most recently referenced) job.
+%-      # The previous job.
+----
+
+`disown` removes a job from the shell's job table without killing it, so it
+keeps running even after the shell exits (an alternative to starting it with
+`nohup` in the first place):
+
+[source,bash]
+----
+long_running_task &
+disown
+----
+
+`suspend` pauses the shell itself (not a job) – useful when the shell was
+started from another program you want to briefly return to.

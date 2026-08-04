@@ -50,5 +50,85 @@ let "var++"
 * `+`
 * `-`
 * `*`
-* `/`
+* `/` (integer division – truncates any remainder)
 * `%` (remainder)
+* `**` (exponentiation)
+
+Bash only supports integer arithmetic. `$((7/2))` is `3`, not `3.5`. For
+floating-point maths, shell out to `bc`:
+
+[source,bash]
+----
+echo "scale=2; 7/2" | bc # 3.50
+----
+
+== Compound assignment
+
+[source,bash]
+----
+((var += 1)) # same as var=$((var+1))
+((var -= 1))
+((var *= 2))
+((var /= 2))
+((var %= 2))
+----
+
+== Comparison, logical, and ternary operators
+
+Inside `$(( ... ))` or `(( ... ))`, comparisons yield `1` (true) or `0`
+(false), which is the opposite convention to command exit statuses. See
+link:./conditionals/conditional-operators.adoc[Conditional operators] for
+using these inside `if`/`[[ ... ]]`.
+
+[source,bash]
+----
+(( a < b ))
+(( a <= b ))
+(( a > b ))
+(( a >= b ))
+(( a == b ))
+(( a != b ))
+
+(( a && b )) # logical AND
+(( a || b )) # logical OR
+(( ! a ))    # logical NOT
+
+result=$(( a > b ? a : b )) # ternary operator: max(a, b)
+----
+
+== Bitwise operators
+
+[source,bash]
+----
+(( a & b ))  # AND
+(( a | b ))  # OR
+(( a ^ b ))  # XOR
+(( ~a ))     # NOT
+(( a << 2 )) # left shift
+(( a >> 2 )) # right shift
+----
+
+== Multiple expressions
+
+The comma operator evaluates each expression left-to-right and yields the
+value of the last one:
+
+[source,bash]
+----
+((i = 0, j = 10)) # i is 0, j is 10
+----
+
+This is commonly used in C-style `for` loops with more than one counter. See
+link:./loops/for.adoc[`for` loops].
+
+== Number bases
+
+Integer literals can be given in a base other than 10, using `<base>#<value>`
+notation (bases 2 to 64):
+
+[source,bash]
+----
+echo $((2#1010))  # 10, binary
+echo $((16#ff))   # 255, hexadecimal
+echo $((8#17))    # 15, octal
+----

@@ -1,0 +1,42 @@
+= Bash: Command grouping
+
+Curly braces `{ }` group commands so they're treated as a single unit for
+redirection or control flow purposes – but, unlike a subshell `( )`, they run
+in the CURRENT shell. Any variables assigned inside the group persist
+afterwards.
+
+[source,bash]
+----
+{
+  echo "Starting"
+  do_something
+  echo "Done"
+} >> log.txt
+# All three commands' output goes to log.txt, via a single redirection.
+----
+
+The syntax has two quirks that trip people up:
+
+* A space is required after the opening `{`.
+* The last command must end with a semicolon or newline before the closing `}`.
+
+[source,bash]
+----
+{ echo "a"; echo "b"; }
+----
+
+Command grouping is commonly used to combine a series of related commands with
+`&&`/`||`, so the whole group succeeds or fails together:
+
+[source,bash]
+----
+[[ -f "$config" ]] && { source "$config"; echo "Config loaded"; }
+----
+
+Compare with a subshell, which would also isolate any variables set inside it:
+
+[source,bash]
+----
+result=$(cd /tmp && pwd)  # Runs in a subshell – parent's $PWD is untouched.
+{ cd /tmp; result=$(pwd); } # Runs in the current shell – $PWD DOES change.
+----

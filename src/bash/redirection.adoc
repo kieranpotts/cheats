@@ -90,3 +90,54 @@ commands from logging anything at all, you redirect both their `stdout` and
 ----
 rm -f $(find / -name core) &> /dev/null
 ----
+
+== Redirection order matters
+
+Redirections are processed left-to-right, and each one takes effect
+immediately – it doesn't retroactively apply to redirections already written
+earlier on the same line. This makes the order of `2>&1` and `>file` critical:
+
+[source,bash]
+----
+# WRONG: FD 2 is duplicated to wherever FD 1 points RIGHT NOW (the terminal),
+# THEN FD 1 is redirected to the file. Stderr still goes to the terminal.
+command 2>&1 >file
+
+# RIGHT: FD 1 is redirected to the file first, THEN FD 2 is duplicated to
+# wherever FD 1 now points (the file). Both streams end up in the file.
+command >file 2>&1
+----
+
+== Custom file descriptors
+
+Beyond `0`, `1`, and `2`, a script can open and use its own numbered file
+descriptors (conventionally 3–9, to avoid clashing with the shell's own use of
+low numbers). This is useful for reading from more than one file at once, or
+for temporarily redirecting output without permanently losing the original
+target.
+
+[source,bash]
+----
+exec 3< input.txt   # Open FD 3 for reading, for the rest of the script.
+read -r line <&3
+exec 3<&-           # Close FD 3 when done with it.
+----
+
+`exec` with only a redirection, and no command, changes the current shell's
+own file descriptors rather than a child process's – this is how you
+redirect all of a script's output at once:
+
+[source,bash]
+----
+exec >logfile 2>&1  # From this point on, everything the script writes
+                     # (stdout and stderr) goes to logfile.
+----
+
+`[x]<>file` opens a file descriptor for both reading and writing, without
+truncating it – rarely needed, but occasionally useful for updating a file
+in place at a specific position:
+
+[source,bash]
+----
+exec 3<> data.txt
+----

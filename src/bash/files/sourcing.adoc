@@ -29,6 +29,22 @@ file or `~/.bash_profile` file (depending on how you log in). These files can be
 used to set environment variables, as well as global variables that will persist
 for the duration of the Bash session.
 
+Which file gets sourced depends on the kind of shell being started:
+
+* A *login shell* (e.g. an SSH session, or a fresh TTY login) sources
+  `~/.bash_profile` (or `~/.profile` if that doesn't exist).
+* An *interactive, non-login shell* (e.g. opening a new terminal window/tab on
+  a desktop) sources `~/.bashrc` instead – `~/.bash_profile` is NOT read.
+
+Because most people expect both cases to end up with the same environment, the
+conventional fix is to have `~/.bash_profile` explicitly source `~/.bashrc`:
+
+[source,bash]
+----
+# In ~/.bash_profile:
+[[ -f ~/.bashrc ]] && source ~/.bashrc
+----
+
 When sourcing a file, all Bash does is copy the contents of the sourced file and
 implant them into the current script at runtime. Any variables that are defined
 in the parent script and referenced in the child script are handled as though

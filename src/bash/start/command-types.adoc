@@ -1,0 +1,39 @@
+= Bash: Types of commands
+
+When Bash resolves a name you type, it checks (in this order) five different
+kinds of "command", each resolved and executed differently:
+
+[source]
+----
+1. Aliases     A literal text substitution, e.g. `alias ll='ls -alF'`.
+               Interactive shells only – see link:../aliases.adoc[Aliases].
+2. Keywords    Syntax built into the language itself, e.g. `if`, `for`, `[[`.
+               These aren't commands you can call indirectly.
+3. Functions   A named, reusable block of shell code defined in the current
+               shell – see link:../fns/declaration.adoc[Declaring functions].
+4. Builtins    A command implemented inside the shell binary itself, e.g. `cd`,
+               `export`, `read` – see link:../built-ins.adoc[Built-in commands].
+5. Executables External programs found by searching each directory in `$PATH`,
+               e.g. `/bin/ls`.
+----
+
+`type` tells you which of these a given name will resolve to, which is
+invaluable when a command doesn't behave as its man page describes (usually
+because a function or alias of the same name is shadowing it):
+
+[source,bash]
+----
+type cd
+# cd is a shell builtin
+
+type ll
+# ll is aliased to `ls -alF`
+
+type ls
+# ls is /bin/ls
+----
+
+`command`, `builtin`, and `enable` (see link:../built-ins.adoc[Built-in
+commands]) let you bypass a function or alias and force resolution to a
+specific one of these, when you need the real thing rather than whatever has
+shadowed it.

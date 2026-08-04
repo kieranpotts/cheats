@@ -1,0 +1,24 @@
+= Bash: Readability
+
+Bash rewards a few small conventions that keep scripts approachable, since its
+terse syntax otherwise makes it easy to write something only the original
+author can follow.
+
+* Use `${var}` rather than bare `$var` in non-trivial scripts – the braces make
+  the variable's boundary explicit, especially next to other text (see
+  link:../vars/substitution.adoc[Variable substitution]).
+* Prefer long-form flags where a command supports them (`--verbose` rather than
+  `-v`) in scripts meant to be read, not just run – it documents intent inline.
+* Name functions and variables for what they hold or do, the same as in any
+  other language – Bash's brevity elsewhere is not a reason for cryptic names.
+* Guard clauses (`[[ -z "$1" ]] && { echo "usage: ..." >&2; exit 1; }` at the
+  top of a function) are easier to follow than deeply nested `if`/`else`.
+* A short comment explaining *why* a non-obvious flag or workaround is there
+  earns its keep; a comment restating what the next line obviously does does
+  not.
+* Keep functions short and single-purpose, same as in any language – a script
+  that's one giant top-level sequence of commands is harder to test and reuse
+  piece by piece than one built from small functions.
+
+None of this is enforced by the language – Bash will happily run unreadable
+code – so it only holds if it's applied consistently by convention.

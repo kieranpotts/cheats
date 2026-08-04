@@ -1,0 +1,54 @@
+= Bash: Positional parameters
+
+When a script or function is called, its arguments are available as
+*positional parameters*: `$1`, `$2`, `$3`, and so on. `$0` holds the script's
+own name, and `$#` holds the count of arguments.
+
+[source,bash]
+----
+#!/usr/bin/env bash
+echo "Script name: $0"
+echo "First argument: $1"
+echo "Number of arguments: $#"
+----
+
+`$@` and `$*` both expand to all positional parameters, but they behave
+differently once quoted. `"$@"` expands to each parameter as a separate,
+correctly-quoted word – this is almost always what you want when forwarding
+arguments to another command.
+
+[source,bash]
+----
+# "$@" preserves arguments containing spaces as separate items.
+for arg in "$@"; do
+  echo "Argument: ${arg}"
+done
+
+# "$*" joins all arguments into a single string (using the first
+# character of $IFS as a separator), which is rarely what you want.
+echo "$*"
+----
+
+Use `shift` to discard the first positional parameter and shuffle the rest
+down by one. This is the standard pattern for looping over arguments one at a
+time, e.g. when writing a simple argument parser.
+
+[source,bash]
+----
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -v|--verbose)
+      verbose=true
+      shift
+      ;;
+    -o|--output)
+      output="$2"
+      shift 2  # Consumes both the flag and its value.
+      ;;
+    *)
+      echo "Unknown option: $1" >&2
+      exit 1
+      ;;
+  esac
+done
+----

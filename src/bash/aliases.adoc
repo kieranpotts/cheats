@@ -1,0 +1,44 @@
+= Bash: Aliases
+
+An *alias* is a simple text substitution for a command, defined with the
+`alias` builtin. Aliases are for interactive convenience only – they are not
+expanded in non-interactive scripts by default, and should not be relied on
+for scripting logic.
+
+[source,bash]
+----
+alias ll='ls -alF'
+alias gs='git status'
+alias ..='cd ..'
+----
+
+List or remove aliases with:
+
+[source,bash]
+----
+alias        # List all defined aliases.
+alias ll     # Show the definition of a single alias.
+unalias ll   # Remove an alias.
+----
+
+Aliases are commonly defined in `~/.bashrc` so they're available in every
+interactive shell session.
+
+Unlike a link:./fns/declaration.adoc[function], an alias:
+
+* Cannot accept arguments – it's a literal, unconditional text substitution.
+* Cannot contain multiple statements with any real logic or control flow.
+* Is not inherited by subshells or scripts, even if exported (aliases can't be
+  exported at all).
+
+Prefer a shell function over an alias for anything beyond a fixed shortcut for
+another command – functions support parameters, local variables, and control
+flow, none of which aliases can do.
+
+[source,bash]
+----
+# An alias can't do this – use a function instead.
+mkcd() {
+  mkdir -p "$1" && cd "$1"
+}
+----

@@ -1,0 +1,50 @@
+= Bash: Associative arrays
+
+Bash 4+ supports *associative arrays*: arrays indexed by arbitrary string keys
+rather than sequential integers. They must be declared explicitly with
+`declare -A` before use.
+
+[source,bash]
+----
+declare -A colors
+
+colors[red]="#ff0000"
+colors[green]="#00ff00"
+colors["light blue"]="#add8e6"
+
+echo "${colors[red]}"
+----
+
+You can also populate one inline, using `key=value` pairs:
+
+[source,bash]
+----
+declare -A colors=(
+  [red]="#ff0000"
+  [green]="#00ff00"
+  [blue]="#0000ff"
+)
+----
+
+`${!colors[@]}` expands to all the keys, and `${colors[@]}` expands to all the
+values. Iterate over both together like this:
+
+[source,bash]
+----
+for key in "${!colors[@]}"; do
+  echo "${key} => ${colors[${key}]}"
+done
+----
+
+Other useful operations:
+
+[source,bash]
+----
+${#colors[@]}          # Number of key/value pairs.
+[[ -v colors[red] ]]   # True if the key "red" is set.
+unset 'colors[red]'    # Remove a single key.
+unset colors           # Remove the whole array.
+----
+
+Unlike indexed arrays, associative arrays have no concept of order – don't rely
+on the iteration order of `${!colors[@]}`.

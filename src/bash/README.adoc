@@ -4,9 +4,13 @@ See also link:../unix[Unix cheats] for usage of built-in system commands like
 `grep`, `find`, and `head`/`tail`, which are commonly executed via Bash but
 which are not part of the Bash language specification itself.
 
+See also link:../posix[POSIX cheats] for POSIX-standard shell scripting, which
+is a subset of Bash that is supported by multiple other Unix shells.
+
 == Getting started
 
 * link:./start/installation.adoc[Installation]
+* link:./start/command-types.adoc[Types of commands]
 
 == Bash files
 
@@ -18,13 +22,25 @@ which are not part of the Bash language specification itself.
 * link:./vars/types.adoc[Types]
 * link:./vars/declaration.adoc[Declaring variables]
 * link:./vars/readonly.adoc[Read-only variables (constants)]
+* link:./vars/attributes.adoc[Variable attributes (`declare`/`typeset`)]
 * link:./vars/local.adoc[Local variables]
 * link:./vars/substitution.adoc[Variable substitution (aka. variable expansion)]
+* link:./vars/tilde-expansion.adoc[Tilde expansion]
 * link:./vars/builtins.adoc[Built-in variables]
+* link:./vars/positional-parameters.adoc[Positional parameters]
+* link:./vars/environment.adoc[Environment variables]
 * link:./vars/return-values.adoc[Return values]
 * link:./vars/command-substitution.adoc[Command substitution]
 * link:./vars/multi-line-strings.adoc[Multi-line strings]
 * link:./vars/arrays.adoc[Arrays]
+* link:./vars/associative-arrays.adoc[Associative arrays]
+
+== Patterns
+
+* link:./patterns/globs.adoc[Glob patterns]
+* link:./patterns/extended-globs.adoc[Extended globs]
+* link:./patterns/regex.adoc[Regular expressions]
+* link:./patterns/brace-expansion.adoc[Brace expansion]
 
 == Functions
 
@@ -36,6 +52,8 @@ which are not part of the Bash language specification itself.
 
 * link:./ui/read.adoc[Reading user input (`read`)]
 * link:./ui/select.adoc[User selections (`select`)]
+* link:./ui/getopts.adoc[Parsing options (`getopts`)]
+* link:./ui/dialogs.adoc[Dialog boxes (`whiptail`)]
 
 == Conditionals
 
@@ -59,9 +77,26 @@ which are not part of the Bash language specification itself.
 * link:./arithmetic.adoc[Arithmetic]
 * link:./filesystem.adoc[Filesystem (reading and writing)]
 * link:./redirection.adoc[Redirection]
+* link:./heredocs-and-herestrings.adoc[Heredocs and herestrings]
+* link:./process-substitution.adoc[Process substitution]
+* link:./subshells.adoc[Subshells]
+* link:./command-grouping.adoc[Command grouping]
+* link:./aliases.adoc[Aliases]
 * link:./exit-codes.adoc[Exit codes]
 * link:./process-management.adoc[Process management]
+* link:./coprocesses.adoc[Coprocesses]
 * link:./built-ins.adoc[Built-in commands]
+* link:./history.adoc[`history`]
+* link:./printf.adoc[`printf`]
+* link:./traps.adoc[Signal handling (`trap`)]
+
+== Practices
+
+* link:./practices/choosing-a-shell.adoc[Choosing your shell]
+* link:./practices/quoting.adoc[Quoting]
+* link:./practices/readability.adoc[Readability]
+* link:./practices/anti-patterns.adoc[Anti-patterns]
+* link:./practices/debugging.adoc[Debugging]
 
 ''''
 
@@ -84,3 +119,5 @@ which are not part of the Bash language specification itself.
   Creative Commons wiki-book by various authors
 * https://jvns.ca/blog/2017/03/26/bash-quirks/[Bash scripting quirks and safety tips]
   by Julia Evans
+* https://linuxsimply.com/bash-scripting-tutorial/loop/[Bash loops], a tutorial
+  by LinuxSimply

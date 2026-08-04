@@ -1,0 +1,38 @@
+= Bash: Coprocesses
+
+A *coprocess*, started with `coproc`, runs a command in the background – like
+`&` – but also connects its `stdin` and `stdout` back to the calling shell via
+a pipe, so you can both send it input and read its output over the lifetime of
+the process. This is different to command substitution or a plain background
+job, neither of which give you an ongoing two-way channel.
+
+[source,bash]
+----
+coproc my_proc { bc; }
+
+echo "2 + 2" >&"${my_proc[1]}"
+read -r result <&"${my_proc[0]}"
+echo "${result}" # 4
+----
+
+`coproc` sets up an indexed array (`my_proc` above, or `COPROC` if no name is
+given) holding two file descriptors:
+
+[source,bash]
+----
+${my_proc[0]}  # Readable – the coprocess's stdout.
+${my_proc[1]}  # Writable – the coprocess's stdin.
+----
+
+The coprocess's PID is available as `${my_proc_PID}` (or `${COPROC_PID}` for
+an unnamed one), which is useful for `wait`-ing on it or sending it a signal.
+
+Coprocesses are most useful for talking to a long-running interactive tool
+(a calculator, a database client, a filter that expects a request/response
+protocol) without paying the startup cost of a new process for every single
+request. For a single one-shot command, prefer ordinary
+link:./vars/command-substitution.adoc[command substitution] or a pipe – it's
+simpler and there's no coprocess left running for you to clean up.
+
+IMPORTANT: Bash only supports a single unnamed coprocess (`COPROC`) at a time,
+but any number of named ones.

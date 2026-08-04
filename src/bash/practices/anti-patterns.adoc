@@ -1,0 +1,84 @@
+= Bash: Anti-patterns
+
+A handful of habits look reasonable but are unreliable enough to avoid
+entirely, rather than used carefully.
+
+== Parsing the output of `ls`
+
+`ls` output is intended for humans, formats filenames unpredictably (quoting,
+escaping control characters), and can't safely represent filenames containing
+spaces or newlines once parsed. Use globs or `find` instead.
+
+[source,bash]
+----
+# Don't:
+for file in $(ls *.txt); do
+
+# Do:
+for file in *.txt; do
+----
+
+== Using `grep`/`sed`/`awk` to process filenames
+
+The same problem applies to piping filenames through text-processing tools –
+they split on whitespace and don't round-trip special characters safely.
+Prefer globs, `find -print0` with `xargs -0` or `while read -r -d ''`, or
+Bash's own parameter expansion for simple substring work.
+
+== Reading a file with a `for` loop
+
+`for line in $(cat file)` word-splits on whitespace, not lines, and expands any
+globs in the content. Use a `while read` loop instead (see
+link:../filesystem.adoc[Filesystem]):
+
+[source,bash]
+----
+# Don't:
+for line in $(cat file.txt); do
+
+# Do:
+while IFS= read -r line; do
+  echo "${line}"
+done < file.txt
+----
+
+== Spawning external programs for things Bash can already do
+
+Calling out to `expr`, `basename`, `dirname`, `cat` (for a single file into a
+variable), or `echo | grep` for something parameter expansion already handles
+adds process-startup overhead and an extra point of failure, for no benefit.
+
+[source,bash]
+----
+# Don't:
+name=$(basename "$path")
+count=$(expr $count + 1)
+
+# Do:
+name="${path##*/}"
+((count++))
+----
+
+== Unquoted variable expansions
+
+Covered in full in link:./quoting.adoc[Quoting] – but it's common enough to
+call out on its own: an unquoted `$var` is a bug waiting for the first
+filename with a space in it.
+
+== Trusting a variable is set before a destructive command
+
+By default, an unset variable expands to the empty string rather than raising
+an error. In a destructive command this can turn a typo into a disaster:
+
+[source,bash]
+----
+# If $DIRECTORY is unset (e.g. a typo elsewhere in the script), this expands
+# to `rm -rf /*` – deleting the whole filesystem, not a subdirectory.
+rm -rf "${DIRECTORY}/"*
+----
+
+Run scripts with `set -u` (see link:./debugging.adoc[Debugging]) so referencing
+an unset variable is an immediate error, and guard required variables
+explicitly with `${VAR:?message}` (see
+link:../vars/substitution.adoc[Variable substitution]) before using them in
+anything destructive.

@@ -1,0 +1,42 @@
+= Bash: Process substitution
+
+Process substitution, `<(command)` or `>(command)`, lets you use a command's
+output (or input) as if it were a file, without creating a temporary file
+yourself. Bash substitutes the construct with a path to a special file (often
+`/dev/fd/N`) connected to the command's `stdin` or `stdout`.
+
+`<(command)` is readable, and expands to a file containing the command's
+output:
+
+[source,bash]
+----
+diff <(sort file1.txt) <(sort file2.txt)
+----
+
+This is commonly used to avoid a subshell when piping into a `while` loop –
+piping into `while` runs the loop in a subshell, so variables it sets don't
+survive after the loop. Process substitution keeps the loop in the current
+shell:
+
+[source,bash]
+----
+# `count` is visible after the loop, because there's no pipe/subshell.
+count=0
+while read -r line; do
+  ((count++))
+done < <(grep "error" log.txt)
+
+echo "Found ${count} errors"
+----
+
+`>(command)` is writable, and expands to a file that, when written to, feeds
+the command's `stdin`. It's less common, but useful for splitting output to
+multiple destinations:
+
+[source,bash]
+----
+some_command | tee >(gzip > output.log.gz) > output.log
+----
+
+Process substitution requires Bash (or another shell with the same extension)
+– it's not POSIX and won't work in `sh` or `dash`.

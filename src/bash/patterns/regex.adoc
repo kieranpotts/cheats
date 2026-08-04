@@ -1,0 +1,44 @@
+= Bash: Regular expressions
+
+The `=~` operator, used inside `[[ ... ]]`, matches a string against an
+link:https://en.wikipedia.org/wiki/Regular_expression#POSIX_extended[Extended
+Regular Expression] (ERE). Unlike globs, regular expressions can match
+arbitrary substrings and support alternation, quantifiers, and groups.
+
+[source,bash]
+----
+if [[ "$email" =~ ^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]{2,}$ ]]; then
+  echo "Looks like a valid email"
+fi
+----
+
+IMPORTANT: The pattern on the right of `=~` should NOT be quoted. Quoting it
+forces a literal string match instead of a regex match.
+
+[source,bash]
+----
+pattern='^[0-9]+$'
+
+if [[ "$1" =~ $pattern ]]; then
+  echo "Numeric"
+fi
+----
+
+When the pattern contains capture groups, `bash` populates the `BASH_REMATCH`
+array. `${BASH_REMATCH[0]}` holds the full match, and `${BASH_REMATCH[1]}`,
+`${BASH_REMATCH[2]}`, etc. hold each capture group.
+
+[source,bash]
+----
+version="v1.4.2"
+
+if [[ "$version" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+  echo "Major: ${BASH_REMATCH[1]}"
+  echo "Minor: ${BASH_REMATCH[2]}"
+  echo "Patch: ${BASH_REMATCH[3]}"
+fi
+----
+
+Storing the pattern in a variable first (rather than inlining it) also avoids
+subtle quoting bugs, since backslashes and brackets behave differently once
+they've passed through variable assignment.

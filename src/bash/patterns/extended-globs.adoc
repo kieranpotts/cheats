@@ -1,0 +1,49 @@
+= Bash: Extended globs
+
+Bash supports a more powerful glob syntax, disabled by default, which must be
+turned on with the `extglob` shell option.
+
+[source,bash]
+----
+shopt -s extglob
+----
+
+Once enabled, the following operators are available, each followed by a
+parenthesized, `|`-separated list of patterns:
+
+[source,bash]
+----
+?(list)  # Zero or one occurrence of the patterns.
+*(list)  # Zero or more occurrences.
++(list)  # One or more occurrences.
+@(list)  # Exactly one of the patterns.
+!(list)  # Anything EXCEPT the patterns.
+----
+
+.Examples
+[source,bash]
+----
+# Match files ending in .jpg or .png.
+ls @(*.jpg|*.png)
+
+# Match everything except .bak files.
+ls !(*.bak)
+
+# Match one or more digits.
+[[ "$var" == +([0-9]) ]] && echo "numeric"
+
+# Match filenames with an optional "old_" prefix.
+ls ?(old_)report.txt
+----
+
+Extended globs are most useful when a plain glob or a full regular expression
+would be overkill – for example, excluding a handful of files from a loop.
+
+[source,bash]
+----
+shopt -s extglob
+
+for file in !(*.log|*.tmp); do
+  echo "Processing ${file}"
+done
+----

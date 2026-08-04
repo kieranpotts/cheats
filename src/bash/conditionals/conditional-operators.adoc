@@ -27,6 +27,14 @@ Some operators, like `<` and `>`, behave differently depending on whether they
 are used in string tests in `[[ ... ]]` or `[ ... ]`, or in arithmetic contexts
 in `(( ... ))`.
 
+IMPORTANT: Inside `[ ... ]`, `<` and `>` are NOT comparison operators at all –
+the single-bracket form is a plain command, so an unescaped `<`/`>` is parsed
+as I/O redirection. `[ 3 < 4 ]` doesn't compare numbers; it redirects `[`'s
+input from a file named `4` (raising "No such file or directory" if it doesn't
+exist, or silently "succeeding" if it does). Use `[[ ... ]]` for lexicographic
+comparison, or `-lt`/`-gt` inside `[ ... ]`, or `(( ... ))` for numeric
+comparison.
+
 == Arithmetic comparison operators
 
 Used to test numbers in `[[ ... ]]`, `[ ... ]`, or `(( ... ))`.

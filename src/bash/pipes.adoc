@@ -10,3 +10,31 @@ program.
 ----
 ls -l | sed -e "s/[aeio]/u/g"
 ----
+
+Each side of a pipe runs in its own subshell. This means variables assigned on
+the right-hand side of a pipe don't persist once it finishes – see
+link:./subshells.adoc[Subshells] for the usual workaround using process
+substitution instead of a pipe.
+
+== Named pipes (FIFOs)
+
+An anonymous pipe (`|`) only connects two commands within a single command
+line. A *named pipe*, or FIFO, is a special file – created with `mkfifo` – that
+persists on the filesystem and can connect two unrelated processes, even ones
+started at different times.
+
+[source,bash]
+----
+mkfifo /tmp/mypipe
+
+# In one terminal, write to the pipe (this blocks until a reader appears):
+echo "hello" > /tmp/mypipe
+
+# In another terminal, read from it:
+cat < /tmp/mypipe
+----
+
+Reads and writes to a FIFO block until there's a process on the other end,
+which makes them a lightweight way to pass data between two independent
+scripts without an intermediate file. Remove the FIFO with `rm` once it's no
+longer needed – it doesn't clean itself up.

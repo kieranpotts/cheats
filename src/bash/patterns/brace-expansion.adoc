@@ -1,0 +1,51 @@
+= Bash: Brace expansion
+
+Brace expansion generates every permutation of a comma-separated list, or a
+range, and happens BEFORE globbing or variable expansion. Unlike globs, it does
+not need to match anything that exists on the filesystem.
+
+[source,bash]
+----
+echo file{1,2,3}.txt
+# file1.txt file2.txt file3.txt
+
+echo {a,b}{1,2}
+# a1 a2 b1 b2
+
+mkdir -p project/{src,test,docs}
+# Creates project/src, project/test, and project/docs.
+----
+
+Ranges are written with `..` and work for both numbers and letters.
+
+[source,bash]
+----
+echo {1..5}
+# 1 2 3 4 5
+
+echo {5..1}
+# 5 4 3 2 1
+
+echo {a..e}
+# a b c d e
+
+# Zero-padded ranges.
+echo {01..10}
+# 01 02 03 04 05 06 07 08 09 10
+
+# Ranges with a step (Bash 4+).
+echo {0..20..5}
+# 0 5 10 15 20
+----
+
+Because brace expansion happens independently of the filesystem, it's commonly
+used to build lists of arguments or filenames that don't exist yet.
+
+[source,bash]
+----
+touch backup-{2024,2025,2026}.tar.gz
+----
+
+Don't confuse `{1..9}` (brace expansion) with `[1-9]` (a glob/regex character
+class) – they look similar but are unrelated features evaluated at different
+times.
