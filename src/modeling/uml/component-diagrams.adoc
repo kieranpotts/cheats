@@ -46,8 +46,29 @@ Interfaces are drawn using the *ball-and-socket* convention:
 ....
 component OrderService
 component InventoryService
+interface IInventory
 
-OrderService -() InventoryService
+InventoryService -- IInventory
+OrderService ..> IInventory
+....
+
+This renders `InventoryService` with a lollipop for the `IInventory`
+interface it provides, and `OrderService` with a dependency arrow to the same
+interface, showing it requires that interface. Where the provided and
+required ends meet at the same point, most tools render the compact
+ball-and-socket "keyhole" symbol described below instead of drawing the
+dependency arrow separately.
+
+A required interface can also be drawn directly as a socket using PlantUML's
+shorthand, without naming the interface separately:
+
+[plantuml]
+....
+component OrderService
+component InventoryService
+
+InventoryService -( IInventory
+OrderService --( IInventory
 ....
 
 === Component compartments
@@ -135,7 +156,9 @@ Based on established UML style conventions:
 
 == Component design principles
 
-The following principles help improve the quality of component designs:
+The following are not part of the UML specification — they are software
+architecture principles, largely popularized by Robert C. Martin, commonly
+applied when grouping classes into components and packages:
 
 [cols="1,3"]
 |===

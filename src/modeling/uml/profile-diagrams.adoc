@@ -40,7 +40,7 @@ Profile diagrams use the following graphical nodes and edges:
 | A class with the `<<stereotype>>` keyword, shown before or above the name.
 
 | Metaclass
-| A class with the `<<Metaclass>>` keyword — represents an existing UML
+| A class with the `<<metaclass>>` keyword — represents an existing UML
   metamodel element being extended.
 
 | Extension
@@ -92,7 +92,7 @@ associations.
 
 A *metaclass* represents an existing UML metamodel element (such as `Class`,
 `Component`, `Actor`, or `Interface`) that is being extended by a stereotype.
-It is shown as a class with the `<<Metaclass>>` keyword.
+It is shown as a class with the `<<metaclass>>` keyword.
 
 A metaclass may be extended by one or more stereotypes. Each stereotype may
 extend one or more metaclasses.
@@ -110,6 +110,22 @@ Extensions can be:
 * **Required** — a stereotype instance must always be linked to a metaclass
   instance. Shown with the `{required}` property or multiplicity `1` near the
   extension end.
+
+[plantuml]
+....
+package "<<profile>>\nEJB" {
+  class "<<stereotype>>\nSessionBean" as sessionBean {
+    +transactionType : String
+  }
+
+  class "<<metaclass>>\nComponent" as metaclass
+
+  sessionBean --|> metaclass
+}
+....
+
+Once applied, the stereotype decorates an ordinary model element, e.g. a
+component named `MyOrderService` shown as `<<SessionBean>> MyOrderService`.
 
 === Profile application
 

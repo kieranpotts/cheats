@@ -92,7 +92,34 @@ directly to the behavior of the structured classifier.
 
 A *connector* binds two or more entities together, allowing them to interact
 at runtime. It is shown as a line between some combination of parts, ports, and
-structured classifiers.
+structured classifiers. There are two named kinds:
+
+* **Assembly connector** — wires one part's provided interface to another
+  part's required interface, drawn as the same ball-and-socket ("keyhole")
+  symbol used in component diagrams.
+* **Delegation connector** — forwards requests arriving at a port on the
+  structured classifier's boundary to a port on one of its internal parts (or
+  vice versa for outgoing requests). Drawn as a line with an open arrowhead,
+  connecting an outer port to an inner port or part.
+
+[plantuml]
+....
+class Car {
+  port engineControl
+}
+
+Car *-- "1" Engine
+Car *-- "1" FuelSystem
+
+Engine -( IFuel
+FuelSystem -- IFuel
+
+Car::engineControl --> Engine : delegation
+....
+
+Here, `Engine` and `FuelSystem` are wired together with an assembly
+connector via the `IFuel` interface, while `Car`'s external `engineControl`
+port delegates to `Engine` internally.
 
 === Collaboration
 

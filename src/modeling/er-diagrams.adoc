@@ -35,6 +35,15 @@ mathematical theorem.
 All entities except weak entities must have a minimal set of uniquely
 identifying attributes that may be used as a primary key.
 
+A *weak entity* has no attributes of its own that are sufficient to uniquely
+identify its instances. Instead, it is existence-dependent on another entity
+— its *owner* (or *identifying entity*) — and is identified by combining its
+own *partial key* (or *discriminator*) with the primary key of its owner. For
+example, a `Room` entity might be weak with respect to `Building`: room
+numbers are only unique within a building, so a `Room` is identified by
+`(BuildingID, RoomNumber)`, not `RoomNumber` alone. The relationship that
+connects a weak entity to its owner is called an *identifying relationship*.
+
 === Attributes
 
 Entities and relationships can both have *attributes* — properties that
@@ -85,11 +94,42 @@ Cardinality constraints in Chen's notation:
   have different values
 |===
 
-== Crow's foot notation (Barker's notation)
+A weak entity is drawn as a double-bordered rectangle, and its identifying
+relationship as a double-bordered diamond. Its partial key attribute is
+underlined with a dashed line, rather than the solid underline used for a
+full primary key.
 
-Crow's foot notation is the most widely used notation for ER diagrams in
-industry. It represents entities as boxes and relationships as lines between
-them. Different shapes at the ends of these lines represent cardinality.
+PlantUML has no native support for Chen's diamond notation, but a rough
+approximation (entities and relationships as boxes, connected by lines) can
+be built as follows:
+
+[plantuml]
+....
+rectangle "Building" as building
+rectangle "Room" as room <<weak entity>>
+diamond "Has" as has
+
+building -- has
+has -- room : "1" ..> "*"
+....
+
+Chen's notation also handles relationships among three or more entities
+directly — the diamond simply connects to every participating entity. For
+example, a ternary `Supplies` relationship might connect `Supplier`, `Part`,
+and `Project` entities, capturing facts like "Supplier S supplies Part P to
+Project J" that cannot be decomposed into three independent binary
+relationships without losing information.
+
+== Crow's foot notation
+
+Crow's foot notation is a family of related ER notations, the most widely
+used for ER diagrams in industry. It represents entities as boxes and
+relationships as lines between them, with different shapes at the ends of
+each line representing cardinality. The best-known member of the family is
+https://en.wikipedia.org/wiki/Data_modeling#Barker's_notation[Barker's
+notation] (Richard Barker's Oracle CASE Method), described below; other
+variants (such as Information Engineering notation) differ in minor
+graphical details, such as how "optional" is marked.
 
 Three basic symbols:
 
@@ -133,6 +173,32 @@ necessary, relationships are promoted to entities in their own right. For
 example, if it is necessary to capture where and when an `Artist` performed a
 `Song`, a new entity `Performance` is introduced (with attributes for time and
 place), and the relationship becomes indirect.
+
+Unlike Chen's notation, attributes are not drawn as separate ovals — they are
+listed directly inside the entity box, primary keys marked (commonly `PK`)
+and foreign keys marked (commonly `FK`).
+
+[plantuml]
+....
+entity "Customer" as customer {
+  * id : int <<PK>>
+  --
+  name : varchar
+  email : varchar
+}
+
+entity "Order" as order {
+  * id : int <<PK>>
+  --
+  customer_id : int <<FK>>
+  placed_at : datetime
+}
+
+customer ||--o{ order : places
+....
+
+This renders the mandatory-one-to-optional-many cardinality of "a customer
+places zero or more orders; every order belongs to exactly one customer."
 
 == Enhanced entity-relationship (EER) model
 
@@ -385,14 +451,17 @@ ER diagrams and UML class diagrams serve different purposes:
 * Use nouns for entity type names (e.g., `Customer`, `Order`, `Product`).
 * Use verbs or verb phrases for relationship names (e.g., `Places`, `Contains`).
 * Keep diagrams simple — avoid clutter by omitting attributes where possible.
-* Prefer crow's foot notation for industry work; Chen's notation for academic
-  or conceptual modeling.
+* Crow's foot notation is more common in industry tooling; Chen's notation is
+  more common in academic and teaching contexts.
 * Model at the appropriate level of abstraction (conceptual, logical, or
   physical).
 * Identify and resolve fan traps and chasm traps early in the design process.
 * Use EER modeling when generalization/specialization hierarchies are needed.
 * An ER model does not show an entity's life history — use state diagrams or
   process models for that.
+* An ER diagram captures structure, not the level of redundancy in that
+  structure — normalize the resulting schema (1NF, 2NF, 3NF, and beyond as
+  needed) as a separate, follow-on step.
 
 == References
 

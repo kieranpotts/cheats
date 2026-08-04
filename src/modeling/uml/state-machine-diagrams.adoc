@@ -20,6 +20,18 @@ UML defines two kinds of state machines:
 * **Protocol state machine** — used to express usage protocols and specify the
   legal usage scenarios of classifiers, interfaces, and ports.
 
+A protocol state machine does not use ordinary transitions with actions.
+Instead, its transitions are *protocol transitions*, labeled with a
+pre-condition and post-condition instead of a behavior:
+
+    operation [pre-condition] / [post-condition]
+
+The pre-condition is the state the classifier must be in (or the guard that
+must hold) for the operation to be legally invoked; the post-condition is the
+state (or condition) guaranteed to hold once the operation completes. This
+lets a protocol state machine specify *when* an operation may legally be
+called without describing *how* it is implemented.
+
 == Purpose
 
 State machine diagrams are used to:
@@ -31,8 +43,9 @@ State machine diagrams are used to:
   the object is in this state?"
 * Document business rules that depend on the state of an entity.
 
-In business applications, roughly 5% of classes are complex enough to warrant
-a state machine diagram. They are much more common in real-time and embedded
+According to commonly cited object-modeling guidelines, only around 5% of
+classes in a typical business application are complex enough to warrant a
+state machine diagram. They are much more common in real-time and embedded
 systems.
 
 == Notation
@@ -118,6 +131,17 @@ another (e.g., `x < 0`, `x = 0`, `x > 0` are consistent; `x <= 0` and `x >= 0`
 overlap). Guards need not form a complete set — if no guard evaluates to true,
 the transition simply does not fire.
 
+=== Completion transitions
+
+A *completion transition* fires automatically, with no explicit trigger, as
+soon as a state's internal work is complete — for example, when its `do`
+activity finishes, or immediately upon entry if the state has no `do`
+activity and no other transitions are waiting on an event. It is drawn as a
+normal transition arrow but with no event name before the optional
+`[guard] / action`, e.g., `[ready] / proceed`. Completion transitions are
+common on composite states, firing once all of the state's regions have
+reached a final state.
+
 === Extended states
 
 In addition to the enumerable state variable, UML state machines support
@@ -194,9 +218,13 @@ guard to avoid this). Drawn as a diamond.
 
 === Junction pseudostate
 
-A static conditional branch or merge. Used to chain multiple transitions
-together. Unlike choice, the decision is based on static conditions evaluated
-before any actions are performed. Drawn as a small filled circle.
+A branch or merge used to chain multiple transition segments into a single
+compound transition, so that a set of guards is evaluated together as one
+atomic unit before any transition effects run. Unlike choice, a junction
+cannot branch on a condition that depends on the effect of an earlier segment
+within the same compound transition — it merges and splits static paths
+rather than making a run-time decision informed by prior actions. Drawn as a
+small filled circle.
 
 === Fork pseudostate
 
@@ -220,6 +248,31 @@ transition from the history pseudostate is taken. Drawn as a circle containing
 
 Represents the most recent active configuration of the composite state
 (including all nested substates). Drawn as a circle containing `H*`.
+
+[plantuml]
+....
+[*] --> Idle
+
+state choice1 <<choice>>
+Idle --> choice1 : submit
+choice1 --> Priority : [urgent]
+choice1 --> Standard : [else]
+
+state fork1 <<fork>>
+state join1 <<join>>
+Priority --> fork1
+fork1 --> Packing
+fork1 --> Billing
+Packing --> join1
+Billing --> join1
+join1 --> Shipped
+
+state Standard {
+  state "history" as H <<history>>
+  [*] --> H
+  Standard : entry / resume where left off
+}
+....
 
 === Entry and exit points
 
@@ -324,8 +377,8 @@ Based on established UML style conventions:
 
 == Limitations
 
-* Only a small proportion of classes (roughly 5%) are complex enough to
-  warrant a state machine diagram.
+* Only a small proportion of classes (commonly cited as roughly 5%) are
+  complex enough to warrant a state machine diagram.
 * State diagrams poorly represent the sequence of processing (order of guard
   evaluation, event dispatch to orthogonal regions).
 * The notation depends heavily on the specific programming language for action

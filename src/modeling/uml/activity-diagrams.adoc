@@ -72,6 +72,13 @@ non-technical stakeholders tend to learn to understand them quickly.
 Guards (conditions) are written in square brackets on outgoing flows from
 decision nodes, e.g., `[condition]`.
 
+Decision/merge and fork/join are easy to confuse but have different
+semantics: a **decision node routes a single token down exactly one**
+outgoing branch, selected by its guards (XOR), whereas a **fork node sends a
+token down every** outgoing branch concurrently, and a corresponding join
+waits for all of them to arrive before releasing a single token (AND). Use a
+diamond for either/or logic; use a bar for concurrent, all-of logic.
+
 [plantuml]
 ....
 start
@@ -81,6 +88,28 @@ if (Payment approved?) then (yes)
 else (no)
   :Cancel order;
 endif
+stop
+....
+
+The following example combines a fork/join with swimlanes, showing the
+Customer and Warehouse partitions processing concurrently before
+synchronizing:
+
+[plantuml]
+....
+|Customer|
+start
+:Submit order;
+fork
+  |Warehouse|
+  :Pick items;
+  :Pack items;
+fork again
+  |Customer|
+  :Pay invoice;
+end fork
+|Warehouse|
+:Ship order;
 stop
 ....
 
@@ -124,6 +153,41 @@ Types of object nodes include:
 * **Central buffer** — stores tokens passed between actions.
 * **Data store** — stores persistent data, shown with `<<datastore>>`.
 
+=== Expansion regions
+
+An *expansion region* is a structured activity region that executes its
+contents once for each element of an input collection, drawn as a rounded
+rectangle with a dashed border. It is one of the additions introduced in
+UML 2.x's Petri-net-based semantics, letting a single sub-workflow be defined
+once and applied element-by-element over a set, list, or bag of input tokens.
+
+Each edge crossing the region boundary connects to an *expansion node*
+(drawn as parallel bars, resembling a partial pin), which fans an input
+collection out into individual tokens, or fans individual output tokens back
+into a collection.
+
+The region has a keyword indicating how its iterations relate to one another:
+
+* `<<iterative>>` — iterations execute one at a time, in order.
+* `<<parallel>>` — iterations execute concurrently.
+* `<<stream>>` — a single execution consumes/produces a stream of values
+  incrementally, rather than the whole collection at once.
+
+[plantuml]
+....
+start
+:Fetch orders;
+partition "<<parallel>>\nExpansion region" {
+  :Validate order;
+  :Charge card;
+}
+:Summarize results;
+stop
+....
+
+NOTE: PlantUML has no dedicated expansion-region notation; the `partition`
+block above is an approximation for illustration only.
+
 === Signals
 
 A *signal* represents an event being sent or received. It is drawn as a
@@ -136,6 +200,16 @@ An *interrupting edge* represents an interruption to a region. It is rendered
 as a lightning-bolt or as a zig-zag adornment on a straight line. When the
 interrupting event occurs, the normal flow is interrupted and the interrupting
 flow is taken.
+
+=== Exception handlers
+
+An *exception handler* attaches error-handling behavior to an action. It is
+drawn as a small lightning-bolt symbol on the boundary of the protected
+action, connected to a separate handler body. If the protected action raises
+a matching exception, its normal outgoing flow is abandoned and the handler
+body executes instead. This differs from an interrupting edge, which
+interrupts an entire region in response to an external event rather than an
+exception raised by a specific action.
 
 == Guidelines
 

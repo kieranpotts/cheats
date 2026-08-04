@@ -7,9 +7,9 @@ process. Each node within the diagram can represent another interaction diagram
 
 Interaction overview diagrams are defined as a specialization of activity
 diagrams. They combine elements from both activity diagrams and interaction
-diagrams, making them useful for "deconstructing a complex scenario that would
+diagrams, making them useful for deconstructing a complex scenario that would
 otherwise require multiple if-then-else paths to be illustrated as a single
-sequence diagram."
+sequence diagram.
 
 == Purpose
 
@@ -63,14 +63,34 @@ interaction overview diagram:
 * **Time constraint** — specifies a time interval within which an event must
   occur.
 
+PlantUML has no dedicated interaction-overview-diagram renderer, but the
+shape of the diagram can be approximated with activity-diagram syntax, using
+labeled actions to stand in for referenced interactions:
+
+[plantuml]
+....
+start
+:ref Login;
+if (credentials valid?) then ([approved])
+  :ref PlaceOrder;
+else ([rejected])
+  :ref ShowError;
+endif
+stop
+....
+
+In a real interaction overview diagram, each `ref` node would be drawn as a
+frame containing the actual name of the referenced sequence, communication,
+or timing diagram — not as a plain activity box.
+
 == Control flow
 
 The control flow between nodes is shown with arrows, just like in an activity
 diagram. The flow can include:
 
 * **Sequential flow** — a simple arrow from one node to the next.
-* **Conditional flow** — using decision and merge nodes with guard conditions
-  on the outgoing edges.
+* **Conditional flow** — using decision and merge nodes with guard conditions,
+  written in square brackets (e.g., `[approved]`), on the outgoing edges.
 * **Concurrent flow** — using fork and join nodes to split and synchronize
   parallel paths.
 
@@ -100,8 +120,8 @@ Interaction overview diagrams are closely related to:
 
 * Interaction overview diagrams are less commonly used than activity diagrams
   or sequence diagrams.
-* UML 2.4 requires branching and joining of branches to be properly nested,
-  which is more restrictive than in activity diagrams and can be difficult to
-  obey.
+* The UML specification requires branching and joining of branches to be
+  properly nested (block-structured), which is more restrictive than in
+  general activity diagrams and can be difficult to obey.
 * The diagram type is not widely supported by all UML modeling tools.
 * For simple control flows, an activity diagram is often more appropriate.

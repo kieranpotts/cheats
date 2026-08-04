@@ -74,11 +74,30 @@ The type of connection (e.g., `<<RMI>>`, `<<HTTP>>`, `<<JDBC>>`,
 the component it implements. It is drawn as a dashed arrow with the
 `<<manifest>>` stereotype from the artifact to the component.
 
+=== Deployment relationship
+
+The *deployment* relationship is what gives this diagram its name: it links
+an artifact to the node it is deployed on. It is drawn as a dashed arrow with
+the `<<deploy>>` stereotype, pointing from the artifact to the node. Nesting
+an artifact box inside a node box (as in the example below) is a graphical
+shorthand for the same relationship and is more common in practice, but the
+explicit `<<deploy>>` arrow is useful when the artifact and node are drawn
+apart, or when several nodes host the same artifact:
+
+[plantuml]
+....
+artifact app.war
+node "Web Server" as web
+
+app.war ..> web : <<deploy>>
+....
+
 === Deployment specification
 
 A *deployment specification* is a configuration file (such as an EJB
 deployment descriptor) that defines how a node should operate. It is drawn as a
-two-sectioned rectangle with the `<<deployment spec>>` stereotype.
+two-sectioned rectangle with the `<<deploymentSpec>>` stereotype (also
+commonly rendered `<<deployment spec>>` by tools).
 
 [plantuml]
 ....

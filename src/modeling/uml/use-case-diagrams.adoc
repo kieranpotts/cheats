@@ -123,6 +123,23 @@ The key difference:
 * `<<extend>>` — the extending use case is executed *conditionally* (only when
   a certain condition is met).
 
+An `<<extend>>` relationship may reference an *extension point* — a named
+location within the base use case's behavior where the extending use case can
+be inserted. Extension points are listed in a separate compartment of the base
+use case and referenced by name from the `<<extend>>` arrow.
+
+[plantuml]
+....
+left to right direction
+actor Customer
+usecase "Place Order" as place
+usecase "Apply Discount" as discount
+
+place : extension points\nPricing
+discount .down.> place : <<extend>>\n(Pricing)
+Customer --> place
+....
+
 === Actor generalization
 
 Actors can also participate in generalization relationships. An inheriting
@@ -150,13 +167,6 @@ guest <|-- user
 == Guidelines
 
 Based on established UML style conventions:
-
-=== Use cases
-
-* Names begin with a strong verb.
-* Use domain terminology, not technical jargon.
-* Place primary use cases in the top-left corner.
-* Imply timing by stacking use cases vertically.
 
 === Actors
 
