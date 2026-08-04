@@ -42,7 +42,7 @@ function App() {
         />
         <button type="submit">Update</button>
       </form>
-    <>
+    </>
   )
 }
 ----
@@ -95,7 +95,7 @@ function App() {
         />
         <button type="submit">Update</button>
       </form>
-    <>
+    </>
   )
 }
 ----
@@ -113,7 +113,7 @@ Notice that, so far, we're not even directly calling the `useActionState` hook.
 But we're already using this feature via our callback for the `action` attribute
 on the `<form>` element.
 
-The `userActionState()` function itself becomes useful when we want to manage
+The `useActionState()` function itself becomes useful when we want to manage
 error and loading states for our forms. Previously, to manage loading and error
 states in a React component, we would have to do a lot of explicit state
 management, like this:
@@ -195,7 +195,7 @@ function App() {
         <button type="submit">Update</button>
         {!isPending && state.error && <p>{state.error.message}</p>}
       </form>
-    <>
+    </>
   )
 }
 ----

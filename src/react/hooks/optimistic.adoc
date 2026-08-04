@@ -1,0 +1,144 @@
+= React hooks: Optimistic updates (React v19)
+
+`useOptimistic` is a hook that was introduced in React v19. It provides a simple
+way to implement _optimistic updates_ — showing an immediate UI change before an
+async operation (like a network request) has completed.
+
+Optimistic updates are a powerful technique for improving the perceived
+performance and responsiveness of an application. The user sees their action
+reflected in the UI immediately, rather than waiting for a server response. If
+the operation fails, React automatically reverts to the actual state, so the UI
+remains consistent with the application's data.
+
+== Understanding useOptimistic
+
+`useOptimistic` takes two arguments:
+
+1. *Current value*: The current value of the state you want to manage
+   optimistically.
+2. *Optimistic update function*: A function that computes the optimistic value
+   based on the current state and the new data.
+
+The hook returns an array with two elements:
+
+1. *Optimistic value*: The value that should be displayed in the UI.
+2. *Setter function*: A function to update the optimistic value, typically
+   called before the actual state update occurs.
+
+[source,jsx]
+----
+import { useOptimistic } from "react"
+
+export function Component() {
+  const [optValue, setOptValue] = useOptimistic(
+    currentValue,
+    optUpdateFunction
+  )
+
+  // ...
+}
+----
+
+== Example: A todo list with optimistic updates
+
+First, here is a basic todo list _without_ optimistic updates. The new todo
+item appears only after the API call completes:
+
+[source,jsx]
+----
+import { useState } from "react"
+
+const addTodoToAPI = async (todo) => {
+  await new Promise(resolve => setTimeout(resolve, 1000))
+  return { id: Date.now(), text: todo }
+}
+
+export function TodoList() {
+  const [todos, setTodos] = useState([])
+
+  const addTodo = async (formData) => {
+    const todo = formData.get("todo")
+    const newTodo = await addTodoToAPI(todo)
+    setTodos(currentTodos => [...currentTodos, newTodo])
+  }
+
+  return (
+    <div>
+      <form action={addTodo}>
+        <input type="text" name="todo" />
+        <button type="submit">Add Todo</button>
+      </form>
+      <ul>
+        {todos.map(todo => (
+          <li key={todo.id}>{todo.text}</li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+----
+
+Now, the same component enhanced with `useOptimistic`. The new todo item appears
+immediately, with reduced opacity to indicate it is pending. Once the API call
+completes, the actual todo item replaces the optimistic one:
+
+[source,jsx]
+----
+import { useOptimistic, useState } from "react"
+
+const addTodoToAPI = async (todo) => {
+  await new Promise(resolve => setTimeout(resolve, 1000))
+  return { id: Date.now(), text: todo }
+}
+
+export function TodoList() {
+  const [todos, setTodos] = useState([])
+  const [optimisticTodos, addOptimisticTodo] = useOptimistic(
+    todos,
+    (currentTodos, newTodo) => [
+      ...currentTodos,
+      { id: "temp", text: newTodo, pending: true }
+    ]
+  )
+
+  const addTodo = async (formData) => {
+    const todo = formData.get("todo")
+    addOptimisticTodo(todo)
+    const newTodo = await addTodoToAPI(todo)
+    setTodos(currentTodos => [...currentTodos, newTodo])
+  }
+
+  return (
+    <div>
+      <form action={addTodo}>
+        <input type="text" name="todo" />
+        <button type="submit">Add Todo</button>
+      </form>
+      <ul>
+        {optimisticTodos.map(todo => (
+          <li
+            key={todo.id}
+            style={{ opacity: todo.pending ? 0.5 : 1 }}
+          >
+            {todo.text}
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+----
+
+== Benefits
+
+* *Improved perceived performance*: Immediate feedback makes the application
+  feel faster and more responsive.
+* *Better user experience*: Users don't have to wait for server responses to see
+  the results of their actions.
+* *Graceful fallback*: If the optimistic update fails (eg. due to a network
+  error), React automatically reverts to the actual state.
+
+.References
+****
+* https://react.dev/reference/react/useOptimistic[React Docs: useOptimistic]
+****

@@ -1,0 +1,67 @@
+= React hooks: Form status (React v19)
+
+`useFormStatus` is a hook that was introduced in React v19. It allows nested
+child components within a `<form>` to read the form's submission status without
+prop drilling or context.
+
+This is particularly useful in complex forms where different sections or fields
+are managed by their own components. For example, a submit button that lives in
+its own component can disable itself while the form is submitting, without
+needing the parent form to pass down a `pending` prop.
+
+== Understanding useFormStatus
+
+`useFormStatus` takes no parameters and returns an object with the following
+properties:
+
+* *pending*: A boolean that indicates whether the form is currently being
+  submitted.
+* *data*: The `FormData` object that is being submitted.
+* *method*: The HTTP method used for the form submission, typically `POST` or
+  `GET`.
+* *action*: The form's action URL or callback function.
+
+[source,jsx]
+----
+import { useFormStatus } from "react"
+
+function SubmitButton() {
+  const { pending, data } = useFormStatus()
+
+  return (
+    <button type="submit" disabled={pending}>
+      {pending ? "Submitting..." : "Submit"}
+    </button>
+  )
+}
+
+export function FeedbackForm() {
+  return (
+    <form action="/submit-feedback">
+      <input type="text" name="text" />
+      <SubmitButton />
+    </form>
+  )
+}
+----
+
+[IMPORTANT]
+======
+`useFormStatus` MUST be called from a component that is a descendant of a
+`<form>` element. It will not work if called from the same component that
+renders the `<form>` itself — it reads status from the nearest parent `<form>`.
+======
+
+== Advantages
+
+* *Reduced prop drilling*: Child components access form state directly, without
+  the parent form passing props through multiple layers.
+* *Improved modularity*: Form-related components become more self-contained and
+  reusable, as they no longer depend on external props for state management.
+* *Real-time updates*: Components that use `useFormStatus` automatically
+  re-render when the form's status changes.
+
+.References
+****
+* https://react.dev/reference/react-dom/hooks/useFormStatus[React Docs: useFormStatus]
+****

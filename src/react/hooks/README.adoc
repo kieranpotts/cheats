@@ -7,6 +7,8 @@ using React's built-in hooks, you can also create your own custom hooks.
 * link:./effects.adoc[Effects]
 * link:./transitions.adoc[Transitions]
 * link:./actions.adoc[Actions]
+* link:./form-status.adoc[Form status]
+* link:./optimistic.adoc[Optimistic updates]
 
 .References
 ****
