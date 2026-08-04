@@ -1,0 +1,408 @@
+= Entity-Relationship Diagrams
+
+An entity-relationship (ER) model describes interrelated things of interest in
+a specific domain of knowledge. It is composed of *entity types* (which
+classify the things of interest) and specifies *relationships* that can exist
+between entities (instances of those entity types).
+
+ER modeling was developed for database design by
+https://en.wikipedia.org/wiki/Peter_Chen[Peter Chen] and published in a 1976
+paper. It is commonly used for teaching the basics of database structure and
+for designing relational databases.
+
+ER models are typically built at three levels of abstraction:
+
+* **Conceptual data model** — the highest level; establishes the overall scope
+  and defines master reference data entities. Used to document data
+  architecture.
+* **Logical data model** — adds operational and transactional data entities
+  with full details, independent of any specific database management system.
+* **Physical data model** — contains enough detail to instantiate a database,
+  including tables, indexes, and constraints. Technology-dependent.
+
+== Components
+
+=== Entities
+
+An *entity* is a thing that exists either physically or logically — a physical
+object (house, car), an event (house sale, car service), or a concept (customer
+transaction, order). An *entity type* (or entity set) is a category; an
+*entity* is an instance of a given entity type.
+
+Entities can be thought of as *nouns*: a computer, an employee, a song, a
+mathematical theorem.
+
+All entities except weak entities must have a minimal set of uniquely
+identifying attributes that may be used as a primary key.
+
+=== Attributes
+
+Entities and relationships can both have *attributes* — properties that
+describe them. For example, an `Employee` entity might have a `SSN` attribute,
+while a `Proved` relationship may have a `Date` attribute.
+
+Attributes are often omitted from diagrams to avoid clutter.
+
+=== Relationships
+
+A *relationship* captures how entities are related to one another.
+Relationships can be thought of as *verbs* linking two or more nouns:
+an `Owns` relationship between a `Company` and a `Computer`, a `Supervises`
+relationship between an `Employee` and a `Department`.
+
+A *relationship set* is the collection of all relationships of the same type
+— analogous to a relation in mathematics.
+
+== Chen's notation
+
+Peter Chen's original notation uses:
+
+* **Rectangles** for entity sets
+* **Diamonds** for relationships
+* **Ovals** for attributes, connected by a line to exactly one entity or
+  relationship set
+* **Lines** connecting entities to relationships
+
+Cardinality constraints in Chen's notation:
+
+[cols="1,3"]
+|===
+| Notation | Meaning
+
+| Double line
+| Total participation — all entities in the entity set must participate in at
+  least one relationship in the relationship set
+
+| Arrow from entity to relationship
+| Key constraint — each entity can participate in at most one relationship
+  (injectivity)
+
+| Thick line (double line + arrow)
+| Bijectivity — each entity is involved in exactly one relationship
+
+| Underlined attribute name
+| Key — two different entities or relationships with this attribute always
+  have different values
+|===
+
+== Crow's foot notation (Barker's notation)
+
+Crow's foot notation is the most widely used notation for ER diagrams in
+industry. It represents entities as boxes and relationships as lines between
+them. Different shapes at the ends of these lines represent cardinality.
+
+Three basic symbols:
+
+[cols="1,3"]
+|===
+| Symbol | Meaning
+
+| Ring (`O`)
+| Zero
+
+| Dash (`|`)
+| One
+
+| Crow's foot (`--<`)
+| Many (infinite)
+|===
+
+These symbols are used in pairs to represent cardinality. The *inner*
+component represents the minimum, the *outer* component represents the
+maximum:
+
+[cols="1,3"]
+|===
+| Notation | Meaning
+
+| `O` + `|`
+| Minimum zero, maximum one (optional)
+
+| `|` + `|`
+| Minimum one, maximum one (mandatory)
+
+| `O` + `--<`
+| Minimum zero, maximum many (optional)
+
+| `|` + `--<`
+| Minimum one, maximum many (mandatory)
+|===
+
+In crow's foot notation, relationships cannot have attributes. Where
+necessary, relationships are promoted to entities in their own right. For
+example, if it is necessary to capture where and when an `Artist` performed a
+`Song`, a new entity `Performance` is introduced (with attributes for time and
+place), and the relationship becomes indirect.
+
+== Enhanced entity-relationship (EER) model
+
+The enhanced entity-relationship (EER) model is an extended version of the ER
+model developed in the 1980s by database researchers including Ramez Elmasri
+and Shamkant Navathe. It incorporates additional semantic constructs for
+modeling complex databases in domains such as engineering design,
+manufacturing systems, telecommunications, GIS, and complex software
+applications.
+
+The EER model retains all concepts from the basic ER model — entities,
+attributes, relationships, keys, and cardinality constraints — while adding
+support for:
+
+* Subclass and superclass relationships (classification hierarchies)
+* Specialization and generalization (top-down and bottom-up abstraction)
+* Attribute and relationship inheritance
+* Union types (categories)
+* Constraints on hierarchies (disjointness, completeness)
+
+=== Subclass and superclass
+
+A *subclass* (or subtype) is an entity type that has distinct attributes or
+relationships in addition to those inherited from another entity type, called
+the *superclass* (or supertype). The subclass is a subset of the superclass
+— every instance of a subclass is also an instance of its superclass.
+
+For example, in a university database, `Person` might be a superclass with
+subclasses `Student`, `Professor`, and `Staff`. Each subclass inherits common
+attributes like `Name`, `Address`, and `DateOfBirth` from `Person`, while
+having specific attributes such as `StudentID` and `Major` for `Student`, or
+`Rank` and `Department` for `Professor`.
+
+Formally, if `S` is a subclass of `C` (the superclass):
+
+* `S ⊆ C` — every member of `S` is also a member of `C`
+* `S` inherits all attributes and relationships of `C`
+* `S` may have additional specific attributes and relationships
+
+=== Specialization
+
+*Specialization* is a top-down conceptual refinement process where a
+higher-level entity type (superclass) is subdivided into lower-level, more
+specialized entity types (subclasses) based on distinguishing characteristics.
+It emphasizes differences among entities within the superclass.
+
+Process:
+
+1. Start with a general entity type.
+2. Identify distinguishing characteristics.
+3. Define subclasses based on these characteristics.
+4. Assign specific attributes and relationships to each subclass.
+
+For example, starting with an `Employee` entity, specialization might identify
+distinct types based on job function:
+
+* `Employee` (superclass) specializes into:
+  * `Secretary` (with attribute `TypingSpeed`)
+  * `Engineer` (with attribute `EngineeringType`)
+  * `Technician` (with attribute `TechGrade`)
+
+Specialization can be:
+
+* **Attribute-defined** — based on a specific attribute value (e.g.,
+  `EmployeeType`).
+* **User-defined** — not based on any specific attribute condition.
+
+=== Generalization
+
+*Generalization* is a bottom-up abstraction process where multiple entity
+types with common characteristics are combined into a higher-level,
+generalized entity type (superclass). It emphasizes similarities among
+entities.
+
+Process:
+
+1. Identify entity types with common attributes.
+2. Extract common attributes into a new superclass.
+3. Establish subclass relationships.
+4. Retain specialized attributes in subclasses.
+
+For example, separate entities `Car`, `Truck`, and `Motorcycle` can be
+generalized into a superclass `Vehicle` containing common attributes like
+`VehicleID`, `Color`, `Year`, and `Manufacturer`, while specific attributes
+remain with subclasses.
+
+Specialization and generalization are inverse processes: specialization
+creates subclasses from a superclass, while generalization creates a
+superclass from existing entity types.
+
+=== Attribute and relationship inheritance
+
+*Inheritance* is a fundamental principle of the EER model where subclasses
+automatically inherit all attributes and relationships from their
+superclass(es). This promotes data consistency and reduces redundancy.
+
+Types of inheritance:
+
+* **Single inheritance** — a subclass inherits from exactly one superclass
+  (e.g., `Student` inherits from `Person`).
+* **Multiple inheritance** — a subclass inherits from multiple superclasses,
+  acquiring attributes and relationships from all parents (e.g.,
+  `TeachingAssistant` might inherit from both `Student` and `Employee`).
+
+Inheritance properties:
+
+* **Transitive** — if `C` is a subclass of `B`, and `B` is a subclass of `A`,
+  then `C` inherits from both `B` and `A`.
+* **Additive** — subclasses can define additional attributes and relationships
+  beyond inherited ones.
+* **Overriding** — generally not supported in EER (unlike object-oriented
+  models).
+
+=== Union types (categories)
+
+A *union type* (or *category*) represents a subclass that is a subset of the
+*union* of two or more distinct superclasses. Unlike regular subclasses that
+inherit from a single superclass, a category can have instances from multiple
+different entity types.
+
+Characteristics:
+
+* An instance of a category must belong to exactly one of the superclasses.
+* The category inherits attributes common to all superclasses.
+* Each instance maintains its identity in the originating superclass.
+
+**Notation**: Represented by a circle with the union symbol (∪) connected to
+all superclasses, with an arc and subset symbol (⊂) connecting to the
+category.
+
+For example, in a vehicle registration database, an `Owner` category can be
+defined as a subset of `PERSON ∪ BANK ∪ COMPANY`. Each vehicle owner is
+either a person, a bank, or a company, but not multiple types simultaneously.
+The `Owner` category would have a relationship `Owns` with the `Vehicle`
+entity.
+
+Formally, if category `T` is defined on superclasses `S1, S2, ..., Sn`:
+
+* `T ⊆ S1 ∪ S2 ∪ ... ∪ Sn`
+* For each instance `t ∈ T`, `t ∈ Si` for exactly one `i`
+
+=== Aggregation
+
+*Aggregation* is an abstraction concept that treats a relationship as a
+higher-level entity, allowing relationships to participate in other
+relationships. This is useful when modeling complex scenarios where
+relationships themselves have attributes or participate in additional
+relationships.
+
+For example, in a project management system:
+
+* Employees work on Projects (relationship: `WorksOn`).
+* For each work assignment, specific Machinery is required.
+* The aggregation treats the entire `WorksOn` relationship as an entity that
+  can be related to `Machinery`.
+
+This allows modeling "Employee `E` working on Project `P` requires Machinery
+`M`" without creating artificial intermediate entities.
+
+=== EER notation summary
+
+EER notation adds the following to standard ER notation:
+
+[cols="1,3"]
+|===
+| Notation | Meaning
+
+| Triangle connecting supertype to subtypes
+| Generalization/specialization hierarchy (similar to UML generalization)
+
+| `d` in a circle
+| Disjoint subtypes — an instance belongs to at most one subtype
+
+| `o` in a circle
+| Overlapping subtypes — an instance can belong to multiple subtypes
+
+| Circle with ∪ symbol
+| Union type (category) — subset of the union of multiple superclasses
+
+| Double rectangle
+| Weak entity (same as basic ER)
+
+| Dashed line connecting category to superclasses
+| Category membership
+|===
+
+== Model usability issues
+
+=== Fan trap
+
+Occurs when a master table links to multiple tables in a one-to-many
+relationship, creating a visual "fan" pattern. When calculating sums over
+aggregates using standard SQL, the results can be incorrect due to
+double-counting. This is common in star schema designs used in data
+warehouses.
+
+*Mitigation*: Adjust the data model or the SQL query to account for the fan
+structure.
+
+=== Chasm trap
+
+Occurs when a model suggests the existence of a relationship between entity
+types, but the pathway between them is incomplete or missing in certain
+instances. For example, a `Building` has one or more `Rooms`, and `Rooms`
+hold zero or more `Computers`. A query for all `Computers` in a `Building`
+would miss `Computers` not currently assigned to a `Room`.
+
+*Mitigation*: Add a direct relationship between the entities that need to be
+queried together.
+
+== ER diagrams vs. UML class diagrams
+
+ER diagrams and UML class diagrams serve different purposes:
+
+[cols="1,3"]
+|===
+| Aspect | ER diagrams | UML class diagrams
+
+| Primary use
+| Database design and data modeling
+| Object-oriented software design
+
+| Origin
+| Peter Chen (1976)
+| Grady Booch, Ivar Jacobson, James Rumbaugh (1990s)
+
+| Entities
+| Entity types (rectangles)
+| Classes (three-compartment rectangles)
+
+| Relationships
+| Lines with cardinality notation
+| Associations, aggregations, compositions, generalizations
+
+| Attributes
+| Ovals (Chen) or listed in entity boxes (crow's foot)
+| Listed in the middle compartment
+
+| Methods
+| Not represented
+| Listed in the bottom compartment
+
+| Focus
+| Data structure and constraints
+| Behavior and object interactions
+|===
+
+== Guidelines
+
+* Use nouns for entity type names (e.g., `Customer`, `Order`, `Product`).
+* Use verbs or verb phrases for relationship names (e.g., `Places`, `Contains`).
+* Keep diagrams simple — avoid clutter by omitting attributes where possible.
+* Prefer crow's foot notation for industry work; Chen's notation for academic
+  or conceptual modeling.
+* Model at the appropriate level of abstraction (conceptual, logical, or
+  physical).
+* Identify and resolve fan traps and chasm traps early in the design process.
+* Use EER modeling when generalization/specialization hierarchies are needed.
+* An ER model does not show an entity's life history — use state diagrams or
+  process models for that.
+
+== References
+
+* https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model[Entity-relationship model - Wikipedia]
+* https://en.wikipedia.org/wiki/Enhanced_entity%E2%80%93relationship_model[Enhanced entity-relationship model - Wikipedia]
+* Chen, Peter (March 1976). "The Entity-Relationship Model - Toward a Unified
+  View of Data". *ACM Transactions on Database Systems*. 1 (1): 9-36.
+* Barker, Richard (1990). *CASE Method: Entity Relationship Modelling*.
+  Addison-Wesley. ISBN 978-0201416961.
+* Elmasri, Ramez; Navathe, Shamkant B. (2011). *Fundamentals of Database
+  Systems* (6th ed.). Pearson/Addison Wesley. ISBN 978-0-136-08620-8.
+* Bagui, Sikha; Earp, Richard Walsh (2022). *Database Design Using
+  Entity-Relationship Diagrams*. Auerbach Publications. ISBN 978-1-032-01718-1.

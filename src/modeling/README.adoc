@@ -1,3 +1,4 @@
 = Modeling
 
 * link:./uml/[UML]
+* link:./er-diagrams.adoc[Entity-Relationship (ER) Diagrams]
