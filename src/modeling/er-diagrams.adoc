@@ -99,18 +99,19 @@ relationship as a double-bordered diamond. Its partial key attribute is
 underlined with a dashed line, rather than the solid underline used for a
 full primary key.
 
-PlantUML has no native support for Chen's diamond notation, but a rough
-approximation (entities and relationships as boxes, connected by lines) can
-be built as follows:
+Neither PlantUML nor Mermaid has native support for Chen's diamond notation,
+but a rough approximation (entities and relationships as boxes, connected by
+lines) can be built as follows:
 
-[plantuml]
+[mermaid]
 ....
-rectangle "Building" as building
-rectangle "Room" as room <<weak entity>>
-diamond "Has" as has
+flowchart LR
+building["Building"]
+room(["Room (weak entity)"])
+has{"Has"}
 
-building -- has
-has -- room : "1" ..> "*"
+building --- has
+has -.->|"1 .. *"| room
 ....
 
 Chen's notation also handles relationships among three or more entities
@@ -178,23 +179,22 @@ Unlike Chen's notation, attributes are not drawn as separate ovals — they are
 listed directly inside the entity box, primary keys marked (commonly `PK`)
 and foreign keys marked (commonly `FK`).
 
-[plantuml]
+[mermaid]
 ....
-entity "Customer" as customer {
-  * id : int <<PK>>
-  --
-  name : varchar
-  email : varchar
+erDiagram
+CUSTOMER {
+  int id PK
+  varchar name
+  varchar email
 }
 
-entity "Order" as order {
-  * id : int <<PK>>
-  --
-  customer_id : int <<FK>>
-  placed_at : datetime
+ORDER {
+  int id PK
+  int customer_id FK
+  datetime placed_at
 }
 
-customer ||--o{ order : places
+CUSTOMER ||--o{ ORDER : places
 ....
 
 This renders the mandatory-one-to-optional-many cardinality of "a customer

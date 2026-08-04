@@ -59,15 +59,16 @@ drawn as a rectangle at the top with a vertical dashed line descending from it.
 The lifeline's name follows the format `instanceName: ClassName`. An anonymous
 instance is written as just `: ClassName`.
 
-[plantuml]
+[mermaid]
 ....
+sequenceDiagram
 actor User
-participant ":System" as system
-participant "Database" as db
-User -> system : login()
-system -> db : query()
-db --> system : data
-system --> User : success
+participant system as :System
+participant db as Database
+User ->> system : login()
+system ->> db : query()
+db -->> system : data
+system -->> User : success
 ....
 
 === Execution specifications
@@ -76,13 +77,14 @@ An *execution specification* (activation bar) is drawn as a thin rectangle
 overlaid on a lifeline, indicating the period during which the object is
 performing an action.
 
-[plantuml]
+[mermaid]
 ....
-Client -> Server : request()
+sequenceDiagram
+Client ->> Server : request()
 activate Server
-Server -> Database : query()
-Database --> Server : data
-Server --> Client : response()
+Server ->> Database : query()
+Database -->> Server : data
+Server -->> Client : response()
 deactivate Server
 ....
 
@@ -128,12 +130,13 @@ line with an open arrowhead.
 A self message represents an object sending a message to itself, for example to
 invoke an internal method. Drawn as a U-shaped arrow.
 
-[plantuml]
+[mermaid]
 ....
+sequenceDiagram
 participant Server
-Server -> Server : selfCheck()
+Server ->> Server : selfCheck()
 activate Server
-Server --> Server : ok
+Server -->> Server : ok
 deactivate Server
 ....
 
@@ -165,13 +168,14 @@ from a lifeline to an endpoint.
 A *guard* is a condition that must be met for a message to be sent. It is
 written in square brackets `[condition]` on the message arrow.
 
-[plantuml]
+[mermaid]
 ....
-User -> ATM : withdraw(amount)
-ATM -> Account : getBalance()
-Account --> ATM : balance
-ATM -> Account : [balance >= amount] debit(amount)
-ATM --> User : cash
+sequenceDiagram
+User ->> ATM : withdraw(amount)
+ATM ->> Account : getBalance()
+Account -->> ATM : balance
+ATM ->> Account : [balance >= amount] debit(amount)
+ATM -->> User : cash
 ....
 
 == Combined fragments
@@ -203,13 +207,14 @@ left corner.
 Models an "if then else" decision. Each operand has a guard condition; the
 operand whose guard is true executes.
 
-[plantuml]
+[mermaid]
 ....
-Client -> Server : login(user, pass)
-alt [password valid]
-  Server --> Client : token
-else [password invalid]
-  Server --> Client : error
+sequenceDiagram
+Client ->> Server : login(user, pass)
+alt password valid
+  Server -->> Client : token
+else password invalid
+  Server -->> Client : error
 end
 ....
 
@@ -218,14 +223,15 @@ end
 Models a simple "if then" — the fragment executes only if the guard condition is
 true.
 
-[plantuml]
+[mermaid]
 ....
-Client -> Server : request()
-opt [cache enabled]
-  Server -> Cache : lookup()
-  Cache --> Server : cachedData
+sequenceDiagram
+Client ->> Server : request()
+opt cache enabled
+  Server ->> Cache : lookup()
+  Cache -->> Server : cachedData
 end
-Server --> Client : response()
+Server -->> Client : response()
 ....
 
 === Loop (`loop`)
@@ -233,13 +239,14 @@ Server --> Client : response()
 Models a repeating sequence. The guard can specify minimum iterations
 (`minint = N`) and maximum iterations (`maxint = N`).
 
-[plantuml]
+[mermaid]
 ....
-Client -> Server : poll()
-loop [not done]
-  Server -> Queue : fetch()
-  Queue --> Server : item
-  Server --> Client : result()
+sequenceDiagram
+Client ->> Server : poll()
+loop not done
+  Server ->> Queue : fetch()
+  Queue -->> Server : item
+  Server -->> Client : result()
 end
 ....
 

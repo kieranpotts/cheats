@@ -90,8 +90,9 @@ Special internal activities:
 | `do / activity`   | Executed continuously while in the state.
 |===
 
-[plantuml]
+[mermaid]
 ....
+stateDiagram-v2
 [*] --> Idle
 
 Idle --> Processing : submit
@@ -249,8 +250,9 @@ transition from the history pseudostate is taken. Drawn as a circle containing
 Represents the most recent active configuration of the composite state
 (including all nested substates). Drawn as a circle containing `H*`.
 
-[plantuml]
+[mermaid]
 ....
+stateDiagram-v2
 [*] --> Idle
 
 state choice1 <<choice>>

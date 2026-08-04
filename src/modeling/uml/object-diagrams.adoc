@@ -45,12 +45,13 @@ significant) is written as just `: ClassName`.
 The attributes compartment shows the current values of the object's attributes
 in the format `attribute = value`.
 
-[plantuml]
+[mermaid]
 ....
-object "alice: User" as alice {
-  name = "Alice"
-  age = 30
-}
+classDiagram
+    class alice["alice: User"] {
+        name = "Alice"
+        age = 30
+    }
 ....
 
 === Links
@@ -64,31 +65,32 @@ relationship.
 Object diagrams can show multiple objects and the links between them, providing
 a concrete example of the relationships defined in a class diagram.
 
-[plantuml]
+[mermaid]
 ....
-object "alice: User" as alice {
-  name = "Alice"
-  age = 30
-}
+classDiagram
+    class alice["alice: User"] {
+        name = "Alice"
+        age = 30
+    }
 
-object "bob: User" as bob {
-  name = "Bob"
-  age = 25
-}
+    class bob["bob: User"] {
+        name = "Bob"
+        age = 25
+    }
 
-object "order1: Order" as order1 {
-  id = 1001
-  total = 49.99
-}
+    class order1["order1: Order"] {
+        id = 1001
+        total = 49.99
+    }
 
-object "order2: Order" as order2 {
-  id = 1002
-  total = 29.99
-}
+    class order2["order2: Order"] {
+        id = 1002
+        total = 29.99
+    }
 
-alice -- order1
-alice -- order2
-bob -- order1
+    alice -- order1
+    alice -- order2
+    bob -- order1
 ....
 
 == Relationship to other diagrams

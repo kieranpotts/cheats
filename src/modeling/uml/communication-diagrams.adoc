@@ -62,19 +62,21 @@ Optionally, a return value can be included:
 
     sequenceNumber: returnValue := methodName(parameters)
 
-PlantUML has no dedicated renderer for communication diagrams, so the layout
-must be approximated with plain object links:
+Neither PlantUML nor Mermaid has a dedicated renderer for communication
+diagrams, so the layout must be approximated with a free-form flowchart of
+labeled links:
 
-[plantuml]
+[mermaid]
 ....
-object Client
-object Server
-object Database
+flowchart LR
+    Client(["Client"])
+    Server(["Server"])
+    Database(["Database"])
 
-Client --> Server : 1: request()
-Server --> Database : 1.1: query()
-Database --> Server : 1.2: data()
-Server --> Client : 2: response()
+    Client -->|"1: request()"| Server
+    Server -->|"1.1: query()"| Database
+    Database -->|"1.2: data()"| Server
+    Server -->|"2: response()"| Client
 ....
 
 == Sequence expressions

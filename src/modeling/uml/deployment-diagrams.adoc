@@ -84,6 +84,8 @@ shorthand for the same relationship and is more common in practice, but the
 explicit `<<deploy>>` arrow is useful when the artifact and node are drawn
 apart, or when several nodes host the same artifact:
 
+// Mermaid has no native node/artifact deployment diagram type, so this
+// remains PlantUML.
 [plantuml]
 ....
 artifact app.war
@@ -99,6 +101,8 @@ deployment descriptor) that defines how a node should operate. It is drawn as a
 two-sectioned rectangle with the `<<deploymentSpec>>` stereotype (also
 commonly rendered `<<deployment spec>>` by tools).
 
+// Mermaid has no native node/artifact deployment diagram type, so this
+// remains PlantUML.
 [plantuml]
 ....
 node "Web Server" as web {

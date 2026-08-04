@@ -65,21 +65,22 @@ The following example maps part of the water cycle, showing the top-down
 hierarchy of general-to-specific concepts and a cross-link (`Evaporation` to
 `Clouds`) connecting two branches that would otherwise be separate:
 
-[plantuml]
+[mermaid]
 ....
-card "Water Cycle" as wc
-card "Evaporation" as evap
-card "Precipitation" as precip
-card "Sun" as sun
-card "Clouds" as clouds
-card "Rain" as rain
+flowchart TB
+wc["Water Cycle"]
+evap["Evaporation"]
+precip["Precipitation"]
+sun["Sun"]
+clouds["Clouds"]
+rain["Rain"]
 
-wc --> evap : includes
-wc --> precip : includes
-sun --> evap : drives
-evap --> clouds : leads to
-precip --> rain : such as
-clouds --> rain : releases
+wc -->|includes| evap
+wc -->|includes| precip
+sun -->|drives| evap
+evap -->|leads to| clouds
+precip -->|such as| rain
+clouds -->|releases| rain
 ....
 
 == How to construct a concept map

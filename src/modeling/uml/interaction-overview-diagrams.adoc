@@ -63,10 +63,13 @@ interaction overview diagram:
 * **Time constraint** — specifies a time interval within which an event must
   occur.
 
-PlantUML has no dedicated interaction-overview-diagram renderer, but the
-shape of the diagram can be approximated with activity-diagram syntax, using
-labeled actions to stand in for referenced interactions:
+Neither PlantUML nor Mermaid has a dedicated interaction-overview-diagram
+renderer, but the shape of the diagram can be approximated with
+activity-diagram syntax, using labeled actions to stand in for referenced
+interactions:
 
+// Mermaid has no native interaction-overview diagram type, so this remains
+// PlantUML.
 [plantuml]
 ....
 start

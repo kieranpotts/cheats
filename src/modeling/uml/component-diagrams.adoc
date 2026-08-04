@@ -42,6 +42,8 @@ Interfaces are drawn using the *ball-and-socket* convention:
 * *Required interface* (socket) — a half-circle on a stick, representing an
   interface the component requires from another component.
 
+// Mermaid has no native ball-and-socket (lollipop/interface) component
+// diagram notation, so this remains PlantUML.
 [plantuml]
 ....
 component OrderService
@@ -62,6 +64,8 @@ dependency arrow separately.
 A required interface can also be drawn directly as a socket using PlantUML's
 shorthand, without naming the interface separately:
 
+// Mermaid has no native ball-and-socket (lollipop/interface) component
+// diagram notation, so this remains PlantUML.
 [plantuml]
 ....
 component OrderService

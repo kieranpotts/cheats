@@ -30,13 +30,14 @@ A class is drawn as a rectangle divided into three compartments:
 2. The middle compartment lists the attributes.
 3. The bottom compartment lists the operations.
 
-[plantuml]
+[mermaid]
 ....
+classDiagram
 class ClassName {
-  - attribute: Type
-  + attribute: Type
-  + operation(): Type
-  - operation(): Type
+  -Type attribute
+  +Type attribute
+  +operation() Type
+  -operation() Type
 }
 ....
 
@@ -58,16 +59,17 @@ There are two notations for interfaces:
 Interfaces can include attributes, operations, visibility, scope, and
 relationships using the same notation as classes.
 
-[plantuml]
+[mermaid]
 ....
-interface Serializable {
-  +serialize(): byte[]
+classDiagram
+class Serializable {
+  <<interface>>
+  +serialize() byte[]
 }
 
-class Order {
-}
+class Order
 
-Order -() Serializable
+Order ..|> Serializable
 ....
 
 === Attributes
@@ -133,13 +135,14 @@ UML specifies two types of scope for members:
 * **Classifier scope** (static) — scoped to the class itself; attribute values
   are equal for all instances. Denoted by an underline.
 
-[plantuml]
+[mermaid]
 ....
+classDiagram
 class Student {
-  +{static} studentCount: int
-  +name: String
-  +{static} getCount(): int
-  +getName(): String
+  +int studentCount$
+  +String name
+  +getCount() int$
+  +getName() String
 }
 ....
 
@@ -149,10 +152,12 @@ Abstract members (those that subclasses are required to implement) are
 represented by *italicized* text. If the class itself is abstract, the class
 name in the top compartment is italicized.
 
-[plantuml]
+[mermaid]
 ....
-abstract class Shape {
-  +{abstract} draw()
+classDiagram
+class Shape {
+  <<abstract>>
+  +draw()*
 }
 class Rectangle {
   +draw()
@@ -174,11 +179,12 @@ information:
 | `inout`  | Both input and output — passed in and returned back
 |===
 
-[plantuml]
+[mermaid]
 ....
+classDiagram
 class Calculator {
-  +add(int a, int b): int
-  +calculate(int value): void
+  +add(int a, int b) int
+  +calculate(int value) void
 }
 ....
 

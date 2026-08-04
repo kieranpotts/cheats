@@ -102,6 +102,8 @@ structured classifiers. There are two named kinds:
   vice versa for outgoing requests). Drawn as a line with an open arrowhead,
   connecting an outer port to an inner port or part.
 
+// Mermaid has no native composite structure diagram type (ports, parts,
+// connectors), so this remains PlantUML.
 [plantuml]
 ....
 class Car {

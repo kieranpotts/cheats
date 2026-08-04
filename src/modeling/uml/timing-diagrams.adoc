@@ -40,6 +40,7 @@ In the concise notation, the possible states are listed along the vertical
 axis, and the lifeline is drawn as a horizontal line that steps up or down to
 a new state at the appropriate point in time.
 
+// Mermaid has no native timing diagram type, so this remains PlantUML.
 [plantuml]
 ....
 @startuml

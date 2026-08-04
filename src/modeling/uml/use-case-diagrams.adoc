@@ -71,19 +71,21 @@ association exists whenever an actor is involved with an interaction described
 by a use case. Arrowheads on associations are optional but often omitted to
 avoid confusion with data flow.
 
-[plantuml]
+[mermaid]
 ....
-left to right direction
-actor Customer
-actor "Payment Gateway" as pg
-usecase "Place Order" as place
-usecase "Pay" as pay
-usecase "Track Delivery" as track
+flowchart LR
+    Customer(["Customer"])
+    pg(["Payment Gateway"])
+    subgraph system [System]
+        place(["Place Order"])
+        pay(["Pay"])
+        track(["Track Delivery"])
+    end
 
-Customer --> place
-place ..> pay : <<include>>
-place ..> track : <<include>>
-pay --> pg
+    Customer --- place
+    place -.->|"<<include>>"| pay
+    place -.->|"<<include>>"| track
+    pay --- pg
 ....
 
 === Packages
@@ -128,16 +130,17 @@ location within the base use case's behavior where the extending use case can
 be inserted. Extension points are listed in a separate compartment of the base
 use case and referenced by name from the `<<extend>>` arrow.
 
-[plantuml]
+[mermaid]
 ....
-left to right direction
-actor Customer
-usecase "Place Order" as place
-usecase "Apply Discount" as discount
+flowchart LR
+    Customer(["Customer"])
+    subgraph system [System]
+        place(["Place Order<br/>extension points: Pricing"])
+        discount(["Apply Discount"])
+    end
 
-place : extension points\nPricing
-discount .down.> place : <<extend>>\n(Pricing)
-Customer --> place
+    Customer --- place
+    discount -.->|"<<extend>> (Pricing)"| place
 ....
 
 === Actor generalization
@@ -147,21 +150,23 @@ actor inherits the use case associations of the parent actor. For example, a
 "Registered User" actor might inherit from a "Guest" actor, gaining access to
 all the same use cases plus additional ones.
 
-[plantuml]
+[mermaid]
 ....
-left to right direction
-actor "Guest" as guest
-actor "Registered User" as user
-actor "Administrator" as admin
-usecase "Browse Products" as browse
-usecase "Place Order" as order
-usecase "Manage Users" as manage
+flowchart LR
+    guest(["Guest"])
+    user(["Registered User"])
+    admin(["Administrator"])
+    subgraph system [System]
+        browse(["Browse Products"])
+        order(["Place Order"])
+        manage(["Manage Users"])
+    end
 
-guest --> browse
-user --> order
-admin --> manage
-user <|-- admin
-guest <|-- user
+    guest --- browse
+    user --- order
+    admin --- manage
+    user -->|"inherits from"| guest
+    admin -->|"inherits from"| user
 ....
 
 == Guidelines

@@ -79,38 +79,54 @@ token down every** outgoing branch concurrently, and a corresponding join
 waits for all of them to arrive before releasing a single token (AND). Use a
 diamond for either/or logic; use a bar for concurrent, all-of logic.
 
-[plantuml]
+[mermaid]
 ....
-start
-:Submit order;
-if (Payment approved?) then (yes)
-  :Confirm order;
-else (no)
-  :Cancel order;
-endif
-stop
+flowchart TD
+    start((start))
+    submit([Submit order])
+    decision{Payment approved?}
+    confirm([Confirm order])
+    cancel([Cancel order])
+    stop((stop))
+
+    start --> submit
+    submit --> decision
+    decision -->|yes| confirm
+    decision -->|no| cancel
+    confirm --> stop
+    cancel --> stop
 ....
 
 The following example combines a fork/join with swimlanes, showing the
 Customer and Warehouse partitions processing concurrently before
 synchronizing:
 
-[plantuml]
+[mermaid]
 ....
-|Customer|
-start
-:Submit order;
-fork
-  |Warehouse|
-  :Pick items;
-  :Pack items;
-fork again
-  |Customer|
-  :Pay invoice;
-end fork
-|Warehouse|
-:Ship order;
-stop
+flowchart TD
+    start((start))
+    submit([Submit order])
+    forkNode{{fork}}
+    joinNode{{join}}
+
+    subgraph Customer
+        submit
+        pay([Pay invoice])
+    end
+
+    subgraph Warehouse
+        pick([Pick items])
+        pack([Pack items])
+        ship([Ship order])
+    end
+
+    stop((stop))
+
+    start --> submit
+    submit --> forkNode
+    forkNode --> pick --> pack --> joinNode
+    forkNode --> pay --> joinNode
+    joinNode --> ship --> stop
 ....
 
 === Activity edges
@@ -173,20 +189,25 @@ The region has a keyword indicating how its iterations relate to one another:
 * `<<stream>>` — a single execution consumes/produces a stream of values
   incrementally, rather than the whole collection at once.
 
-[plantuml]
+[mermaid]
 ....
-start
-:Fetch orders;
-partition "<<parallel>>\nExpansion region" {
-  :Validate order;
-  :Charge card;
-}
-:Summarize results;
-stop
+flowchart TD
+    start((start))
+    fetch([Fetch orders])
+    summarize([Summarize results])
+    stop((stop))
+
+    subgraph region ["<<parallel>> Expansion region"]
+        validate([Validate order])
+        charge([Charge card])
+        validate --> charge
+    end
+
+    start --> fetch --> region --> summarize --> stop
 ....
 
-NOTE: PlantUML has no dedicated expansion-region notation; the `partition`
-block above is an approximation for illustration only.
+NOTE: Mermaid (like PlantUML) has no dedicated expansion-region notation; the
+subgraph above is an approximation for illustration only.
 
 === Signals
 

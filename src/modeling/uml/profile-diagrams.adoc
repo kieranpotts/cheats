@@ -111,6 +111,8 @@ Extensions can be:
   instance. Shown with the `{required}` property or multiplicity `1` near the
   extension end.
 
+// Mermaid has no native profile diagram type (stereotype/metaclass
+// extension notation), so this remains PlantUML.
 [plantuml]
 ....
 package "<<profile>>\nEJB" {

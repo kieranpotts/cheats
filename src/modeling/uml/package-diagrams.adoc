@@ -27,14 +27,18 @@ A *package* is drawn as a large folder-shaped rectangle — a tabbed box — wit
 the package name in the tab. The tab may appear on the left or right side of
 the box.
 
-[plantuml]
+[mermaid]
 ....
-package "Web Application" as web
-package "Business Logic" as biz
-package "Data Access" as data
+flowchart TB
+    subgraph web ["Web Application"]
+    end
+    subgraph biz ["Business Logic"]
+    end
+    subgraph data ["Data Access"]
+    end
 
-web ..> biz
-biz ..> data
+    web -.-> biz
+    biz -.-> data
 ....
 
 === Packageable elements
