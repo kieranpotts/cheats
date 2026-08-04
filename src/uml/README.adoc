@@ -21,10 +21,12 @@ The most useful diagrams are documented here.
 == Structural diagrams
 
 * link:./class-diagrams.adoc[Class diagrams]
+* link:./composite-structure-diagrams.adoc[Composite structure diagrams]
 * link:./object-diagrams.adoc[Object diagrams]
 * link:./component-diagrams.adoc[Component diagrams]
 * link:./deployment-diagrams.adoc[Deployment diagrams]
 * link:./package-diagrams.adoc[Package diagrams]
+* link:./profile-diagrams.adoc[Profile diagrams]
 
 == Behavioral diagrams
 
@@ -32,4 +34,6 @@ The most useful diagrams are documented here.
 * link:./activity-diagrams.adoc[Activity diagrams]
 * link:./state-machine-diagrams.adoc[State machine diagrams]
 * link:./sequence-diagrams.adoc[Sequence diagrams]
+* link:./interaction-overview-diagrams.adoc[Interaction overview diagrams]
+* link:./timing-diagrams.adoc[Timing diagrams]
 * link:./communication-diagrams.adoc[Communication diagrams]

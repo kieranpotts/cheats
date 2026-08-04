@@ -5,6 +5,22 @@ static structure of a system by showing the system's classes, their attributes
 and operations (methods), and the relationships between them.
 
 Class diagrams are used both for conceptual modeling and for detailed design.
+They are the mainstay of object-oriented analysis and design (OOAD).
+
+== Purpose
+
+Class diagrams are used to:
+
+* Design and communicate the static structure and composition of a system.
+* Discover related data and identify important entities.
+* See whether you have too many or too few classes.
+* See whether relationships between objects are too complex or too numerous.
+* Spot differences between one class and another.
+* Support forward and reverse engineering during software development.
+
+Class diagrams are *not* intended to show how objects are instantiated, how
+they interact, or algorithm details. They cannot be used to understand an
+application's overall control flow.
 
 == Classes
 
@@ -24,6 +40,70 @@ class ClassName {
 }
 ....
 
+The art of drawing UML is knowing what to leave out. Keep class diagrams simple
+so they can be understood by many different stakeholders, not just developers.
+Prioritize descriptive labeling of classes and their relationships over
+getting the types of relationships precisely correct.
+
+=== Interfaces
+
+There are two notations for interfaces:
+
+* **Stereotype notation** — a class rectangle with the `<<interface>>`
+  stereotype.
+* **Ball notation** (lollipop) — a circle on a stick attached to the
+  implementing class. This is often preferred because it makes interfaces
+  visually distinct from concrete classes.
+
+Interfaces can include attributes, operations, visibility, scope, and
+relationships using the same notation as classes.
+
+[plantuml]
+....
+interface Serializable {
+  +serialize(): byte[]
+}
+
+class Order {
+}
+
+Order -() Serializable
+....
+
+=== Attributes
+
+The syntax for attributes is:
+
+    [visibility] name : type [multiplicity] = default
+
+Examples:
+
+* `- balance : double = 0.00`
+* `+ name : String`
+* `# id : int`
+
+Trivial getters and setters may be omitted. There is no need to include
+inherited methods if the inheritance chain is shown in the diagram.
+
+=== Operations
+
+The syntax for operations (methods) is:
+
+    [visibility] name(parameters) : returnType
+
+The syntax for parameters is:
+
+    name: type, ...
+
+A method's return type may be omitted for constructors and when the return type
+is void.
+
+Example:
+
+    + distance(p1: Point, p2: Point) : double
+
+=== Member visibility
+
 The visibility of an attribute or operation is indicated by a prefix:
 
 [cols="1,3"]
@@ -33,8 +113,48 @@ The visibility of an attribute or operation is indicated by a prefix:
 | `+`    | Public — visible to all classes
 | `-`    | Private — visible only within the class
 | `#`    | Protected — visible to subclasses
-| `~`    | Package — visible to classes in the same package
+| `~`    | Package — visible to classes in the same package (default)
+| `/`    | Computed — value is derived dynamically from other attributes
 |===
+
+The `~` symbol is the default and is normally omitted. The `/` symbol for
+computed members may be placed before another visibility symbol, e.g., `/+`.
+In practice this symbol is rarely used.
+
+=== Member scope
+
+UML specifies two types of scope for members:
+
+* **Instance scope** (default) — attribute values may vary between instances.
+* **Classifier scope** (static) — scoped to the class itself; attribute values
+  are equal for all instances. Denoted by an underline.
+
+[plantuml]
+....
+class Student {
+  +{static} studentCount: int
+  +name: String
+  +{static} getCount(): int
+  +getName(): String
+}
+....
+
+=== Abstract classes and abstract members
+
+Abstract members (those that subclasses are required to implement) are
+represented by *italicized* text. If the class itself is abstract, the class
+name in the top compartment is italicized.
+
+[plantuml]
+....
+abstract class Shape {
+  +{abstract} draw()
+}
+class Rectangle {
+  +draw()
+}
+Shape <|-- Rectangle
+....
 
 === Parameter directionality
 
@@ -65,26 +185,90 @@ class Calculator {
 | Relationship | Description
 
 | Association
-| A general "uses-a" relationship between two classes.
+| A general "uses-a" relationship between two classes. Drawn as a solid line.
 
 | Directed association
-| An association with a navigable direction, drawn as a solid line with an open arrowhead.
+| An association with a navigable direction, drawn as a solid line with an
+  open arrowhead pointing toward the child.
 
 | Aggregation
-| A "has-a" relationship where the part can exist independently of the whole. Drawn as a solid line with an open diamond at the whole end.
+| A "has-a" relationship where the part can exist independently of the whole.
+  Drawn as a solid line with an open diamond at the whole end.
 
 | Composition
-| A strong "owns-a" relationship where the part cannot exist without the whole. Drawn as a solid line with a filled diamond at the whole end.
+| A strong "owns-a" relationship where the part cannot exist without the
+  whole. Drawn as a solid line with a filled diamond at the whole end.
 
 | Generalization
-| An "is-a" inheritance relationship. Drawn as a solid line with a hollow triangle arrowhead pointing at the superclass.
+| An "is-a" inheritance relationship. Drawn as a solid line with a hollow
+  triangle arrowhead pointing at the superclass.
 
 | Realization
-| An "implements" relationship, typically between a class and an interface. Drawn as a dashed line with a hollow triangle arrowhead.
+| An "implements" relationship, typically between a class and an interface.
+  Drawn as a dashed line with a hollow triangle arrowhead (or lollipop
+  notation).
 
 | Dependency
-| A "depends-on" relationship where a change in one class may affect another. Drawn as a dashed line with an open arrowhead.
+| A "depends-on" relationship where a change in one class may affect another.
+  Drawn as a dashed line with an open arrowhead.
 |===
+
+=== Association
+
+An association is a usage relationship — the relationship is determined by how
+the class instances are used rather than being hardwired into the design.
+Associations may be bi-directional (solid line, no arrowheads) or
+uni-directional (solid line with an open arrowhead).
+
+Associations can be labeled and may include multiplicity information.
+
+=== Reflexive association
+
+A class can be associated with other instances of the same type. For example,
+a `Staff` member could be associated with other `Staff` members on the same
+team. The association line doubles back on itself, reconnecting to the same
+class.
+
+=== Dependency
+
+A dependency is a weak, transitory relationship. One class uses another as a
+parameter or return type but does not store a permanent reference. For
+example, an `Email` class may receive `Person` objects via its `to()` and
+`from()` methods, extract information, then discard them.
+
+Dependencies are often omitted in class diagrams since they are implementation
+details rather than an intrinsic part of an object's state.
+
+=== Association class
+
+An *association class* is a class that represents an association with its own
+attributes and methods. It is drawn as a class attached to an association line
+by a dashed line. Association classes are typically used during analysis and
+then refactored during design.
+
+=== Aggregation vs. composition
+
+Aggregation means "is part of" — the parent groups instances of other objects
+but does not own them. The child objects may exist independently. For example,
+a `Library` aggregates many `Book` objects; if the library closes, the books
+continue to exist.
+
+Composition means "is entirely made of" — the parts live and die with the
+whole. The lifecycle of the child is completely controlled by the parent. For
+example, if a `Book` is deleted, so are all of its `Page` objects.
+
+=== Gotchas
+
+Relationship notation is the most widely misused of UML notation. The most
+common error is in the representation of inheritance arrow direction.
+
+Think of it this way: *arrows point toward the things that are known by the
+thing at the opposite end of the line.*
+
+* In **inheritance**, child classes know about their parents, but not the other
+  way around. The arrow points toward the parent (superclass).
+* In **associations and dependencies**, the dependencies do not know about the
+  objects that are using them. The arrow points toward the child (dependent).
 
 == Multiplicity
 
@@ -100,8 +284,98 @@ relationship. It is written near the end of the association line.
 | `0..*`    | Zero or more (many)
 | `*`       | Zero or more (many)
 | `1..*`    | One or more
+| `n`       | Exactly n (where n > 1)
+| `0..n`    | Zero to n
+| `1..n`    | One to n
 | `n..m`    | Between n and m
 |===
+
+Multiplicity can also be used on class attributes to indicate the number of
+values an attribute can hold.
+
+== Constraints
+
+UML constraints provide more granular information about data that passes
+through class instances. Constraints are delimited with curly braces:
+`{constraint}`.
+
+Constraints can be pre-conditions (must be true before a method executes) or
+post-conditions (must be true after execution). They are defined using the
+Object Constraint Language (OCL):
+
+* **Data types**: `Boolean`, `Integer`, `Real`, `String`
+* **Arithmetic**: `+`, `-`, `*`, `/`, `mod()`, `abs()`, `min()`, `max()`
+* **Comparison**: `<`, `>`, `<=`, `>=`, `=`, `<>`
+* **Boolean**: `and`, `or`, `xor`, `not`
+
+Example: `{ordered FIFO}` on an association indicates first-in, first-out
+ordering.
+
+== Guidelines
+
+Based on established UML style conventions:
+
+=== General
+
+* Identify responsibilities on domain (conceptual) class diagrams.
+* Indicate visibility and types only on design models.
+* Design class diagrams should reflect language naming conventions.
+* Model association classes on analysis diagrams.
+* Do not name associations that have association classes.
+
+=== Classes
+
+* Use common terminology for names.
+* Prefer complete singular nouns for class names.
+* Name operations with a strong verb.
+* Name attributes with a domain-based noun.
+* Do not model scaffolding code (getters, setters, relationship maintenance).
+* Never show classes with just two compartments.
+* List static members before instance members.
+* List members in decreasing visibility.
+* Develop consistent method signatures.
+
+=== Interfaces
+
+* Interface definitions must reflect implementation language constraints.
+* Name interfaces according to language naming conventions.
+* Apply lollipop notation to indicate that a class realizes an interface.
+* Define interfaces separately from your classes.
+* Do not model the operations and attributes of an interface in your classes.
+* Consider an interface to be a contract.
+
+=== Relationships
+
+* Model relationships horizontally.
+* Collaboration indicates the need for a relationship.
+* Model a dependency when the relationship is transitory.
+* Always indicate the multiplicity.
+* Avoid a multiplicity of `*` — prefer `0..*`.
+* Do not model implied relationships.
+* Do not model every single dependency.
+* Center names on associations.
+* Write concise association names in active voice.
+* Indicate directionality to clarify an association name.
+* Indicate role names when multiple associations between two classes exist.
+* Make associations bi-directional only when collaboration occurs in both
+  directions.
+
+=== Inheritance
+
+* Apply the sentence rule for inheritance — "A is a B."
+* Place subclasses below superclasses.
+* Beware of data-based inheritance.
+* A subclass should inherit everything.
+
+=== Aggregation and composition
+
+* Apply the sentence rule for aggregation — "A is part of B."
+* You should be interested in both the whole and the part.
+* Depict the whole to the left of the part.
+* Apply composition when the parts share the persistence lifecycle with the
+  whole.
+* Don't worry about getting the diamonds right — the difference is often
+  subtle at the coding level.
 
 == Advantages
 

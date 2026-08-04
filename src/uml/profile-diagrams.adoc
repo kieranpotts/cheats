@@ -1,0 +1,175 @@
+# Profile diagrams
+
+A profile diagram operates at the metamodel level to define lightweight
+extensions to UML. It shows custom *stereotypes*, *tagged values*, and
+*constraints* that adapt the UML metamodel for a specific domain, platform, or
+methodology.
+
+Profile diagrams were introduced in UML 2.0 and first appeared on the official
+taxonomy of UML diagrams in UML 2.2. They are classified as structure diagrams.
+
+== Purpose
+
+Profile diagrams are used to:
+
+* Define custom stereotypes that extend existing UML metaclasses.
+* Adapt UML for a specific platform (e.g., Java EE, .NET) or domain (e.g.,
+  business process modeling, service-oriented architecture, medical
+  applications).
+* Add domain-specific terminology and notation to standard UML diagrams.
+* Define tagged values (properties) that can be attached to model elements.
+* Apply constraints that restrict how model elements may be used.
+
+The profile mechanism is a *lightweight* extension mechanism — it does not allow
+modifying existing metamodels or creating new metamodels (as MOF does). It only
+allows adaptation or customization of an existing metamodel.
+
+== Notation
+
+Profile diagrams use the following graphical nodes and edges:
+
+[cols="1,3"]
+|===
+| Element | Notation
+
+| Profile
+| A package with the `<<profile>>` keyword, optionally with a `{uri=...}`
+  attribute.
+
+| Stereotype
+| A class with the `<<stereotype>>` keyword, shown before or above the name.
+
+| Metaclass
+| A class with the `<<Metaclass>>` keyword — represents an existing UML
+  metamodel element being extended.
+
+| Extension
+| A solid line with a filled triangle arrowhead pointing from the stereotype to
+  the extended metaclass.
+
+| Reference
+| A dependency relationship indicating that a stereotype references a metaclass
+  without extending it.
+
+| Profile application
+| A dashed arrow with an open arrowhead from a package to a profile, labeled
+  `<<apply>>`.
+|===
+
+=== Profile
+
+A *profile* is a package that extends a reference metamodel (such as UML) by
+defining stereotypes, data types, primitive types, and enumerations. It is
+shown as a package with the `<<profile>>` keyword.
+
+A profile may have a URI attribute that serves as a unique identifier,
+rendered as `{uri=...}` after the profile name. OMG normative profiles use a
+date-based version format (e.g., `20110331`).
+
+One profile may reuse parts of another profile. Multiple profiles can be applied
+to the same model simultaneously, as long as they do not have conflicting
+constraints.
+
+=== Stereotype
+
+A *stereotype* is a profile class that defines how an existing metaclass may be
+extended. It enables the use of platform- or domain-specific terminology in
+place of, or in addition to, the standard UML notation.
+
+A stereotype is drawn as a class with the `<<stereotype>>` keyword. It may have:
+
+* *Properties* (tag definitions) — attributes that hold values when the
+  stereotype is applied.
+* *Icons* — custom graphical representations that replace or augment the
+  standard notation of the extended element.
+
+A stereotype cannot be used by itself — it must always be used with one of the
+metaclasses it extends. Stereotypes can participate in generalization
+relationships (a stereotype may specialize another stereotype) and binary
+associations.
+
+=== Metaclass
+
+A *metaclass* represents an existing UML metamodel element (such as `Class`,
+`Component`, `Actor`, or `Interface`) that is being extended by a stereotype.
+It is shown as a class with the `<<Metaclass>>` keyword.
+
+A metaclass may be extended by one or more stereotypes. Each stereotype may
+extend one or more metaclasses.
+
+=== Extension
+
+An *extension* is a special kind of association that indicates a stereotype
+extends a metaclass. It is drawn as a solid line with a filled triangle
+arrowhead pointing from the stereotype to the metaclass.
+
+Extensions can be:
+
+* **Non-required** (default) — a stereotype instance may be attached to a
+  metaclass instance at will. Shown with multiplicity `0..1` or no adornment.
+* **Required** — a stereotype instance must always be linked to a metaclass
+  instance. Shown with the `{required}` property or multiplicity `1` near the
+  extension end.
+
+=== Profile application
+
+A *profile application* shows that one or more profiles have been applied to a
+package. It is drawn as a dashed arrow with an open arrowhead from the package
+to the profile, labeled `<<apply>>`.
+
+Applying a profile means it is allowed (but not required) to apply the
+stereotypes defined in that profile. Profiles can be dynamically applied or
+removed. If a profile depends on other profiles, those must be applied first.
+
+== Tagged values
+
+A *tagged value* is a property value attached to a model element through a
+stereotype. In UML 1.x, tagged values could exist independently; since UML 2.0,
+they can only be represented as attributes defined on a stereotype.
+
+Tagged values can be displayed in several ways:
+
+* In the traditional notation: `{tag = value}` after the element name.
+* In a separate compartment within the element, headed by the stereotype name
+  in guillemets.
+* In an attached comment (note) symbol.
+
+When displayed in compartments or comments, each name-value pair appears on a
+separate line.
+
+== Applying stereotypes
+
+When a stereotype is applied to a model element, the stereotype name is shown
+within guillemets above or before the element name (e.g., `<<servlet>>
+SearchServlet`). If multiple stereotypes are applied, they are shown as a
+comma-separated list.
+
+If the stereotype defines an icon, the icon can replace or augment the standard
+notation of the extended element. For example, an actor with a `<<Web Client>>`
+stereotype might display a custom icon instead of the standard stick figure.
+
+== Examples of standard UML profiles
+
+* **EJB Profile** — extends UML for Enterprise JavaBeans development, defining
+  stereotypes such as `<<SessionBean>>`, `<<EntityBean>>`, and
+  `<<MessageDrivenBean>>`.
+* **Java Profile** — adapts UML for Java platform development, restricting
+  generalization to single inheritance.
+* **SysML** — a profile that extends UML for systems engineering.
+* **SoaML** — a profile for service-oriented architecture modeling.
+
+== Advantages
+
+* Allows UML to be adapted for domain-specific and platform-specific modeling
+  without modifying the UML standard.
+* Enables tool support for domain-specific notation and validation.
+* Profiles can be dynamically applied, combined, or removed.
+* Provides a standardized way to extend UML across tools and organizations.
+
+== Limitations
+
+* The profile mechanism is lightweight — it cannot create new metamodel
+  elements or remove existing constraints.
+* Profiles with conflicting constraints cannot be applied simultaneously.
+* Stereotype names should not clash with keyword names for the extended model
+  element.

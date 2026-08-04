@@ -2,7 +2,41 @@
 
 An activity diagram shows the flow of control (or data) from one activity to
 another, describing the dynamic behavior of a system. It is similar to a
-flowchart but supports parallel flows.
+flowchart but supports parallel flows, concurrent activities, and swimlanes.
+
+Activity diagrams are behavioral diagrams. They are used to model both
+computational and organizational processes (workflows), as well as the data
+flows intersecting with the related activities.
+
+In UML 1.x, activity diagrams were a specialized form of state diagram. In UML
+2.x, they were reformalized to be based on Petri net-like semantics, increasing
+the scope of situations that can be modeled.
+
+== Activity diagrams vs. flowcharts
+
+Flowcharts were invented decades before UML activity diagrams. Activity
+diagrams are essentially a superset of flowcharts — they add support for
+concurrency (fork/join), swimlanes (partitions), object flows, and signal
+events.
+
+Flowcharts tend to be used informally by non-programmers to document business
+workflows. Activity diagrams can be scaled up from a simple flowchart to add
+more complex descriptions.
+
+== Purpose
+
+Activity diagrams are used to:
+
+* Model business processes and workflows.
+* Model the logic captured by a single use case or usage scenario.
+* Model the detailed logic of a business rule.
+* Model software processes and computational workflows.
+* Model both low-level internal class control flows and high-level business
+  processes.
+* Visualize parallel and concurrent activities.
+
+Activity diagrams are less technical in appearance than most UML diagrams —
+non-technical stakeholders tend to learn to understand them quickly.
 
 == Notation
 
@@ -10,18 +44,33 @@ flowchart but supports parallel flows.
 |===
 | Element | Notation
 
-| Initial node   | A filled circle.
-| Activity       | A rounded rectangle labeled with the action name.
+| Initial node   | A filled circle — the starting point of the workflow.
+| Activity       | A rounded rectangle (stadium) labeled with the action name.
 | Decision node  | A diamond with labeled outgoing flows (guards).
 | Merge node     | A diamond that combines multiple incoming flows into one.
 | Fork node      | A bold horizontal bar that splits a flow into parallel flows.
 | Join node      | A bold horizontal bar that synchronizes parallel flows into one.
-| Final node     | A filled circle inside an unfilled circle (activity final).
-| Flow final     | A circle with an X inside, indicating one flow ends but the activity continues.
+| Activity final | A filled circle inside an unfilled circle — terminates the entire
+                  activity.
+| Flow final     | A circle with an X inside — one flow ends but the activity
+                  continues.
+| Sub-activity   | A rounded rectangle with a rake symbol in the bottom corner —
+                  indicates the activity is described by a more detailed diagram.
+| Signal         | A five-sided shape (like a folded note) — represents an event
+                  being sent or received.
+| Time event     | An hourglass symbol — represents a time-based trigger.
+| Connector      | A small circle with a label — used to connect separate parts
+                  of a diagram without drawing a long edge.
+| Interrupting edge | A lightning-bolt (or zig-zag on a straight line) — represents
+                  an interruption.
+| Pin            | A small square on the side of an activity — represents input
+                  or output parameters.
+| Object node    | A rectangle — represents data or objects flowing between
+                  activities.
 |===
 
 Guards (conditions) are written in square brackets on outgoing flows from
-decision nodes, eg. `[condition]`.
+decision nodes, e.g., `[condition]`.
 
 [plantuml]
 ....
@@ -34,3 +83,131 @@ else (no)
 endif
 stop
 ....
+
+=== Activity edges
+
+Activity edges are directed connections along which tokens or data objects
+flow between activity nodes. There are two types:
+
+* **Control flow** — shows the sequence of execution. Drawn as a solid line with
+  an open arrowhead.
+* **Object flow** — shows the flow of data or objects between actions. Drawn as
+  a dashed line with an open arrowhead.
+
+Edges can have guards (conditions in square brackets) and can be named.
+
+=== Partitions (swimlanes)
+
+An *activity partition* (also called a swimlane) groups activities that share a
+common characteristic, such as being performed by the same actor, organization
+unit, or system component.
+
+Partitions are drawn as parallel lines (horizontal or vertical) with a name
+labeling the partition in a box at one end. Any activity nodes placed between
+these lines are considered to be contained within the partition.
+
+Partitions can be hierarchical (subpartitions) and multidimensional (where each
+swim cell is the intersection of multiple partitions).
+
+=== Object nodes
+
+*Object nodes* hold data that is input to and output from executable nodes.
+Types of object nodes include:
+
+* **Pin** — a small square on the side of an action, representing an input or
+  output parameter.
+* **Parameter** — an object node on the border of an activity, representing an
+  activity parameter.
+* **Central buffer** — stores tokens passed between actions.
+* **Data store** — stores persistent data, shown with `<<datastore>>`.
+
+=== Signals
+
+A *signal* represents an event being sent or received. It is drawn as a
+five-sided shape (like a folded note or a rectangle with a pointed corner).
+Signals can trigger activities or be triggered by them.
+
+=== Interrupting edges
+
+An *interrupting edge* represents an interruption to a region. It is rendered
+as a lightning-bolt or as a zig-zag adornment on a straight line. When the
+interrupting event occurs, the normal flow is interrupted and the interrupting
+flow is taken.
+
+== Guidelines
+
+Based on established UML style conventions:
+
+=== General
+
+* Place the start point in the top-left corner.
+* Always include an ending point (unless modeling a continuous process).
+* Flowcharting operations implies the need to simplify — if an operation is so
+  complex it needs an activity diagram, consider refactoring it.
+
+=== Activities
+
+* Question "black hole" activities — those with transitions in but none out.
+* Question "miracle" activities — those with transitions out but none in
+  (except the start point).
+
+=== Decision points
+
+* Decision points should reflect the previous activity — the decision is
+  implied by context.
+* Avoid superfluous decision points.
+
+=== Guards
+
+* Each transition leaving a decision point must have a guard.
+* Guards should not overlap (e.g., `x <= 0` and `x >= 0` overlap at 0).
+* Guards on decision points must form a complete set.
+* Apply an `[Otherwise]` guard for "fall through" logic.
+* Guards are optional when they don't add value.
+
+=== Parallel activities
+
+* A fork should have a corresponding join.
+* Forks have one entry transition.
+* Joins have one exit transition.
+* Avoid superfluous forks — not every opportunity for parallelism needs to be
+  modeled.
+
+=== Swimlanes
+
+* Order swimlanes in a logical manner.
+* Apply swimlanes to linear processes.
+* Have less than five swimlanes.
+* Consider swimareas for complex diagrams.
+* Consider horizontal swimlanes for business processes.
+
+=== Action objects
+
+* Place shared action objects on swimlane separators.
+* Apply state names when an object appears several times.
+* Show only critical inputs and outputs.
+* Depict action objects as smaller than activities.
+
+== Applications
+
+* Business process modeling and workflow documentation.
+* Use case analysis — modeling basic and alternate courses of action.
+* Modeling software processes and computational algorithms.
+* Designing embedded systems and real-time control logic.
+* Documenting organizational processes and procedures.
+
+== Advantages
+
+* Easy for non-technical stakeholders to understand.
+* Supports both sequential and parallel flows.
+* Can model both business processes and software logic.
+* Swimlanes provide clear responsibility assignment.
+* More expressive than traditional flowcharts.
+
+== Limitations
+
+* Activity diagrams can become large and unwieldy for complex processes.
+* The notation has many specialized elements that are rarely used.
+* In UML 2.x, the semantics changed significantly from UML 1.x, which can
+  cause interpretation differences.
+* For simple sequential logic, a flowchart or pseudocode may be sufficient.

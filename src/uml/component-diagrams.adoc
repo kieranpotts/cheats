@@ -2,22 +2,199 @@
 
 A component diagram shows the components that make up a system and their
 dependencies on each other. A component is a modular, deployable, and
-replaceable part of a system that provides a set of interfaces.
+replaceable part of a system that encapsulates behavior and implements a set
+of interfaces.
 
-Component diagrams are used to model the implementation view of a system.
+Component diagrams are structure diagrams used to model the implementation view
+of a system. They are particularly useful in component-based development (CBD)
+and service-oriented architecture (SOA).
+
+Components are strictly logical, design-time constructs. The idea is that you
+can easily reuse or substitute a different component implementation because a
+component encapsulates behavior and implements specified interfaces.
+
+== Purpose
+
+Component diagrams are used to:
+
+* Model the structural relationships between components of a system.
+* Show the dependencies an application has on other packages and libraries.
+* Verify that a system's required functionality is being implemented by
+  components.
+* Provide a high-level, architectural view of the system for developers and
+  stakeholders.
+* Help system administrators plan ahead by understanding logical software
+  components and their relationships.
+* Document a system's architecture throughout its lifecycle.
+
+Component diagrams can be used at a very high level (showing only large-grain
+components) or at a detailed component level.
 
 == Notation
 
-A component is drawn as a rectangle with a component icon (two small rectangles
-overlapping the left edge) and an optional `<<component>>` stereotype.
+A *component* is drawn as a rectangle with the `<<component>>` stereotype and
+optionally a component icon (two small rectangles overlapping the left edge).
 
-Interfaces are drawn as a "lollipop" (a circle on a stick) for provided
-interfaces, or as a socket (a half-circle on a stick) for required interfaces.
+Interfaces are drawn using the *ball-and-socket* convention:
+
+* *Provided interface* (lollipop) — a circle on a stick, representing an
+  interface the component implements.
+* *Required interface* (socket) — a half-circle on a stick, representing an
+  interface the component requires from another component.
 
 [plantuml]
 ....
-component OrderService {
-}
-OrderService -() OrderRepository
+component OrderService
+component InventoryService
+
+OrderService -() InventoryService
 ....
+
+=== Component compartments
+
+A component can have additional compartments stacked below the name
+compartment to show provided and required interfaces:
+
+* **Provided interfaces** — the formal contract of services the component
+  provides to its consumers.
+* **Required interfaces** — the services the component depends on from other
+  components.
+
+=== Ports
+
+A *port* is a feature of a classifier that specifies a distinct interaction
+point between the classifier and its environment. Ports are depicted as small
+squares on the sides of components. Ports can be:
+
+* **Unidirectional** — input or output only.
+* **Bi-directional** — both input and output.
+
+Ports allow a component to de-couple its internals from external entities. A
+port delegates received requests to internal parts or delivers them directly to
+the component's behavior.
+
+=== Subsystems
+
+A *subsystem* is a specialized version of a component classifier. It uses the
+same notation as a component but with the `<<subsystem>>` keyword instead of
+`<<component>>`. The UML specification leaves the decision of when to use a
+component versus a subsystem to the methodology of the modeler.
+
+=== Assembly connectors
+
+An *assembly connector* ties one component's provided interface with another
+component's required interface. It is drawn as a lollipop and socket symbol
+placed next to each other, making the relationship easy to read.
+
+== Internal structure
+
+A component can be decomposed to show its internal structure. The component is
+drawn larger than normal and the inner parts (other components or classes) are
+placed inside. Ports on the outer component delegate to the internal parts.
+
+This is useful for modeling how a component's provided and required interfaces
+relate to its internal parts. The interconnections between internal components
+are drawn using assembly connectors.
+
+== Relationship to other diagrams
+
+Component diagrams are closely related to:
+
+* **Class diagrams** — in UML 2, a component is a specialized version of a
+  class. The notation rules for classes also apply to components.
+* **Deployment diagrams** — component diagrams show logical software
+  components; deployment diagrams show where those components are physically
+  deployed on nodes. Architects often iterate between these two diagrams.
+* **Composite structure diagrams** — can be used to show the internal
+  decomposition of a component.
+
+== Guidelines
+
+Based on established UML style conventions:
+
+=== Components
+
+* Use descriptive names for architectural components.
+* Use environment-specific naming conventions for detailed design components.
+* Apply textual stereotypes to components consistently.
+* Avoid modeling data and user interface components at the architectural level.
+
+=== Interfaces
+
+* Prefer lollipop notation to indicate realization of interfaces by components.
+* Prefer the left-hand side of a component for interface lollipops.
+* Show only relevant interfaces — avoid clutter.
+
+=== Dependencies
+
+* Model dependencies from left to right.
+* Place child components below parent components.
+* Components should only depend on interfaces, not on other components
+  directly.
+* Avoid modeling compilation dependencies.
+
+== Component design principles
+
+The following principles help improve the quality of component designs:
+
+[cols="1,3"]
+|===
+| Principle | Description
+
+| Acyclic Dependencies
+| Allow no cycles in the dependency graph between components.
+
+| Common Closure
+| Classes in a component should be closed together against the same kinds of
+  changes.
+
+| Common Reuse
+| The classes in a component are reused together — if you reuse one class,
+  you reuse them all.
+
+| Dependency Inversion
+| Abstractions should not depend on details; details should depend on
+  abstractions.
+
+| Open-Closed
+| Software elements should be open for extension but closed for modification.
+
+| Release-Reuse Equivalency
+| The granule of reuse is the granule of release — do not reuse only part of
+  a released software element.
+
+| Stable Abstractions
+| A component should be as abstract as it is stable.
+
+| Stable Dependencies
+| Depend in the direction of stability — if A depends on B, then B should
+  be more stable than A.
+|===
+
+== Applications
+
+* Modeling the high-level software architecture of a system.
+* Documenting component dependencies for large development teams.
+* Planning the integration of COTS (commercial off-the-shelf) components.
+* Designing service-oriented architectures.
+* Communicating the system architecture to stakeholders and implementation
+  staff.
+
+== Advantages
+
+* Provides a high-level, architectural view of the system.
+* Supports component reuse and substitutability.
+* Useful communication tool for developers, stakeholders, and system
+  administrators.
+* Helps organize development effort between subteams by defining component
+  interfaces.
+* Supports both top-down and bottom-up design approaches.
+
+== Limitations
+
+* Component diagrams are often overlooked in favor of deployment diagrams.
+* The notation can be visually wasteful for large systems.
+* Components are logical design-time constructs — they do not directly map to
+  physical deployment.
+* Over-architecting can lead to unnecessary complexity and cost.
 

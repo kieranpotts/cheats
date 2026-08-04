@@ -4,28 +4,92 @@ A use case diagram shows the actors in a system, the use cases (goals) they
 participate in, and the relationships between them. It provides a high-level
 view of the system's functional requirements from the user's perspective.
 
+Use case diagrams are both behavior diagrams (they describe what the system
+does) and structure diagrams (they show the static relationships between actors
+and use cases).
+
+== Purpose
+
+Use case diagrams are used to:
+
+* Capture the external (functional) requirements of a system under design.
+* Communicate the scope of a development initiative to stakeholders.
+* Provide an overview of all or part of the usage requirements for a system.
+* Visualize which functionality is in scope and what is out of scope.
+* Model your analysis of usage requirements in the form of a system use case
+  model.
+* Serve as the "glue" that keeps a requirements model together.
+
+The absence of use cases also tells stakeholders what a system does *not* do.
+If you include use cases in system documentation, they must be comprehensive —
+partial documentation leads to confusion.
+
 == Notation
 
-* An *actor* is drawn as a stick figure. An actor represents a role played by
-  a user or an external system.
+=== Actors
 
-* A *use case* is drawn as an ellipse labeled with a verb phrase describing the
-  goal.
+An *actor* is a person, organization, or external system that plays a role in
+one or more interactions with the system. Actors are drawn as stick figures and
+exist outside the system boundary.
 
-* The *system boundary* is drawn as a rectangle enclosing the use cases.
+Actors can be:
 
-* An *association* between an actor and a use case is drawn as a solid line.
+* Human users (e.g., Customer, Administrator).
+* External systems (e.g., Payment Gateway, Identity Provider).
+* Devices or hardware (e.g., Card Reader, Barcode Scanner).
+* Scheduled events — introduce an actor called "Time" to initiate cron-like
+  tasks.
+
+Actors model *roles*, not job positions. A single person may play multiple
+actor roles, and a single actor role may be played by multiple people.
+
+=== Use cases
+
+A *use case* describes a sequence of actions that provides something of
+measurable value to an actor. It is drawn as an ellipse (or a horizontal oval)
+labeled with a verb phrase describing the goal.
+
+Use case naming guidelines:
+
+* Names should begin with a strong verb (e.g., "Place Order", "Withdraw Cash").
+* Use domain terminology familiar to stakeholders.
+* Place primary use cases in the top-left corner of the diagram.
+* Imply timing by stacking — use cases that occur first appear above those that
+  occur later.
+
+=== System boundary
+
+The *system boundary* (or subject) is drawn as a rectangle enclosing the use
+cases. Anything inside the box is in scope; anything outside is not. System
+boundary boxes can also indicate release scope — use a separate box for each
+release with a label.
+
+=== Associations
+
+An *association* between an actor and a use case is drawn as a solid line. An
+association exists whenever an actor is involved with an interaction described
+by a use case. Arrowheads on associations are optional but often omitted to
+avoid confusion with data flow.
 
 [plantuml]
 ....
 left to right direction
 actor Customer
+actor "Payment Gateway" as pg
 usecase "Place Order" as place
 usecase "Pay" as pay
+usecase "Track Delivery" as track
 
 Customer --> place
 place ..> pay : <<include>>
+place ..> track : <<include>>
+pay --> pg
 ....
+
+=== Packages
+
+*Packages* group related use cases into folders. Use packages when a diagram
+becomes too large to fit on a single page.
 
 == Relationships between use cases
 
@@ -34,11 +98,122 @@ place ..> pay : <<include>>
 | Relationship | Description
 
 | `<<include>>`
-| One use case always includes the behavior of another. Drawn as a dashed arrow labeled `<<include>>`.
+| One use case always includes the behavior of another. Think of it as a
+  procedure call — you know exactly when to invoke it. Drawn as a dashed arrow
+  labeled `<<include>>` pointing from the base use case to the included one.
 
 | `<<extend>>`
-| One use case conditionally extends the behavior of another. Drawn as a dashed arrow labeled `<<extend>>`, pointing from the extending use case to the extended one.
+| One use case conditionally extends the behavior of another. Think of it as a
+  hardware interrupt — you don't know when or if it will be invoked. Drawn as a
+  dashed arrow labeled `<<extend>>` pointing from the extending use case to the
+  extended one.
 
 | Generalization
-| One use case inherits and specializes another. Drawn as a solid line with a hollow triangle arrowhead.
+| One use case inherits and specializes another. Use when a single condition
+  results in significantly different business logic. Drawn as a solid line with
+  a hollow triangle arrowhead pointing at the parent use case.
 |===
+
+=== Include vs. extend
+
+The key difference:
+
+* `<<include>>` — the included use case is *always* executed when the base use
+  case runs.
+* `<<extend>>` — the extending use case is executed *conditionally* (only when
+  a certain condition is met).
+
+=== Actor generalization
+
+Actors can also participate in generalization relationships. An inheriting
+actor inherits the use case associations of the parent actor. For example, a
+"Registered User" actor might inherit from a "Guest" actor, gaining access to
+all the same use cases plus additional ones.
+
+[plantuml]
+....
+left to right direction
+actor "Guest" as guest
+actor "Registered User" as user
+actor "Administrator" as admin
+usecase "Browse Products" as browse
+usecase "Place Order" as order
+usecase "Manage Users" as manage
+
+guest --> browse
+user --> order
+admin --> manage
+user <|-- admin
+guest <|-- user
+....
+
+== Guidelines
+
+Based on established UML style conventions:
+
+=== Use cases
+
+* Names begin with a strong verb.
+* Use domain terminology, not technical jargon.
+* Place primary use cases in the top-left corner.
+* Imply timing by stacking use cases vertically.
+
+=== Actors
+
+* Place primary actors in the top-left corner of the diagram.
+* Draw actors on the outside edges of the diagram.
+* Name actors with singular, business-relevant nouns.
+* Associate each actor with one or more use cases.
+* Actors model roles, not positions.
+* Use `<<system>>` to indicate system actors.
+* Actors do not interact with one another directly.
+* Introduce an actor called "Time" to initiate scheduled events.
+
+=== Relationships
+
+* Indicate an association if the actor appears within the use case logic.
+* Avoid arrowheads on actor-use case associations.
+* Apply `<<include>>` when you know exactly when to invoke the use case.
+* Apply `<<extend>>` when a use case may be invoked across several steps.
+* Introduce `<<extend>>` associations sparingly.
+* Generalize use cases when a single condition results in significantly new
+  business logic.
+* Do not apply `<<include>>`, `<<extend>>`, or generalization to actors.
+* Avoid more than two levels of use case associations.
+* Place an included use case to the right of the invoking use case.
+* Place an extending use case below the parent use case.
+* Place an inheriting use case below the base use case.
+* Place an inheriting actor below the parent actor.
+
+=== System boundary boxes
+
+* Indicate release scope with a system boundary box.
+* Avoid meaningless system boundary boxes — only use them when they add
+  information.
+
+== Business use case diagrams
+
+In addition to system use case diagrams, UML can model *business use cases*.
+A business use case represents a business function, process, or activity
+performed in the modeled business. A *business actor* represents a role played
+by a person or system external to the modeled business. Business use cases and
+business actors are not defined in the UML standard — they were introduced in
+Rational Unified Process (RUP) and require custom stereotypes.
+
+== Advantages
+
+* Helps communicate high-level functions of a system and its scope.
+* Provides a simplified view that stakeholders interpret more completely than
+  class diagrams.
+* Clarifies functional requirements before anyone builds anything.
+* Visualizes which functionality is present and, by omission, what is absent.
+* Serves as a communication tool for non-technical stakeholders.
+* Supports both forward and reverse engineering.
+
+== Applications
+
+* Software design and system architecture planning.
+* Requirements gathering and analysis.
+* Stakeholder presentations and project scoping.
+* Business process modeling.
+* Enterprise and large-scale application development.

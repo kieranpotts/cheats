@@ -1,19 +1,157 @@
 # Package diagrams
 
-A package diagram shows the packages (namespaces) in a system and their
-dependencies. A package is a grouping mechanism for organizing model elements.
+A package diagram shows how model elements are organized into packages
+(namespaces) and the dependencies between them. A package is a general-purpose
+grouping mechanism for organizing model elements into semantically related
+groups.
+
+Package diagrams are structure diagrams. They are used when a system contains
+too many elements to visualize effectively with a single class diagram — at
+large scales, classes must be organized into discrete packages and the
+dependencies between those packages represented at a higher level.
+
+== Purpose
+
+Package diagrams are used to:
+
+* Organize large models into smaller, more manageable pieces.
+* Visualize dependencies between major elements in a system.
+* Represent a compile-time grouping mechanism.
+* Illustrate the layered architecture of a software system.
+* Organize use cases, classes, or data entities into cohesive groups.
+* Provide a high-level view of the system's namespace structure.
 
 == Notation
 
-A package is drawn as a large folder-shaped rectangle — a tabbed box — labeled
-with the package name in the tab.
-
-Dependencies between packages are drawn as dashed arrows.
+A *package* is drawn as a large folder-shaped rectangle — a tabbed box — with
+the package name in the tab. The tab may appear on the left or right side of
+the box.
 
 [plantuml]
 ....
-package com.app
-package org.util
+package "Web Application" as web
+package "Business Logic" as biz
+package "Data Access" as data
 
-com.app ..> org.util
+web ..> biz
+biz ..> data
 ....
+
+=== Packageable elements
+
+A package can contain any *packageable element*, including:
+
+* Classes
+* Interfaces
+* Components
+* Use cases
+* Other packages (nested packages)
+* Data types
+* Constraints
+
+=== Dependencies
+
+A *dependency* between two packages is drawn as a dashed arrow from the
+dependent package to the package it depends on. A dependency means that
+elements in the source package have knowledge of elements in the target
+package.
+
+== Relationship types
+
+In addition to the standard dependency, there are several special relationships
+defined between packages:
+
+[cols="1,3"]
+|===
+| Relationship | Notation | Description
+
+| Package import
+| Dashed arrow with `<<import>>`
+| The importing namespace adds the names of the members of the imported
+  package to its own namespace. By default, an unlabeled dependency between
+  two packages is interpreted as a package import.
+
+| Package access
+| Dashed arrow with `<<access>>`
+| Similar to import, but the imported elements are only accessible within the
+  importing package's namespace — they are not exported further.
+
+| Package merge
+| Dashed arrow with `<<merge>>`
+| The contents of the target package are combined into the source package. If
+  an element exists in both, the source element's definition is expanded to
+  include the target element's definition. Similar to generalization for
+  packages.
+
+| Package use
+| Dashed arrow with `<<use>>`
+| Indicates that the source package uses elements from the target package without importing them into its namespace.
+|===
+
+Note: Package merge was used extensively in earlier UML specifications but is
+no longer used within the UML 2.5.1 specification itself.
+
+== Types of package diagrams
+
+=== Class package diagrams
+
+Class package diagrams organize classes into packages. Rules of thumb:
+
+* Classes in the same inheritance hierarchy typically belong in the same
+  package.
+* Classes related by composition often belong in the same package.
+* Classes that collaborate heavily (as shown in sequence diagrams) often
+  belong in the same package.
+
+Common stereotypes for class packages include `<<application>>` (containing UI
+and application-specific business classes) and `<<technical>>` (containing
+infrastructure classes such as persistence frameworks).
+
+=== Use case package diagrams
+
+Use case package diagrams organize use cases into packages. Rules of thumb:
+
+* Included and extending use cases belong in the same package as the base use
+  case.
+* Analyze the goals of each main actor — each cohesive set of goals suggests a
+  separate package.
+
+=== Data package diagrams
+
+Data package diagrams organize data entities into large-scale business
+domains. They follow the same principles as class package diagrams but lead to
+data models instead of class models.
+
+== Packaging strategies
+
+* A diagram should have roughly 7 ± 2 elements — when it exceeds this, use
+  packages to organize it into smaller diagrams.
+* Packages should be *cohesive* — everything in a package should make sense
+  together. A good test: you should be able to give the package a short,
+  descriptive name.
+* Packages can be nested — a package may contain other packages.
+* Packages can be used on any UML diagram, but are most common on class
+  diagrams and use case diagrams.
+
+== Model diagrams
+
+A *model diagram* is an auxiliary structure diagram that shows an abstraction
+or specific view of a system. It is often used to describe the architecture of
+a multi-layered application. A model can contain packages, and packages can
+have dependencies or other relationships (such as import) defined between them.
+
+== Advantages
+
+* Enables management of large-scale systems by grouping related elements.
+* Provides a high-level architectural view of the system.
+* Supports layered architecture visualization.
+* Reduces diagram complexity by hiding internal package details.
+* Enforces namespace boundaries and access control.
+
+== Limitations
+
+* Package diagrams add little value for small systems.
+* The true value is often in the creation process rather than the final
+  diagram.
+* Package diagrams can become outdated quickly if not maintained alongside
+  the code.

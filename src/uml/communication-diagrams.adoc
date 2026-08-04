@@ -1,25 +1,66 @@
 # Communication diagrams
 
-A communication diagram (formerly called a collaboration diagram) shows the
-interactions between objects and the links between them, emphasizing the
-structural relationships among the objects rather than the time ordering of
+A communication diagram (formerly called a collaboration diagram in UML 1.x)
+shows the interactions between objects and the links between them, emphasizing
+the structural relationships among the objects rather than the time ordering of
 messages.
+
+Communication diagrams are interaction diagrams. They represent a combination
+of information taken from class, sequence, and use case diagrams, describing
+both the static structure and dynamic behavior of a system.
+
+== Purpose
+
+Communication diagrams are used to:
+
+* Provide a bird's-eye view of a collection of collaborating objects.
+* Allocate functionality to classes by exploring the behavioral aspects of a
+  system.
+* Model the logic of a complex operation, particularly one that interacts with
+  a large number of other objects.
+* Explore the roles that objects take within a system and the different
+  relationships they are involved with in those roles.
+* Show which elements each object interacts with — better than sequence
+  diagrams.
 
 == Notation
 
-* Objects are drawn as rectangles labeled with the object name
-  (`instanceName: ClassName`), connected by lines representing the links
-  (associations) between them.
+Communication diagrams use a free-form arrangement of objects and links (as
+used in object diagrams). Messages are labeled with a chronological number and
+placed near the link the message is sent over.
 
-* Messages are drawn as labeled arrows along the links. Each message is
-  prefixed with a sequence number to indicate the order of the interaction.
+=== Frame
 
-Sequence numbering uses a hierarchical dot notation, eg. `1`, `1.1`, `1.2`,
-`2`, `2.1`, to convey the nesting of calls.
+Communication diagrams may be shown within a rectangular frame with the name in
+a compartment in the upper left corner. The heading may use `sd` (short form)
+or `interaction` (long form).
 
-A communication diagram conveys the same information as a sequence diagram, but
-the two emphasize different aspects: sequence diagrams show time order clearly,
-while communication diagrams show structural relationships clearly.
+=== Lifelines
+
+A *lifeline* represents an individual participant in the interaction. Unlike
+sequence diagrams, communication diagram lifelines have no "tail" — they are
+shown as just a rectangle (the "head").
+
+The lifeline name follows the format `instanceName: ClassName`. An anonymous
+instance is written as just `: ClassName`.
+
+=== Links
+
+The lines between classifiers represent instances of relationships —
+associations, aggregations, compositions, and dependencies — between
+classifiers. Links are drawn as solid lines.
+
+=== Messages
+
+Messages are drawn as labeled arrows along the links. Each message is prefixed
+with a sequence number to indicate the order of the interaction. The basic
+notation is:
+
+    sequenceNumber: methodName(parameters)
+
+Optionally, a return value can be included:
+
+    sequenceNumber: returnValue := methodName(parameters)
 
 [plantuml]
 ....
@@ -28,3 +69,123 @@ Server "1" -- "1" Database : 1.1: query()
 Database "1" -- "1" Server : 1.2: data()
 Server "1" -- "1" Client : 2: response()
 ....
+
+== Sequence expressions
+
+Sequence numbering uses a hierarchical dot notation to convey the nesting of
+calls. The format is:
+
+    [integer [name]] [recurrence] : message-name
+
+* The *integer* represents the sequential order of the message within the next
+  higher level of procedural nesting. For example, `2` follows `1`, `2.1`
+  follows `2`, and `1.2.4` follows `1.2.3`.
+* The *name* (a letter) represents a concurrent thread of control. For example,
+  `2.3a` and `2.3b` are concurrent within activation `2.3`.
+* The *recurrence* defines conditional or iterative execution.
+
+=== Guards
+
+A *guard* specifies a condition for the message to be sent. It is written in
+square brackets:
+
+    2.3b [x>y]: draw()
+
+=== Iteration
+
+An *iteration* specifies a sequence of messages executed repeatedly:
+
+* `*[i=1..12]: search(t[i])` — sequential iteration.
+* `*||[i=1..12]: search(t[i])` — concurrent (parallel) iteration.
+* `*: notify()` — iteration with unspecified conditions.
+
+== Instance-level vs. specification-level
+
+Communication diagrams can be drawn at two levels:
+
+* **Instance-level** — depicts interactions between specific object instances.
+  Used to explore the internal design of object-oriented software.
+* **Specification-level** — depicts interactions between roles (classifiers).
+  Used to analyze and explore the roles taken by domain classes within a
+  system.
+
+== Relationship to sequence diagrams
+
+Communication diagrams convey much of the same information as sequence
+diagrams, but each emphasizes different aspects:
+
+[cols="1,3"]
+|===
+| Aspect | Sequence diagram | Communication diagram
+
+| Time order
+| Shows order clearly — messages flow top to bottom.
+| Order is indicated by sequence numbers on messages.
+
+| Structural relationships
+| Less clear — objects are arranged in columns.
+| Shows clearly — objects are arranged in a free-form layout with links.
+
+| Big picture
+| Harder to see the overall collaboration.
+| Easier to see the bird's-eye view of collaborating objects.
+|===
+
+A communication diagram corresponds to a simple sequence diagram without
+structuring mechanisms such as interaction uses and combined fragments. If you
+find yourself needing complex sequence numbers, a sequence diagram is likely
+more appropriate.
+
+== Guidelines
+
+Based on established UML style conventions:
+
+=== General
+
+* Use instance-level diagrams to explore object design issues.
+* Use specification-level diagrams to explore roles.
+* Communication diagrams do not model process flow.
+* When sequence is important, use a sequence diagram.
+* Apply sequence diagram guidelines to instance-level communication diagrams.
+
+=== Messages
+
+* Indicate a return value only when it isn't clear.
+* Indicate parameters only when they aren't clear.
+* Depict an arrow for each message.
+* Consolidate getter invocations into a single message (e.g., `getInfo()`).
+* Indicate concurrent threads with letters in the sequence expression.
+
+=== Links
+
+* Model "bare" links on instance-level communication diagrams.
+* Show role-pertinent information on specification-level diagrams.
+* Prefer roles on links instead of within classes.
+* Indicate navigability sparingly.
+* Links should be consistent with static relationships.
+
+== Applications
+
+* Exploring the design of object-oriented software.
+* Allocating functionality to classes during early design.
+* Modeling complex operations that interact with many objects.
+* Providing a bird's-eye view of collaborating objects.
+* Real-time system design where structural relationships are important.
+
+== Advantages
+
+* Shows structural relationships between objects more clearly than sequence
+  diagrams.
+* Free-form layout is easier to draw on whiteboards.
+* Good for people with a "structure bent" who focus on class diagrams or CRC
+  cards.
+* Combines static structure and dynamic behavior in a single view.
+
+== Limitations
+
+* Sequence order is harder to follow than in sequence diagrams.
+* Complex sequence numbering can become unwieldy.
+* Cannot represent combined fragments or interaction uses.
+* Less widely used and understood than sequence diagrams.
+* Message overtaking (different receive order than send order) is assumed not
+  to occur or is irrelevant.

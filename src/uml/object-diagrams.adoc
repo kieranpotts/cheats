@@ -4,14 +4,46 @@ An object diagram shows a snapshot of the instances of the classes in a system
 at a specific point in time, along with the values of their attributes and the
 links between them. It is effectively an instance of a class diagram.
 
-Object diagrams are useful for illustrating complex data structures and for
-validating class diagrams by example.
+Object diagrams are also sometimes referred to as *instance diagrams*. They are
+closely related to class diagrams and use almost identical notation — the key
+difference is that class diagrams show classes, while object diagrams display
+instances of classes (objects).
+
+The latest UML 2.5.1 specification does not explicitly define object diagrams as
+a separate diagram type, but provides a notation for "instance specifications"
+of classifiers.
+
+== Purpose
+
+Object diagrams are used to:
+
+* Validate and illustrate class diagrams by providing concrete examples.
+* Explore complex data structures and relationships between objects.
+* Act as test cases for class diagrams — they can reveal design flaws that
+  class diagrams hide.
+* Provide insight into how a view of a system is expected to evolve over time
+  (using a correlated set of object diagrams at different time points).
+* Explain complex business rules with concrete examples.
+* Serve as a starting point that can evolve into a communication diagram by
+  adding messages.
 
 == Notation
 
-An object is drawn as a rectangle, similar to a class, but the name is
-underlined and takes the form `objectName: ClassName`. The attributes
-compartment shows the current values of the object's attributes.
+=== Instance specifications
+
+Each object on an object diagram is represented by an *instance specification*.
+This shows:
+
+* The object's classifier (class name).
+* The instance name (optional).
+* Slots for attribute values.
+
+The name follows the format `objectName: ClassName`. The name is underlined to
+distinguish it from a class. An anonymous object (whose instance name is not
+significant) is written as just `: ClassName`.
+
+The attributes compartment shows the current values of the object's attributes
+in the format `attribute = value`.
 
 [plantuml]
 ....
@@ -23,3 +55,80 @@ object "User" as alice {
 
 An anonymous object (an instance whose name is not significant) is written as
 `: ClassName`.
+
+=== Links
+
+A *link* is an instance of an association. It is drawn as a solid line between
+two objects. Links may be labeled with role names to indicate the nature of the
+relationship.
+
+=== Multiple objects with links
+
+Object diagrams can show multiple objects and the links between them, providing
+a concrete example of the relationships defined in a class diagram.
+
+[plantuml]
+....
+object "alice: User" as alice {
+  name = "Alice"
+  age = 30
+}
+
+object "bob: User" as bob {
+  name = "Bob"
+  age = 25
+}
+
+object "order1: Order" as order1 {
+  id = 1001
+  total = 49.99
+}
+
+object "order2: Order" as order2 {
+  id = 1002
+  total = 29.99
+}
+
+alice --> order1
+alice --> order2
+bob --> order1
+....
+
+== Relationship to other diagrams
+
+Object diagrams are closely related to:
+
+* **Class diagrams** — an object diagram is an instance of a class diagram. It
+  provides a concrete snapshot that validates the abstract structure defined by
+  the class diagram.
+* **Communication diagrams** — object diagrams are effectively a notational
+  subset of communication diagrams. An object diagram can evolve into a
+  communication diagram simply by adding messages to the links.
+
+== Applications
+
+* Validating class diagrams by providing concrete examples.
+* Exploring complex data structures and relationships.
+* Testing design decisions before implementation.
+* Documenting specific scenarios for complex business rules.
+* Illustrating the state of a system at different points in time.
+
+== Advantages
+
+* More concrete than class diagrams — easier for non-technical stakeholders to
+  understand.
+* Can reveal design flaws that class diagrams hide (e.g., missing attributes,
+  incorrect multiplicities).
+* Useful for testing and validating class designs.
+* Simple notation that is easy to draw and modify.
+
+== Limitations
+
+* Object diagrams are fairly limited in use — they are typically used only to
+  show examples of data structure.
+* The UML 2.5.1 specification does not explicitly define object diagrams as a
+  separate diagram type.
+* Only aspects of current interest are typically shown — they are not intended
+  to be comprehensive.
+* Object diagrams are often temporary — the value is often in the act of
+  modeling rather than the model itself.

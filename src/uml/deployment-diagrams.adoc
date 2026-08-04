@@ -1,23 +1,169 @@
 # Deployment diagrams
 
 A deployment diagram shows the physical deployment of artifacts onto nodes —
-the hardware or software execution environments on which components run.
+the hardware or software execution environments on which components run. It
+depicts a static view of the run-time configuration of processing nodes and
+the software components that run on those nodes.
 
-Deployment diagrams are used to model the deployment view of a system.
+Deployment diagrams are structure diagrams. They show the hardware for a
+system, the software installed on that hardware, and the middleware used to
+connect the disparate machines to one another.
+
+In UML 1.x, components were deployed directly to nodes. In UML 2.x, *artifacts*
+are deployed to nodes, and artifacts *manifest* (implement) components.
+Components are deployed to nodes indirectly through artifacts.
+
+== Purpose
+
+Deployment diagrams are used to:
+
+* Model the physical deployment of a system onto hardware or virtualized
+  infrastructure.
+* Show where the different components of a software system will physically
+  run and how they communicate.
+* Explore the issues involved with installing a system into production.
+* Explore dependencies with other systems in the production environment.
+* Design the hardware and software configuration of embedded systems.
+* Depict the hardware and network infrastructure of an organization.
+* Document deployment differences between development, staging, and production
+  environments.
+
+System administrators benefit the most from this type of diagram.
 
 == Notation
 
-A node is drawn as a three-dimensional box (a perspective cube) labeled with
-the node name and an optional `<<device>>` or `<<execution environment>>`
-stereotype.
+=== Nodes
 
-Artifacts (deployable units such as JAR files, WAR files, or executables) are
-drawn as rectangles with a `<<artifact>>` stereotype and a dog-eared corner
-icon.
+A *node* is a computational resource, typically a single piece of hardware
+(such as a computer, server, network router, or mobile device) or a software
+execution environment. A node is drawn as a three-dimensional box (a
+perspective cube) labeled with the node name.
+
+There are two types of nodes:
+
+* **Device node** — a physical computing resource with processing memory and
+  services to execute software (e.g., a server, workstation, or mobile phone).
+  Shown with the `<<device>>` stereotype.
+* **Execution environment node** — a software computing resource that runs
+  within an outer node and provides a service to host and execute other
+  software elements (e.g., an application server, web server, or database
+  management system). Shown with the `<<execution environment>>` stereotype.
+
+Nodes can contain other nodes (nested boxes) or software artifacts. A single
+node may conceptually represent multiple physical nodes, such as a cluster of
+database servers.
+
+=== Artifacts
+
+An *artifact* is a concrete element in the physical world that is the result of
+a development process. Examples include executable files, libraries, archives
+(JAR, WAR), database schemas, configuration files, and deployment scripts.
+
+An artifact is drawn as a rectangle with the `<<artifact>>` stereotype and a
+dog-eared corner icon (a page with a folded corner).
+
+=== Communication path
+
+A *communication path* is a connection between nodes, drawn as a solid line.
+The type of connection (e.g., `<<RMI>>`, `<<HTTP>>`, `<<JDBC>>`,
+`<<message bus>>`) is indicated with a stereotype on the line.
+
+=== Manifestation
+
+*Manifestation* (or implementation) is the relationship between an artifact and
+the component it implements. It is drawn as a dashed arrow with the
+`<<manifest>>` stereotype from the artifact to the component.
+
+=== Deployment specification
+
+A *deployment specification* is a configuration file (such as an EJB
+deployment descriptor) that defines how a node should operate. It is drawn as a
+two-sectioned rectangle with the `<<deployment spec>>` stereotype.
 
 [plantuml]
 ....
-node "App Server" {
-  artifact app.jar
+node "Web Server" as web {
+  artifact app.war
 }
+
+node "App Server" as app {
+  artifact ejb.jar
+}
+
+node "DB Server" as db {
+  artifact schema.sql
+}
+
+web -- app : <<HTTP>>
+app -- db : <<JDBC>>
 ....
+
+== Specification level vs. instance level
+
+Deployment diagrams can be drawn at two levels:
+
+* **Specification level** (type level) — shows an overview of the deployment
+  of artifacts to deployment targets without referencing specific instances.
+  Useful for documenting the general architecture.
+* **Instance level** — shows deployment of specific instances of artifacts to
+  specific named nodes. Useful for documenting differences between
+  development, staging, and production environments (e.g., `wsrv-01` vs.
+  `dbsrv-14`).
+
+== Relationship to other diagrams
+
+Deployment diagrams are closely related to:
+
+* **Component diagrams** — deployment diagrams borrow notation from component
+  diagrams and add the concept of nodes. Components are deployed to nodes
+  indirectly through artifacts.
+* **Network architecture diagrams** — deployment diagrams can be used to show
+  logical or physical network architecture. Network architecture diagrams may
+  show no artifacts or deployments at all, or only the major ones.
+
+== Guidelines
+
+Based on established UML style conventions:
+
+=== General
+
+* Indicate software components on solution-specific diagrams.
+* Focus on nodes and communication associations on enterprise-level diagrams.
+
+=== Nodes and components
+
+* Name nodes with descriptive terms.
+* Model only vital software components — avoid clutter.
+* Apply consistent stereotypes to components.
+* Apply visual stereotypes to nodes (e.g., a drum icon for a database).
+
+=== Dependencies and communication associations
+
+* Indicate communication protocols via stereotypes on the connection lines.
+* Model only critical dependencies between components.
+
+== Applications
+
+* Documenting the deployment architecture of web applications, microservices,
+  and distributed systems.
+* Planning production, staging, and development environments.
+* Designing embedded and real-time systems.
+* Communicating infrastructure requirements to system administrators.
+* Documenting network topology and middleware connections.
+
+== Advantages
+
+* Forces teams to think about important deployment issues long before delivery.
+* Provides a clear picture of hardware and software dependencies.
+* Useful for installation, maintenance, and support teams.
+* Can be used to document both current and target architectures.
+
+== Limitations
+
+* Deployment diagrams tend to become very large very quickly because they
+  reflect physical complexities.
+* The notation can be visually wasteful — concise alternatives (such as
+  listing software by physical filenames) are often more practical.
+* For simple systems, a free-form diagram or installation scripts may be
+  sufficient.
+* The diagram type is most useful for systems deployed to multiple machines.

@@ -11,6 +11,20 @@ Sequence diagrams are organized along two dimensions:
 * **Vertical axis** — time, progressing from top to bottom. Time in a sequence
   diagram is about ordering, not duration.
 
+Reading a sequence diagram is like reading a text document — start at the
+top-left corner and follow the horizontal lines down the page. The first object,
+top-left, is the "driver" that triggers the whole sequence.
+
+== Types of sequence diagrams
+
+There are two kinds:
+
+* **Sequence Diagram (SD)** — a regular version describing how the system
+  operates, with every object within the system described specifically.
+* **System Sequence Diagram (SSD)** — all systems are treated as a black box.
+  Only an object named `System` is depicted; internal classes are not shown.
+  SSDs are useful for illustrating use case scenarios with stakeholders.
+
 == Purpose
 
 Sequence diagrams are used to:
@@ -22,6 +36,13 @@ Sequence diagrams are used to:
   operation.
 * Document how objects in an existing (legacy) system currently interact.
 * Provide a more formal refinement of use cases during the requirements phase.
+* Validate and flesh out the logic of a usage scenario.
+* Detect bottlenecks in an object-oriented design.
+* Identify which classes are complex enough to warrant a state machine diagram.
+
+Sequence diagrams are the most popular UML artifact for dynamic modeling. They
+are particularly useful for illustrating systems with deeply nested calls and
+help junior developers break down complex sequences.
 
 == Notation
 
@@ -65,6 +86,13 @@ Server --> Client : response()
 deactivate Server
 ....
 
+=== State invariants
+
+A *state invariant* is a runtime constraint on a lifeline. It specifies a
+condition that must hold at a particular point in the interaction. It is shown
+as a constraint in curly braces `{condition}` on the lifeline, or as a state
+symbol.
+
 == Message types
 
 [cols="1,3"]
@@ -86,7 +114,8 @@ are synchronous. Drawn as a solid line with a filled arrowhead.
 
 An asynchronous message does not require the sender to wait. The sender
 continues execution while the receiver processes the message independently.
-Drawn as a solid line with an open (stick) arrowhead.
+Drawn as a solid line with an open (stick) arrowhead. Common in multithreaded
+applications, event-driven systems, and message-oriented middleware.
 
 === Reply message
 
@@ -111,17 +140,20 @@ deactivate Server
 === Create message
 
 A create message instantiates a new object during the interaction. Drawn as a
-dashed arrow labeled `create`.
+dashed arrow labeled `create`, or as a message with the `<<create>>`
+stereotype, or as a message arrow pointing into the side of the classifier
+symbol.
 
 === Delete message
 
 A delete message destroys an object. The lifeline ends with an X at the point
-of destruction.
+of destruction. In languages with garbage collection (Java, C#), destruction
+need not be modeled explicitly.
 
 === Found message
 
 A found message comes from an unknown source. Drawn as an arrow directed toward
-a lifeline from an endpoint.
+a lifeline from an endpoint (filled-in circle).
 
 === Lost message
 
@@ -224,15 +256,69 @@ runs in parallel.
 
 == Interaction occurrences
 
-An *interaction occurrence* allows one sequence diagram to reference another.
-It is drawn as a frame with `ref` in the namebox, containing the name of the
-referenced diagram and any parameters.
+An *interaction occurrence* (interaction use) allows one sequence diagram to
+reference another. It is drawn as a frame with `ref` in the namebox. The
+syntax is:
+
+    [attribute =] interaction-name [(arguments)] [: return-value]
+
+For example:
+
+    `result = Checkout(cart) : receipt`
+
+The interaction use must cover all involved lifelines represented on the
+enclosing interaction.
 
 == Gates
 
 A *gate* is a message with one end connected to the diagram's frame edge and
 the other end connected to a lifeline. Gates model the passing of information
-between a sequence diagram and its context.
+between a sequence diagram and its context. Gates can be formal (on
+interactions), actual (on interaction uses), or expression gates (on combined
+fragments).
+
+== Guidelines
+
+Based on established UML style conventions:
+
+=== General
+
+* Strive for left-to-right ordering of messages.
+* Layer classifiers: actors on the left, then controller classes, then UI
+  classes, then business classes, then persistence classes on the right.
+* Name actors consistently with your use case diagrams.
+* Name classes consistently with your class diagrams.
+* Place human and organization actors on the left-most side.
+* Place reactive system actors on the right-most side.
+* Include a prose description of the logic alongside the diagram.
+* Avoid modeling object destruction unless necessary.
+
+=== Classifiers
+
+* Name objects when you refer to them in messages.
+* Name objects when several of the same type exist.
+* Apply textual stereotypes consistently.
+* Apply visual stereotypes sparingly.
+* Focus on critical interactions — don't model every detail.
+
+=== Messages
+
+* Justify message names beside the arrowhead.
+* Create objects directly rather than using `<<create>>` stereotypes.
+* Apply operation signatures for software-to-software messages.
+* Use prose for messages involving human and organization actors.
+* Prefer names over types for parameters.
+* Indicate types as parameter placeholders when needed.
+* Messages to classes are implemented as static operations.
+
+=== Return values
+
+* Do not model a return value when it is obvious what is being returned.
+* Model a return value only when you need to refer to it elsewhere.
+* Justify return values beside the arrowhead.
+* Model return values as part of a method invocation.
+* Indicate types as return value placeholders.
+* Explicitly indicate the actual value for simple values.
 
 == Challenges
 

@@ -1,0 +1,151 @@
+# Composite structure diagrams
+
+A composite structure diagram shows the internal structure of a classifier
+(such as a class, component, or collaboration) and the collaborations that this
+structure makes possible. It depicts the runtime instances of interconnected
+elements collaborating over communication links to achieve a common objective.
+
+Composite structure diagrams are structure diagrams introduced in UML 2.0.
+They can be used to show:
+
+* The internal structure of a classifier — internal structure diagram.
+* Classifier interactions with the environment through ports.
+* The behavior of a collaboration — collaboration use diagram.
+
+== Purpose
+
+Composite structure diagrams are used to:
+
+* Decompose a class, component, or use case into its internal parts.
+* Show the points of interaction (ports) that a component has with other parts
+  of the system.
+* Model collaborations between instances at runtime.
+* Describe design patterns and their application in a specific context.
+* Visualize the internal architecture of complex components.
+
+== Notation
+
+Composite structure diagrams use the following elements:
+
+[cols="1,3"]
+|===
+| Element | Notation
+
+| Structured classifier
+| A class or component rectangle — represents a classifier whose internal
+  structure is being shown.
+
+| Part
+| A rectangle within the structured classifier, labeled with `roleName:
+  Classifier`. Represents a role played at runtime by an instance.
+
+| Port
+| A small square on the boundary of a classifier — an interaction point
+  through which the classifier communicates with its environment or internal
+  parts.
+
+| Connector
+| A line connecting parts, ports, or a combination — binds entities together
+  for runtime interaction.
+
+| Collaboration
+| A dashed oval containing roles that instances can play in the
+  collaboration.
+
+| Collaboration use
+| A dashed oval with dashed lines (role bindings) to the parts — represents
+  one particular use of a collaboration pattern.
+|===
+
+=== Structured classifier
+
+A *structured classifier* is a class or component whose behavior can be
+described through interactions between its parts. An *encapsulated classifier*
+is a structured classifier that contains ports.
+
+=== Part
+
+A *part* represents a role played at runtime by one instance of a classifier
+or by a collection of instances. The part may name only the role, it may name
+an abstract superclass, or it may name a specific concrete class. A part can
+include a multiplicity factor (e.g., `[0..*]`).
+
+=== Port
+
+A *port* is an interaction point on the boundary of a classifier. Ports can
+optionally specify the services they provide and the services they require from
+other parts of the system.
+
+* *Public ports* — visible in the environment, shown straddling the boundary.
+* *Protected ports* — not visible in the environment, shown inside the
+  boundary.
+
+Each port has a type and is labeled with a name. Ports may contain a
+multiplicity factor (e.g., `[3]`).
+
+Ports can either delegate received requests to internal parts, or deliver them
+directly to the behavior of the structured classifier.
+
+=== Connector
+
+A *connector* binds two or more entities together, allowing them to interact
+at runtime. It is shown as a line between some combination of parts, ports, and
+structured classifiers.
+
+=== Collaboration
+
+A *collaboration* describes the relevant aspects of the cooperation of a set
+of instances by identifying the specific roles that the instances will play.
+It is shown as a dashed oval containing roles. Collaborations are more abstract
+than structured classifiers — roles are often typed by interfaces rather than
+concrete classes.
+
+=== Collaboration use
+
+A *collaboration use* represents one particular application of a collaboration
+pattern to a specific situation. It binds specific entities from a given
+context to the roles of the collaboration. It is shown as a dashed ellipse with
+dashed lines (role bindings) to the parts.
+
+== Relationship to other diagrams
+
+Composite structure diagrams are closely related to:
+
+* **Class diagrams** — composite structure diagrams decompose classes into
+  their internal parts, ports, and connectors.
+* **Component diagrams** — components are structured classifiers; composite
+  structure diagrams can show their internal wiring.
+* **Object role model (ORM) diagrams** — similar in notation, but ORM diagrams
+  focus on detailed relationships between entities while composite structure
+  diagrams focus on collaborations.
+* **Sequence diagrams** — sequence diagrams are often preferred for exploring
+  collaborations because of their more robust notation and wider developer
+  familiarity.
+
+== Applications
+
+* Modeling the internal architecture of complex components and subsystems.
+* Designing the wiring of enterprise application servers (e.g., Tomcat, JBoss).
+* Describing design patterns (e.g., Observer pattern) and their application.
+* Modeling the internal structure of bank ATMs, medical devices, and other
+  embedded systems.
+* Documenting the collaboration between objects in a specific use case
+  realization.
+
+== Advantages
+
+* Provides a detailed view of the internal structure of classifiers.
+* Clearly shows how parts interact through ports and connectors.
+* Useful for modeling component-based and service-oriented architectures.
+* Supports both structural decomposition and behavioral collaboration views.
+
+== Limitations
+
+* Composite structure diagrams are a niche diagram type — they are not widely
+  used in practice.
+* Many UML modeling tools have limited support for composite structure
+  diagrams.
+* For exploring collaborations, sequence diagrams are often more practical
+  and more widely understood.
+* The notation can be complex and may require significant training to use
+  effectively.

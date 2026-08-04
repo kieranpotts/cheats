@@ -1,8 +1,39 @@
 # State machine diagrams
 
-A state machine diagram shows the states an object can be in, the transitions
+A state machine diagram (formerly called a state diagram, statechart diagram, or
+state-transition diagram) shows the states an object can be in, the transitions
 between those states, and the events that trigger them. It is useful for
 modeling the lifecycle of an object with complex behavior.
+
+UML state machines are an object-based variant of Harel statecharts. They
+overcome the main limitations of traditional finite-state machines (FSMs) by
+introducing hierarchically nested states and orthogonal regions, while
+extending the notion of actions.
+
+== Types of state machines
+
+UML defines two kinds of state machines:
+
+* **Behavioral state machine** — used to model the behavior of individual
+  entities (class instances, subsystems, or entire systems). This is the
+  common kind.
+* **Protocol state machine** — used to express usage protocols and specify the
+  legal usage scenarios of classifiers, interfaces, and ports.
+
+== Purpose
+
+State machine diagrams are used to:
+
+* Model the lifecycle of an object with complex behavior.
+* Explore the behavior of a class, actor, subsystem, or component.
+* Model real-time and event-driven systems.
+* Identify error conditions by asking "should this transition be allowed when
+  the object is in this state?"
+* Document business rules that depend on the state of an entity.
+
+In business applications, roughly 5% of classes are complex enough to warrant
+a state machine diagram. They are much more common in real-time and embedded
+systems.
 
 == Notation
 
@@ -14,15 +45,28 @@ modeling the lifecycle of an object with complex behavior.
 | State           | A rounded rectangle labeled with the state name.
 | Final state     | A filled circle inside an unfilled circle.
 | Transition      | A directed arrow labeled with `event [guard] / action`.
+| Choice          | A diamond — dynamic conditional branch.
+| Junction        | A small filled circle — static conditional branch or merge.
+| Fork / Join     | A short heavy bar — splits or merges concurrent transitions.
+| Shallow history | A circle containing `H` — restores the most recent active substate.
+| Deep history    | A circle containing `H*` — restores the entire active state configuration.
+| Entry point     | A small circle on the border of a composite state.
+| Exit point      | A small circle with a cross on the border of a composite state.
+| Terminate       | A cross — terminates the state machine execution.
 |===
 
-A state may have three compartments separated by horizontal lines:
+=== States
+
+A state represents a stage in the behavior pattern of an object. States are
+represented by the values of the attributes of an object. A state is drawn as a
+rounded rectangle and may have up to three compartments:
 
 . State name
-. State variables (optional)
-. Internal transitions (optional), written as `event [guard] / action`
+. Internal activities compartment — `entry / action`, `exit / action`,
+  `do / activity`
+. Internal transitions compartment — events handled without leaving the state
 
-Special internal transitions:
+Special internal activities:
 
 [cols="1,3"]
 |===
@@ -30,7 +74,7 @@ Special internal transitions:
 
 | `entry / action`  | Executed when entering the state.
 | `exit / action`   | Executed when leaving the state.
-| `do / activity`   | Executed while in the state.
+| `do / activity`   | Executed continuously while in the state.
 |===
 
 [plantuml]
@@ -43,4 +87,241 @@ Processing --> Failed : error
 
 Idle : entry / reset
 Processing : do / process
+Failed : entry / log
+Failed --> Idle : retry
 ....
+
+=== Transitions
+
+A transition is a progression from one state to another, triggered by an event
+that is either internal or external to the object. The label format is:
+
+    event [guard] / action
+
+* *Event* — the trigger that causes the transition (mandatory).
+* *Guard* — a Boolean condition that must be true for the transition to fire
+  (optional).
+* *Action* — behavior executed when the transition fires (optional).
+
+Transitions are the result of the invocation of an operation that causes an
+important change in state. Not all method invocations result in transitions —
+for example, a getter method typically does not change state.
+
+=== Guards
+
+A *guard* is a Boolean expression evaluated dynamically based on the value of
+extended state variables and event parameters. Guards are shown in square
+brackets, e.g., `[balance >= amount]`.
+
+Guards on similar transitions leaving a state must be consistent with one
+another (e.g., `x < 0`, `x = 0`, `x > 0` are consistent; `x <= 0` and `x >= 0`
+overlap). Guards need not form a complete set — if no guard evaluates to true,
+the transition simply does not fire.
+
+=== Extended states
+
+In addition to the enumerable state variable, UML state machines support
+*extended state variables* — additional data (e.g., counters, timers) that
+form part of the overall state. This avoids state explosion. For example,
+instead of creating 1000 states to count keystrokes, use a `key_count`
+variable with a guard `[key_count == 0]`.
+
+== Hierarchically nested states
+
+The most important innovation of UML state machines over traditional FSMs is
+the introduction of *hierarchically nested states* (also called composite
+states or superstates).
+
+If a system is in a nested state (substate), it is also implicitly in the
+surrounding state (superstate). Events not handled by the substate are
+automatically delegated to the superstate. This enables *programming by
+difference* — substates only define what differs from their superstate.
+
+A composite state may have its decomposition hidden, shown with a special
+"composite" icon (two horizontally placed connected states) in the lower
+right-hand corner.
+
+=== Submachine states
+
+A *submachine state* inserts the specification of another state machine into
+the containing state machine. It is semantically equivalent to a composite
+state and enables reuse of common behaviors.
+
+== Orthogonal regions
+
+A composite state can contain two or more *orthogonal regions* (AND-decomposition),
+meaning that being in the composite state entails being in all its orthogonal
+regions simultaneously. Orthogonal regions address the problem of combinatorial
+state explosion when behavior is fragmented into independent, concurrently
+active parts.
+
+Regions are separated by dashed lines within the composite state. Each region
+has its own set of states and transitions. Orthogonal regions can communicate
+by sending events to each other.
+
+== Pseudostates
+
+=== Initial pseudostate
+
+A default starting point. There can be at most one per region. The outgoing
+transition may have a behavior but not a trigger or guard. Drawn as a small
+solid filled circle.
+
+=== Final state
+
+Signifies that the enclosing region is completed. Drawn as a circle
+surrounding a small solid filled circle.
+
+=== Terminate pseudostate
+
+Implies that execution of the state machine is terminated. The state machine
+does not exit any states or perform exit actions other than those on the
+transition leading to the terminate pseudostate. Drawn as a cross.
+
+=== Choice pseudostate
+
+A dynamic conditional branch. It evaluates the guards of its outgoing
+transitions to select exactly one. If multiple guards are true, an arbitrary
+one is selected. If none are true, the model is ill-formed (use an `else`
+guard to avoid this). Drawn as a diamond.
+
+=== Junction pseudostate
+
+A static conditional branch or merge. Used to chain multiple transitions
+together. Unlike choice, the decision is based on static conditions evaluated
+before any actions are performed. Drawn as a small filled circle.
+
+=== Fork pseudostate
+
+Splits an incoming transition into two or more transitions terminating on
+orthogonal target vertices (in different regions). Drawn as a short heavy bar.
+
+=== Join pseudostate
+
+Merges several transitions from different orthogonal regions into a single
+outgoing transition. Drawn as a short heavy bar.
+
+=== Shallow history pseudostate
+
+Represents the most recent active substate of the containing state (but not
+substates of that substate). A transition into shallow history goes to the
+most recent substate. If the composite state was never active, the default
+transition from the history pseudostate is taken. Drawn as a circle containing
+`H`.
+
+=== Deep history pseudostate
+
+Represents the most recent active configuration of the composite state
+(including all nested substates). Drawn as a circle containing `H*`.
+
+=== Entry and exit points
+
+*Entry points* (small circle on the border) allow transitions from outside a
+composite state to target specific substates. *Exit points* (small circle with
+a cross on the border) allow transitions from within a composite state to exit
+to specific targets outside.
+
+== Entry and exit actions
+
+Every state can have optional *entry actions* (executed upon entry) and *exit
+actions* (executed upon exit). These are associated with states, not
+transitions. Regardless of how a state is entered or exited, all its entry and
+exit actions will be executed.
+
+Entry actions provide guaranteed initialization (like class constructors).
+Exit actions provide guaranteed cleanup (like class destructors). The order of
+execution is top-down for entry (outermost to innermost) and bottom-up for
+exit.
+
+== Internal transitions
+
+An *internal transition* executes actions without exiting or re-entering the
+state. Unlike a self-transition, no entry or exit actions are executed. This is
+useful for events that cause internal processing but no state change (e.g., a
+keystroke that generates a character code without changing the keyboard's
+state).
+
+== Transition execution sequence
+
+When a transition fires, the following sequence is executed:
+
+. Evaluate the guard condition.
+. Exit the source state configuration (innermost to outermost, up to the least
+  common ancestor).
+. Execute the actions associated with the transition.
+. Enter the target state configuration (outermost to innermost).
+
+== Event deferral
+
+Sometimes an event arrives when the state machine is in a state that cannot
+handle it. UML state machines support *event deferral* — events can be
+deferred in a state and automatically recalled when the machine enters a state
+that does not list the event in its deferred event list.
+
+== Run-to-completion (RTC) model
+
+UML state machines assume a *run-to-completion* execution model: each event
+must be fully processed before the next event can start. New events are queued
+until the state machine becomes idle. This avoids internal concurrency issues
+within a single state machine.
+
+== Guidelines
+
+Based on established UML style conventions:
+
+=== General
+
+* Create a state machine when behavior differs based on state.
+* Place the initial state in the top-left corner.
+* Place the final state in the bottom-right corner.
+
+=== States
+
+* State names should be simple but descriptive.
+* Question "black hole" states — states with transitions in but none out.
+* Question "miracle" states — states with transitions out but none in.
+
+=== Substates
+
+* Model substates for targeted complexity.
+* Aggregate common substate transitions to the superstate.
+* Create a hierarchy of state machines for very complex entities.
+* Top-level state machines always have initial and final states.
+
+=== Transitions and actions
+
+* Name software actions using implementation language naming conventions.
+* Name actor actions using prose.
+* Indicate entry actions only when applicable for all entry transitions.
+* Indicate exit actions only when applicable for all exit transitions.
+* Model recursive (self) transitions only when you want to exit and re-enter
+  the state.
+* Name transition events in past tense.
+* Place transition labels near the source state.
+
+=== Guards
+
+* Guards should not overlap.
+* Introduce junctions to visually localize guards.
+* Guards need not form a complete set.
+* Name guards consistently.
+
+== Applications
+
+* Modeling the lifecycle of business entities (e.g., orders, invoices,
+  seminars).
+* Designing real-time and embedded control software.
+* Modeling network protocols and communication behavior.
+* Documenting the behavior of UI components and widgets.
+* Specifying legal usage protocols for interfaces and ports.
+
+== Limitations
+
+* Only a small proportion of classes (roughly 5%) are complex enough to
+  warrant a state machine diagram.
+* State diagrams poorly represent the sequence of processing (order of guard
+  evaluation, event dispatch to orthogonal regions).
+* The notation depends heavily on the specific programming language for action
+  and guard expressions.
+* State machine diagrams can become unwieldy for very large systems without
+  hierarchical decomposition.

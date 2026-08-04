@@ -1,0 +1,123 @@
+# Timing diagrams
+
+A timing diagram is a type of interaction diagram that focuses on the behavior
+of one or more objects throughout a given period of time. Time increases from
+left to right, and lifelines are shown in separate compartments arranged
+vertically.
+
+Timing diagrams are a special form of sequence diagram with the axes reversed —
+time runs horizontally instead of vertically. They are used to reason about
+timing constraints, state changes, and duration.
+
+== Purpose
+
+Timing diagrams are used to:
+
+* Explore the behaviors of objects throughout a given period of time.
+* Model timing constraints on state changes and interactions.
+* Design embedded software, such as control software for hardware systems.
+* Analyze real-time systems where precise timing is critical.
+* Document time-dependent behavior in network protocols and concurrent systems.
+
+== Notation
+
+There are two flavors of timing diagram: *concise notation* and *robust
+notation*.
+
+=== Lifeline
+
+A *lifeline* represents an individual participant in the interaction. On a
+timing diagram, the lifeline is shown as a named compartment arranged
+vertically. The name follows the format `instanceName: ClassName`.
+
+=== State or condition timeline
+
+A *state timeline* shows the states or conditions of a lifeline over time.
+Discrete state transitions are drawn as a box line (step changes), while
+continuous changes (such as temperature) are drawn as a curved line.
+
+In the concise notation, states are listed across the diagram and the
+transition between them is indicated by a crossing of two general value
+lifelines.
+
+[plantuml]
+....
+@startuml
+concise "Seminar" as S
+@0 as :Proposed
+@5 as :Scheduled
+@10 as :Enrolling
+@15 as :Taught
+@20 as :Closed
+S :Proposed -> S :Scheduled : schedule()
+S :Scheduled -> S :Enrolling : open()
+S :Enrolling -> S :Taught : start()
+S :Taught -> S :Closed : finish()
+@enduml
+....
+
+=== Duration constraint
+
+A *duration constraint* specifies an interval of time that a condition or
+state must satisfy. It is shown as a graphical association between a duration
+interval and the construct it constrains. For example, "ice should melt into
+water in 1 to 6 minutes."
+
+=== Time constraint
+
+A *time constraint* specifies a time interval within which an event must
+occur. It is shown as a graphical association between a time interval and the
+occurrence it constrains. For example, "person should wake up between 5:40 am
+and 6:00 am."
+
+=== Destruction occurrence
+
+A *destruction occurrence* represents the destruction of the instance described
+by the lifeline. It is depicted by a cross in the form of an X at the end of a
+timeline. No other occurrence may appear after the destruction event on a given
+lifeline.
+
+=== Messages
+
+In the robust notation, arrows between lifelines represent messages exchanged
+between objects. Events or stimuli can be optionally labeled at transition
+points to indicate the reason for a state change.
+
+=== Timing ruler
+
+A *timing ruler* is a notation unique to timing diagrams. It is depicted as
+tick mark values along the bottom of the diagram, providing a time reference
+for state changes and events.
+
+== Concise vs. robust notation
+
+[cols="1,3"]
+|===
+| Notation | Description
+
+| Concise
+| Shows the lifecycle of a single object over time. States are listed across
+  the diagram with transition points indicated by crossing lines. Timing
+  constraints are shown along the bottom.
+
+| Robust
+| Shows multiple lifelines in separate compartments within a frame. Includes
+  state timelines, messages between lifelines, event labels, timing
+  constraints, time observations, and timing rulers.
+|===
+
+== Applications
+
+* Designing embedded and real-time control software.
+* Modeling network protocols and communication timing.
+* Analyzing concurrent system behavior.
+* Documenting time-dependent business processes.
+* Validating timing requirements in safety-critical systems.
+
+== Limitations
+
+* Timing diagrams become difficult to read with more than two or three
+  lifelines.
+* Few mainstream business application modeling tools support timing diagrams.
+* For exploring detailed state transitions, a state machine diagram is often
+  more appropriate.

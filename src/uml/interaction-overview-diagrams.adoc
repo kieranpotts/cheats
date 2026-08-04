@@ -1,0 +1,107 @@
+# Interaction overview diagrams
+
+An interaction overview diagram is a variant of an activity diagram that
+provides a high-level overview of the control flow within a system or business
+process. Each node within the diagram can represent another interaction diagram
+(such as a sequence diagram, communication diagram, or timing diagram).
+
+Interaction overview diagrams are defined as a specialization of activity
+diagrams. They combine elements from both activity diagrams and interaction
+diagrams, making them useful for "deconstructing a complex scenario that would
+otherwise require multiple if-then-else paths to be illustrated as a single
+sequence diagram."
+
+== Purpose
+
+Interaction overview diagrams are used to:
+
+* Provide a high-level overview of the control flow within a system.
+* Decompose complex scenarios into smaller, manageable interaction diagrams.
+* Visualize the flow of interactions across multiple use cases or scenarios.
+* Combine the flow control of activity diagrams with the detail of interaction
+  diagrams.
+* Show branching, merging, and parallel flows of interactions.
+
+== Notation
+
+Interaction overview diagrams use a frame with the heading `sd` (or
+`interaction`) in the top-left compartment. The heading text may also include
+a list of the contained lifelines.
+
+=== Elements from activity diagrams
+
+Interaction overview diagrams inherit the following control elements from
+activity diagrams:
+
+[cols="1,3"]
+|===
+| Element | Notation
+
+| Initial node     | A filled circle — the starting point of the flow.
+| Activity final   | A filled circle inside an unfilled circle — terminates the entire
+                    flow.
+| Flow final       | A circle with an X — terminates a single flow.
+| Decision node    | A diamond — a conditional branch.
+| Merge node       | A diamond — merges multiple incoming flows into one.
+| Fork node        | A short heavy bar — splits a flow into concurrent flows.
+| Join node        | A short heavy bar — synchronizes concurrent flows.
+|===
+
+=== Elements from interaction diagrams
+
+The following elements from interaction diagrams can appear as nodes in an
+interaction overview diagram:
+
+* **Interaction** — any kind of interaction diagram (sequence, communication,
+  timing, or interaction overview) may appear inline as a node. The inline
+  interaction may be anonymous or named.
+* **Interaction use** — a reference to another interaction diagram, drawn as a
+  frame with `ref` in the namebox. This allows reuse of existing interaction
+  diagrams.
+* **Duration constraint** — specifies an interval of time that a condition or
+  state must satisfy.
+* **Time constraint** — specifies a time interval within which an event must
+  occur.
+
+== Control flow
+
+The control flow between nodes is shown with arrows, just like in an activity
+diagram. The flow can include:
+
+* **Sequential flow** — a simple arrow from one node to the next.
+* **Conditional flow** — using decision and merge nodes with guard conditions
+  on the outgoing edges.
+* **Concurrent flow** — using fork and join nodes to split and synchronize
+  parallel paths.
+
+== Relationship to other diagrams
+
+Interaction overview diagrams are closely related to:
+
+* **Activity diagrams** — interaction overview diagrams are a specialization of
+  activity diagrams. They use the same control flow notation (initial, final,
+  decision, merge, fork, join nodes) but replace actions with interactions or
+  interaction uses.
+* **Sequence diagrams** — the most common type of interaction embedded within
+  an interaction overview diagram.
+* **Communication diagrams** — can also appear as inline interactions.
+* **Timing diagrams** — can also appear as inline interactions.
+
+== Applications
+
+* Modeling complex business processes that involve multiple interacting
+  components.
+* Providing a bird's-eye view of system behavior across multiple use cases.
+* Decomposing complex sequence diagrams into a structured overview.
+* Documenting the flow of interactions in service-oriented architectures.
+* Visualizing the orchestration of microservices or distributed systems.
+
+== Limitations
+
+* Interaction overview diagrams are less commonly used than activity diagrams
+  or sequence diagrams.
+* UML 2.4 requires branching and joining of branches to be properly nested,
+  which is more restrictive than in activity diagrams and can be difficult to
+  obey.
+* The diagram type is not widely supported by all UML modeling tools.
+* For simple control flows, an activity diagram is often more appropriate.
