@@ -1,4 +1,4 @@
-# Activity diagrams
+= Activity diagrams
 
 An activity diagram shows the flow of control (or data) from one activity to
 another, describing the dynamic behavior of a system. It is similar to a
@@ -91,8 +91,11 @@ flow between activity nodes. There are two types:
 
 * **Control flow** — shows the sequence of execution. Drawn as a solid line with
   an open arrowhead.
-* **Object flow** — shows the flow of data or objects between actions. Drawn as
-  a dashed line with an open arrowhead.
+* **Object flow** — shows the flow of data or objects between actions. Also
+  drawn as a solid line with an open arrowhead; it is distinguished from
+  control flow by connecting to or from object nodes (rectangles) rather than
+  actions. Some tools render object flow as a dashed line by convention, but
+  this is not mandated by the UML specification.
 
 Edges can have guards (conditions in square brackets) and can be named.
 

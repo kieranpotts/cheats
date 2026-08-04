@@ -1,4 +1,4 @@
-# Profile diagrams
+= Profile diagrams
 
 A profile diagram operates at the metamodel level to define lightweight
 extensions to UML. It shows custom *stereotypes*, *tagged values*, and

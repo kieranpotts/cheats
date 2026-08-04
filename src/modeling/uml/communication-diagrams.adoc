@@ -1,4 +1,4 @@
-# Communication diagrams
+= Communication diagrams
 
 A communication diagram (formerly called a collaboration diagram in UML 1.x)
 shows the interactions between objects and the links between them, emphasizing
@@ -62,12 +62,19 @@ Optionally, a return value can be included:
 
     sequenceNumber: returnValue := methodName(parameters)
 
+PlantUML has no dedicated renderer for communication diagrams, so the layout
+must be approximated with plain object links:
+
 [plantuml]
 ....
-Client "1" -- "1" Server : 1: request()
-Server "1" -- "1" Database : 1.1: query()
-Database "1" -- "1" Server : 1.2: data()
-Server "1" -- "1" Client : 2: response()
+object Client
+object Server
+object Database
+
+Client --> Server : 1: request()
+Server --> Database : 1.1: query()
+Database --> Server : 1.2: data()
+Server --> Client : 2: response()
 ....
 
 == Sequence expressions

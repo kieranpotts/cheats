@@ -1,4 +1,4 @@
-# Interaction overview diagrams
+= Interaction overview diagrams
 
 An interaction overview diagram is a variant of an activity diagram that
 provides a high-level overview of the control flow within a system or business

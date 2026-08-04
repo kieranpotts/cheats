@@ -1,4 +1,4 @@
-# Package diagrams
+= Package diagrams
 
 A package diagram shows how model elements are organized into packages
 (namespaces) and the dependencies between them. A package is a general-purpose
@@ -58,8 +58,7 @@ package.
 
 == Relationship types
 
-In addition to the standard dependency, there are several special relationships
-defined between packages:
+UML defines three relationships that are specific to packages:
 
 [cols="1,3"]
 |===
@@ -82,14 +81,16 @@ defined between packages:
   an element exists in both, the source element's definition is expanded to
   include the target element's definition. Similar to generalization for
   packages.
-
-| Package use
-| Dashed arrow with `<<use>>`
-| Indicates that the source package uses elements from the target package without importing them into its namespace.
 |===
 
 Note: Package merge was used extensively in earlier UML specifications but is
 no longer used within the UML 2.5.1 specification itself.
+
+The generic `<<use>>` dependency stereotype (`Usage`, applicable to any two
+named elements, not just packages) is also commonly seen between packages. It
+indicates that the source package requires elements of the target package for
+its full implementation or operation, without importing them into its
+namespace.
 
 == Types of package diagrams
 

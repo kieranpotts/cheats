@@ -1,4 +1,4 @@
-# Component diagrams
+= Component diagrams
 
 A component diagram shows the components that make up a system and their
 dependencies on each other. A component is a modular, deployable, and

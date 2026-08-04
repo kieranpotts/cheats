@@ -1,4 +1,4 @@
-# Sequence diagrams
+= Sequence diagrams
 
 A sequence diagram shows the interactions between objects arranged in time
 sequence. It highlights the order in which messages are exchanged between
@@ -189,7 +189,6 @@ left corner.
 | `loop`  | Iteration — the fragment repeats, with an optional guard.
 | `break` | The fragment executes instead of the remainder if a condition is true; the enclosing interaction is then exited.
 | `par`   | Parallel — the fragments execute concurrently.
-| `ref`   | Reference to an interaction defined in another diagram.
 | `critical` | Critical region — only one thread may execute this fragment at a time.
 | `neg`   | Negative — the fragment shows an invalid or disallowed interaction.
 | `assert` | Assertion — the fragment specifies a valid interaction that must hold.
@@ -207,9 +206,9 @@ operand whose guard is true executes.
 [plantuml]
 ....
 Client -> Server : login(user, pass)
-alt Password valid
+alt [password valid]
   Server --> Client : token
-else Password invalid
+else [password invalid]
   Server --> Client : error
 end
 ....
@@ -222,7 +221,7 @@ true.
 [plantuml]
 ....
 Client -> Server : request()
-opt Cache enabled
+opt [cache enabled]
   Server -> Cache : lookup()
   Cache --> Server : cachedData
 end
@@ -237,7 +236,7 @@ Models a repeating sequence. The guard can specify minimum iterations
 [plantuml]
 ....
 Client -> Server : poll()
-loop until done
+loop [not done]
   Server -> Queue : fetch()
   Queue --> Server : item
   Server --> Client : result()

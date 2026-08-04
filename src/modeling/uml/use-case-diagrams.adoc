@@ -1,4 +1,4 @@
-# Use case diagrams
+= Use case diagrams
 
 A use case diagram shows the actors in a system, the use cases (goals) they
 participate in, and the relationships between them. It provides a high-level
@@ -165,7 +165,8 @@ Based on established UML style conventions:
 * Name actors with singular, business-relevant nouns.
 * Associate each actor with one or more use cases.
 * Actors model roles, not positions.
-* Use `<<system>>` to indicate system actors.
+* Use a `<<system>>` stereotype to indicate system actors, if useful. This is
+  a common convention, not a stereotype defined in the UML standard.
 * Actors do not interact with one another directly.
 * Introduce an actor called "Time" to initiate scheduled events.
 

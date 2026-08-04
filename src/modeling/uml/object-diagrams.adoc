@@ -1,4 +1,4 @@
-# Object diagrams
+= Object diagrams
 
 An object diagram shows a snapshot of the instances of the classes in a system
 at a specific point in time, along with the values of their attributes and the
@@ -47,14 +47,11 @@ in the format `attribute = value`.
 
 [plantuml]
 ....
-object "User" as alice {
+object "alice: User" as alice {
   name = "Alice"
   age = 30
 }
 ....
-
-An anonymous object (an instance whose name is not significant) is written as
-`: ClassName`.
 
 === Links
 
@@ -89,9 +86,9 @@ object "order2: Order" as order2 {
   total = 29.99
 }
 
-alice --> order1
-alice --> order2
-bob --> order1
+alice -- order1
+alice -- order2
+bob -- order1
 ....
 
 == Relationship to other diagrams

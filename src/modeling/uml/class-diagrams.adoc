@@ -1,4 +1,4 @@
-# Class diagrams
+= Class diagrams
 
 A class diagram is the most common type of UML diagram. It describes the
 static structure of a system by showing the system's classes, their attributes
@@ -113,13 +113,17 @@ The visibility of an attribute or operation is indicated by a prefix:
 | `+`    | Public — visible to all classes
 | `-`    | Private — visible only within the class
 | `#`    | Protected — visible to subclasses
-| `~`    | Package — visible to classes in the same package (default)
-| `/`    | Computed — value is derived dynamically from other attributes
+| `~`    | Package — visible to classes in the same package
 |===
 
-The `~` symbol is the default and is normally omitted. The `/` symbol for
-computed members may be placed before another visibility symbol, e.g., `/+`.
-In practice this symbol is rarely used.
+UML does not mandate a default visibility; it must be modeled explicitly.
+Many tools and languages (e.g., Java's package-private access) treat an
+unlabeled member as package visibility by convention, which is why `~` is
+often omitted in practice.
+
+A separate `/` prefix marks a **derived** property — one whose value is
+computed from other properties rather than stored directly. It is not a
+visibility kind; it is placed before the visibility symbol, e.g. `/+age`.
 
 === Member scope
 
@@ -189,7 +193,7 @@ class Calculator {
 
 | Directed association
 | An association with a navigable direction, drawn as a solid line with an
-  open arrowhead pointing toward the child.
+  open arrowhead pointing toward the target (known) class.
 
 | Aggregation
 | A "has-a" relationship where the part can exist independently of the whole.
@@ -267,8 +271,9 @@ thing at the opposite end of the line.*
 
 * In **inheritance**, child classes know about their parents, but not the other
   way around. The arrow points toward the parent (superclass).
-* In **associations and dependencies**, the dependencies do not know about the
-  objects that are using them. The arrow points toward the child (dependent).
+* In **associations and dependencies**, the supplier does not know about the
+  client using it. The arrow points toward the supplier (the target/known
+  class).
 
 == Multiplicity
 

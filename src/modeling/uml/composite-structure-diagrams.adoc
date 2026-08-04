@@ -1,4 +1,4 @@
-# Composite structure diagrams
+= Composite structure diagrams
 
 A composite structure diagram shows the internal structure of a classifier
 (such as a class, component, or collaboration) and the collaborations that this
@@ -74,11 +74,13 @@ include a multiplicity factor (e.g., `[0..*]`).
 
 A *port* is an interaction point on the boundary of a classifier. Ports can
 optionally specify the services they provide and the services they require from
-other parts of the system.
+other parts of the system. A port is drawn as a small square straddling the
+classifier's boundary, regardless of its visibility.
 
-* *Public ports* — visible in the environment, shown straddling the boundary.
-* *Protected ports* — not visible in the environment, shown inside the
-  boundary.
+Like any other property, a port has a visibility (`+` public, `-` private,
+`#` protected, `~` package), shown as a prefix on its name. A public port is
+visible to, and can be interacted with by, the classifier's environment; a
+private or protected port is restricted to internal use.
 
 Each port has a type and is labeled with a name. Ports may contain a
 multiplicity factor (e.g., `[3]`).

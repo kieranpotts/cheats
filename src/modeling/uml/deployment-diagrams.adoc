@@ -1,4 +1,4 @@
-# Deployment diagrams
+= Deployment diagrams
 
 A deployment diagram shows the physical deployment of artifacts onto nodes —
 the hardware or software execution environments on which components run. It

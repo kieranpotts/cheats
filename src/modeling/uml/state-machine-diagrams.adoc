@@ -1,4 +1,4 @@
-# State machine diagrams
+= State machine diagrams
 
 A state machine diagram (formerly called a state diagram, statechart diagram, or
 state-transition diagram) shows the states an object can be in, the transitions
@@ -159,18 +159,25 @@ Regions are separated by dashed lines within the composite state. Each region
 has its own set of states and transitions. Orthogonal regions can communicate
 by sending events to each other.
 
+== Final state
+
+A *final state* signifies that the enclosing region is completed. Drawn as a
+circle surrounding a small solid filled circle. Unlike the pseudostates
+described below, a final state is a proper vertex — the state machine can
+rest there between events.
+
 == Pseudostates
+
+A pseudostate is a transient vertex used to connect transitions into more
+complex paths — a state machine may not remain in a pseudostate between
+events. Final state (below) is not a pseudostate: it is a distinct kind of
+vertex that, like a normal state, can be the stable target of a transition.
 
 === Initial pseudostate
 
 A default starting point. There can be at most one per region. The outgoing
 transition may have a behavior but not a trigger or guard. Drawn as a small
 solid filled circle.
-
-=== Final state
-
-Signifies that the enclosing region is completed. Drawn as a circle
-surrounding a small solid filled circle.
 
 === Terminate pseudostate
 

@@ -1,4 +1,4 @@
-# Timing diagrams
+= Timing diagrams
 
 A timing diagram is a type of interaction diagram that focuses on the behavior
 of one or more objects throughout a given period of time. Time increases from
@@ -36,23 +36,25 @@ A *state timeline* shows the states or conditions of a lifeline over time.
 Discrete state transitions are drawn as a box line (step changes), while
 continuous changes (such as temperature) are drawn as a curved line.
 
-In the concise notation, states are listed across the diagram and the
-transition between them is indicated by a crossing of two general value
-lifelines.
+In the concise notation, the possible states are listed along the vertical
+axis, and the lifeline is drawn as a horizontal line that steps up or down to
+a new state at the appropriate point in time.
 
 [plantuml]
 ....
 @startuml
 concise "Seminar" as S
-@0 as :Proposed
-@5 as :Scheduled
-@10 as :Enrolling
-@15 as :Taught
-@20 as :Closed
-S :Proposed -> S :Scheduled : schedule()
-S :Scheduled -> S :Enrolling : open()
-S :Enrolling -> S :Taught : start()
-S :Taught -> S :Closed : finish()
+
+@0
+S is Proposed
+@5
+S is Scheduled
+@10
+S is Enrolling
+@15
+S is Taught
+@20
+S is Closed
 @enduml
 ....
 
