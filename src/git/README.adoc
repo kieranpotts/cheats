@@ -1,6 +1,7 @@
 = Git
 
 * link:./install.adoc[Installation]
+* link:./mergetool.adoc[Merge tools]
 * link:./rebase.adoc[Rebase]
 * link:./submodules.adoc[Submodules]
 * link:./worktrees.adoc[Worktrees]

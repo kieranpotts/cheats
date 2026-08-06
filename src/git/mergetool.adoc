@@ -1,0 +1,287 @@
+= Merge tools
+
+`git mergetool` launches an external merge tool to help you resolve the conflicts
+left behind by an unsuccessful merge, rebase, cherry-pick, revert, or pull.
+
+`git difftool` is the companion command for invoking an external diff program
+instead of the built-in `git diff`. The two commands share the same
+configuration: a single `difftool` / `mergetool` backend (such as VS Code or
+Vim) can be used for both purposes.
+
+== The merge workflow
+
+Conflicts arise whenever Git cannot reconcile two sets of changes to the same
+lines automatically. The conflicting file is rewritten in place with conflict
+markers (`<<<<<<<`, `=======`, `>>>>>>>`) surrounding the competing blocks.
+
+1. Run a merge that produces conflicts:
+
++
+[source,sh]
+----
+git merge feature
+----
+
+2. List the files that need resolution:
+
++
+[source,sh]
+----
+git status
+git diff --name-only --diff-filter=U
+----
+
+3. Resolve each conflict with your merge tool (see below), or by hand by
+   editing the files and removing the conflict markers.
+
+4. Mark the conflicts as resolved and finalize the merge:
+
++
+[source,sh]
+----
+git add <file>            # per file, or `git add -A` for all
+git merge --continue      # or `git commit` to finalize
+----
+
+[TIP]
+======
+To abort the merge and return the working tree to its pre-merge state, run
+`git merge --abort`. Use `git reset --merge` if you also want to discard staged
+changes.
+======
+
+== Invoking `git mergetool`
+
+Run `git mergetool` with no arguments to resolve every conflicted file in turn.
+Git will prompt you before launching the tool for each file unless you pass
+`--no-prompt`.
+
+[source,sh]
+----
+git mergetool                      # Resolve all conflicted files
+git mergetool <file>               # Resolve a single file
+git mergetool --tool=<tool>        # Use a specific tool for this run
+git mergetool -t meld              # Shorthand for the above
+git mergetool --no-prompt          # Do not prompt before each file
+git mergetool -y                   # Shorthand for --no-prompt
+----
+
+Git keeps backup files with `.orig` extensions of the conflicted versions. To
+suppress the backups:
+
+[source,sh]
+----
+git mergetool --no-backup
+----
+
+The corresponding diff command is `git difftool`:
+
+[source,sh]
+----
+git difftool                  # Diff the working tree against the index
+git difftool <commit>         # Diff the working tree against a commit
+git difftool <commit1> <commit2>
+git difftool --dir-diff       # Diff two whole directories at once
+git difftool -t vscode        # Use a specific tool for this run
+----
+
+== Configuration
+
+A tool is configured once and then invoked automatically on subsequent runs of
+`git mergetool` and `git difftool`.
+
+[source,sh]
+----
+# Set the default merge tool.
+git config --global merge.tool <tool>
+
+# Set the default diff tool.
+git config --global diff.tool <tool>
+
+# Skip the "launch the tool?" prompt.
+git config --global mergetool.prompt false
+----
+
+Built-in tools that Git knows how to launch without any extra configuration
+include `araxis`, `bc`, `code`, `deltawalker`, `diffuse`, `ecmerge`, `gvim`,
+`kdiff3`, `meld`, `nvim`, `opendiff`, `p4merge`, `smerge`, `tkdiff`, `vimdiff`,
+`vim`, `winmerge`, and `xxdiff`. Run `git mergetool --tool-help` to see the
+list of supported tools on your machine plus any custom tools you have
+defined.
+
+[NOTE]
+======
+`merge.tool` and `diff.tool` hold the *name* of the tool, not the path to an
+executable. To point Git at a non-standard binary location, set the `path`
+subkey for that tool, for example
+`git config --global mergetool.meld.path /usr/bin/meld`.
+======
+
+== Using VS Code
+
+VS Code's built-in merge editor is the modern way to resolve conflicts
+graphically. It works for the local VS Code installation and for the
+`code` and `code-insiders` binaries in `$PATH`.
+
+[source,sh]
+----
+git config --global merge.tool code
+git config --global mergetool.code.cmd 'code --wait $MERGED'
+git config --global diff.tool code
+git config --global difftool.code.cmd 'code --wait --diff $LOCAL $REMOTE'
+----
+
+[TIP]
+======
+`--wait` blocks Git until you close the editor window, which is what tells Git
+the conflict has been resolved. Without it, Git will proceed immediately. The
+`$MERGED`, `$LOCAL`, `$REMOTE`, and `$BASE` placeholders are substituted by Git
+with the paths to the conflicted file, the current side, the incoming side, and
+the common ancestor respectively.
+======
+
+The native VS Code merge editor (a 3-way view with inline checkboxes) is
+triggered automatically when you open a file containing conflict markers, or by
+running the *Git: Resolve Conflicts* command. The `git mergetool` integration
+above opens the same editor and waits for it to close.
+
+For VS Code Insiders, substitute `code-insiders` for `code` everywhere.
+
+== Using IntelliJ IDEA or WebStorm
+
+A JetBrains IDE can be used as both a diff tool and a merge tool. The IDE must
+be launched from the `idea` (or `webstorm`, `pycharm`, etc.) command-line
+launcher. Enable the launcher first via *Tools → Create Command-line Launcher*
+in older releases, or via the *JetBrains Toolbox* registry in newer ones.
+
+[source,sh]
+----
+git config --global merge.tool intellij
+git config --global mergetool.intellij.cmd 'idea merge \`git rev-parse --show-toplevel\` $PWD $LOCAL $REMOTE $MERGED $BASE'
+git config --global diff.tool intellij
+git config --global difftool.intellij.cmd 'idea diff \`git rev-parse --show-toplevel\` $LOCAL $REMOTE'
+----
+
+Replace `idea` with `webstorm`, `pycharm`, `phpstorm`, or `rubymine` for the
+corresponding IDE.
+
+[TIP]
+======
+On Windows, the launcher is typically at
+`%PROGRAMFILES%\JetBrains\<IDE>\bin\<ide>.exe`. Adjust the `cmd` to call that
+absolute path if the IDE is not on your `PATH`.
+======
+
+== Using Vim or Neovim
+
+`vimdiff` (or `nvim -d`) opens a 4-window layout: `LOCAL`, `BASE`, `REMOTE`,
+and the merged result. The merged file is in the bottom-right pane.
+
+[source,sh]
+----
+# Vim
+git config --global merge.tool vimdiff
+git config --global mergetool.vimdiff.cmd 'vim -d $LOCAL $REMOTE $MERGED $BASE'
+
+# Neovim
+git config --global merge.tool nvim
+git config --global mergetool.nvim.cmd 'nvim -d $LOCAL $REMOTE $MERGED $BASE'
+----
+
+Within the merge session, the following Vim/Neovim commands are useful:
+
+[cols="1,3",options="header"]
+|===
+| Command | Effect
+
+| `:diffget` or `:diffg`
+| Pull the corresponding hunk from the `REMOTE` buffer into the merge result.
+  Use `:diffget //2` for `LOCAL` and `:diffget //3` for `REMOTE` (the buffer
+  numbers are shown in the status line).
+
+| `:diffput` or `:diffp`
+| Push the hunk from the current buffer into the merge result.
+
+| `]c`
+| Jump to the next conflict hunk.
+
+| `[c`
+| Jump to the previous conflict hunk.
+
+| `:only`
+| Close every window except the merge result, ready to save and exit.
+
+| `:wq`
+| Write the merged result and quit. `:qa!` abandons the merge.
+|===
+
+[NOTE]
+======
+Vim/Neovim do not write the resolved file back to the path Git expects unless
+the merge result pane is the file pointed to by `$MERGED`. The built-in
+`vimdiff` preset arranges this for you; if you customize `cmd`, make sure
+`$MERGED` is opened last so it is the active "result" buffer.
+======
+
+== Using Meld
+
+Meld is a popular graphical 3-way merge tool available on Linux, Windows, and
+macOS (via Homebrew: `brew install --cask meld`).
+
+[source,sh]
+----
+git config --global merge.tool meld
+git config --global diff.tool meld
+
+# 3-way merge with the common ancestor visible.
+git config --global mergetool.meld.cmd 'meld --auto-merge $LOCAL $BASE $REMOTE --output=$MERGED'
+----
+
+== Custom tools
+
+To wire up a tool that Git does not know about, give it an arbitrary name and
+define a `cmd` for it. The placeholders Git substitutes are:
+
+[cols="1,3",options="header"]
+|===
+| Placeholder | Expands to
+
+| `$LOCAL`   | The version of the file in the current branch (`HEAD`).
+| `$REMOTE`  | The version of the file being merged in.
+| `$BASE`    | The common ancestor of the two versions.
+| `$MERGED`  | The path to the file containing the conflict markers; the merge tool should write the resolved result here.
+| `$BACKUP`  | Path of the `.orig` backup Git created (rarely needed).
+|===
+
+For example, a custom tool that just opens the conflicted file in `$EDITOR`:
+
+[source,sh]
+----
+git config --global merge.tool mytool
+git config --global mergetool.mytool.cmd '$EDITOR $MERGED'
+----
+
+[NOTE]
+======
+Diff tools only receive `$LOCAL` and `$REMOTE` (and `$BASE` with `--dir-diff`);
+`$MERGED` is not meaningful for `git difftool`.
+======
+
+== Resetting configuration
+
+To remove a tool configuration:
+
+[source,sh]
+----
+git config --global --unset merge.tool
+git config --global --unset mergetool.<tool>.cmd
+git config --global --unset diff.tool
+git config --global --unset difftool.<tool>.cmd
+----
+
+To inspect the active configuration:
+
+[source,sh]
+----
+git config --global --get-regexp '^(merge|diff|mergetool|difftool)\.'
+----
