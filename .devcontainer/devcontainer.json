@@ -2,8 +2,8 @@
 // https://aka.ms/devcontainer.json.
 
 {
-  "name": "Template",
-  "runArgs": ["--name", "kieranpotts-template"],
+  "name": "Cheats",
+  "runArgs": ["--name", "kieranpotts-cheats"],
   "build": {
     "dockerfile": "Dockerfile",
     "context": "..",
