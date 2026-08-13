@@ -13,17 +13,17 @@ SHOULD NOT, OPTIONAL, and MAY are to be interpreted as described in
 
 ## Project structure
 
-- **`src/`** Source files.
+- `src/`. Source files.
 
-  - **`aws/`** AWS-related notes.
+  - `aws/`. AWS-related notes.
 
-  - **`bash/`** Bash-related notes.
+  - `bash/`. Bash-related notes.
 
-  - **`python/`** Python-related notes.
+  - `python/`. Python-related notes.
 
   - Etc.
 
-- **`template/`** Template files for new collections notes.
+- `template/`. Template files for new collections notes.
 
 ## Tools
 
