@@ -1,0 +1,168 @@
+= Launching
+
+Ollama has a built-in REPL for interactive chats with models.
+
+[source,sh]
+----
+# Start an interactive chat session with a model.
+# The model is downloaded automatically if not already present.
+ollama run <model>
+
+# Pass a single prompt and exit (non-interactive).
+echo "Why is the sky blue?" | ollama run <model>
+----
+
+To exit an interactive session, press `Ctrl+D` or type `/bye`.
+
+In these modes, the user talks directly to the model. The user types a prompt
+and the model replies, with no intermediary. The model has no access to the
+outside world — neither the host environment nor the web. The only context it
+has is the running chat session.
+
+== Running via a harness
+
+More typically, users interact with models via an external agent harness —
+a coding assistant or other tool that drives the model, rather than a human
+typing prompts directly.
+
+Ollama provides a `launch` subcommand that configures a supported harness to
+use Ollama as its model provider.
+
+[source,sh]
+----
+ollama launch <harness>
+----
+
+For example, `ollama launch claude` configures Claude Code to connect to the
+local Ollama server, and `ollama launch vscode` configures VS Code's Copilot
+Chat panel to do the same.
+
+Ollama launches the harness with the model last selected for that harness.
+To choose a different model for the harness, reset its configuration by
+passing the `--config` flag, or pass a model directly with `--model`. The
+model can be any of those listed by `ollama ls`
+
+[source,sh]
+----
+ollama launch claude --config
+ollama launch claude --model qwen3-coder:30b
+----
+
+The `launch` subcommand passes an inline configuration to the harness, so it
+does not change the harness's own persistent settings.
+
+== Tool calling
+
+For a model to be useful in the context of an coding agent harness, the model
+must support tool calling.
+
+The best way to check for tool calling support is to look for a "tools" badge on
+the model's page in the [Ollama model library](https://ollama.com/search). You
+can also use the `ollama show <model>` command in your terminal to check a
+model's capabilities.
+
+When using Ollama via harnesses like VS Code's chat panel, the model selection
+dropdown may only show those models that support tool calling. For example, if
+you pull `deepseek-coder:6.7b`, it won't show up in VS Code's model selection
+panel because this model does not support tools.
+
+== Custom harness configuration
+
+To make Ollama the default provider for a harness, or to configure a harness
+that `launch` does not support, the harness must be configured directly. The
+following covers example configurations for a handful of front-end interfaces.
+
+=== VS Code Copilot Chat integration
+
+Confirm Ollama is running at http://localhost:11434/ (you should see "Ollama is
+running"), then open the model picker in the Copilot Chat panel. Your local
+models may already appear under the "Ollama" provider. If not, click
+*Add Models*, choose "Ollama", and enter `http://localhost:11434/`.
+
+=== Claude Code
+
+To make Ollama the default provider, and to set default models, add the
+following to your shell profile (`~/.bashrc`, `~/.zshrc`, etc.). The auth token
+can be any value – Ollama ignores its value.
+
+[source,sh]
+----
+export ANTHROPIC_BASE_URL=http://localhost:11434
+export ANTHROPIC_AUTH_TOKEN=ollama
+export ANTHROPIC_MODEL=qwen3-coder:30b
+export ANTHROPIC_SMALL_FAST_MODEL=qwen2.5-coder:3b # For fast subtasks.
+----
+
+Restart your shell for the changes to take effect, then launch `claude`
+directly.
+
+[WARNING]
+======
+These settings will also effect other Claude interfaces, such as the VS Code
+extension, effectively locking you out of access to Claude's hosted models.
+======
+
+=== OpenCode
+
+Configure a custom integration at `~/.config/opencode/opencode.json`:
+
+[source,json]
+----
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
+      "options": {
+        "baseURL": "http://localhost:11434/v1"
+      },
+      "models": {
+        "qwen3:8b-16k": { "tools": true }
+      }
+    }
+  }
+}
+----
+
+`@ai-sdk/openai-compatible` is the SDK package required to integrate with OpenAI
+API-compatible services (like Ollama). The `tools` option is what enables
+agentic file edits.
+
+Restart OpenCode, run `/models`, and your local model should be there.
+
+=== Command line interfaces
+
+https://aider.chat/[Aider] works across a whole Git repository, similar to
+Claude Code or Copilot CLI. It connects to Ollama via its OpenAI-compatible
+endpoint.
+
+[source,sh]
+----
+aider --model ollama_chat/qwen2.5-coder:7b
+----
+
+See the https://aider.chat/docs/llms/ollama.html[Aider + Ollama docs] for
+further instructions.
+
+https://github.com/TheR1D/shell_gpt[ShellGPT] (sgpt) is a general-purpose tool
+for piping commands and text into a model. Useful for explaining errors and
+analyzing logs.
+
+[source,sh]
+----
+sgpt --model ollama/mistral "explain this error: segfault at 0x00"
+cat error.log | sgpt --model ollama/mistral "what's wrong here?"
+----
+
+https://github.com/danielmiessler/Fabric[Fabric] is built around reusable prompt
+templates. Itt works well with piped input.
+
+[source,sh]
+----
+cat error.log | fabric --model ollama:mistral --pattern analyze_logs
+git diff | fabric --model ollama:mistral --pattern write_commit
+----
+
+https://terminaltrove.com/oterm/[Oterm] is a terminal UI (TUI) that provides a
+more visually rich experience than plain CLI tools like Aider or sgpt.

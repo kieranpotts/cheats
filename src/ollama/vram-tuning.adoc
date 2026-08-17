@@ -12,8 +12,23 @@ server instance — not per-request.
 
 == `OLLAMA_CONTEXT_LENGTH`
 
-Default context window, in tokens, for every model the server loads. Default
-is `4096`.
+Default context window, in tokens, for every model the server loads. Since
+Ollama 0.15.5 the default is no longer a flat `4096` — the server sizes it
+from the VRAM it detects at startup.
+
+[cols="1,1"]
+|===
+|VRAM |Default `num_ctx`
+
+|< 24 GiB
+|4,096
+
+|24–48 GiB
+|32,768
+
+|>= 48 GiB
+|262,144
+|===
 
 The KV cache and compute buffers both scale with context length. This is
 usually the single largest lever on memory use after the model weights
@@ -22,11 +37,10 @@ buffers" is almost always context-related.
 
 Caveats:
 
-* `4096` is already the built-in default, so setting it explicitly is a
-  no-op unless something else raised it — a previously-set env var, a client
-  passing `num_ctx`, or a model whose own Modelfile bakes in a larger value.
-  Keep it as a documented floor, but don't expect it to change behavior on a
-  stock install.
+* Because the default is VRAM-derived, the same configuration behaves
+  differently on different machines — and setting this variable is a real
+  change, not a no-op, on any card at 24 GiB or above. On a 32 GiB card the
+  server would otherwise pick 32,768.
 
 * This env var only sets the default. A client that sends `options.num_ctx`
   in its API request overrides it for that request, and a model whose own
@@ -39,6 +53,22 @@ Caveats:
 
 Verify with `ollama ps` — the CONTEXT column shows what was actually
 allocated.
+
+=== Silent truncation
+
+When a request carries more history than `num_ctx`, Ollama does not error. It
+discards the oldest tokens, first-in-first-out, and proceeds — so the model
+quietly forgets earlier context. Since the trim takes from the *front*, the
+system prompt is typically the first casualty.
+
+WARNING: A front-end's declared context window MUST therefore be less than or
+equal to the server's real `num_ctx`. If a harness advertises 128K against a
+server allocating 8K, it will keep sending history that is silently thrown
+away.
+
+The truncation is logged only at debug level (`server/prompt.go`), so it does
+not appear in normal server output. In the runner's journal it shows up
+indirectly as `memory_seq_rm` entries.
 
 == `OLLAMA_FLASH_ATTENTION`
 
@@ -120,6 +150,10 @@ Caveats:
 
 == Applying the configuration
 
+IMPORTANT: The `ollama` systemd service does not inherit your shell
+environment. Exporting these variables in `.bashrc` or `.profile` has no
+effect on the running server — they must be set on the service itself.
+
 On Linux, set these as a systemd drop-in on `ollama.service`:
 
 [source,sh]
@@ -193,48 +227,3 @@ PARAMETER num_gpu 20
 ----
 ollama create your-model:4k -f Modelfile
 ----
-
-== Example: 32 GB VRAM (AMD, single card), 32 GB system RAM
-
-A solo workstation, one model resident at a time, no other GPU consumers to
-share with. The goal is headroom — for the desktop environment, browser, and
-other everyday programs sharing the 32 GB system RAM — not squeezing in the
-largest possible model.
-
-[source,ini]
-----
-[Service]
-# 8k (8192) is a comfortable working context for coding/chat use without
-# starving the rest of the card. Raise it (eg. to 16384) only if a
-# specific workload needs the longer window, and watch VRAM headroom.
-Environment="OLLAMA_CONTEXT_LENGTH=8192"
-
-# Required on AMD/ROCm: unlike CUDA, ROCm does not always enable flash
-# attention automatically. Confirm it actually took ("flash attention"
-# in the startup log) — on unsupported GPU/model combinations this
-# silently has no effect, and KV cache quantization won't help either.
-Environment="OLLAMA_FLASH_ATTENTION=1"
-
-# Halves KV cache memory for negligible quality loss. Sensible default
-# at this VRAM budget.
-Environment="OLLAMA_KV_CACHE_TYPE=q8_0"
-
-# Only one model runs at a time on this workstation, so there's no
-# reason to reserve headroom for a second.
-Environment="OLLAMA_MAX_LOADED_MODELS=1"
-
-# No concurrent requests to fan out to on a solo workstation — avoids
-# multiplying the context memory cost.
-Environment="OLLAMA_NUM_PARALLEL=1"
-
-# Free VRAM promptly when idle, since system RAM is also only 32 GB and
-# other programs need headroom too. Default is 5m.
-Environment="OLLAMA_KEEP_ALIVE=5m"
-----
-
-With this configuration, a well-quantized (Q4–Q5) model in the 20–27B
-parameter range should fit comfortably in 32 GB VRAM alongside the KV cache,
-leaving the model weights as the dominant consumer. Larger models can work
-too, but check with `ollama ps` after loading — if `PROCESSOR` shows any
-CPU split, some layers spilled out of VRAM and inference will be
-significantly slower.

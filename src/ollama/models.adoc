@@ -12,7 +12,7 @@ ollama pull <model>
 ollama pull <model>:<tag>
 
 # List all downloaded models.
-ollama list
+ollama ls
 
 # Remove a downloaded model.
 ollama rm <model>
@@ -27,11 +27,6 @@ tag pulls the default variant.
 Start small when testing a new setup — a 1B parameter model like `gemma3:1b` is
 a fast way to verify everything is working before downloading larger models.
 ======
-
-For a new setup, starting with a 3-8B model on a machine with 16-32GB RAM gives
-the best balance of quality and speed with minimal setup risk. See
-link:./hardware.adoc[Hardware] for a full breakdown of model size vs hardware
-requirements.
 
 ## Model families
 
