@@ -1,5 +1,7 @@
 = Running models
 
+Ollama has a built-in REPL for interactive chats with models.
+
 [source,sh]
 ----
 # Start an interactive chat session with a model.
@@ -11,3 +13,39 @@ echo "Why is the sky blue?" | ollama run <model>
 ----
 
 To exit an interactive session, press `Ctrl+D` or type `/bye`.
+
+In these modes, the user talks directly to the model. The users types a prompt
+and the model replies, with no intermediary. The model has no access to the
+outside world — neither the host environment nor the web. The only context it
+has is the running chat session.
+
+== Running via a harness
+
+More typically, users interact with models via an external agent harness —
+a coding assistant or other tool that drives the model rather than a human
+typing prompts directly.
+
+Ollama provides a `launch` subcommand that configures a supported harness to
+use Ollama as its model provider.
+
+[source,sh]
+----
+ollama launch <harness>
+----
+
+For example, `ollama launch claude` configures Claude Code to connect to the
+local Ollama server, and `ollama launch vscode` configures VS Code's Copilot
+Chat panel to do the same.
+
+Ollama launches the harness with the model last selected for that harness.
+To choose a different model for the harness, reset its configuration by
+passing the `--config` flag, or pass a model directly with `--model`:
+
+[source,sh]
+----
+ollama launch claude --config
+ollama launch claude --model qwen3-coder:30b
+----
+
+See link:./harnesses.adoc[**Harnesses**] for harness-specific setup, including
+manual configuration for harnesses without `launch` support.

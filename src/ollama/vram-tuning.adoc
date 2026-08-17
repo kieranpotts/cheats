@@ -1,0 +1,240 @@
+= VRAM tuning
+
+OOM (out-of-memory) is a common error pattern when running models locally.
+This is when the server fails to allocate enough VRAM for the model,
+its context, or its compute buffers, and the load or request fails. Ollama
+surfaces this as an allocation error naming the failed buffer, eg.
+`graph_reserve` or "failed to allocate compute pp buffers".
+
+Four server-level environment variables reduce GPU memory pressure. They are
+set once, on the Ollama server, and apply to every model loaded by that
+server instance — not per-request.
+
+== `OLLAMA_CONTEXT_LENGTH`
+
+Default context window, in tokens, for every model the server loads. Default
+is `4096`.
+
+The KV cache and compute buffers both scale with context length. This is
+usually the single largest lever on memory use after the model weights
+themselves. An OOM on `graph_reserve` or "failed to allocate compute pp
+buffers" is almost always context-related.
+
+Caveats:
+
+* `4096` is already the built-in default, so setting it explicitly is a
+  no-op unless something else raised it — a previously-set env var, a client
+  passing `num_ctx`, or a model whose own Modelfile bakes in a larger value.
+  Keep it as a documented floor, but don't expect it to change behavior on a
+  stock install.
+
+* This env var only sets the default. A client that sends `options.num_ctx`
+  in its API request overrides it for that request, and a model whose own
+  Modelfile bakes in `PARAMETER num_ctx` overrides it for that model — some
+  published models do exactly this. Check what a given model actually pins
+  with `/show parameters` in the REPL (`ollama run`).
+
+* Memory scales as `OLLAMA_NUM_PARALLEL × OLLAMA_CONTEXT_LENGTH`. With
+  parallelism above 1, the effective context is a multiple of this number.
+
+Verify with `ollama ps` — the CONTEXT column shows what was actually
+allocated.
+
+== `OLLAMA_FLASH_ATTENTION`
+
+Forces flash attention on (`1`) or off (`0`). Default is automatic — Ollama
+enables it on its own when the back-end and device support it.
+
+Flash attention reduces memory usage as context size grows, and — more
+importantly here — K/V cache quantization only takes effect when flash
+attention is enabled, so this is a prerequisite for `OLLAMA_KV_CACHE_TYPE`
+below.
+
+Caveat: since selection is already automatic, forcing `1` only changes
+anything where Ollama declined to enable it — which on ROCm may mean the
+back-end doesn't support it for your GPU/model combination. If it isn't
+genuinely active, the KV cache setting won't help either. Check the server
+log at startup.
+
+== `OLLAMA_KV_CACHE_TYPE`
+
+Quantization type for the K/V context cache. Default is `f16`.
+
+[cols="1,1,3"]
+|===
+|Value |Memory vs `f16` |Quality impact
+
+|`f16`
+|baseline
+|None. Default, highest precision.
+
+|`q8_0`
+|~1/2
+|Very small precision loss, usually no noticeable quality impact. The
+recommended choice if not using `f16`.
+
+|`q4_0`
+|~1/4
+|Small-to-medium precision loss, more noticeable at higher context sizes.
+|===
+
+Roughly halves the KV cache allocation at `q8_0`. The larger the context, the
+more this saves in absolute terms.
+
+Caveats:
+
+* Global option — every model on the server runs with this quantization
+  type. There is no per-model override.
+
+* Requires flash attention (see above).
+
+* Quality impact is model-dependent. Models with a high GQA count (eg.
+  Qwen2) may lose more precision from quantization than low-GQA models.
+  Worth A/B-ing on your actual workload if output quality matters.
+
+== `OLLAMA_MAX_LOADED_MODELS`
+
+Caps how many models may be resident in memory simultaneously. Default is
+`3 × number of GPUs` (or `3` for CPU inference).
+
+With the default of 3, a second or third model loaded by some other client
+can quietly consume the headroom your primary model needs, producing an OOM
+that looks unrelated to what you were doing. Setting it to `1` guarantees one
+model owns the GPU at a time. Others queue rather than compete.
+
+Caveats:
+
+* Trade-off is latency. Switching between models now forces an
+  unload/reload cycle.
+
+* On Windows with Radeon GPUs this is already the effective default (ROCm
+  v5.7 VRAM reporting limitations), so setting it there is redundant —
+  harmless, but it isn't what fixed the problem.
+
+* Doesn't cap parallel requests to a single model — that's
+  `OLLAMA_NUM_PARALLEL`, which multiplies context memory and is worth
+  pinning to `1` alongside this if VRAM is tight.
+
+* Related: `OLLAMA_KEEP_ALIVE` (default `5m`) controls how long an idle
+  model holds its VRAM. Shortening it frees memory sooner between uses.
+
+== Applying the configuration
+
+On Linux, set these as a systemd drop-in on `ollama.service`:
+
+[source,sh]
+----
+sudo systemctl edit ollama.service
+----
+
+[source,ini]
+----
+[Service]
+# Default context window for all models, in tokens. KV cache and compute
+# buffers scale with this — the main lever on VRAM use.
+Environment="OLLAMA_CONTEXT_LENGTH=4096"
+
+# Force Flash Attention on. Reduces memory at longer contexts, and is a
+# prerequisite for K/V cache quantization below.
+Environment="OLLAMA_FLASH_ATTENTION=1"
+
+# Quantize the K/V cache to 8-bit: ~half the memory of f16, negligible
+# quality cost. Global — applies to every model on this server.
+Environment="OLLAMA_KV_CACHE_TYPE=q8_0"
+
+# One model resident at a time (default is 3 per GPU). Stops a second
+# model from eating the headroom the first one needs.
+Environment="OLLAMA_MAX_LOADED_MODELS=1"
+----
+
+[source,sh]
+----
+sudo systemctl daemon-reload
+sudo systemctl restart ollama
+----
+
+Other platforms:
+
+* macOS: `launchctl setenv NAME value`, then restart the app.
+
+* Windows: set the variables via the Settings/Control Panel environment
+  variables dialogue (Ollama inherits user/system environment variables),
+  then quit and relaunch Ollama.
+
+== Verifying it took effect
+
+[source,sh]
+----
+ollama ps                       # CONTEXT column = actual allocated context.
+                                # PROCESSOR column = GPU/CPU split.
+rocm-smi                        # Actual VRAM in use, and by what.
+journalctl -u ollama -f         # Startup log: back-end, flash attention, buffer sizes.
+----
+
+In the REPL, `/show parameters` reveals whether a model pins its own
+`num_ctx`, overriding the server default.
+
+== Not covered by these variables
+
+`num_batch` (prompt-processing batch size, default `512`) and `num_gpu`
+(layers offloaded to GPU) have no server-wide environment variable. They are
+set per-request via the API `options` object, or baked into a model with a
+link:./modelfiles.adoc[Modelfile]:
+
+[source]
+----
+FROM your-model:tag
+PARAMETER num_ctx 4096
+PARAMETER num_batch 256
+PARAMETER num_gpu 20
+----
+
+[source,sh]
+----
+ollama create your-model:4k -f Modelfile
+----
+
+== Example: 32 GB VRAM (AMD, single card), 32 GB system RAM
+
+A solo workstation, one model resident at a time, no other GPU consumers to
+share with. The goal is headroom — for the desktop environment, browser, and
+other everyday programs sharing the 32 GB system RAM — not squeezing in the
+largest possible model.
+
+[source,ini]
+----
+[Service]
+# 8k (8192) is a comfortable working context for coding/chat use without
+# starving the rest of the card. Raise it (eg. to 16384) only if a
+# specific workload needs the longer window, and watch VRAM headroom.
+Environment="OLLAMA_CONTEXT_LENGTH=8192"
+
+# Required on AMD/ROCm: unlike CUDA, ROCm does not always enable flash
+# attention automatically. Confirm it actually took ("flash attention"
+# in the startup log) — on unsupported GPU/model combinations this
+# silently has no effect, and KV cache quantization won't help either.
+Environment="OLLAMA_FLASH_ATTENTION=1"
+
+# Halves KV cache memory for negligible quality loss. Sensible default
+# at this VRAM budget.
+Environment="OLLAMA_KV_CACHE_TYPE=q8_0"
+
+# Only one model runs at a time on this workstation, so there's no
+# reason to reserve headroom for a second.
+Environment="OLLAMA_MAX_LOADED_MODELS=1"
+
+# No concurrent requests to fan out to on a solo workstation — avoids
+# multiplying the context memory cost.
+Environment="OLLAMA_NUM_PARALLEL=1"
+
+# Free VRAM promptly when idle, since system RAM is also only 32 GB and
+# other programs need headroom too. Default is 5m.
+Environment="OLLAMA_KEEP_ALIVE=5m"
+----
+
+With this configuration, a well-quantized (Q4–Q5) model in the 20–27B
+parameter range should fit comfortably in 32 GB VRAM alongside the KV cache,
+leaving the model weights as the dominant consumer. Larger models can work
+too, but check with `ollama ps` after loading — if `PROCESSOR` shows any
+CPU split, some layers spilled out of VRAM and inference will be
+significantly slower.

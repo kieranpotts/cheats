@@ -19,7 +19,7 @@ ollama rm <model>
 ----
 
 Model names follow the format `<name>:<tag>`, where the tag identifies the
-variant (typically size and quantisation level, eg. `llama3:8b`). Omitting the
+variant (typically size and quantization level, eg. `llama3:8b`). Omitting the
 tag pulls the default variant.
 
 [TIP]

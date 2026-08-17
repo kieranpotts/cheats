@@ -14,9 +14,10 @@ seamlessly.
 * link:./models.adoc[Models]
 * link:./running-models.adoc[Running models]
 * link:./hardware.adoc[Hardware]
+* link:./vram-tuning.adoc[VRAM tuning]
 * link:./modelfiles.adoc[Modelfiles]
 * link:./api.adoc[API]
-* link:./front-ends.adoc[Front-ends]
+* link:./harnesses.adoc[Harnesses]
 
 **[Full docs here.](https://docs.ollama.com/)**
 
