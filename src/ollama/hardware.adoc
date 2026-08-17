@@ -1,88 +1,116 @@
 = Hardware
 
 Ollama automatically uses GPU acceleration where available (NVIDIA via CUDA, AMD
-via ROCm, Apple Silicon via Metal). It falls back to CPU if no GPU is detected.
+via ROCm, Apple Silicon via Metal, and Intel plus additional AMD GPUs via Vulkan
+on Windows and Linux). It falls back to CPU if no GPU is detected.
 
 The primary constraint on performance is VRAM. Models that fit entirely in VRAM
-run fast. Any overflow, no matter how much, into system RAM will cause a 5–20x
-performance drop.
-
-== Model size vs hardware requirements
-
-[options="header"]
-|===
-|Model size |Example models |RAM/VRAM |GPU |Suitable PCs |Speed
-
-|<1B parameters
-|Qwen3 0.6B
-|<4 GB
-|Not required (CPU-only)
-|Any modern laptop, Raspberry Pi 5
-|10-30 tok/s (CPU)
-
-|1-3B parameters
-|Llama 3.2 3B
-|4-8 GB
-|Optional (CPU-only is possible but slower)
-|MacBook Air M1/M2, MacBook Pro (base), ultrabooks, some older PCs
-|2-10 tok/s (CPU)
-
-|7-13B parameters
-|Llama 3.1 8B, Qwen3 8B, Mistral 7B
-|8-16 GB
-|8-12 GB VRAM, RTX 3060/4060 recommended
-|MacBook Pro M1/M2 (16-32 GB), gaming laptops, mid-range PCs
-|20-50 tok/s (GPU)
-
-|30-70B parameters
-|Llama 3.3 70B, Qwen3 32B
-|32+ GB
-|24+ GB VRAM, RTX 4090/A6000
-|Mac Studio / MacBook Pro (Max/Ultra), high-end PCs w/ RTX 3090/4090
-|40-80 tok/s (high-end GPU)
-
-|100B+ parameters
-|Qwen3 235B, GLM-4.6 357B*, GLM-4.7 355B*, Llama 3.1 405B
-|64+ GB
-|Multi-GPU (80GB+ total)
-|Workstations, multi-GPU PCs, dedicated servers
-|10-30 tok/s (multi-GPU); cloud/enterprise recommended
-|===
-
-(* Assuming Q4 quantization (4-bit precision). Full precision models require ~4x
-more RAM.)
+run fast. Spilling a significant share of the layers into system RAM causes a
+5–20x performance drop.
 
 == GPU
 
-VRAM-to-model-size mapping:
+Model size to memory and hardware:
 
-* 8–12 GB → 7B–13B models
-* 16–24 GB → up to ~34B models
-* 32–48 GB → 70B models
-* 64 GB+ (multi-GPU) → 100B+ models
+[options="header"]
+|===
+|Model size |Memory |Hardware |Speed
+
+|<1B
+|<4 GB
+|CPU-only
+|30–80 tok/s
+
+|1–3B
+|4–8 GB
+|CPU-only, or any GPU for a large speed-up
+|5–15 tok/s (CPU)
+
+|4–13B
+|8–16 GB
+|8–12 GB VRAM (RTX 3060/4060)
+|30–110 tok/s
+
+|14–32B
+|16–32 GB
+|16–24 GB VRAM (RTX 3090/4090)
+|20–50 tok/s
+
+|33–70B
+|48+ GB
+|~43 GB VRAM for a 70B; dual RTX 3090/4090, or RTX 6000 Ada
+|16–21 tok/s
+
+|100B+
+|140+ GB
+|Multi-GPU; a 405B needs ~8x A100 80GB class
+|10–30 tok/s
+|===
+
+All figures assume Q4 quantization (4-bit precision), the Ollama default. Full
+precision models require ~4x more memory. Memory needs scale with total
+parameters, not active ones: a mixture-of-experts model such as Qwen3 235B-A22B
+still needs all 235B of weights resident (~132 GB at Q4), despite activating
+only 22B per token.
+
+A model is a stack of layers, and each layer sits either in VRAM (computed by
+the GPU) or in system RAM (computed by the CPU). Moving layers onto the GPU is
+called _offloading_, and the `num_gpu` parameter sets how many layers to send
+there — it is a layer count, not a count of GPUs:
+
+* `-1` (the default) — Ollama measures free VRAM and picks the split itself.
+* `0` — every layer on the CPU.
+* `999` — force all layers onto the GPU, spread across all detected cards.
+
+CAUTION: Ollama follows llama.cpp in using "offload" to mean offload _to_ the
+GPU, so "100% GPU offload" is the fast, fully GPU-resident case. Elsewhere the
+same word is often used to mean spilling _out of_ VRAM onto the CPU, which is
+the slow case. Check which sense a given source intends.
 
 Consumer GPU options, roughly in order of price:
 
-* RTX 3090 (24 GB) — runs up to 34B models; 70B with low quantization. Available
-  second-hand.
-* Dual RTX 3090s (48 GB combined) — runs 70B models; typically cheaper than a
-  single RTX 5090.
-* RTX 4090 (24 GB) — ~130 tok/s on 8B models.
-* RTX 5090 (32 GB) — ~200 tok/s on 8B models; runs Llama 3.1 405B at 15–20 tok/s
-  with quantization.
+* RTX 3090 (24 GB) — runs up to 34B models; 70B only with aggressive
+  quantization. Available second-hand.
+* Dual RTX 3090s (48 GB combined) — runs 70B models at Q4 (~16–21 tok/s);
+  typically cheaper than a single RTX 5090.
+* RTX 4090 (24 GB) — ~95–110 tok/s on 8B models.
+* RTX 5090 (32 GB) — ~140 tok/s on 8B models.
 * RTX 6000 Ada (48 GB) — unlocks 70B models comfortably.
 
+NOTE: Published tokens-per-second figures vary by 40–50% between sources, since
+context length, quantization, and inference engine all differ. Treat the numbers
+above as short-context, batch-size-1 upper bounds.
+
 Nvidia is recommended — its CUDA ecosystem has the most mature AI software
-support. AMD ROCm is an alternative but lags in performance and compatibility.
-Intel oneAPI is not currently supported by Ollama.
+support. AMD is an alternative, via either ROCm or Vulkan, but lags in
+performance and compatibility. Intel GPUs work through Ollama's Vulkan support;
+Intel's own oneAPI path is not supported upstream, and is available only via
+community builds.
 
 TIP: Choose a motherboard with room for a second GPU later. The AMD Threadripper
 platform is a good choice for dual-GPU or expandable builds.
 
 == System RAM
 
-Aim for at least 64 GB. 128–256 GB allows running very large quantized models
-that overflow VRAM, though they will run slowly.
+Size system RAM to how much of the model lives on the GPU, not to the model's
+size.
+
+* *Model fits in VRAM.* 16 GB is workable and 32 GB is comfortable, even for
+  32B models. RAM is not the constraint here.
+* *Model overflows VRAM.* The spilled layers, and their KV cache, occupy system
+  RAM for real. Size RAM to the overflow, and expect the 5–20x slowdown.
+* *Deliberately running very large models on CPU.* 128–256 GB puts 100B+
+  quantized models within reach, at a few tokens per second.
+
+RAM is not needed only for the initial load. Ollama memory-maps the model file,
+so a copy of the weights stays resident in the page cache even at 100% GPU
+offload — this can look like tens of GB in `top`. It is file-backed and
+reclaimable, though, so it is not a real requirement; it just makes reloads
+fast.
+
+The KV cache is separate again, and grows with both context length and
+concurrency: required memory scales by `OLLAMA_NUM_PARALLEL` ×
+`OLLAMA_CONTEXT_LENGTH`.
 
 == CPU
 
@@ -91,12 +119,14 @@ or Ryzen 5 is sufficient; an i7 or Ryzen 7 is more than enough.
 
 == Storage
 
-A fast NVMe SSD (1–2 TB) is important. Models are 4–40 GB each and load slowly
-from spinning disks.
+A fast NVMe SSD (1–2 TB) is important. Models that fit a consumer GPU are 4–40
+GB each, and load slowly from spinning disks. 100B+ models run to several hundred
+GB apiece, so budget storage accordingly.
 
 == PSU
 
-Size to your GPU — 850W for an RTX 3090/4090 build, 1000W+ for an RTX 5090.
+Size to your GPU — 850W for a single RTX 3090/4090, 1000W+ for an RTX 5090, and
+1200W+ for a dual-GPU build, which can draw ~900W under sustained load.
 
 == Cooling and noise
 
@@ -107,7 +137,8 @@ large fans running at low speed to minimize noise.
 
 For a modular, expandable AI workstation: full tower or rack-convertible.
 Options include the Fractal Design Define 7 XL, Corsair 1000D, and SilverStone
-RM510.
+RM51 (a 5U rack-mount chassis that can be tilted for use as a tower, with 455 mm
+of GPU clearance).
 
 == OS
 

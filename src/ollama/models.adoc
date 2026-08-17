@@ -33,7 +33,11 @@ the best balance of quality and speed with minimal setup risk. See
 link:./hardware.adoc[Hardware] for a full breakdown of model size vs hardware
 requirements.
 
+## Model families
+
 Popular model families include Llama (Meta), Qwen (Alibaba), Gemma (Google),
 Mistral, and DeepSeek. Most have variants across a range of sizes. For coding
 tasks specifically, fine-tuned variants such as Qwen Coder, CodeLlama, and
-DeepSeek Coder tend to outperform general-purpose models.
+DeepSeek Coder tend to outperform general-purpose models. However, not all of
+these have tools capabilities, so they're good only for delegating coding
+tasks.
