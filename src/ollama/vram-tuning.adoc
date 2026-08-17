@@ -35,21 +35,14 @@ usually the single largest lever on memory use after the model weights
 themselves. An OOM on `graph_reserve` or "failed to allocate compute pp
 buffers" is almost always context-related.
 
-Caveats:
+This env var only sets the default. A client that sends `options.num_ctx`
+in its API request overrides it for that request, and a model whose own
+Modelfile bakes in `PARAMETER num_ctx` overrides it for that model — some
+published models do exactly this. Check what a given model actually pins
+with `/show parameters` in the REPL (`ollama run`).
 
-* Because the default is VRAM-derived, the same configuration behaves
-  differently on different machines — and setting this variable is a real
-  change, not a no-op, on any card at 24 GiB or above. On a 32 GiB card the
-  server would otherwise pick 32,768.
-
-* This env var only sets the default. A client that sends `options.num_ctx`
-  in its API request overrides it for that request, and a model whose own
-  Modelfile bakes in `PARAMETER num_ctx` overrides it for that model — some
-  published models do exactly this. Check what a given model actually pins
-  with `/show parameters` in the REPL (`ollama run`).
-
-* Memory scales as `OLLAMA_NUM_PARALLEL × OLLAMA_CONTEXT_LENGTH`. With
-  parallelism above 1, the effective context is a multiple of this number.
+Memory scales as `OLLAMA_NUM_PARALLEL × OLLAMA_CONTEXT_LENGTH`. With
+parallelism above 1, the effective context is a multiple of this number.
 
 Verify with `ollama ps` — the CONTEXT column shows what was actually
 allocated.
@@ -58,10 +51,10 @@ allocated.
 
 When a request carries more history than `num_ctx`, Ollama does not error. It
 discards the oldest tokens, first-in-first-out, and proceeds — so the model
-quietly forgets earlier context. Since the trim takes from the *front*, the
+quietly forgets earlier context. Since the trim takes from the front, the
 system prompt is typically the first casualty.
 
-WARNING: A front-end's declared context window MUST therefore be less than or
+To avoid this scenario, a harness's declared context window MUST be less than or
 equal to the server's real `num_ctx`. If a harness advertises 128K against a
 server allocating 8K, it will keep sending history that is silently thrown
 away.
@@ -75,16 +68,9 @@ indirectly as `memory_seq_rm` entries.
 Forces flash attention on (`1`) or off (`0`). Default is automatic — Ollama
 enables it on its own when the back-end and device support it.
 
-Flash attention reduces memory usage as context size grows, and — more
-importantly here — K/V cache quantization only takes effect when flash
-attention is enabled, so this is a prerequisite for `OLLAMA_KV_CACHE_TYPE`
-below.
-
-Caveat: since selection is already automatic, forcing `1` only changes
-anything where Ollama declined to enable it — which on ROCm may mean the
-back-end doesn't support it for your GPU/model combination. If it isn't
-genuinely active, the KV cache setting won't help either. Check the server
-log at startup.
+Flash attention reduces memory usage as context size grows. K/V cache
+quantization only takes effect when flash attention is enabled, so this is a
+prerequisite for `OLLAMA_KV_CACHE_TYPE` — see below.
 
 == `OLLAMA_KV_CACHE_TYPE`
 
@@ -111,16 +97,14 @@ recommended choice if not using `f16`.
 Roughly halves the KV cache allocation at `q8_0`. The larger the context, the
 more this saves in absolute terms.
 
-Caveats:
+This is a global option. Every model on the server runs with this quantization
+type. There is no per-model override.
 
-* Global option — every model on the server runs with this quantization
-  type. There is no per-model override.
+It requires flash attention (see above).
 
-* Requires flash attention (see above).
-
-* Quality impact is model-dependent. Models with a high GQA count (eg.
-  Qwen2) may lose more precision from quantization than low-GQA models.
-  Worth A/B-ing on your actual workload if output quality matters.
+Quality impact is model-dependent. Models with a high GQA count (eg. Qwen2) may
+lose more precision from quantization than low-GQA models. Worth A/B-ing on
+your actual workload if output quality matters.
 
 == `OLLAMA_MAX_LOADED_MODELS`
 
@@ -130,23 +114,15 @@ Caps how many models may be resident in memory simultaneously. Default is
 With the default of 3, a second or third model loaded by some other client
 can quietly consume the headroom your primary model needs, producing an OOM
 that looks unrelated to what you were doing. Setting it to `1` guarantees one
-model owns the GPU at a time. Others queue rather than compete.
+model owns the GPU at a time. Others queue rather than compete. The trade-off is
+latency, since switching between models now forces an unload/reload cycle.
 
-Caveats:
+This setting doesn't cap parallel requests to a single model — that's
+`OLLAMA_NUM_PARALLEL`, which multiplies context memory and is worth pinning to
+`1` alongside this if VRAM is tight.
 
-* Trade-off is latency. Switching between models now forces an
-  unload/reload cycle.
-
-* On Windows with Radeon GPUs this is already the effective default (ROCm
-  v5.7 VRAM reporting limitations), so setting it there is redundant —
-  harmless, but it isn't what fixed the problem.
-
-* Doesn't cap parallel requests to a single model — that's
-  `OLLAMA_NUM_PARALLEL`, which multiplies context memory and is worth
-  pinning to `1` alongside this if VRAM is tight.
-
-* Related: `OLLAMA_KEEP_ALIVE` (default `5m`) controls how long an idle
-  model holds its VRAM. Shortening it frees memory sooner between uses.
+Related: `OLLAMA_KEEP_ALIVE` (default `5m`) controls how long an idle model
+holds its VRAM. Shortening it frees memory sooner between uses.
 
 == Applying the configuration
 

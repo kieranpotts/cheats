@@ -65,10 +65,10 @@ there. It is a layer count, not a count of GPUs:
 System RAM should be sized for the overflow, not to fit the model. For example,
 even where a 32GB model fits into VRAM, you will still want at least 16 GB of
 RAM, and 32 GB RAM will be more comfortable. Spilled layers and the KV cache
-will still spill over into the RAM, increasing latency. For the ultimate
-performance, you don't want any overflow into system RAM at all, which means
-VRAM needs to be enough for a model's weights plus plenty of room to spare for
-the KV cache.
+will still spill over into the RAM, reducing throughput and increasing latency.
+For the ultimate performance, you don't want any overflow into system RAM at all,
+which means VRAM needs to be enough for a model's weights plus plenty of room
+to spare for the KV cache.
 
 The KV cache (which is separate from weights) grows with both context length
 and concurrency. Thus, required memory for the KV cache scaled by
