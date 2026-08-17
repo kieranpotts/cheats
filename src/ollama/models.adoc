@@ -36,3 +36,30 @@ tasks specifically, fine-tuned variants such as Qwen Coder, CodeLlama, and
 DeepSeek Coder tend to outperform general-purpose models. However, not all of
 these have tools capabilities, so they're good only for delegating coding
 tasks.
+
+## Model tags
+
+Ollama categorizes models using tags, which appear after a colon in the model
+name, eg. `codellama:7b-code-q4_K_M`.
+
+- `codellama` is the model family.
+
+- `7b` is the number of parameters, or weights.
+
+- `code` is the task the model is optimized for, in this case coding. `instruct`
+  means the model is specifically trained to follow instructions and answer
+  questions quickly.
+
+- `q4_K_M` is the quantization level. `fp16` is the default, which stands for
+  16 bit floating-point. This format uses less memory than higher-precision
+  formats like `fp32`. A `q` prefix indicates the model has been quantized,
+  which means it has been optimized to use less memory and to run faster by
+  simplifying its data representations, trading some loss of accuracy compared
+  to the original model. The number following `q` represents the level of
+  quantization, with higher numbers meaning the quantization is _less_
+  aggressive. The letters, eg. `K`, `L`, and `M`, denote specific methods used
+  in quantization. Different methods have proven to work better on different
+  hardware.
+
+- A `v` prefix in a model name indicates a version number. Generally, higher
+  versioned models have more capabilities than their earlier versions.

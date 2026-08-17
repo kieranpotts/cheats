@@ -23,7 +23,7 @@ Model size to memory and hardware:
 
 |1–3B
 |4–8 GB
-|CPU-only, or any GPU for reduced latency
+|CPU-only, or GPU for reduced latency
 |5–15 tok/s (CPU)
 
 |4–13B
