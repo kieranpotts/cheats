@@ -1,7 +1,5 @@
 # Cheats
 
-**🚧 UNDER RECONSTRUCTION 🚧**
-
 Cheat sheets and study notes for various tools, technologies, and languages.
 
 ## Contents
