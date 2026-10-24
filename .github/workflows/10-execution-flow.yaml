@@ -1,0 +1,63 @@
+name: 10 - Controlling the Execution Flow
+
+on:
+  workflow_dispatch:
+    inputs:
+      pass-unit-tests:
+        type: boolean
+        description: Fake the unit tests as passing
+        default: true
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build
+        run: echo "Building the project"
+
+  unit-tests:
+    runs-on: ubuntu-latest
+    # Uncomment this next line if you want dependent jobs to run even if
+    # this one fails:
+    #continue-on-error: true
+    steps:
+      - name: Running unit tests
+        run: echo "Running tests..."
+      - name: Failing tests
+        if: ${{ !inputs.pass-unit-tests }}
+        run: exit 1
+
+  deploy-nonprod:
+    runs-on: ubuntu-latest
+    needs:
+      - build
+      - unit-tests
+    steps:
+      - name: Deploying to nonprod
+        run: echo "Deploying to nonprod..."
+
+  e2e-tests:
+    runs-on: ubuntu-latest
+    needs:
+      - deploy-nonprod
+    steps:
+      - name: Running e2e tests
+        run: echo "Running E2E tests"
+
+  load-tests:
+    runs-on: ubuntu-latest
+    needs:
+      - deploy-nonprod
+    steps:
+      - name: Running load tests
+        run: echo "Running load tests"
+
+  deploy-prod:
+    runs-on: ubuntu-latest
+    needs:
+      - e2e-tests
+      - load-tests
+    steps:
+      - name: Deploying to prod
+        run: echo "Deploying to prod..."
