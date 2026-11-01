@@ -12,16 +12,18 @@ remains consistent with the application's data.
 
 == Understanding useOptimistic
 
-`useOptimistic` takes two arguments:
+`useOptimistic` takes two arguments.
 
 1. *Current value*: The current value of the state you want to manage
    optimistically.
+
 2. *Optimistic update function*: A function that computes the optimistic value
    based on the current state and the new data.
 
 The hook returns an array with two elements:
 
 1. *Optimistic value*: The value that should be displayed in the UI.
+
 2. *Setter function*: A function to update the optimistic value, typically
    called before the actual state update occurs.
 
@@ -42,7 +44,7 @@ export function Component() {
 == Example: A todo list with optimistic updates
 
 First, here is a basic todo list _without_ optimistic updates. The new todo
-item appears only after the API call completes:
+item appears only after the API call completes.
 
 [source,jsx]
 ----
@@ -80,7 +82,7 @@ export function TodoList() {
 
 Now, the same component enhanced with `useOptimistic`. The new todo item appears
 immediately, with reduced opacity to indicate it is pending. Once the API call
-completes, the actual todo item replaces the optimistic one:
+completes, the actual todo item replaces the optimistic one.
 
 [source,jsx]
 ----
@@ -133,8 +135,10 @@ export function TodoList() {
 
 * *Improved perceived performance*: Immediate feedback makes the application
   feel faster and more responsive.
+
 * *Better user experience*: Users don't have to wait for server responses to see
   the results of their actions.
+
 * *Graceful fallback*: If the optimistic update fails (eg. due to a network
   error), React automatically reverts to the actual state.
 

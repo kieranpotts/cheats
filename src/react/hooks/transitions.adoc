@@ -39,15 +39,13 @@ import { useState, useTransition } from 'react'
 function Component() {
 
   const [tab, setTab] = useState('home')
-  const [isPending, starTransition] = useTransition()
+  const [isPending, startTransition] = useTransition()
 
   function switchTab(tab) {
 
-    /*
-    Whatever state changes we implement in startTransition's callback,
+    /* Whatever state changes we implement in startTransition's callback,
     they will be treated by React as low-priority state changes – ie.
-    they can be interrupted by new transitions.
-    */
+    they can be interrupted by new transitions. */
 
     startTransition(() => {
       setTab(tab)

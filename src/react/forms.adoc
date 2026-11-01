@@ -1,4 +1,4 @@
-= React: Forms
+= Forms in React
 
 [IMPORTANT]
 ======
@@ -19,7 +19,7 @@ This concept is known as *controlled components* in React. It is the recommended
 way to work with forms in React.
 
 There are several steps to creating a controlled component. The first step is to
-synchronize component state with changes to the values of native form elements:
+synchronize component state with changes to the values of native form elements.
 
 [source,jsx]
 ----
@@ -35,8 +35,7 @@ export default function Form() {
     setFormData(prevFormData => {
       return {
         ...prevFormData,
-        /* Use ES6 computed property names to turn a dynamic
-        string into a key: */
+        /* Use ES6 computed property names to turn a dynamic string into a key: */
         [event.target.name]: event.target.value
       }
     })
@@ -76,7 +75,7 @@ component state.
 
 To fix this, and make the component state the source of truth, it is a simple
 matter of setting the `value` attribute of the form inputs to the corresponding
-values in the component state:
+values in the component state.
 
 [source,jsx]
 ----
@@ -92,8 +91,6 @@ export default function Form() {
     setFormData(prevFormData => {
       return {
         ...prevFormData,
-        /* Use ES6 computed property names to turn a dynamic
-        string into a key: */
         [event.target.name]: event.target.value
       }
     })
@@ -129,7 +126,7 @@ uncontrolled components.
 
 HTML forms have other types of input controls, such as radios and checkboxes,
 that need some special handling. The following code demonstrates handling of all
-the different types of form elements, and also how to handle form submission:
+the different types of form elements, and also how to handle form submission.
 
 [source,jsx]
 ----
@@ -146,10 +143,8 @@ export default function Form() {
     }
   )
 
-  /*
-  `useId` is another hook that generate a unique ID which we can use for
-  our component and its children.
-  */
+  /* `useId` is another hook that generate a unique ID which we can use for
+  our component and its children. */
   const id = React.useId()
 
   function handleChange(event) {

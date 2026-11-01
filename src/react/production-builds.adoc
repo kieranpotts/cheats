@@ -1,4 +1,4 @@
-= React: Production builds
+= Production builds
 
 .index.html
 [source,html]

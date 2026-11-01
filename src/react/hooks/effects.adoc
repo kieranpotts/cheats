@@ -63,10 +63,11 @@ export default function App() {
 ----
 
 The code that interacts with external systems is now inside the effect hook's
-callback function. There is a change in behavior here: the effect is only run
-_after_ the component is rendered for the first time. But otherwise we still
-have the same problem, and the component keeps re-rendering itself in an
-infinite loop.
+callback function. There is a change in behavior her. The effect is only run
+_after_ the component is rendered for the first time.
+
+But we still have the same problem. The component keeps re-rendering itself in
+an infinite loop.
 
 The `useEffect()` function has a second argument. It is an optional argument,
 but you will almost always want to use it. It is an array of dependencies. Those
@@ -76,7 +77,7 @@ effect runs, stopping it from running on every render (the default behavior).
 
 If you pass an empty array, the effect will only run once, after the first
 render, and never again. That's because we're not looking for any changes
-between one render and the next:
+between one render and the next.
 
 [source,jsx]
 ----
@@ -167,7 +168,7 @@ const [notes, setNotes] = React.useState(
 == Memory leaks
 
 Be careful about setting things up in effect hooks that may cause memory leaks.
-Consider the following example:
+Consider the following example.
 
 [source,jsx]
 ----
@@ -186,10 +187,10 @@ export default function WindowTracker() {
 }
 ----
 
-Instance of this component will set up DOM event listeners when they are
+Instances of this component will set up DOM event listeners when they are
 mounted. But when the component is unmounted, the event listeners are not
 removed. This is a memory leak. To fix this, you can return a cleanup function
-from the effect hook:
+from the effect hook.
 
 [source,jsx]
 ----
@@ -216,11 +217,12 @@ export default function WindowTracker() {
 
 Other things you will need to clean up in effect hooks include timers and
 subscriptions, eg. to websockets.
+
 *As React developers, we are expected to clean up after our effects.*
 
 == Effects with async functions
 
-It may be tempting to use async functions with `useEffect`:
+It may be tempting to use async functions with `useEffect`.
 
 [source,jsx]
 ----

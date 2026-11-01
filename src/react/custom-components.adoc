@@ -1,7 +1,7 @@
-= React: Custom components
+= React custom components
 
 At the simplest level, a React component is just a function that returns some
-JSX or other React elements. This actually works:
+JSX or other React elements.
 
 [source,jsx]
 ----
@@ -99,7 +99,7 @@ ReactDOM.render(<Page />, document.getElementById("root"))
 ----
 
 Components SHOULD be extracted out into separate files, and imported into the
-other components that depend on them:
+other components that depend on them.
 
 [source,jsx]
 ----

@@ -1,4 +1,4 @@
-= React: Types of React components
+= Types of React components
 
 Since React was released in 2013, there have emerged lots of different ways to
 define components. This document covers the most common construction patterns
@@ -8,49 +8,39 @@ fully obsolete, but it's still useful to know about them.
 == `createClass`
 
 Originally React used an API called `createClass` to define components. This is
-effectively an implementation of the factory pattern. This API is now obsolete;
-it has been removed from React's core package, but is still available via a
+effectively an implementation of the factory pattern. This API is now obsolete.
+It has been removed from React's core package, but is still available via a
 separate package ("create-react-class") if you need it to support legacy code.
 
 [source,jsx]
 ----
 import createClass from "create-react-class"
 
-/*
-`createClass()` takes an object that represents the state and methods
-of a React component.
-*/
+/* `createClass()` takes an object that represents the state
+and methods of a React component. */
 const CreateClassComponent = createClass({
 
-  /*
-  The `getInitialState()` method is used to define the initial state of the
-  component.
-  */
+  /* The `getInitialState()` method is used to define the initial
+  state of the component. */
   getInitialState: function () {
     return {
       text: localStorage.getItem("text") || "",
     }
   },
 
-  /*
-  Lifecycle methods for side-effects were available as well.
-  */
+  /* Lifecycle methods for side-effects were available as well. */
   componentDidUpdate: function () {
     localStorage.setItem("text", this.state.text)
   },
 
-  /*
-  Other methods can be added to the object to serve as event handlers for
-  the component.
-  */
+  /* Other methods can be added to the object to serve as event
+  handlers for the component. */
   handleChangeText: function (event) {
     this.setState({ text: event.target.value })
   },
 
-  /*
-  The only required function is `render()`, which returns the JSX
-  that represents the component.
-  */
+  /* The only required function is `render()`, which returns the JSX
+  that represents the component. */
   render: function () {
     return (
       <div>
@@ -129,10 +119,8 @@ import React from "react"
 
 class ClassComponent extends React.Component {
 
-  /*
-  The class constructor is primarily used to initialize the component's state,
-  and to bind methods.
-  */
+  /* The class constructor is primarily used to initialize the component's
+  state, and to bind methods. */
   constructor(props) {
     super(props)
 
@@ -166,7 +154,7 @@ class ClassComponent extends React.Component {
 export default ClassComponent
 ----
 
-An alternative syntax allows for auto-binding of methods using arrow functions:
+An alternative syntax allows for auto-binding of methods using arrow functions.
 
 [source,jsx]
 ----
@@ -218,7 +206,7 @@ theory, you could create custom components that extend from lower-level base
 components. But the best practice in the React ecosystem has always been to use
 composition instead of inheritance.
 
-Class components are considered deprecated; they still work, coexisting in React
+Class components are considered deprecated. They still work, coexisting in React
 core with functional components, but the React team does not intend to extend
 `React.Component` with new features. Future development of React will focus on
 functional components (see below), and therefore it is RECOMMENDED that all new
@@ -286,7 +274,9 @@ export default withLocalStorage("text")(ClassComponent)
 
 [NOTE]
 ======
-This pattern can also be used with functional components.
+Although class components are considered deprecated, higher-order components
+are still very much used to extend new functional components (see below) with
+reusable functionality.
 ======
 
 == Functional components
@@ -302,14 +292,12 @@ Refactored as a functional component, the previous example would look like this:
 ----
 import { useEffect, useState } from "react"
 
-const FunctionComponent = () => {
+const FunctionalComponent = () => {
   const [text, setText] = useState(localStorage.getItem("text") || "")
 
-  /*
-  The `useEffect()` hook is used to manage side-effects in functional
+  /* The `useEffect()` hook is used to manage side-effects in functional
   components. This callback will be executed every time the value of the
-  state of `text` changes.
-  */
+  state of `text` changes. */
   useEffect(() => {
     localStorage.setItem("text", text)
   }, [text])
@@ -327,7 +315,7 @@ const FunctionComponent = () => {
   )
 }
 
-export default FunctionComponent
+export default FunctionalComponent
 ----
 
 We can define custom hooks, too. In the following example we have extracted both
@@ -348,7 +336,7 @@ const useLocalStorage = (storageKey) => {
   return [value, setValue]
 }
 
-const FunctionComponent = () => {
+const FunctionalComponent = () => {
   const [text, setText] = useLocalStorage("text")
 
   const handleChangeText = (event) => {
@@ -358,13 +346,12 @@ const FunctionComponent = () => {
   return (
     <div>
       <p>Text: {text}</p>
-
       <input type="text" value={text} onChange={handleChangeText} />
     </div>
   )
 }
 
-export default FunctionComponent
+export default FunctionalComponent
 ----
 
 This custom hook can now be reused in other components, so all components in an
@@ -374,11 +361,11 @@ is the primary way that React encourages code reuse in functional components.
 == Server components
 
 In 2023 React introduced React Server Components (RSC), which allows components
-to be pre-rendered on the server (and then optionally hydrated, or partially
-hydrated, on the client).
+to be pre-rendered on the server, and then optionally hydrated, or partially
+hydrated, on the client.
 
-Because server components serve different use cases, ir is not possible to
-directly compare them to other types of React components.
+Server components serve entirely different use cases to classic React (client)
+components).
 
 [source,jsx]
 ----
@@ -418,7 +405,7 @@ expected to be added to client components in the future. Simply, if a component
 is declared as async, it can perform asynchronous operations, such as fetching
 data.
 
-The previous server component example demonstrates this: the functional
+The previous server component example demonstrates this. The functional
 component is defined using an `async` function, and within the body of the
 function the logic awaits a query to the database before rendering the JSX as
 HTML.
@@ -426,7 +413,7 @@ HTML.
 In full-stack React applications, you can use server components to perform
 asynchronous operations on the server, such as fetching data from a database,
 and then using that data to render client components. On the server, you pass
-promises as props to the client components:
+promises as props to the client components.
 
 [source,jsx]
 ----
@@ -445,7 +432,7 @@ const ReactServerComponent = () => {
 }
 ----
 
-The promises are resolved in the client components using React's `use` API:
+The promises are resolved in the client components using React's `use` API.
 
 [source,jsx]
 ----

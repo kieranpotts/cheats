@@ -2,7 +2,7 @@
 
 The following component will render a button labelled "Add Item" and a list of
 items labelled "Thing 1" and "Thing 2". When the button is clicked, the original
-array will be updated with a new item – we can see that my inspecting the
+array will be updated with a new item – we can see that by inspecting the
 console log – but the new item will not be rendered in the list.
 
 [source,jsx]
@@ -108,7 +108,7 @@ function add() {
 }
 ----
 
-This works, but there is better way that follows best practices. Whenever we
+This works, but there is better way that follows best practice. Whenever we
 want to use an existing state value to calculate a new state value, we should
 use the _functional update_ form of the state setter function. This form of the
 state setter function accepts a callback as its first argument, and that
@@ -149,7 +149,7 @@ export default function App() {
 
 This pattern is more verbose, but it is best practice because it ensures that
 the new state value is based on the most recent state value. Here's another
-example:
+example.
 
 [source,jsx]
 ----
@@ -248,20 +248,22 @@ updating only the properties that exist in the new object.
 *Props* are properties that we pass into a component from the parent component,
 similarly to how a function receives parameters. Another way to think about
 props is they are values that we use to _configure_ a component. Props are
-immutable; a component receiving props is not allowed to change them.
+immutable. A component receiving props is not allowed to change them.
 
-*State* refers to values that are
-_managed by the component itself. State is mutable; it can – indeed, it _should_
-– change during the lifecycle of a component. The purpose of using state is to
-dynamically re-render the component when its state changes. This is what
-differentiates state from props and plain local variables.
+*State* refers to values that are _managed by the component itself_. State is
+mutable. It can – indeed, it _should_ – change during the lifecycle of a
+component. The purpose of using state is to dynamically re-render the component
+when its state changes. This is what differentiates state from props and plain
+local variables.
 
 Props MAY be used to set some initial (default) state in a component. And state
 MAY be passed as props to child components.
 
-*Whenever state changes, it will re-render the component that holds that state, _and_ any child components that are passed the parent component's state as props.*
+Whenever state changes, it will re-render the component that holds that state,
+_and_ it will re-render any child components that are passed the parent
+component's state as props.
 
-So, in the following example, the `App` component is the parent component, and
+In the following example, the `App` component is the parent component, and
 the `Counter` component is the child component. When `count` changes in the
 `App` component, the `Counter` component will re-render.
 
@@ -399,7 +401,7 @@ This is derived state. It works, but this is not best practice. Better to always
 have _one source of truth_ for each piece of state. In this case, the `on` value
 originates from the parent component, and any changes to those values should be
 managed by the parent component and allowed to trickle back down to the child
-components, like this:
+components.
 
 [source,jsx]
 ----
@@ -408,14 +410,12 @@ function Box(props) {
     backgroundColor: props.on ? "#222222" : "transparent"
   }
 
-  /*
-  Notice the design pattern om the onClick attribute. The `toggle` function is
+  /* Notice the design pattern om the onClick attribute. The `toggle` function is
   defined in the parent component, and passed down to this child component as a
-  prop. This is what allows us to "life state up" and have the parent component
+  prop. This is what allows us to "lift state up" and have the parent component
   mutate the state inherited by the child component in response to events that
   happened in the child component. Where we want to pass values back to the
-  parent component, we simply wrap the callback function in another function.
-  */
+  parent component, we simply wrap the callback function in another function. */
   return (
     <div
       style={styles}
@@ -452,14 +452,12 @@ export default function App() {
   }
 
   const squareElements = squares.map(square => (
-    /*
-    Note: `key` is a special prop that React uses to keep track of which
+    /* Note: `key` is a special prop that React uses to keep track of which
     elements have changed, been added, or been removed when multiple instances
     of the same component type exist. But it is not available as a prop inside
     the components themselves – `props.key` is always undefined. Best practice
     is to use a prop named `id` where you need child components to
-    have a reference to their unique key.
-    */
+    have a reference to their unique key. */
     <Box
       key={square.id}
       id={square.id}
@@ -480,15 +478,15 @@ Another way to implement the callbacks would be for the parent component to
 create a custom callback function for each instance of the child `<Box>`
 component, with the `id` of the box already wrapped in the callback function.
 Then the child component would simply call the callback function in the normal
-way:
+way.
 
 [source,jsx]
 ----
 /* App.jsx */
 <Box
-    key={square.id}
-    on={square.on}
-    toggle={() => toggle(square.id)}
+  key={square.id}
+  on={square.on}
+  toggle={() => toggle(square.id)}
 />
 
 /* Box.jsx */

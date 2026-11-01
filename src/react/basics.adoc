@@ -2,7 +2,7 @@
 
 JSX is a syntax extension for JavaScript that looks similar to HTML, with a few
 key differences. It gets compiled to a plain JavaScript object, which you can
-see by simply console logging it.
+see by simply console-logging it.
 
 [source,jsx]
 ----

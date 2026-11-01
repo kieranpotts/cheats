@@ -41,7 +41,7 @@ function App() {
 }
 ----
 
-The `Contact` component looks like this:
+Here's the `Contact` component.
 
 [source,jsx]
 ----
@@ -64,7 +64,7 @@ export default function Contact(props) {
 ----
 
 Alternatively, the props can be destructured in the function signature, into
-individual variables:
+individual variables.
 
 [source,jsx]
 ----
@@ -137,7 +137,7 @@ This pattern can work particularly well with TypeScript, where you can define
 the shape of the `item` object using an interface.
 
 Alternatively, you can use the spread operator to pass all the properties of the
-`item` object as individual props, like this:
+`item` object as individual props.
 
 [source,jsx]
 ----
@@ -151,16 +151,18 @@ const cards = data.map(item => {
 })
 ----
 
-This requires not changes to the `Card` component itself, but only changes to
+This requires no changes to the `Card` component itself, but only changes to
 the calling code. All the properties of the `item` object will be passed as
 props, but any props that are not used by the component will simply be ignored -
 there is no harm in passing extra props.
 
-''''
+== Props versus attributes
 
 The main difference between props and attributes is that React supports _any_ JS
 data type to be passed as prop values, while HTML attributes are limited to
-strings. Where non-string values are passed as props, the value needs to be
+strings.
+
+Where non-string values are passed as props, the value needs to be
 enclosed in curly braces, so that React can evaluate the expression. Whatever
 value the JS expression resolves to will be the value that is passed to the
 prop.
