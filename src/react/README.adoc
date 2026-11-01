@@ -1,4 +1,4 @@
-= React
+= React cheats
 
 [NOTE]
 ======
@@ -22,4 +22,6 @@ React v19.
 ** link:./hooks/effects.adoc[Effects]
 ** link:./hooks/transitions.adoc[Transitions]
 ** link:./hooks/actions.adoc[Actions]
+** link:./hooks/form-status.adoc[Form status]
+** link:./hooks/optimistic.adoc[Optimistic updates]
 * link:./compiler.adoc[React compiler]
