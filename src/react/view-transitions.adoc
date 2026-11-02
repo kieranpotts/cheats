@@ -1,0 +1,164 @@
+= View transitions
+
+_Added in React 19.3._
+
+`<ViewTransition>` animates the UI inside it with the browser's View Transition
+API. It works only in the DOM.
+
+[source,jsx]
+----
+import { startTransition, useState, ViewTransition } from "react"
+
+export default function Gallery() {
+  const [showItem, setShowItem] = useState(false)
+
+  return (
+    <>
+      <button
+        onClick={() => {
+          startTransition(() => {
+            setShowItem(prev => !prev)
+          })
+        }}
+      >
+        {showItem ? "Hide" : "Show"}
+      </button>
+
+      {showItem && (
+        <ViewTransition>
+          <Video video={videos[0]} />
+        </ViewTransition>
+      )}
+    </>
+  )
+}
+----
+
+== What triggers an animation
+
+Only non-urgent updates animate. A plain `setState` call updates immediately,
+with no animation. The following updates animate.
+
+* State updates inside `startTransition`, including Actions.
+
+* `<Suspense>` boundaries that reveal their content.
+
+* Updates from `useDeferredValue`.
+
+React picks the type of animation from how the tree changed.
+
+* *Enter.* The `<ViewTransition>` mounted.
+
+* *Exit.* The `<ViewTransition>` unmounted.
+
+* *Update.* The children of the `<ViewTransition>` changed.
+
+* *Share.* A `<ViewTransition>` with a `name` unmounted in one place, and one
+  with the same `name` mounted in another.
+
+The default animation is a cross-fade. For enter and exit animations, the
+`<ViewTransition>` MUST come before any DOM node in the component that renders
+it.
+
+== Customizing animations
+
+Each of the props `enter`, `exit`, `update`, `share`, and `default` takes
+`"auto"` (the browser's default animation), `"none"` (no animation), or a _View
+Transition Class_. React adds the class to the view transition when that type
+of animation runs, so CSS can target it with the view transition
+pseudo-elements.
+
+[source,jsx]
+----
+<ViewTransition enter="slide-in" exit="slide-out">
+  <Page />
+</ViewTransition>
+----
+
+[source,css]
+----
+::view-transition-old(.slide-out) {
+  animation: 300ms ease-out both slide-to-left;
+}
+
+::view-transition-new(.slide-in) {
+  animation: 300ms ease-out both slide-from-right;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none;
+  }
+}
+----
+
+To animate in JavaScript instead, use the event props `onEnter`, `onExit`,
+`onUpdate`, and `onShare`. Each callback receives a view transition instance,
+with the pseudo-elements as `old`, `new`, `group`, and `imagePair`, and the
+array of Transition Types.
+
+== Transition types
+
+`addTransitionType()` labels a Transition with its cause. The class props
+accept an object that maps each type to a View Transition Class, so the same
+update can animate differently, eg. by direction.
+
+[source,jsx]
+----
+import { addTransitionType, startTransition, ViewTransition } from "react"
+
+function nextSlide() {
+  startTransition(() => {
+    addTransitionType("next")
+    setCurrentSlide(c => c + 1)
+  })
+}
+
+// …
+
+<ViewTransition
+  enter={{ next: "from-right", previous: "from-left" }}
+  exit={{ next: "to-left", previous: "to-right" }}
+>
+  <Slide />
+</ViewTransition>
+----
+
+== Shared element transitions
+
+Give two `<ViewTransition>` components the same `name` to animate an element
+from one place to another, eg. a thumbnail that grows into a full-screen view.
+Only one `<ViewTransition>` with a given name MAY be mounted at a time.
+
+[source,jsx]
+----
+<ViewTransition name={`video-${video.id}`}>
+  <Thumbnail video={video} />
+</ViewTransition>
+----
+
+Only set `name` for shared element transitions. Otherwise React generates a
+unique name automatically.
+
+== With Suspense
+
+Wrap a `<Suspense>` boundary to animate the change from fallback to content.
+With `update="auto"` and `default="none"`, only that change animates. The
+fallback appears instantly.
+
+[source,jsx]
+----
+<ViewTransition update="auto" default="none">
+  <Suspense fallback={<Skeleton />}>
+    <Content />
+  </Suspense>
+</ViewTransition>
+----
+
+.References
+****
+* https://react.dev/reference/react/ViewTransition[React Docs: <ViewTransition>]
+* https://react.dev/reference/react/addTransitionType[React Docs: addTransitionType]
+* https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API[MDN: View Transition API]
+****

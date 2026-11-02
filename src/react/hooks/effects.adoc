@@ -1,12 +1,14 @@
 = React hooks: Effects
 
-If you loaded the following component in a web UI, you will see from the console
-that the component will re-render itself in an infinite loop.
+If you load the following component in a web UI, the console shows that the
+component re-renders itself in an infinite loop.
 
 [source,jsx]
 ----
+import { useState } from "react"
+
 export default function App() {
-  const [starWarsData, setStarWarsData] = React.useState({})
+  const [starWarsData, setStarWarsData] = useState({})
 
   console.log("Component rendered")
 
@@ -22,33 +24,33 @@ export default function App() {
 }
 ----
 
-Why does this happen? The component renders initially with no data. Then, when
-the `fetch` is resolved, the component state is updated, triggering a re-render
-of the component. But because the `fetch` code is at the top level of the
-component, it is executed again. This is how React works - when a component is
-re-rendered, literally its top-level logic is re-run.
+Why does this happen? The component renders initially with no data. When the
+`fetch` resolves, it updates the component state, which triggers a re-render.
+But the `fetch` code is at the top level of the component, so it runs again.
+This is how React works: every render runs the component's top-level code
+again.
 
-So you have to be careful about what you do in the top-level of a component.
+So be careful about what you do in the top level of a component. Rendering
+MUST be pure.
 
-The solution is to use `useEffect`, aka "the effect hook". This hook allows you
-to perform side effects in function components. A side effect is defined as
-anything that happens outside of the scope of the React component. Examples
-include syncing data with back-end services, as well as interacting with native
-web platform APIs - even using things like `console.log` is considered a side
-effect.
+The solution is the `useEffect` Hook. It runs code that synchronizes a
+component with an _external system_, after React has rendered the component and
+updated the DOM. External systems include back-end services, browser APIs such
+as `localStorage`, timers, and third-party widgets.
 
-TIP: It is perhaps better to think of side effects as *outside effects*. They
-are things that happen outside of React and interact with other systems, even
-other web platform APIs such as localStorage.
+TIP: Think of Effects as _outside effects_. They let a component step outside
+React and interact with other systems.
 
-Here's the first part of the solution:
+Here's the first part of the solution.
 
 [source,jsx]
 ----
-export default function App() {
-  const [starWarsData, setStarWarsData] = React.useState({})
+import { useEffect, useState } from "react"
 
-  React.useEffect(() => {
+export default function App() {
+  const [starWarsData, setStarWarsData] = useState({})
+
+  useEffect(() => {
     fetch("https://swapi.dev/api/people/1")
       .then(res => res.json())
       .then(data => setStarWarsData(data))
@@ -62,29 +64,41 @@ export default function App() {
 }
 ----
 
-The code that interacts with external systems is now inside the effect hook's
-callback function. There is a change in behavior her. The effect is only run
-_after_ the component is rendered for the first time.
+The code that talks to the external system is now inside the Effect's callback
+function. React runs it _after_ each render, rather than during it.
 
-But we still have the same problem. The component keeps re-rendering itself in
-an infinite loop.
+But there is still a problem. Each fetch updates the state, the state change
+triggers a new render, and the new render runs the Effect again. The component
+still loops forever.
 
-The `useEffect()` function has a second argument. It is an optional argument,
-but you will almost always want to use it. It is an array of dependencies. Those
-dependencies are variables that, if they change from one render to the next,
-will cause the effect to run. In other words, the dependencies controls when the
-effect runs, stopping it from running on every render (the default behavior).
+== Dependencies
 
-If you pass an empty array, the effect will only run once, after the first
-render, and never again. That's because we're not looking for any changes
-between one render and the next.
+`useEffect` takes an optional second argument, an array of _dependencies_.
+These are the reactive values (props, state, and variables declared in the
+component) that the Effect reads. React runs the Effect after the first render,
+and then again only when a dependency has changed since the last render. React
+compares each dependency with its previous value using `Object.is`.
+
+[cols="1,2"]
+|===
+|Dependencies |When the Effect runs
+
+|None
+|After every render.
+
+|`[]`
+|After the first render only.
+
+|`[a, b]`
+|After the first render, and after any render in which `a` or `b` changed.
+|===
 
 [source,jsx]
 ----
 export default function App() {
-  const [starWarsData, setStarWarsData] = React.useState({})
+  const [starWarsData, setStarWarsData] = useState({})
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetch("https://swapi.dev/api/people/1")
       .then(res => res.json())
       .then(data => setStarWarsData(data))
@@ -98,22 +112,17 @@ export default function App() {
 }
 ----
 
-But if you pass an array of dependencies, the effect will run whenever one of
-those dependencies changes. The "dependencies" here are normally the state
-variables that we want to trigger execution of the effect whenever they change.
-
-In the following example, on the first render the effect will fetch the Star
-Wars character with ID 1. When the user clicks the button, the effect will fetch
-the next character with ID 2, and so on. The API response is printed verbatim to
-the screen.
+In the following example, the first render fetches the Star Wars character with
+ID 1. When the user clicks the button, the Effect fetches the next character,
+with ID 2, and so on. The component prints the API response to the screen.
 
 [source,jsx]
 ----
 export default function App() {
-  const [starWarsData, setStarWarsData] = React.useState({})
-  const [num, setNum] = React.useState(1)
+  const [starWarsData, setStarWarsData] = useState({})
+  const [num, setNum] = useState(1)
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetch(`https://swapi.dev/api/people/${num}`)
       .then(res => res.json())
       .then(data => setStarWarsData(data))
@@ -121,61 +130,53 @@ export default function App() {
 
   return (
     <div>
-      <button onClick={() => setNum(prevNum => prevNum + 1)}>Get Next Character</button>
+      <button onClick={() => setNum(prevNum => prevNum + 1)}>
+        Get Next Character
+      </button>
       <pre>{JSON.stringify(starWarsData, null, 2)}</pre>
     </div>
   )
 }
 ----
 
-== Performance optimization
+You don't choose the dependencies. The code of the Effect determines them, and
+the `eslint-plugin-react-hooks` linter flags missing ones. To run an Effect
+less often, change its code so that it reads fewer reactive values.
 
-In the following example, we're using a combination of `useState` and
-`useEffect` to synchronize the component's `notes` state with an item called
-`notes` in the browser's `localStorage`.
-
-[source,jsx]
-----
-const [notes, setNotes] = React.useState(
-  JSON.parse(localStorage.getItem("notes")) || []
-)
-
-React.useEffect(() => {
-  localStorage.setItem("notes", JSON.stringify(notes))
-}, [notes])
-----
-
-Every time a component is re-rendered (whenever any of its state changes), all
-the component's top-level code gets re-run, including the `React.useState()`
-calls. State will not actually get re-initialized, but the `useState` calls
-_will_ get re-run, and so we should be careful about performing expensive
-operations to initialize state.
-
-In the above example, we're interacting with the browser's `localStorage` API to
-setup the initial state of the component. This is a fairly expensive operation.
-
-React provides a way to optimize this. It is called *lazy state initialization*.
-All is required is, instead of passing a value to `useState`, you pass a
-function that returns a value.
+Objects and functions declared in the component are new on every render, so an
+Effect that depends on one runs after every render. Create the object or
+function inside the Effect instead, depend on its primitive parts, or memoize
+it.
 
 [source,jsx]
 ----
-const [notes, setNotes] = React.useState(
-  () => JSON.parse(localStorage.getItem("notes")) || []
-)
+/* ❌ `options` is a new object on every render. */
+const options = { serverUrl, roomId }
+useEffect(() => {
+  const connection = createConnection(options)
+  connection.connect()
+  return () => connection.disconnect()
+}, [options])
+
+/* ✅ Depends only on the primitive values. */
+useEffect(() => {
+  const connection = createConnection({ serverUrl, roomId })
+  connection.connect()
+  return () => connection.disconnect()
+}, [serverUrl, roomId])
 ----
 
-== Memory leaks
+== Cleanup
 
-Be careful about setting things up in effect hooks that may cause memory leaks.
+Be careful about setting things up in Effects that may cause memory leaks.
 Consider the following example.
 
 [source,jsx]
 ----
 export default function WindowTracker() {
-  const [windowWidth, setWindowWidth] = React.useState(window.innerWidth)
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.addEventListener("resize", function() {
       setWindowWidth(window.innerWidth)
     })
@@ -187,17 +188,16 @@ export default function WindowTracker() {
 }
 ----
 
-Instances of this component will set up DOM event listeners when they are
-mounted. But when the component is unmounted, the event listeners are not
-removed. This is a memory leak. To fix this, you can return a cleanup function
-from the effect hook.
+Instances of this component add a DOM event listener when they mount. But when
+the component unmounts, the listener is not removed. This is a memory leak. To
+fix it, return a _cleanup function_ from the Effect.
 
 [source,jsx]
 ----
 export default function WindowTracker() {
-  const [windowWidth, setWindowWidth] = React.useState(window.innerWidth)
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
 
-  React.useEffect(() => {
+  useEffect(() => {
     function watchWindowWidth() {
       setWindowWidth(window.innerWidth)
     }
@@ -215,54 +215,250 @@ export default function WindowTracker() {
 }
 ----
 
-Other things you will need to clean up in effect hooks include timers and
-subscriptions, eg. to websockets.
+React runs the cleanup function before it runs the Effect again with new
+dependencies, and when the component unmounts. Other things to clean up include
+timers, subscriptions, and open connections, eg. to WebSockets.
 
-*As React developers, we are expected to clean up after our effects.*
+*Every Effect that sets something up MUST clean it up.*
+
+In development, Strict Mode mounts each component, unmounts it, and mounts it
+again. So each Effect runs setup, then cleanup, then setup again. This exposes
+Effects that are missing their cleanup. Don't suppress it with a ref that blocks
+the second run. Fix the cleanup instead.
+
+== Race conditions
+
+When a dependency changes quickly, eg. as the user clicks "Get Next Character"
+several times, the responses can arrive out of order. The component then shows
+the data for an old request. To fix this, ignore the responses of stale
+requests in the cleanup function.
+
+[source,jsx]
+----
+useEffect(() => {
+  let ignore = false
+
+  fetch(`https://swapi.dev/api/people/${num}`)
+    .then(res => res.json())
+    .then(data => {
+      if (!ignore) {
+        setStarWarsData(data)
+      }
+    })
+
+  return () => {
+    ignore = true
+  }
+}, [num])
+----
+
+An `AbortController` does the same job, and also cancels the HTTP request.
+
+[source,jsx]
+----
+useEffect(() => {
+  const controller = new AbortController()
+
+  fetch(`https://swapi.dev/api/people/${num}`, { signal: controller.signal })
+    .then(res => res.json())
+    .then(data => setStarWarsData(data))
+    .catch(error => {
+      if (error.name !== "AbortError") throw error
+    })
+
+  return () => controller.abort()
+}, [num])
+----
+
+[NOTE]
+====
+Effects make a poor general-purpose data-fetching tool. They don't run on the
+server, they start fetching only after the component renders, and they don't
+cache the results. Prefer the data-fetching features of a framework, a library
+such as TanStack Query or SWR, or the `use` API with Suspense.
+====
 
 == Effects with async functions
 
-It may be tempting to use async functions with `useEffect`.
+It may be tempting to make the Effect callback an async function.
 
 [source,jsx]
 ----
 export default function App() {
-  // ...
+  // …
 
-  React.useEffect(async () => {
+  useEffect(async () => {
     const res = await fetch(`https://swapi.dev/api/people/${num}`)
     const data = await res.json()
     setStarWarsData(data)
   }, [num])
 
-  // ...
+  // …
 }
 ----
 
-Unfortunately, you should never make the effect callback an async function. The
-reason is that you can optionally return a function from effects, which will be
-used by React to do any clean-up operations you need it to do after the
-component is unmounted. But an async function will always return a promise, or
-nothing. Therefore it is impossible to return a cleanup function back to React
-from an async effect callback.
+Don't do this. An Effect callback may return a cleanup function, but an async
+function always returns a promise. React can't run a promise as a cleanup
+function.
 
-There is a solution, which is to simply write an inner async function, and our
-effect code calls that. This way, we still have the option of returning a
-cleanup function if we need to.
+Instead, define an async function inside the Effect, and call it. The Effect
+can still return a cleanup function.
 
 [source,jsx]
 ----
-React.useEffect(() => {
+useEffect(() => {
+  let ignore = false
+
   async function getMemes() {
     const res = await fetch("https://api.imgflip.com/get_memes")
     const data = await res.json()
-    setAllMemes(data.data.memes)
+    if (!ignore) {
+      setAllMemes(data.data.memes)
+    }
   }
+
   getMemes()
 
-  /* Return optional cleanup function. */
   return () => {
-    // ...
+    ignore = true
   }
 }, [])
 ----
+
+== Stale closures
+
+Each render creates new functions, and each function _closes over_ the props
+and state of the render that created it. A function that outlives its render
+keeps seeing those old values. This is a _stale closure_.
+
+The classic example is an interval set up in an Effect that runs once.
+
+[source,jsx]
+----
+function Counter() {
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setCount(count + 1) // ❌ `count` is always 0, from the first render.
+    }, 1000)
+    return () => clearInterval(id)
+  }, []) // The linter flags the missing `count` dependency.
+
+  return <h1>{count}</h1>
+}
+----
+
+The count goes to 1, and stays there. There are several fixes.
+
+* *Use an updater function,* so the callback doesn't read the value at all.
+  This is the best fix here.
++
+[source,jsx]
+----
+setCount(c => c + 1)
+----
+
+* *Add the value to the dependencies,* so React sets the Effect up again with
+  a fresh callback. Here, that would reset the interval on every tick.
+
+* *Read the latest value from a ref,* for callbacks that must keep a stable
+  identity.
+
+* *Use an Effect Event,* for logic that an Effect fires but that shouldn't
+  re-run the Effect.
+
+Stale closures also affect `useCallback` and `useMemo` with missing
+dependencies, and event handlers stored for later, eg. in a subscription.
+
+== Effect events
+
+_Added in React 19.2._
+
+Sometimes an Effect needs the latest value of a prop or state variable, but
+shouldn't re-run when that value changes. In the following example, the
+Effect connects to a chat room. It should reconnect when `roomId` changes, but
+not when `theme` changes.
+
+`useEffectEvent` wraps the non-reactive part of the logic in an _Effect
+Event_. An Effect Event always sees the latest props and state, and it is not a
+dependency.
+
+[source,jsx]
+----
+import { useEffect, useEffectEvent } from "react"
+
+function ChatRoom({ roomId, theme }) {
+  const onConnected = useEffectEvent(() => {
+    showNotification("Connected!", theme)
+  })
+
+  useEffect(() => {
+    const connection = createConnection(serverUrl, roomId)
+    connection.on("connected", () => {
+      onConnected()
+    })
+    connection.connect()
+    return () => connection.disconnect()
+  }, [roomId]) // ✅ Effect Events are not dependencies.
+
+  // …
+}
+----
+
+* Call Effect Events only from inside Effects.
+
+* Declare an Effect Event in the same component or Hook as the Effect that uses
+  it. Don't pass it to other components or Hooks.
+
+* Don't use Effect Events to silence the dependency linter. Use them only for
+  logic that is conceptually an event fired by the Effect.
+
+== Layout effects
+
+`useLayoutEffect` has the same API as `useEffect`, but React runs it after it
+updates the DOM and before the browser paints. Use it to measure layout, eg. the
+size of a tooltip, and to set state before the user sees the screen. It blocks
+painting, so prefer `useEffect` for everything else.
+
+Layout Effects don't run during server rendering. The server HTML shows the
+component before the layout Effect has adjusted it, so the content can jump when
+it hydrates.
+
+== You might not need an Effect
+
+Effects are an escape hatch, for synchronizing with systems outside React. Many
+common uses of Effects are unnecessary.
+
+* *Values calculated from props or state.* Calculate them during render. Use
+  `useMemo` if the calculation is expensive.
+
+* *Resetting state when a prop changes.* Pass a different `key` to the
+  component.
+
+* *Responding to a user event,* eg. sending a request when the user submits a
+  form. Do this in the event handler, which knows what happened.
+
+* *Notifying a parent of a state change.* Call the parent's callback in the
+  same event handler that changes the state.
+
+[source,jsx]
+----
+/* ✅ Calculated during render. */
+const visibleTodos = todos.filter(t => !t.done)
+
+/* ❌ An extra render, and two copies of the same data to keep in sync. */
+const [visibleTodos, setVisibleTodos] = useState([])
+useEffect(() => {
+  setVisibleTodos(todos.filter(t => !t.done))
+}, [todos])
+----
+
+.References
+****
+* https://react.dev/reference/react/useEffect[React Docs: useEffect]
+* https://react.dev/learn/synchronizing-with-effects[React Docs: Synchronizing with Effects]
+* https://react.dev/learn/you-might-not-need-an-effect[React Docs: You might not need an Effect]
+* https://react.dev/reference/react/useEffectEvent[React Docs: useEffectEvent]
+* https://react.dev/reference/react/useLayoutEffect[React Docs: useLayoutEffect]
+****

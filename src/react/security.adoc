@@ -1,0 +1,103 @@
+= Security
+
+== Cross-site scripting (XSS)
+
+React escapes every string that it renders as text or as an attribute value.
+User input rendered with `{…}` shows up as text, and can't inject HTML or
+scripts.
+
+[source,jsx]
+----
+const comment = "<img src=x onerror=alert(1)>"
+
+/* ✅ Renders the string as text. */
+<p>{comment}</p>
+----
+
+The protection has gaps. Each of the following can still run an attacker's
+code.
+
+=== dangerouslySetInnerHTML
+
+`dangerouslySetInnerHTML` inserts a string as raw HTML, without escaping it.
+Avoid it. If you must render HTML from users or other untrusted sources, eg.
+rendered Markdown, sanitize it first with a library such as DOMPurify.
+
+[source,jsx]
+----
+import DOMPurify from "dompurify"
+
+function Comment({ html }) {
+  return <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(html) }} />
+}
+----
+
+=== URLs
+
+A URL in `href`, `src`, `action`, or `formAction` can run code when its scheme
+is `javascript:`.
+
+* React 16.9 started to warn about `javascript:` URLs.
+
+* React 19 blocks them. It replaces the URL with one that throws an error.
+
+* React doesn't block other dangerous schemes, eg. `data:text/html`.
+
+Validate user-supplied URLs against an allowlist of schemes, eg. `https:` and
+`mailto:`.
+
+[source,jsx]
+----
+function safeUrl(input) {
+  try {
+    const url = new URL(input, window.location.origin)
+    return ["http:", "https:", "mailto:"].includes(url.protocol) ? url.href : "#"
+  } catch {
+    return "#"
+  }
+}
+
+<a href={safeUrl(user.website)}>Website</a>
+----
+
+=== Direct DOM access
+
+React's escaping applies only to what React renders. Code that writes HTML to
+the DOM itself bypasses it, eg. `ref.current.innerHTML = …`, or
+`insertAdjacentHTML()`. So do third-party libraries that write HTML, eg.
+some rich-text editors, Markdown renderers, and charting libraries. Check how
+such libraries handle untrusted input.
+
+=== Server-rendered state
+
+Server-rendered apps often embed initial data in a `<script>` tag.
+`JSON.stringify()` doesn't escape `</script>`, so a string in the data can
+close the tag and start a new one. Escape `<` as `<`, or use a library
+such as `serialize-javascript`. Frameworks handle this for their own data.
+
+[source,js]
+----
+const json = JSON.stringify(data).replace(/</g, "\\u003c")
+const html = `<script>window.__DATA__ = ${json}</script>`
+----
+
+=== Defense in depth
+
+A strict Content Security Policy (CSP) limits what an injected script can do.
+A nonce-based policy, eg. `script-src 'nonce-…' 'strict-dynamic'`, allows only
+scripts that carry the nonce of the current response. Frameworks such as
+Next.js can add nonces to the scripts they generate.
+
+== Server functions
+
+Every server function is a public HTTP endpoint. Authenticate, authorize, and
+validate every call inside the function.
+
+.References
+****
+* https://react.dev/reference/react-dom/components/common#dangerously-setting-the-inner-html[React Docs: Dangerously setting the inner HTML]
+* https://react.dev/blog/2024/04/25/react-19-upgrade-guide[React Blog: React 19 upgrade guide]
+* https://github.com/cure53/DOMPurify[DOMPurify]
+* https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html[OWASP: Cross Site Scripting Prevention Cheat Sheet]
+* https://web.dev/articles/strict-csp[web.dev: Mitigate cross-site scripting with a strict CSP]
+****

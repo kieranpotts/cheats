@@ -1,0 +1,120 @@
+= React hooks: Memoization
+
+React re-renders a component, and all its children, whenever its state
+changes. Usually this is fast enough. Memoization caches the results of earlier
+work, so React can skip it when the inputs haven't changed.
+
+[TIP]
+====
+The React Compiler adds memoization automatically, at build time. In a project
+that uses the compiler, new code rarely needs the APIs on this page.
+====
+
+== useMemo
+
+`useMemo(calculate, dependencies)` caches the result of a calculation. React
+calls `calculate` on the first render, and again only when a dependency
+changes.
+
+[source,jsx]
+----
+import { useMemo } from "react"
+
+function TodoList({ todos, filter }) {
+  const visibleTodos = useMemo(
+    () => filterTodos(todos, filter),
+    [todos, filter]
+  )
+
+  // …
+}
+----
+
+Use it only for calculations that are measurably slow. As a guide, the React
+docs suggest that a calculation is worth memoizing if it takes 1 ms or more.
+
+== useCallback
+
+`useCallback(fn, dependencies)` caches a function definition. It is the same
+as `useMemo(() => fn, dependencies)`. A component creates new functions on
+every render, so a cached function is useful when it is passed to a memoized
+child, or used as a dependency of another Hook.
+
+[source,jsx]
+----
+import { useCallback } from "react"
+
+function ProductPage({ productId }) {
+  const handleSubmit = useCallback(orderDetails => {
+    post(`/product/${productId}/buy`, orderDetails)
+  }, [productId])
+
+  return <ShippingForm onSubmit={handleSubmit} />
+}
+----
+
+== memo
+
+`memo(Component)` returns a version of the component that skips re-rendering
+when its props haven't changed. React compares each prop with its previous
+value using `Object.is`.
+
+[source,jsx]
+----
+import { memo } from "react"
+
+const ShippingForm = memo(function ShippingForm({ onSubmit }) {
+  // …
+})
+----
+
+`memo` doesn't help if the parent passes a new object, array, or function on
+every render. Pair it with `useMemo` and `useCallback`, as in the previous
+examples.
+
+== When memoization doesn't help
+
+Memoization has costs. React has to store the cached values, and compare the
+dependencies on every render, and the code is harder to read. It also breaks
+silently.
+
+* *One unstable prop defeats `memo`.* An inline object, array, or function,
+  eg. `style={{ color: "red" }}`, is new on every render, so the memoized
+  component re-renders anyway.
+
+* *`children` defeats `memo`.* JSX passed as `children` creates new elements
+  on every render of the parent.
++
+[source,jsx]
+----
+/* `Panel` re-renders every time, despite `memo`. */
+<Panel>
+  <p>Hello</p>
+</Panel>
+----
+
+* *Cheap work isn't worth caching.* Comparing the dependencies can cost more
+  than the calculation.
+
+Profile first. Fix the structure of the components before memoizing, eg. move
+state down, or pass components as `children`.
+
+== With the React Compiler
+
+The compiler memoizes components and values automatically. It can also
+memoize code after an early `return`, which Hooks can't do. With the compiler
+turned on, the React docs recommend the following.
+
+* *New code.* Rely on the compiler. Use `useMemo` and `useCallback` only where
+  you need precise control, eg. to keep a value that an Effect depends on
+  stable.
+
+* *Existing code.* Leave existing memoization in place, or test carefully
+  before removing it. Removing it can change the compiler's output.
+
+.References
+****
+* https://react.dev/reference/react/useMemo[React Docs: useMemo]
+* https://react.dev/reference/react/useCallback[React Docs: useCallback]
+* https://react.dev/reference/react/memo[React Docs: memo]
+****

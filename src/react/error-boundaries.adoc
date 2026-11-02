@@ -1,0 +1,161 @@
+= Error boundaries
+
+By default, if a component throws an error during rendering, React removes the
+whole app from the screen. An _error boundary_ catches errors thrown by the
+components below it, and shows a fallback UI instead.
+
+An error boundary MUST be a class component. There is no Hook equivalent. A
+class becomes an error boundary when it defines `static
+getDerivedStateFromError()`, which sets state to show the fallback, and
+optionally `componentDidCatch()`, which logs the error.
+
+[source,jsx]
+----
+import { Component } from "react"
+
+class ErrorBoundary extends Component {
+  state = { hasError: false }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true }
+  }
+
+  componentDidCatch(error, info) {
+    logErrorToMyService(error, info.componentStack)
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback
+    }
+
+    return this.props.children
+  }
+}
+
+function App() {
+  return (
+    <ErrorBoundary fallback={<p>Something went wrong.</p>}>
+      <Profile />
+    </ErrorBoundary>
+  )
+}
+----
+
+Error boundaries catch errors thrown during rendering, in lifecycle methods
+and Effects, in Actions and Transitions, and by promises read with `use`. They
+don't catch errors thrown in the following places.
+
+* Event handlers. Use `try`/`catch`, and set state to show the error.
+
+* Asynchronous code outside a Transition, eg. `setTimeout` callbacks. This
+  includes async code that an Effect starts. An error thrown directly in the
+  Effect reaches the boundary, but an error thrown later, in a promise
+  callback, doesn't.
+
+* Server-side rendering.
+
+* The error boundary itself, rather than its children.
+
+== Using react-error-boundary
+
+Rather than writing the class yourself, use the `react-error-boundary` package.
+It also lets the user retry.
+
+[source,jsx]
+----
+import { ErrorBoundary } from "react-error-boundary"
+
+function Fallback({ error, resetErrorBoundary }) {
+  return (
+    <div role="alert">
+      <p>Something went wrong: {error.message}</p>
+      <button onClick={resetErrorBoundary}>Try again</button>
+    </div>
+  )
+}
+
+function App() {
+  return (
+    <ErrorBoundary FallbackComponent={Fallback}>
+      <Profile />
+    </ErrorBoundary>
+  )
+}
+----
+
+== Where to put error boundaries
+
+Wrap independent parts of the UI in their own boundaries, eg. each widget on a
+dashboard, so one failure doesn't take down the rest of the page. Put a
+top-level boundary around the whole app as a last resort.
+
+Place error boundaries alongside Suspense boundaries. Suspense handles the
+loading state of a region, and the error boundary handles its failure state.
+
+== Retrying failed lazy loads
+
+A component loaded with `lazy` throws if its code fails to load, eg. after a
+deploy has removed the old bundle files from the server, or on a flaky
+connection. React caches the failed result, so rendering the component again
+throws again. The error boundary should offer a retry that reloads the page.
+The reload fetches the new HTML, which points at the new bundle files.
+
+[source,jsx]
+----
+import { lazy, Suspense } from "react"
+import { ErrorBoundary } from "react-error-boundary"
+
+const Settings = lazy(() => import("./Settings"))
+
+function ChunkError() {
+  return (
+    <div role="alert">
+      <p>This part of the app failed to load.</p>
+      <button onClick={() => window.location.reload()}>Reload</button>
+    </div>
+  )
+}
+
+<ErrorBoundary FallbackComponent={ChunkError}>
+  <Suspense fallback={<Spinner />}>
+    <Settings />
+  </Suspense>
+</ErrorBoundary>
+----
+
+== Root error handlers
+
+_Added in React 19._
+
+`createRoot` and `hydrateRoot` accept options to report errors, eg. to a
+monitoring service.
+
+[source,jsx]
+----
+import { createRoot } from "react-dom/client"
+
+const root = createRoot(document.getElementById("root"), {
+  /* An error boundary caught an error. */
+  onCaughtError(error, errorInfo) {
+    reportError(error, errorInfo.componentStack)
+  },
+  /* No error boundary caught the error. */
+  onUncaughtError(error, errorInfo) {
+    reportError(error, errorInfo.componentStack)
+  },
+  /* React recovered from the error automatically. */
+  onRecoverableError(error, errorInfo) {
+    reportError(error, errorInfo.componentStack)
+  },
+})
+----
+
+React 19 also logs each error once, with its component stack, instead of
+logging it several times.
+
+.References
+****
+* https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary[React Docs: Catching rendering errors with an error boundary]
+* https://github.com/bvaughn/react-error-boundary[react-error-boundary]
+****

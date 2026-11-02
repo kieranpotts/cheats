@@ -206,18 +206,21 @@ theory, you could create custom components that extend from lower-level base
 components. But the best practice in the React ecosystem has always been to use
 composition instead of inheritance.
 
-Class components are considered deprecated. They still work, coexisting in React
-core with functional components, but the React team does not intend to extend
-`React.Component` with new features. Future development of React will focus on
-functional components (see below), and therefore it is RECOMMENDED that all new
-codebases adopt functional components with hooks (see below).
+Class components are still supported, but the React docs don't recommend them
+for new code, and list `Component` among React's legacy APIs. New features, such
+as Hooks, work only in function components. New code SHOULD use function
+components with Hooks. One exception remains: an error boundary must still be
+a class component.
+
+The lifecycle methods `componentWillMount`, `componentWillReceiveProps`, and
+`componentWillUpdate` are deprecated. They survive only with an `UNSAFE_`
+prefix, eg. `UNSAFE_componentWillMount`.
 
 == Higher-order components
 
-Higher-order components is a design pattern for class components that
-effectively does what mixins used to do for `createClass` components. It's a
-functional programming pattern that allows you to extend existing components
-with additional functionality.
+Higher-order components (HOCs) are a design pattern for class components that
+does what mixins used to do for `createClass` components. A HOC is a function
+that takes a component and returns a new component with extra behavior.
 
 [source,jsx]
 ----
@@ -273,27 +276,29 @@ export default withLocalStorage("text")(ClassComponent)
 ----
 
 [NOTE]
-======
-Although class components are considered deprecated, higher-order components
-are still very much used to extend new functional components (see below) with
-reusable functionality.
-======
+====
+HOCs also work with function components, and some libraries still export them.
+For new code, prefer custom Hooks. They share logic without adding wrapper
+components to the tree.
+====
 
-== Functional components
+== Function components
 
-Initially, functional components were stateless. They were designed for the
+Initially, function components were stateless. They were designed for the
 composition of very simple components that did not require state or lifecycle
-methods. But with the release of React Hooks in v16.8 (February 2019),
-functional components became the preferred way to define components in React.
+methods. But with the release of React Hooks in v16.8 (February 2019), function
+components became the preferred way to define components in React.
 
-Refactored as a functional component, the previous example would look like this:
+Refactored as a function component, the previous example looks like this.
 
 [source,jsx]
 ----
 import { useEffect, useState } from "react"
 
 const FunctionalComponent = () => {
-  const [text, setText] = useState(localStorage.getItem("text") || "")
+  /* Pass a function to `useState` so `localStorage` is read only on the
+  first render. */
+  const [text, setText] = useState(() => localStorage.getItem("text") || "")
 
   /* The `useEffect()` hook is used to manage side-effects in functional
   components. This callback will be executed every time the value of the
@@ -318,16 +323,18 @@ const FunctionalComponent = () => {
 export default FunctionalComponent
 ----
 
-We can define custom hooks, too. In the following example we have extracted both
-built-in hooks, `useState()` and `useEffect()`, into a custom hook called
-`useLocalStorage()`:
+You can define custom Hooks, too. The following example extracts both built-in
+Hooks, `useState()` and `useEffect()`, into a custom Hook called
+`useLocalStorage()`.
 
 [source,jsx]
 ----
 import { useEffect, useState } from "react"
 
 const useLocalStorage = (storageKey) => {
-  const [value, setValue] = useState(localStorage.getItem(storageKey) || "")
+  const [value, setValue] = useState(
+    () => localStorage.getItem(storageKey) || ""
+  )
 
   useEffect(() => {
     localStorage.setItem(storageKey, value)
@@ -354,107 +361,34 @@ const FunctionalComponent = () => {
 export default FunctionalComponent
 ----
 
-This custom hook can now be reused in other components, so all components in an
+This custom Hook can now be reused in other components, so all components in an
 application share the same logic for interacting with local storage data. This
-is the primary way that React encourages code reuse in functional components.
+is the primary way that React encourages code reuse in function components.
+Each component that calls the Hook gets its own, independent state.
 
 == Server components
 
-In 2023 React introduced React Server Components (RSC), which allows components
-to be pre-rendered on the server, and then optionally hydrated, or partially
-hydrated, on the client.
-
-Server components serve entirely different use cases to classic React (client)
-components).
+React Server Components render ahead of time, on the server or at build time,
+in an environment separate from the browser. They can be `async`, and they can
+read from databases and file systems directly. Their code is never sent to the
+browser. Server components have been stable since React 19, and need a
+framework that supports them, such as Next.js.
 
 [source,jsx]
 ----
-const ReactServerComponent = async () => {
+async function Posts() {
   const posts = await db.query("SELECT * FROM posts")
 
   return (
-    <div>
-      <ul>
-        {posts?.map((post) => (
-          <li key={post.id}>{post.title}</li>
-        ))}
-      </ul>
-    </div>
-  )
-}
-
-export default ReactServerComponent
-----
-
-Server components cannot use hooks or any client-side JavaScript (eg. attaching
-DOM event handlers), because they run on the server. In effect, React server
-components are more like a traditional server-side rendering (SSR) or
-"templating" solution.
-
-[NOTE]
-======
-With the emergence of server components, the React team has also introduced the
-concept of client components, which is the term that now refers to the
-traditional client-side components.
-======
-
-== Async components
-
-Async components are currently supported only for server components, but are
-expected to be added to client components in the future. Simply, if a component
-is declared as async, it can perform asynchronous operations, such as fetching
-data.
-
-The previous server component example demonstrates this. The functional
-component is defined using an `async` function, and within the body of the
-function the logic awaits a query to the database before rendering the JSX as
-HTML.
-
-In full-stack React applications, you can use server components to perform
-asynchronous operations on the server, such as fetching data from a database,
-and then using that data to render client components. On the server, you pass
-promises as props to the client components.
-
-[source,jsx]
-----
-import { Suspense } from "react"
-
-const ReactServerComponent = () => {
-  const postsPromise = db.query("SELECT * FROM posts")
-
-  return (
-    <div>
-      <Suspense>
-        <ReactClientComponent promisedPosts={postsPromise} />
-      </Suspense>
-    </div>
-  )
-}
-----
-
-The promises are resolved in the client components using React's `use` API.
-
-[source,jsx]
-----
-"use client"
-
-import { use } from "react"
-
-const ReactClientComponent = ({ promisedPosts }) => {
-  const posts = use(promisedPosts)
-
-  return (
     <ul>
-      {posts?.map((post) => (
+      {posts.map((post) => (
         <li key={post.id}>{post.title}</li>
       ))}
     </ul>
   )
 }
-
-export { ReactClientComponent }
 ----
 
-In the future, React should support async client components, allowing client
-components to perform asynchronous operations on the client side before doing
-their rendering.
+Server components can't use state, Effects, or event handlers. With their
+arrival, the traditional components that run in the browser became known as
+_client components_.

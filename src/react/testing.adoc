@@ -1,0 +1,317 @@
+= Testing
+
+Most React apps test components with the following tools.
+
+* *A test runner,* eg. Vitest, or Jest. Vitest reuses the Vite configuration,
+  so it suits Vite projects.
+
+* *A simulated DOM,* eg. jsdom or happy-dom, so tests can render components
+  outside a browser.
+
+* *React Testing Library,* to render components and find elements the way a
+  user would, eg. by role or label.
+
+* *user-event,* to simulate user interactions such as typing and clicking.
+
+* *jest-dom,* for DOM-specific assertions such as `toBeInTheDocument()`.
+
+React Testing Library follows one guiding principle: "The more your tests
+resemble the way your software is used, the more confidence they can give
+you." Test what the user sees and does, not the internals of a component, such
+as its state.
+
+[NOTE]
+====
+React 19 deprecated `react-test-renderer`, and removed most of
+`react-dom/test-utils`. The `act` function moved to the `react` package. The
+React docs recommend React Testing Library instead.
+====
+
+== Setup with Vitest
+
+[source,bash]
+----
+npm install --save-dev vitest jsdom \
+  @testing-library/react @testing-library/dom \
+  @testing-library/user-event @testing-library/jest-dom
+----
+
+Add a `test` section to the Vite configuration.
+
+.vite.config.js
+[source,js]
+----
+import { defineConfig } from "vite"
+import react from "@vitejs/plugin-react"
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    environment: "jsdom",
+    setupFiles: ["./vitest.setup.js"],
+  },
+})
+----
+
+The setup file runs before each test file. It adds the jest-dom matchers, and
+removes rendered components from the DOM after each test.
+
+.vitest.setup.js
+[source,js]
+----
+import { afterEach } from "vitest"
+import { cleanup } from "@testing-library/react"
+import "@testing-library/jest-dom/vitest"
+
+afterEach(() => {
+  cleanup()
+})
+----
+
+.package.json
+[source,json]
+----
+{
+  "scripts": {
+    "test": "vitest"
+  }
+}
+----
+
+`npm test` runs the tests in watch mode during development, and runs them once
+in CI.
+
+== A first test
+
+Test files sit next to the components they test, and are named `*.test.jsx`.
+
+.Counter.test.jsx
+[source,jsx]
+----
+import { describe, expect, it } from "vitest"
+import { render, screen } from "@testing-library/react"
+import userEvent from "@testing-library/user-event"
+import Counter from "./Counter"
+
+describe("Counter", () => {
+  it("increments the count when the button is clicked", async () => {
+    const user = userEvent.setup()
+    render(<Counter />)
+
+    await user.click(screen.getByRole("button", { name: "Add" }))
+
+    expect(screen.getByText("Count: 1")).toBeInTheDocument()
+  })
+})
+----
+
+* `render()` renders the component into a container in the simulated DOM.
+
+* `screen` runs queries against the whole document.
+
+* `userEvent.setup()` creates a simulated user. Its methods, eg. `click()` and
+  `type()`, return promises, so `await` them.
+
+React Testing Library wraps rendering and user events in `act()`, so React
+finishes its updates before the test checks the DOM. You rarely need to call
+`act()` yourself.
+
+== Queries
+
+Prefer queries that reflect how users, including users of assistive
+technology, find elements. In priority order, the queries are the following.
+
+1. `getByRole`, eg. `getByRole("button", { name: "Save" })`. Use this for
+   almost everything.
+2. `getByLabelText`, for form fields.
+3. `getByPlaceholderText`
+4. `getByText`, for non-interactive content.
+5. `getByDisplayValue`
+6. `getByAltText`
+7. `getByTitle`
+8. `getByTestId`, as a last resort. It matches a `data-testid` attribute.
+
+Each query comes in several variants, which differ in how many elements they
+expect, and whether they wait.
+
+[cols="2,2,2,2,1"]
+|===
+|Variant |0 matches |1 match |More than 1 match |Waits
+
+|`getBy…`
+|Throws
+|Returns the element
+|Throws
+|No
+
+|`queryBy…`
+|Returns `null`
+|Returns the element
+|Throws
+|No
+
+|`findBy…`
+|Throws
+|Returns the element
+|Throws
+|Yes
+
+|`getAllBy…`
+|Throws
+|Returns an array
+|Returns an array
+|No
+
+|`queryAllBy…`
+|Returns `[]`
+|Returns an array
+|Returns an array
+|No
+
+|`findAllBy…`
+|Throws
+|Returns an array
+|Returns an array
+|Yes
+|===
+
+* Use `getBy…` when the element should be present.
+
+* Use `queryBy…` to assert that an element is _absent_, eg.
+  `expect(screen.queryByRole("alert")).not.toBeInTheDocument()`.
+
+* Use `findBy…` for elements that appear later, eg. after data loads. It
+  returns a promise, and retries for up to 1 second by default.
+
+== Async code
+
+Await a `findBy…` query to wait for content that appears after an async
+update.
+
+[source,jsx]
+----
+it("shows the user's name after loading", async () => {
+  render(<Profile userId="42" />)
+
+  expect(screen.getByText("Loading…")).toBeInTheDocument()
+  const heading = await screen.findByRole("heading", { name: "Ada" })
+  expect(heading).toBeInTheDocument()
+})
+----
+
+To wait for anything else, eg. for an element to disappear, use `waitFor()`. It
+retries the callback until the callback stops throwing.
+
+[source,jsx]
+----
+import { waitFor } from "@testing-library/react"
+
+await waitFor(() => {
+  expect(screen.queryByText("Loading…")).not.toBeInTheDocument()
+})
+----
+
+== Mocking
+
+Use `vi.fn()` to create mock functions, eg. for callback props.
+
+[source,jsx]
+----
+import { expect, it, vi } from "vitest"
+
+it("calls onSave with the form values", async () => {
+  const user = userEvent.setup()
+  const onSave = vi.fn()
+  render(<NameForm onSave={onSave} />)
+
+  await user.type(screen.getByLabelText("Name"), "Ada")
+  await user.click(screen.getByRole("button", { name: "Save" }))
+
+  expect(onSave).toHaveBeenCalledWith({ name: "Ada" })
+})
+----
+
+To mock network requests, use Mock Service Worker (MSW). It intercepts requests
+at the network level, so components use their real `fetch` code.
+
+[source,js]
+----
+import { afterAll, afterEach, beforeAll } from "vitest"
+import { http, HttpResponse } from "msw"
+import { setupServer } from "msw/node"
+
+const server = setupServer(
+  http.get("/api/users/:id", ({ params }) => {
+    return HttpResponse.json({ id: params.id, name: "Ada" })
+  })
+)
+
+beforeAll(() => server.listen())
+afterEach(() => server.resetHandlers())
+afterAll(() => server.close())
+----
+
+== Providers and routers
+
+A component that reads context, or uses a router, needs its providers in the
+test. Pass them with the `wrapper` option.
+
+[source,jsx]
+----
+import { MemoryRouter } from "react-router"
+
+render(<Header />, {
+  wrapper: ({ children }) => (
+    <MemoryRouter initialEntries={["/teams/42"]}>
+      <ThemeContext value="dark">{children}</ThemeContext>
+    </MemoryRouter>
+  ),
+})
+----
+
+To reuse the same providers across tests, write a custom `render` function
+that sets the `wrapper`, and import it instead of React Testing Library's.
+
+== Testing custom Hooks
+
+Test a custom Hook through a component that uses it, where possible. To test
+the Hook on its own, use `renderHook()`. Wrap calls that update state in
+`act()`.
+
+[source,jsx]
+----
+import { act, renderHook } from "@testing-library/react"
+import { useCounter } from "./useCounter"
+
+it("increments", () => {
+  const { result } = renderHook(() => useCounter())
+
+  act(() => {
+    result.current.increment()
+  })
+
+  expect(result.current.count).toBe(1)
+})
+----
+
+== Beyond the simulated DOM
+
+* *Browser mode.* Vitest can run component tests in a real browser, through
+  Playwright or WebdriverIO. The `vitest-browser-react` package provides the
+  `render` function.
+
+* *End-to-end tests.* Playwright and Cypress drive the whole app in a real
+  browser. Use them for critical user journeys, eg. sign-up and checkout.
+
+* *Async server components.* React Testing Library and other unit test tools
+  can't render async server components yet. Test them end-to-end, and move logic
+  that needs unit tests out into plain functions.
+
+.References
+****
+* https://testing-library.com/docs/react-testing-library/intro/[Testing Library: React Testing Library]
+* https://testing-library.com/docs/queries/about[Testing Library: About queries]
+* https://testing-library.com/docs/user-event/intro[Testing Library: user-event]
+* https://vitest.dev/guide/[Vitest: Getting started]
+* https://mswjs.io/[Mock Service Worker]
+****

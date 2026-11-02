@@ -1,13 +1,166 @@
-= React compiler (React v19)
+= React Compiler
 
-React v19's new compiler is an evolution of something that was released a number
-of years ago called React Forget.
+React Compiler is a build-time tool that memoizes components and Hooks
+automatically. It grew out of a research project announced in 2021 as React
+Forget. Version 1.0, the first stable release, shipped in 2025-10.
 
-Essentially, React Compiler can take your React code and compile it down to
-something that is much more efficient, and much smaller in terms of the amount
-of code that is shipped to the browser, but which still works the same way.
+Without the compiler, React re-renders a component and all its children whenever
+its state changes. To skip unnecessary work, developers add `useMemo`,
+`useCallback`, and `memo` by hand. The compiler analyzes each component, and
+inserts the equivalent memoization for you. It can also memoize code after an
+early `return`, which Hooks can't do.
 
-The big advantage of the React Compiler is that we're not going to need APIs
-like `React.memo()`, `React.useMemo`, or `React.useCallback` any more. The
-compiler will figure out when to memoize things and when not to, and
-automatically handle these use cases to fine-tune performance.
+The compiler doesn't make bundles smaller. It adds code to cache values. Its
+benefit is fewer, cheaper re-renders at runtime.
+
+== Requirements
+
+* *React 17 or later.* The compiler targets React 19 by default. For React 17
+  or 18, set the `target` option, and install the `react-compiler-runtime`
+  package as a dependency.
+
+* *Code that follows the Rules of React.* Components and Hooks MUST be pure,
+  MUST follow the Rules of Hooks, and MUST NOT mutate props, state, or values
+  after they have been rendered. The compiler skips any component it can't prove
+  safe, and leaves it unoptimized.
+
+== Installation
+
+The compiler is a Babel plugin. Install an exact version, because future
+versions may change how they memoize code.
+
+[source,bash]
+----
+npm install --save-dev --save-exact babel-plugin-react-compiler@latest
+----
+
+It MUST run first in the Babel plugin pipeline.
+
+.babel.config.js
+[source,js]
+----
+module.exports = {
+  plugins: [
+    "babel-plugin-react-compiler", // Must run first.
+    // …
+  ],
+}
+----
+
+For React 17 or 18, pass the `target` option.
+
+[source,js]
+----
+module.exports = {
+  plugins: [
+    ["babel-plugin-react-compiler", { target: "18" }],
+  ],
+}
+----
+
+=== Vite
+
+With `@vitejs/plugin-react` 6.0.0 or later, add the compiler through
+`@rolldown/plugin-babel`.
+
+[source,bash]
+----
+npm install --save-dev @rolldown/plugin-babel
+----
+
+.vite.config.js
+[source,js]
+----
+import { defineConfig } from "vite"
+import react, { reactCompilerPreset } from "@vitejs/plugin-react"
+import babel from "@rolldown/plugin-babel"
+
+export default defineConfig({
+  plugins: [
+    react(),
+    babel({
+      presets: [reactCompilerPreset()],
+    }),
+  ],
+})
+----
+
+Earlier versions of `@vitejs/plugin-react` take the plugin in their own
+`babel` option.
+
+[source,js]
+----
+react({
+  babel: {
+    plugins: ["babel-plugin-react-compiler"],
+  },
+})
+----
+
+=== Next.js
+
+Install `babel-plugin-react-compiler`, then turn on the `reactCompiler` option.
+
+.next.config.js
+[source,js]
+----
+const nextConfig = {
+  reactCompiler: true,
+}
+
+export default nextConfig
+----
+
+=== Expo
+
+Expo SDK 54 and later turn the compiler on by default.
+
+== Verifying the compiler works
+
+* In React DevTools, compiled components show a "Memo ✨" badge.
+
+* In the build output, compiled modules import `c` from
+  `react/compiler-runtime`.
+
+== Linting
+
+The compiler's checks for violations of the Rules of React are part of
+`eslint-plugin-react-hooks`. Its `recommended` preset includes them, eg. the
+`set-state-in-render`, `set-state-in-effect`, and `refs` rules. The linter
+doesn't need the compiler to be installed. Remove the older
+`eslint-plugin-react-compiler` package, which these rules replace.
+
+== Opting out
+
+To stop the compiler from optimizing one component or Hook, add the
+`"use no memo"` directive at the top of its body. Remove the directive once
+you have fixed the underlying problem.
+
+[source,jsx]
+----
+function ProblematicComponent() {
+  "use no memo"
+  // …
+}
+----
+
+To adopt the compiler gradually, set the `compilationMode: "annotation"`
+option. The compiler then optimizes only components and Hooks that start with
+the `"use memo"` directive.
+
+== useMemo, useCallback, and memo
+
+The compiler doesn't make these APIs obsolete, but most new code no longer
+needs them. For new code, rely on the compiler, and use `useMemo` and
+`useCallback` only where you need precise control, eg. to keep an Effect
+dependency stable. In existing code, leave manual memoization in place, or test
+carefully before removing it, because removing it can change the compiled
+output.
+
+.References
+****
+* https://react.dev/learn/react-compiler[React Docs: React Compiler]
+* https://react.dev/learn/react-compiler/installation[React Docs: Installation]
+* https://react.dev/reference/react-compiler/configuration[React Docs: Compiler configuration]
+* https://react.dev/blog/2025/10/07/react-compiler-1[React Blog: React Compiler v1.0]
+****

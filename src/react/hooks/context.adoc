@@ -1,0 +1,137 @@
+= React hooks: Context
+
+Passing data through many layers of components that don't use it, only so a
+deep child can read it, is called _prop drilling_. Context lets a component
+provide a value to every component below it in the tree, however deep.
+
+Context suits values that many components need, eg. the current theme, the
+signed-in user, or the locale.
+
+== Creating and providing context
+
+Create a context with `createContext()`, outside any component. The argument is
+the default value, which components get when there is no provider above them.
+
+.ThemeContext.js
+[source,js]
+----
+import { createContext } from "react"
+
+export const ThemeContext = createContext("light")
+----
+
+To provide a value, render the context itself as a component, with a `value`
+prop.
+
+[source,jsx]
+----
+import { useState } from "react"
+import { ThemeContext } from "./ThemeContext"
+
+export default function App() {
+  const [theme, setTheme] = useState("dark")
+
+  return (
+    <ThemeContext value={theme}>
+      <Page />
+      <button onClick={() => setTheme(t => t === "dark" ? "light" : "dark")}>
+        Toggle theme
+      </button>
+    </ThemeContext>
+  )
+}
+----
+
+[NOTE]
+====
+Rendering `<ThemeContext>` directly as a provider is new in React 19. Earlier
+versions used `<ThemeContext.Provider value={…}>`. It still works, but the
+React team plans to deprecate it.
+====
+
+== Reading context
+
+Read the value with `useContext()`. The component gets the value of the
+nearest provider above it, and re-renders when that value changes.
+
+[source,jsx]
+----
+import { useContext } from "react"
+import { ThemeContext } from "./ThemeContext"
+
+function Button({ children }) {
+  const theme = useContext(ThemeContext)
+  return <button className={`button-${theme}`}>{children}</button>
+}
+----
+
+Since React 19, the `use` API reads context, too. Unlike `useContext`, it can
+be called inside conditions and after an early `return`.
+
+[source,jsx]
+----
+import { use } from "react"
+import { ThemeContext } from "./ThemeContext"
+
+function Heading({ children }) {
+  if (children == null) {
+    return null
+  }
+
+  const theme = use(ThemeContext)
+  return <h1 className={`heading-${theme}`}>{children}</h1>
+}
+----
+
+== Context with a reducer
+
+A common pattern combines context with `useReducer`. One context holds the
+state, and another holds `dispatch`. Any component in the tree can then read the
+state, and update it.
+
+[source,jsx]
+----
+import { createContext, useContext, useReducer } from "react"
+
+const TasksContext = createContext(null)
+const TasksDispatchContext = createContext(null)
+
+export function TasksProvider({ children }) {
+  const [tasks, dispatch] = useReducer(tasksReducer, [])
+
+  return (
+    <TasksContext value={tasks}>
+      <TasksDispatchContext value={dispatch}>
+        {children}
+      </TasksDispatchContext>
+    </TasksContext>
+  )
+}
+
+export function useTasks() {
+  return useContext(TasksContext)
+}
+
+export function useTasksDispatch() {
+  return useContext(TasksDispatchContext)
+}
+----
+
+== Performance
+
+Every component that reads a context re-renders when the context value changes.
+React compares the old and new values with `Object.is`. If the provider passes a
+new object or function on every render, every reader re-renders every time.
+Memoize such values with `useMemo` and `useCallback`, or let the React Compiler
+do it.
+
+Splitting state and `dispatch` into two contexts, as in the reducer pattern,
+means that components that only dispatch don't re-render when the state
+changes.
+
+.References
+****
+* https://react.dev/learn/passing-data-deeply-with-context[React Docs: Passing data deeply with context]
+* https://react.dev/reference/react/useContext[React Docs: useContext]
+* https://react.dev/reference/react/createContext[React Docs: createContext]
+****

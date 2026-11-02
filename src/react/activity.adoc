@@ -1,0 +1,73 @@
+= Activity
+
+_Added in React 19.2._
+
+`<Activity>` hides and shows part of the UI, but keeps its state. It is an
+alternative to conditional rendering, which unmounts the hidden component and
+discards its state.
+
+[source,jsx]
+----
+import { Activity } from "react"
+
+/* Before: unmounts `Sidebar` when hidden, and loses its state. */
+{isShowingSidebar && <Sidebar />}
+
+/* After: hides `Sidebar`, and keeps its state. */
+<Activity mode={isShowingSidebar ? "visible" : "hidden"}>
+  <Sidebar />
+</Activity>
+----
+
+The `mode` prop is `"visible"` (the default) or `"hidden"`.
+
+* *Hidden.* React hides the children with `display: none`, and cleans up their
+  Effects. The children keep their state. They still re-render when their props
+  change, but at a lower priority than the rest of the page.
+
+* *Visible.* React shows the children with their earlier state restored, and
+  sets up their Effects again.
+
+== Uses
+
+* *Preserving state.* Keep the state of tabs, panels, and back navigations,
+  eg. text the user typed into a form.
+
+* *Pre-rendering.* Render content the user is likely to need next in a hidden
+  `<Activity>`. React renders it in the background, and starts loading its
+  code, data, and images, so it appears faster when shown.
+
+[source,jsx]
+----
+function TabContainer({ activeTab }) {
+  return (
+    <>
+      <Activity mode={activeTab === "home" ? "visible" : "hidden"}>
+        <Home />
+      </Activity>
+      <Activity mode={activeTab === "posts" ? "visible" : "hidden"}>
+        <Posts />
+      </Activity>
+    </>
+  )
+}
+----
+
+== Caveats
+
+* Hidden children stay in the DOM, so the browser keeps running them. A
+  `<video>`, for example, keeps playing. Stop such behavior in an Effect
+  cleanup function, eg. by pausing the video, because React runs the cleanup
+  when it hides the children.
+
+* A hidden `<Activity>` whose children render only text renders nothing,
+  because there is no DOM element to hide.
+
+* Inside a `<ViewTransition>`, showing or hiding an `<Activity>` in a Transition
+  plays the enter or exit animation.
+
+.References
+****
+* https://react.dev/reference/react/Activity[React Docs: <Activity>]
+* https://react.dev/blog/2025/10/01/react-19-2[React Blog: React 19.2]
+****

@@ -1,0 +1,162 @@
+= Server rendering and hydration
+
+_Server-side rendering_ (SSR) renders the React tree to HTML on the server,
+for each request. The browser shows the HTML straight away, before the
+JavaScript has loaded. React then _hydrates_ the HTML: it renders the same
+tree in the browser, and attaches event handlers and state to the existing DOM
+nodes instead of creating new ones.
+
+_Static rendering_, or prerendering, does the same at build time, for pages
+that are the same for every visitor.
+
+Most apps get SSR from a framework, eg. Next.js or React Router in framework
+mode. The underlying APIs are in `react-dom/server` and `react-dom/static`.
+
+[cols="1,2"]
+|===
+|API |Use
+
+|`renderToPipeableStream`
+|Streams HTML in Node.js.
+
+|`renderToReadableStream`
+|Streams HTML in environments with Web Streams, eg. Deno, Bun, and edge
+runtimes.
+
+|`prerender`
+|Renders static HTML, and waits for all data to load. Added in React 19.
+
+|`renderToString`
+|Renders HTML synchronously. It doesn't support streaming, or waiting for
+data, so prefer the streaming APIs.
+|===
+
+In the browser, attach React to the server-rendered HTML with `hydrateRoot()`,
+not `createRoot()`.
+
+== Streaming
+
+With the streaming APIs, React sends the HTML for the page shell first. Parts of
+the page inside a `<Suspense>` boundary that are still waiting for data arrive
+later, in the same response, and replace their fallbacks. React also hydrates
+each boundary separately, and hydrates first the part of the page that the user
+interacts with.
+
+== Hydration mismatches
+
+React expects the first render in the browser to produce exactly the same
+markup as the server did. When it doesn't, React logs a hydration error. When
+text content doesn't match, React throws away the server HTML up to the
+nearest `<Suspense>` boundary, or for the whole root, and renders it again on
+the client, which is slow. React doesn't patch mismatched attributes, so the
+DOM can keep the server's values.
+
+Since React 19, React logs a single error for each mismatch, with a diff of
+the server and client markup.
+
+=== Causes
+
+* *Values that differ between server and client,* eg. `Date.now()`,
+  `Math.random()`, and dates or numbers formatted with the locale or time zone
+  of the machine.
+
+* *Browser-only checks during render,* eg. `typeof window !== "undefined"`,
+  `localStorage`, `window.matchMedia()`, or the viewport size.
+
+* *Invalid HTML nesting,* eg. a `<div>` inside a `<p>`, or a `<tr>` without a
+  `<tbody>`. The browser repairs the HTML as it parses it, so the DOM no
+  longer matches what React rendered.
+
+* *Browser extensions* that change the DOM before React hydrates it, eg. by
+  adding attributes to `<html>` or `<body>`.
+
+* *Different data* on the server and the client, eg. data the client fetches
+  again and gets a newer version of.
+
+=== Fixes
+
+* *Render the same thing first, then update.* Render the server-safe version on
+  the first render, and switch to the browser-only version in an Effect. Since
+  React 19.3, `use(browser())` does this without an Effect.
++
+[source,jsx]
+----
+function LocalTime({ iso }) {
+  const [text, setText] = useState(iso)
+
+  useEffect(() => {
+    setText(new Date(iso).toLocaleTimeString())
+  }, [iso])
+
+  return <time dateTime={iso}>{text}</time>
+}
+----
+
+* *Pass server values down as data.* Compute a timestamp or a random seed
+  once, on the server, and pass it to the client as a prop, so both sides
+  render with the same value.
+
+* *Generate IDs with `useId`.* It returns the same ID on the server and the
+  client. A counter or `Math.random()` doesn't.
+
+* *Fix invalid HTML.*
+
+* *Suppress the warning for unavoidable cases.* `suppressHydrationWarning` on
+  an element silences a mismatch in that element's own text content or
+  attributes, one level deep. Use it only for content that can't match, eg. a
+  timestamp, or attributes that extensions add to `<body>`.
++
+[source,jsx]
+----
+<p suppressHydrationWarning>{new Date().toLocaleString()}</p>
+----
+
+[NOTE]
+====
+Layout Effects don't run on the server. A component that measures the DOM in
+a `useLayoutEffect` renders its unmeasured version into the server HTML, and
+can jump when it hydrates. React 18 and earlier logged a warning about this.
+React 19 doesn't.
+====
+
+== SSR and server components
+
+SSR and server components (RSC) solve different problems, and frameworks such as
+Next.js use both together.
+
+[cols="1,2,2"]
+|===
+| |SSR |Server components
+
+|Question it answers
+|_When_ is the HTML produced?
+|_Where_ does the component's code run?
+
+|Output
+|HTML.
+|A serialized description of the UI, the RSC payload.
+
+|Code sent to the browser
+|All of it. Every component hydrates.
+|Only client components. Server components never hydrate.
+
+|Can use state and Effects
+|Yes, once hydrated.
+|No.
+
+|Can read a database directly
+|No. Data is fetched in loaders or on the client.
+|Yes.
+|===
+
+With both, server components run first and produce the RSC payload. SSR then
+renders the payload, and the client components in it, to HTML. In the
+browser, only the client components hydrate.
+
+.References
+****
+* https://react.dev/reference/react-dom/server[React Docs: Server React DOM APIs]
+* https://react.dev/reference/react-dom/static[React Docs: Static React DOM APIs]
+* https://react.dev/reference/react-dom/client/hydrateRoot[React Docs: hydrateRoot]
+* https://react.dev/reference/react-dom/client/hydrateRoot#handling-different-client-and-server-content[React Docs: Handling different client and server content]
+****

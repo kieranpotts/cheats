@@ -1,10 +1,10 @@
 = React: Keys
 
-In React, when you generate a list of elements, eg. using `Array.prototype.map`,
-React will warn that each child in the list should have a `key` prop with a
-unique value. The `key` value is used internally by React to keep track of each
-element, so it can efficiently re-render the list when the underlying data model
-changes.
+When you render a list of elements, eg. with `Array.prototype.map()`, each
+element needs a `key` prop that is unique among its siblings. React uses keys to
+match elements between renders. When the data changes, React can then tell
+which items were added, removed, or moved, and keep each item's state and DOM
+node with the right item.
 
 [source,jsx]
 ----
@@ -33,3 +33,63 @@ export default function App() {
   )
 }
 ----
+
+React logs a warning when an element in a list has no key.
+
+== Rules of keys
+
+* Keys MUST be unique among siblings. They don't need to be unique across the
+  whole app.
+
+* Keys MUST NOT change between renders. Use a stable ID from the data, eg. a
+  database ID. Don't generate keys during render, eg. with `Math.random()` or
+  `crypto.randomUUID()`. A new key on every render makes React recreate every
+  item, and lose its state.
+
+* Avoid array indexes as keys if the list can be reordered, filtered, or have
+  items inserted. The index then refers to a different item, so state and DOM
+  nodes end up attached to the wrong item. React uses the index when no key is
+  given.
+
+== Keys are not props
+
+React does not pass `key` to the component. `props.key` is always `undefined`.
+If the component needs the ID, pass it as a separate prop.
+
+[source,jsx]
+----
+<Box key={square.id} id={square.id} on={square.on} />
+----
+
+== Keys on fragments
+
+To render several elements per item without a wrapper element, use the long
+form of the fragment syntax. The shorthand `<>…</>` can't take a key.
+
+[source,jsx]
+----
+import { Fragment } from "react"
+
+function Glossary({ items }) {
+  return (
+    <dl>
+      {items.map(item => (
+        <Fragment key={item.id}>
+          <dt>{item.term}</dt>
+          <dd>{item.description}</dd>
+        </Fragment>
+      ))}
+    </dl>
+  )
+}
+----
+
+== Resetting state with a key
+
+Keys work outside lists, too. When a component's key changes, React unmounts the
+old instance and mounts a new one, with fresh state.
+
+.References
+****
+* https://react.dev/learn/rendering-lists[React Docs: Rendering lists]
+****

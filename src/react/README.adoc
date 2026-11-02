@@ -1,27 +1,56 @@
 = React cheats
 
+Notes on building user interfaces with React.
+
 [NOTE]
-======
-Most code examples in this documentation is correct for React v17. Some
-documentation notes differences in React v18 and extensions that are coming to
-React v19.
-======
+====
+These notes target React 19.3, the latest stable release at the time of writing
+(2026-09-09). React does not publish long-term support (LTS) releases. Features
+added after React 19.0 are marked with the version that introduced them.
+====
 
 * link:./basics.adoc[React basics]
+* link:./rendering.adoc[How React renders]
 * link:./production-builds.adoc[Production builds]
 * link:./prototyping.adoc[Prototyping React apps]
 * link:./custom-components.adoc[Custom components]
 * link:./types-of-components.adoc[Types of components]
+* link:./component-patterns.adoc[Component patterns]
 * link:./props.adoc[Props]
 * link:./keys.adoc[Keys]
-* link:./dom-event-listeners.adoc[DOM Event listeners]
+* link:./dom-event-listeners.adoc[DOM event listeners]
 * link:./js-in-jsx.adoc[JS in JSX]
 * link:./forms.adoc[Forms]
 * link:./hooks/README.adoc[Hooks]
 ** link:./hooks/state.adoc[State]
+** link:./hooks/reducers.adoc[Reducers]
 ** link:./hooks/effects.adoc[Effects]
+** link:./hooks/refs.adoc[Refs]
+** link:./hooks/context.adoc[Context]
+** link:./hooks/memoization.adoc[Memoization]
 ** link:./hooks/transitions.adoc[Transitions]
 ** link:./hooks/actions.adoc[Actions]
 ** link:./hooks/form-status.adoc[Form status]
 ** link:./hooks/optimistic.adoc[Optimistic updates]
-* link:./compiler.adoc[React compiler]
+* link:./state-management.adoc[State management]
+* link:./suspense.adoc[Suspense and lazy loading]
+* link:./error-boundaries.adoc[Error boundaries]
+* link:./activity.adoc[Activity]
+* link:./view-transitions.adoc[View transitions]
+* link:./portals.adoc[Portals]
+* link:./document-metadata.adoc[Document metadata and resources]
+* link:./server-rendering.adoc[Server rendering and hydration]
+* link:./server-components.adoc[Server components and server functions]
+* link:./routing.adoc[Routing]
+* link:./testing.adoc[Testing]
+* link:./typescript.adoc[TypeScript]
+* link:./performance.adoc[Performance]
+* link:./security.adoc[Security]
+* link:./compiler.adoc[React Compiler]
+
+.References
+****
+* https://react.dev/learn[React Docs: Learn React]
+* https://react.dev/reference/react[React Docs: API reference]
+* https://react.dev/versions[React Docs: React versions]
+****

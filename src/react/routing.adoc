@@ -1,0 +1,427 @@
+= Routing
+
+React has no built-in router. A router maps URLs to components, and updates
+the page when the user navigates, without a full page reload.
+
+* *Frameworks* include a router, eg. Next.js (App Router) and React Router in
+  framework mode.
+
+* *React Router* is the most widely used standalone router. These notes cover
+  React Router 8.
+
+* *TanStack Router* is an alternative with a strong focus on type safety.
+
+[NOTE]
+====
+React Router 8 was released in 2026-06. It requires React 19.2.7 or later, and
+it is ESM-only. The `react-router-dom` package is gone. Import everything from
+`react-router`, except `RouterProvider` and `HydratedRouter`, which come from
+`react-router/dom`.
+====
+
+== Modes
+
+React Router has three modes. Each adds features to the one before it.
+
+[cols="1,3"]
+|===
+|Mode |Features
+
+|Declarative
+|Matches URLs to components, navigation, and active link states. Routes are
+defined as JSX.
+
+|Data
+|Adds data loading (loaders), mutations (actions), pending states, and error
+boundaries per route. Routes are defined as objects, outside React.
+
+|Framework
+|Wraps data mode in a Vite plugin. Adds file-based route modules, generated
+types, code splitting, and server rendering (SSR) or static rendering.
+|===
+
+For new apps, the React Router docs recommend framework mode. Use data mode to
+keep control of bundling and the server. Use declarative mode for the simplest
+setup, or when another library already handles data loading.
+
+[source,bash]
+----
+npm install react-router
+----
+
+== Declarative mode
+
+Wrap the app in `<BrowserRouter>`, and define the routes with `<Routes>` and
+`<Route>`.
+
+.main.jsx
+[source,jsx]
+----
+import { createRoot } from "react-dom/client"
+import { BrowserRouter, Route, Routes } from "react-router"
+
+createRoot(document.getElementById("root")).render(
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<Root />}>
+        <Route index element={<Home />} />
+        <Route path="about" element={<About />} />
+
+        <Route path="teams/:teamId" element={<Team />} />
+
+        <Route element={<AuthLayout />}>
+          <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
+        </Route>
+
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
+  </BrowserRouter>
+)
+----
+
+=== Route patterns
+
+* *Nested routes.* A child route's path is relative to its parent's, so
+  `about` inside `/` matches `/about`.
+
+* *Index routes.* A route with `index` renders at its parent's URL, like a
+  default child. Index routes can't have children.
+
+* *Layout routes.* A route with no `path` wraps its children in a component,
+  without adding a URL segment.
+
+* *Dynamic segments.* A segment that starts with `:` matches any value, eg.
+  `teams/:teamId` matches `/teams/42`.
+
+* *Optional segments.* A trailing `?` makes a segment optional, eg.
+  `:lang?/categories`.
+
+* *Splats.* A trailing `/*` matches the rest of the URL, eg. `files/*`. A
+  `path="*"` route catches every unmatched URL, eg. for a 404 page.
+
+A parent route renders its matching child route where it places `<Outlet />`.
+
+[source,jsx]
+----
+import { Outlet } from "react-router"
+
+export default function Root() {
+  return (
+    <>
+      <Header />
+      <main>
+        <Outlet />
+      </main>
+    </>
+  )
+}
+----
+
+=== URL parameters
+
+`useParams()` returns the values of the dynamic segments.
+`useSearchParams()` reads and sets the query string.
+
+[source,jsx]
+----
+import { useParams, useSearchParams } from "react-router"
+
+export default function Team() {
+  const { teamId } = useParams()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const tab = searchParams.get("tab") ?? "members"
+
+  return (
+    <>
+      <h1>Team {teamId}</h1>
+      <button onClick={() => setSearchParams({ tab: "settings" })}>
+        Settings
+      </button>
+      {/* … */}
+    </>
+  )
+}
+----
+
+== Navigation
+
+Use `<Link>` for links. It renders an `<a>`, but navigates without a full page
+reload. `<NavLink>` also knows whether its route is active or pending. Its
+`className`, `style`, and `children` props accept functions that receive
+`isActive` and `isPending`.
+
+[source,jsx]
+----
+import { Link, NavLink } from "react-router"
+
+function Header() {
+  return (
+    <nav>
+      <NavLink to="/" className={({ isActive }) => isActive ? "active" : ""}>
+        Home
+      </NavLink>
+      <Link to="/teams/42?tab=settings">Team settings</Link>
+    </nav>
+  )
+}
+----
+
+To navigate from code, eg. after the user saves a form, call the function
+returned by `useNavigate()`. Prefer links for anything the user selects. Links
+work with the keyboard, screen readers, and "open in new tab".
+
+[source,jsx]
+----
+import { useNavigate } from "react-router"
+
+function LogoutButton() {
+  const navigate = useNavigate()
+
+  async function handleClick() {
+    await logout()
+    navigate("/login", { replace: true })
+  }
+
+  return <button onClick={handleClick}>Log out</button>
+}
+----
+
+`navigate(-1)` goes back one entry in the browser history.
+
+== Data mode
+
+In data mode, create the router once, outside React, with
+`createBrowserRouter()`. Each route is an object. Pass the router to
+`<RouterProvider>`.
+
+.main.jsx
+[source,jsx]
+----
+import { createRoot } from "react-dom/client"
+import { createBrowserRouter } from "react-router"
+import { RouterProvider } from "react-router/dom"
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    Component: Root,
+    ErrorBoundary: RootErrorBoundary,
+    children: [
+      { index: true, Component: Home },
+      {
+        path: "teams/:teamId",
+        Component: Team,
+        loader: teamLoader,
+        action: teamAction,
+      },
+    ],
+  },
+])
+
+createRoot(document.getElementById("root")).render(
+  <RouterProvider router={router} />
+)
+----
+
+[IMPORTANT]
+====
+Create the router at the top level of a module. Don't create it in a component,
+or keep it in React state.
+====
+
+=== Loaders
+
+A `loader` loads the data for a route before the route renders. React Router
+runs the loaders of all matching routes in parallel. The component reads the
+result with `useLoaderData()`.
+
+[source,jsx]
+----
+import { data, useLoaderData } from "react-router"
+
+export async function teamLoader({ params }) {
+  const team = await fetchTeam(params.teamId)
+
+  if (!team) {
+    throw data("Team not found", { status: 404 })
+  }
+
+  return { team }
+}
+
+export default function Team() {
+  const { team } = useLoaderData()
+  return <h1>{team.name}</h1>
+}
+----
+
+=== Actions
+
+An `action` handles form submissions to a route. React Router's `<Form>`
+submits to the route's action, rather than to the server. When the action
+finishes, React Router reloads the data of every loader on the page, so the UI
+stays in sync. The component reads the action's return value with
+`useActionData()`.
+
+[source,jsx]
+----
+import { Form, redirect, useActionData } from "react-router"
+
+export async function teamAction({ request, params }) {
+  const formData = await request.formData()
+  const name = formData.get("name")
+
+  if (!name) {
+    return { error: "Name is required" }
+  }
+
+  await updateTeam(params.teamId, { name })
+  return redirect(`/teams/${params.teamId}`)
+}
+
+function EditTeam() {
+  const actionData = useActionData()
+
+  return (
+    <Form method="post">
+      <input type="text" name="name" />
+      {actionData?.error && <p>{actionData.error}</p>}
+      <button type="submit">Save</button>
+    </Form>
+  )
+}
+----
+
+`<Form>` adds a browser history entry, like a navigation. To submit without
+navigating, eg. for a "like" button, use a fetcher.
+
+[source,jsx]
+----
+import { useFetcher } from "react-router"
+
+function LikeButton({ postId }) {
+  const fetcher = useFetcher()
+  const busy = fetcher.state !== "idle"
+
+  return (
+    <fetcher.Form method="post" action={`/posts/${postId}/like`}>
+      <button type="submit" disabled={busy}>
+        {busy ? "Saving…" : "Like"}
+      </button>
+    </fetcher.Form>
+  )
+}
+----
+
+=== Pending UI
+
+`useNavigation()` reports the state of the current navigation:
+`"idle"`, `"loading"`, or `"submitting"`.
+
+[source,jsx]
+----
+import { Outlet, useNavigation } from "react-router"
+
+function Root() {
+  const navigation = useNavigation()
+
+  return (
+    <>
+      {navigation.state !== "idle" && <ProgressBar />}
+      <Outlet />
+    </>
+  )
+}
+----
+
+=== Error boundaries
+
+A route's `ErrorBoundary` renders in place of the route when its loader,
+action, or component throws. `isRouteErrorResponse()` detects errors thrown
+with `data()`, eg. a 404.
+
+[source,jsx]
+----
+import { isRouteErrorResponse, useRouteError } from "react-router"
+
+function RootErrorBoundary() {
+  const error = useRouteError()
+
+  if (isRouteErrorResponse(error)) {
+    return <h1>{error.status} {error.statusText}</h1>
+  }
+
+  return <h1>Something went wrong</h1>
+}
+----
+
+=== Lazy routes
+
+To split a route's code out of the main bundle, load it with `lazy`.
+
+[source,jsx]
+----
+createBrowserRouter([
+  {
+    path: "/admin",
+    lazy: async () => {
+      const { Component, loader } = await import("./admin")
+      return { Component, loader }
+    },
+  },
+])
+----
+
+Since React Router 8, routes also support `middleware`, which runs before and
+after the loaders and actions of a navigation, eg. to check that the user is
+signed in.
+
+== Framework mode
+
+Framework mode starts from a template.
+
+[source,bash]
+----
+npx create-react-router@latest my-app
+----
+
+Routes are defined in `app/routes.ts`, and each route is a _route module_ that
+exports its component, `loader`, `action`, and `ErrorBoundary`. React Router
+generates TypeScript types for each route module.
+
+.app/routes.ts
+[source,ts]
+----
+import { index, route } from "@react-router/dev/routes"
+
+export default [
+  index("./home.tsx"),
+  route("products/:pid", "./product.tsx"),
+]
+----
+
+.app/product.tsx
+[source,tsx]
+----
+import type { Route } from "./+types/product"
+
+export async function loader({ params }: Route.LoaderArgs) {
+  const product = await getProduct(params.pid)
+  return { product }
+}
+
+export default function Product({ loaderData }: Route.ComponentProps) {
+  return <h1>{loaderData.product.name}</h1>
+}
+----
+
+.References
+****
+* https://reactrouter.com/start/modes[React Router: Picking a mode]
+* https://reactrouter.com/start/declarative/routing[React Router: Routing (declarative mode)]
+* https://reactrouter.com/start/data/routing[React Router: Routing (data mode)]
+* https://remix.run/blog/react-router-v8[Remix Blog: React Router v8]
+* https://tanstack.com/router[TanStack Router]
+****

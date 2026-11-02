@@ -1,46 +1,51 @@
-= React hooks: Form status (React v19)
+= React hooks: Form status
 
-`useFormStatus` is a hook that was introduced in React v19. It allows nested
-child components within a `<form>` to read the form's submission status without
-prop drilling or context.
+_Added in React 19._
 
-This is particularly useful in complex forms where different sections or fields
-are managed by their own components. For example, a submit button that lives in
-its own component can disable itself while the form is submitting, without
-needing the parent form to pass down a `pending` prop.
+`useFormStatus` lets a component inside a `<form>` read the form's submission
+status, without the form passing it down as props or through context.
+
+This is particularly useful when a form is built from separate components. For
+example, a submit button in its own component can disable itself while the form
+submits, without the parent form passing down a `pending` prop.
 
 == Understanding useFormStatus
 
-`useFormStatus` takes no parameters and returns an object with the following
-properties.
+`useFormStatus` is imported from `react-dom`, not `react`. It takes no
+arguments, and returns an object with the following properties.
 
-* `pending`: A boolean that indicates whether the form is currently being
-  submitted.
+* `pending` is `true` while the parent `<form>` is submitting, and `false`
+  otherwise.
 
-* `data`. The `FormData` object that is being submitted.
+* `data` is the `FormData` that the parent `<form>` is submitting. It is
+  `null` when there is no submission in progress.
 
-* `method`: The HTTP method used for the form submission, typically `POST` or
-  `GET`.
+* `method` is the HTTP method of the form, `"get"` or `"post"`.
 
-* `action`: The form's action URL or callback function.
+* `action` is the function passed to the form's `action` prop. It is `null` if
+  the action is a URL, or if there is no parent `<form>`.
 
 [source,jsx]
 ----
-import { useFormStatus } from "react"
+import { useFormStatus } from "react-dom"
 
 function SubmitButton() {
-  const { pending, data } = useFormStatus()
+  const { pending } = useFormStatus()
 
   return (
     <button type="submit" disabled={pending}>
-      {pending ? "Submitting..." : "Submit"}
+      {pending ? "Submitting…" : "Submit"}
     </button>
   )
 }
 
 export function FeedbackForm() {
+  async function submitFeedback(formData) {
+    await sendFeedback(formData.get("text"))
+  }
+
   return (
-    <form action="/submit-feedback">
+    <form action={submitFeedback}>
       <input type="text" name="text" />
       <SubmitButton />
     </form>
@@ -49,22 +54,15 @@ export function FeedbackForm() {
 ----
 
 [IMPORTANT]
-======
-`useFormStatus` MUST be called from a component that is a descendant of a
-`<form>` element. It will not work if called from the same component that
-renders the `<form>` itself — it reads status from the nearest parent `<form>`.
-======
+====
+`useFormStatus` MUST be called from a component that renders inside a
+`<form>`. It reads the status of the nearest parent `<form>` only. It doesn't
+report on a `<form>` that the same component renders.
 
-== Advantages
-
-* *Reduced prop drilling*: Child components access form state directly, without
-  the parent form passing props through multiple layers.
-
-* *Improved modularity*: Form-related components become more self-contained and
-  reusable, as they no longer depend on external props for state management.
-
-* *Real-time updates*: Components that use `useFormStatus` automatically
-  re-render when the form's status changes.
+The form's `action` MUST be a function. React can't track the status of a form
+whose action is a URL, because the browser submits that form with a full page
+navigation.
+====
 
 .References
 ****

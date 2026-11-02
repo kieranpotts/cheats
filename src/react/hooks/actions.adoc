@@ -1,18 +1,36 @@
 = React hooks: Actions
 
-Actions are a new concept planned for release in React v19. This hook makes it
-easier to update state in response to form actions.
+_Added in React 19._
 
-Previously, to synchronize the data submitted via a form with your React
-application's state, you would use an `onSubmit` callback, which would
-`event.preventDefault` and then update the state based on the form data.
+An _Action_ is a function that runs inside a _Transition_, and can be async.
+While an Action runs, React tracks its pending state, keeps the current UI
+interactive, and shows optimistic updates. When the Action finishes, React
+applies its state updates together. If the Action throws, the nearest
+error boundary catches the error.
+
+You create Actions in the following ways.
+
+* Pass a function to `startTransition`.
+
+* Pass a function to an _action prop_, eg. the `action` prop of `<form>`, or
+  the `formAction` prop of `<button>`. React wraps the call in a Transition for
+  you.
+
+* Call the dispatch function returned by `useActionState`.
+
+== Form actions
+
+Before React 19, to submit a form you used an `onSubmit` handler. It called
+`event.preventDefault()`, and then updated the state based on the form data.
 
 [source,jsx]
 ----
+import { useState } from "react"
+
 function App() {
-  const [input, setInput] = useState('')
+  const [input, setInput] = useState("")
   const [name, setName] = useState(
-    () => JSON.parse(localStorage.getItem('name')) || ''
+    () => JSON.parse(localStorage.getItem("name")) || ""
   )
 
   function handleChange(event) {
@@ -24,7 +42,7 @@ function App() {
     try {
       const newName = await updateNameInDb(input)
       setName(newName)
-      setInput('')
+      setInput("")
     } catch (error) {
       console.error(error.message)
     }
@@ -47,37 +65,29 @@ function App() {
 }
 ----
 
+In React 19, you can pass a function to the form's `action` prop instead. React
+calls it with the form's `FormData` object.
 
-In React 19, we will be able to replace the `onSubmit` callback with an `action`
-callback. This callback will receive the form's native Form Data object.
+React builds on the web platform here. The `action` attribute is native to
+HTML `<form>` elements, where it takes the URL to which the browser sends the
+form data. React also accepts a function.
 
-[source,html]
+In the following refactored code, the input no longer needs state. The input
+manages its own value, as an uncontrolled input, and the action reads it from
+the `FormData`. After the action succeeds, React resets the form.
+
+[source,jsx]
 ----
-<form action={...}>
-----
+import { useState } from "react"
 
-Interestingly, React is piggybacking on the native capabilities of the web
-platform in its implementation of the `action` attribute. The `action` attribute
-is actually native to HTML `<form>` elements. Traditionally, it is given a string
-value which represents a URL to which the form data is sent. React allows you to
-set a callback function instead, and that callback receives the form's native
-Form Data object.
-
-As shown in the refactored code below, we no longer need to `useState` to keep
-track of the form's state. In this particular case, we no longer need to track
-the value of the input field.
-
-[source,js]
-----
 function App() {
-
   const [name, setName] = useState(
-    () => JSON.parse(localStorage.getItem('name')) || ''
+    () => JSON.parse(localStorage.getItem("name")) || ""
   )
 
   async function formAction(formData) {
     try {
-      const newName = await updateNameInDb(formData.get('name'))
+      const newName = await updateNameInDb(formData.get("name"))
       setName(newName)
     } catch (error) {
       console.error(error.message)
@@ -100,32 +110,16 @@ function App() {
 }
 ----
 
-This is a big improvement in React's usability, because it is tapping into the
-native capabilities of the web platform. In this case, native `<form>` elements
-are left to manage their own state, and we don't need to duplicate that state in
-our React components that use `<form>` elements.
-
-This new hook makes it much easier to work with forms in React, and we can
-remove a whole lot of boilerplate code that we previously needed to write for
-form handling.
-
-Notice that, so far, we're not even directly calling the `useActionState` hook.
-But we're already using this feature via our callback for the `action` attribute
-on the `<form>` element.
-
-The `useActionState()` function itself becomes useful when we want to manage
-error and loading states for our forms. Previously, to manage loading and error
-states in a React component, we would have to do a lot of explicit state
-management, like this:
+This removes much of the boilerplate that form handling needed before. But the
+component still has no pending or error state. Before React 19, these needed
+yet more state variables.
 
 [source,jsx]
 ----
 function App() {
-
   const [name, setName] = useState(
-    () => JSON.parse(localStorage.getItem('name')) || ''
+    () => JSON.parse(localStorage.getItem("name")) || ""
   )
-
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
@@ -133,7 +127,7 @@ function App() {
     setLoading(true)
     setError(null)
     try {
-      const newName = await updateNameInDb(formData.get('name'))
+      const newName = await updateNameInDb(formData.get("name"))
       setName(newName)
     } catch (error) {
       console.error(error.message)
@@ -147,62 +141,134 @@ function App() {
 }
 ----
 
-In React 19, the `useActionState()` function will return three values, which
-represent the following.
+== useActionState
 
-* The form's current state.
+`useActionState` manages state that an Action updates.
 
-* The wrapping action function to be called when the form is submitted (this
-  must get referenced from `<form action="">`.
+[source,js]
+----
+const [state, dispatchAction, isPending] = useActionState(
+  reducerAction,
+  initialState,
+  permalink // Optional.
+)
+----
 
-* A boolean value that indicates whether the action is pending.
+* `reducerAction(previousState, payload)` is the Action. It receives the
+  current state, and the value passed to `dispatchAction`. Its return value
+  becomes the new state. It can be sync or async.
 
-The following code shows the refactoring using `useActionState()`.
+* `initialState` is the state before the first dispatch.
+
+* `permalink` is the URL of the page the form modifies. It is for forms that
+  submit to a server function before the JavaScript bundle has loaded.
+
+The Hook returns three values.
+
+* `state` is the current state.
+
+* `dispatchAction` runs the Action. Pass it to a form's `action` prop, or call
+  it inside `startTransition`.
+
+* `isPending` is `true` while any dispatched Action is in progress.
+
+The following code refactors the previous example with `useActionState`.
 
 [source,jsx]
 ----
-import { useState, useActionState } from "react"
+import { useActionState } from "react"
+
+async function updateNameAction(prevState, formData) {
+  try {
+    const name = await updateNameInDb(formData.get("name"))
+    return { name, error: null }
+  } catch (error) {
+    return { ...prevState, error: error.message }
+  }
+}
 
 function App() {
-
-  const [state, actionFunction, isPending] = useActionState(
-    updateState,
-    { // Initial state
-      error: null,
-      name: JSON.parse(localStorage.getItem('name')) || ''
-    }
-  )
-
-  async function updateState(prevState, formData) {
-    try {
-      const newName = await updateNameInDb(formData.get('name'))
-      return { name: newName }
-    } catch (error) {
-      return { ...prevState, error }
-    }
-  }
+  const [state, formAction, isPending] = useActionState(updateNameAction, {
+    name: "",
+    error: null,
+  })
 
   return (
     <>
       <p>Your name is: {state.name}</p>
 
-      {isPending && <p>Loading...</p>}
+      {isPending && <p>Loading…</p>}
 
-      <form action={actionFunction}>
+      <form action={formAction}>
         <input
           type="text"
           name="name"
           required
         />
-        <button type="submit">Update</button>
-        {!isPending && state.error && <p>{state.error.message}</p>}
+        <button type="submit" disabled={isPending}>Update</button>
+        {!isPending && state.error && <p>{state.error}</p>}
       </form>
     </>
   )
 }
 ----
 
-Notice how error handling is implemented within our custom `updateState`
-function. It's just updating the form's state in the normal way, adding an error
-message, and we get complete control over how the rendering responds to that
-state.
+The Action handles expected errors itself, by returning them as part of the
+state. The component then has complete control over how it renders them.
+Errors that the Action throws go to the nearest error boundary instead.
+
+When a form calls `dispatchAction`, the Action receives the `FormData` as its
+payload. Outside a form, call `dispatchAction` inside `startTransition`, and
+pass it any payload.
+
+[source,jsx]
+----
+import { startTransition, useActionState } from "react"
+
+function Checkout() {
+  const [count, dispatchAction, isPending] = useActionState(
+    updateCartAction,
+    0
+  )
+
+  function handleAdd() {
+    startTransition(() => {
+      dispatchAction({ type: "ADD" })
+    })
+  }
+
+  // …
+}
+
+async function updateCartAction(prevCount, action) {
+  switch (action.type) {
+    case "ADD":
+      return await addToCart(prevCount)
+    case "REMOVE":
+      return await removeFromCart(prevCount)
+  }
+  return prevCount
+}
+----
+
+* React queues dispatched Actions, and runs them one after another. Each Action
+  receives the state that the previous one returned.
+
+* `dispatchAction` has a stable identity, so Effects don't need it as a
+  dependency.
+
+* `useActionState` was briefly called `useFormState`, and imported from
+  `react-dom`, in React's canary releases. `useFormState` is deprecated.
+
+== Resetting a form
+
+React resets a form automatically after its action succeeds. To reset a form at
+another time, call `requestFormReset(formElement)`, from `react-dom`, inside a
+Transition.
+
+.References
+****
+* https://react.dev/reference/react/useActionState[React Docs: useActionState]
+* https://react.dev/reference/react-dom/components/form[React Docs: <form>]
+* https://react.dev/blog/2024/12/05/react-19#actions[React Blog: React v19, Actions]
+****

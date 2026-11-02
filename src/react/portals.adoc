@@ -1,0 +1,42 @@
+= Portals
+
+A portal renders children into a different part of the DOM, outside the parent
+component's DOM node. Portals suit modals, tooltips, and toasts, which need to
+escape a parent's `overflow: hidden` or `z-index`.
+
+`createPortal(children, domNode, key?)` is imported from `react-dom`.
+
+[source,jsx]
+----
+import { useState } from "react"
+import { createPortal } from "react-dom"
+
+function ModalButton() {
+  const [isOpen, setIsOpen] = useState(false)
+
+  return (
+    <>
+      <button onClick={() => setIsOpen(true)}>Open</button>
+      {isOpen && createPortal(
+        <div className="modal" role="dialog" aria-modal="true">
+          <p>Hello from the modal.</p>
+          <button onClick={() => setIsOpen(false)}>Close</button>
+        </div>,
+        document.body
+      )}
+    </>
+  )
+}
+----
+
+A portal changes only where the DOM nodes go. In every other way, the children
+stay part of the React tree where the portal was created.
+
+* They read context from the React parents.
+
+* Their events bubble up to the React parents, not to their parents in the DOM.
+
+.References
+****
+* https://react.dev/reference/react-dom/createPortal[React Docs: createPortal]
+****

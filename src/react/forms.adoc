@@ -1,41 +1,95 @@
 = Forms in React
 
-[IMPORTANT]
-======
-This documentation is up-to-date with React v17. React v18 introduced a new hook
-called `useActionState` that makes it much easier to work with forms in React.
-======
+React supports two ways to work with form inputs.
 
-Working with native forms is one React's weak points.
+* *Uncontrolled inputs.* The DOM holds each input's value. You read the values
+  when the form is submitted, usually from a `FormData` object. This needs the
+  least code, and it's the natural fit for form actions, which React 19
+  introduced.
 
-Traditionally, to dynamically send form data to a server, you would listen to a
-form's `submit` event, prevent the default action, capture the values of all the
-form's inputs, and send the data to an HTTP endpoint. In React, it is better
-practice to dynamically track the state of form inputs, syncing the values of
-the inputs with the state of the React components that wrap them – literally on
-every keystroke as the user enters data.
+* *Controlled inputs.* React state holds each input's value, and the input
+  displays it. You update the state on every change. Use this when the UI must
+  respond to each keystroke, eg. to validate input as the user types, to format
+  it, or to enable a button.
 
-This concept is known as *controlled components* in React. It is the recommended
-way to work with forms in React.
+== Uncontrolled forms with actions
 
-There are several steps to creating a controlled component. The first step is to
-synchronize component state with changes to the values of native form elements.
+Since React 19, the `action` prop of a `<form>` accepts a function. When the
+user submits the form, React prevents the browser's default navigation, and
+calls the function with the form's `FormData`.
 
 [source,jsx]
 ----
-export default function Form() {
-  const [formData, setFormData] = React.useState(
-    {
-      firstName: "",
-      lastName: ""
-    }
+export default function SignupForm() {
+  async function signup(formData) {
+    await createAccount(formData.get("email"))
+  }
+
+  return (
+    <form action={signup}>
+      <label>
+        Email
+        <input type="email" name="email" required />
+      </label>
+      <button type="submit">Sign up</button>
+    </form>
   )
+}
+----
+
+* Each input needs a `name`, which becomes its key in the `FormData`.
+
+* Set an uncontrolled input's initial value with `defaultValue`, or
+  `defaultChecked` for checkboxes and radios. Don't use `value` or `checked`,
+  because they make the input controlled.
+
+* React runs the action in a Transition. When the action succeeds, React resets
+  the form's uncontrolled inputs.
+
+* A `<button>` can override the form's action with its own `formAction` prop.
+
+Wrapping an input in its `<label>` connects the two, without the need for `id`
+and `htmlFor` attributes.
+
+To show errors or pending state, or to keep the submitted values, combine form
+actions with the `useActionState`, `useFormStatus`, and `useOptimistic` Hooks.
+
+Before React 19, the equivalent was an `onSubmit` handler. It still works.
+
+[source,jsx]
+----
+function handleSubmit(event) {
+  event.preventDefault()
+  const formData = new FormData(event.currentTarget)
+  createAccount(formData.get("email"))
+}
+
+// …
+
+<form onSubmit={handleSubmit}>
+----
+
+== Controlled inputs
+
+With controlled inputs, the state of each input lives in React, and React
+updates it on every keystroke. The first step is to update component state
+whenever the value of a form element changes.
+
+[source,jsx]
+----
+import { useState } from "react"
+
+export default function Form() {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: ""
+  })
 
   function handleChange(event) {
     setFormData(prevFormData => {
       return {
         ...prevFormData,
-        /* Use ES6 computed property names to turn a dynamic string into a key: */
+        /* Use computed property names to turn a dynamic string into a key. */
         [event.target.name]: event.target.value
       }
     })
@@ -60,32 +114,28 @@ export default function Form() {
 }
 ----
 
-This is good design. We can easily add new inputs to this form by simply syncing
-the inputs' `name` attributes with the keys in our state object where we want to
-store the associated values.
+This is good design. To add a new input to this form, give it a `name` that
+matches the key in the state object where its value should be stored.
 
-But these are not yet controlled components. In simple terms, a controlled
-component is a React component that renders a form element and controls what
-happens in that form on subsequent user input. The idea is that the React
-component state should be the single source of truth for _all_ data, including
-form data.
+But these are not yet controlled inputs. A controlled input is one whose
+displayed value comes from React state. The idea is that the component state
+is the single source of truth for _all_ data, including form data.
 
-At the moment we have two sources of truth: the native form data, and the React
-component state.
+At the moment there are two sources of truth: the native form data, and the
+React component state.
 
-To fix this, and make the component state the source of truth, it is a simple
-matter of setting the `value` attribute of the form inputs to the corresponding
-values in the component state.
+To fix this, and make the component state the source of truth, set the `value`
+prop of each input to the matching value in the component state.
 
 [source,jsx]
 ----
+import { useState } from "react"
+
 export default function Form() {
-  const [formData, setFormData] = React.useState(
-    {
-      firstName: "",
-      lastName: ""
-    }
-  )
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: ""
+  })
 
   function handleChange(event) {
     setFormData(prevFormData => {
@@ -117,38 +167,44 @@ export default function Form() {
 }
 ----
 
-There is no change in the behavior of the form, but conceptually the form is now
-"controlled" by the React component. We can mutate the component state in other
-ways, and the form rendering will be updated to reflect those changes.
+The behavior of the form doesn't change, but the React component now
+"controls" the form. When other code changes the component state, the inputs
+update to match.
 
-If you don't set this up correctly, React may warn about there existing
-uncontrolled components.
+React warns about two common mistakes.
 
-HTML forms have other types of input controls, such as radios and checkboxes,
-that need some special handling. The following code demonstrates handling of all
-the different types of form elements, and also how to handle form submission.
+* An input switches between controlled and uncontrolled, eg. when its `value`
+  changes from `undefined` to a string. Always initialize controlled values,
+  eg. to `""`.
+
+* An input has a `value` but no `onChange` handler, which makes it read-only.
+
+Other input types need special handling. A checkbox uses `checked` instead of
+`value`, a group of radios shares one `name`, and `<select>` and `<textarea>`
+take a `value` prop, like `<input>`. The following code handles every type of
+form element, and also handles form submission.
 
 [source,jsx]
 ----
-export default function Form() {
-  const [formData, setFormData] = React.useState(
-    {
-      firstName: "",
-      lastName: "",
-      email: "",
-      comments: "",
-      isFriendly: true,
-      employment: "",
-      favColor: ""
-    }
-  )
+import { useId, useState } from "react"
 
-  /* `useId` is another hook that generate a unique ID which we can use for
-  our component and its children. */
-  const id = React.useId()
+export default function Form() {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    comments: "",
+    isFriendly: true,
+    employment: "",
+    favColor: ""
+  })
+
+  /* `useId` generates an ID that is unique to this component instance, and
+  stable between server and client renders. */
+  const id = useId()
 
   function handleChange(event) {
-    const {name, value, type, checked} = event.target
+    const { name, value, type, checked } = event.target
 
     setFormData(prevFormData => {
       return {
@@ -206,8 +262,6 @@ export default function Form() {
         name="isFriendly"
       />
       <label htmlFor={id + "-isFriendly"}>Are you friendly?</label>
-      <br />
-      <br />
 
       <fieldset>
         <legend>Current employment status</legend>
@@ -220,7 +274,6 @@ export default function Form() {
           onChange={handleChange}
         />
         <label htmlFor={id + "-unemployed"}>Unemployed</label>
-        <br />
 
         <input
           type="radio"
@@ -231,7 +284,6 @@ export default function Form() {
           onChange={handleChange}
         />
         <label htmlFor={id + "-part-time"}>Part-time</label>
-        <br />
 
         <input
           type="radio"
@@ -242,18 +294,18 @@ export default function Form() {
           onChange={handleChange}
         />
         <label htmlFor={id + "-full-time"}>Full-time</label>
-        <br />
       </fieldset>
-      <br />
 
       <label htmlFor={id + "-favColor"}>What is your favorite color?</label>
-      <br />
       <select
         id={id + "-favColor"}
         value={formData.favColor}
         onChange={handleChange}
         name="favColor"
       >
+        {/* An option for the initial empty value. Without it, the browser
+        shows "Red" while the state still holds "". */}
+        <option value="">-- Choose --</option>
         <option value="red">Red</option>
         <option value="orange">Orange</option>
         <option value="yellow">Yellow</option>
@@ -262,12 +314,104 @@ export default function Form() {
         <option value="indigo">Indigo</option>
         <option value="violet">Violet</option>
       </select>
-      <br />
-      <br />
 
-      <!-- When a button is in a form, its default is `type="submit"`. -->
+      {/* A button in a form defaults to `type="submit"`. */}
       <button>Submit</button>
     </form>
   )
 }
 ----
+
+Controlled inputs re-render the component on every keystroke. In a large
+form, this can make typing slow. Use uncontrolled inputs, or a form library.
+
+== File inputs
+
+An `<input type="file">` is always uncontrolled, because its value can only be
+set by the user, for security reasons. Read the selected files from the
+`FormData` when the form is submitted, or from `event.target.files` in an
+`onChange` handler.
+
+[source,jsx]
+----
+async function upload(formData) {
+  const file = formData.get("avatar") // A `File` object.
+  await uploadAvatar(file)
+}
+
+<form action={upload}>
+  <input type="file" name="avatar" accept="image/*" />
+  <button>Upload</button>
+</form>
+----
+
+== Reading uncontrolled inputs with a ref
+
+To read or change an uncontrolled input outside a form submission, eg. to focus
+it, or to read its value in an event handler, attach a ref.
+
+[source,jsx]
+----
+import { useRef } from "react"
+
+function Search() {
+  const inputRef = useRef(null)
+
+  function handleClick() {
+    search(inputRef.current.value)
+  }
+
+  return (
+    <>
+      <input ref={inputRef} defaultValue="" />
+      <button onClick={handleClick}>Search</button>
+    </>
+  )
+}
+----
+
+== Form libraries
+
+For large forms with complex validation, use a form library, eg. React Hook
+Form, with a schema validation library, eg. Zod. React Hook Form registers
+uncontrolled inputs through refs, so typing in a field doesn't re-render the
+whole form. The schema can be shared with the server, to validate the same
+data there.
+
+[source,jsx]
+----
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+
+const schema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.email("Enter a valid email address"),
+})
+
+export default function SignupForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({ resolver: zodResolver(schema) })
+
+  return (
+    <form onSubmit={handleSubmit(data => createAccount(data))}>
+      <input {...register("name")} />
+      {errors.name && <p>{errors.name.message}</p>}
+
+      <input type="email" {...register("email")} />
+      {errors.email && <p>{errors.email.message}</p>}
+
+      <button disabled={isSubmitting}>Sign up</button>
+    </form>
+  )
+}
+----
+
+.References
+****
+* https://react.dev/reference/react-dom/components/form[React Docs: <form>]
+* https://react.dev/reference/react-dom/components/input[React Docs: <input>]
+****

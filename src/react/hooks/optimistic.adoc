@@ -1,43 +1,75 @@
-= React hooks: Optimistic updates (React v19)
+= React hooks: Optimistic updates
 
-`useOptimistic` is a hook that was introduced in React v19. It provides a simple
-way to implement _optimistic updates_ — showing an immediate UI change before an
-async operation (like a network request) has completed.
+_Added in React 19._
 
-Optimistic updates are a powerful technique for improving the perceived
-performance and responsiveness of an application. The user sees their action
-reflected in the UI immediately, rather than waiting for a server response. If
-the operation fails, React automatically reverts to the actual state, so the UI
-remains consistent with the application's data.
+`useOptimistic` provides a simple way to implement _optimistic updates_. The UI
+changes straight away, before an async operation, such as a network request,
+has completed.
+
+Optimistic updates make an app feel faster and more responsive. The user sees
+the result of their action immediately, rather than waiting for a response
+from the server.
 
 == Understanding useOptimistic
 
+[source,js]
+----
+const [optimisticState, setOptimistic] = useOptimistic(value, reducer)
+----
+
 `useOptimistic` takes two arguments.
 
-1. *Current value*: The current value of the state you want to manage
-   optimistically.
+1. *Value.* The real value, eg. from state or props. React shows it when no
+   Action is pending.
 
-2. *Optimistic update function*: A function that computes the optimistic value
-   based on the current state and the new data.
+2. *Reducer.* Optional. A pure function, `(currentState, action) => nextState`,
+   that computes the optimistic state from the current state and the argument
+   passed to `setOptimistic`.
 
-The hook returns an array with two elements:
+The Hook returns an array of two elements.
 
-1. *Optimistic value*: The value that should be displayed in the UI.
+1. *Optimistic state.* While an Action is pending, it is the value set by
+   `setOptimistic`, or computed by the reducer. Otherwise, it equals `value`.
 
-2. *Setter function*: A function to update the optimistic value, typically
-   called before the actual state update occurs.
+2. *Setter function.* Sets the optimistic state. With no reducer, it takes the
+   new value, or an updater function. With a reducer, it takes the action to
+   pass to the reducer.
+
+When the Action finishes, React discards the optimistic state, and shows
+`value` again. If the Action updated the real state, `value` now holds the
+result. If the Action failed, and didn't update the real state, the UI returns
+to how it was before.
+
+[IMPORTANT]
+====
+Call the setter inside an Action, ie. inside `startTransition`, or inside a
+function passed to an action prop such as `<form action>`. Outside an Action,
+React logs a warning, and the optimistic state appears only briefly.
+====
+
+== Example: A like button
+
+Without a reducer, the setter takes the optimistic value directly.
 
 [source,jsx]
 ----
-import { useOptimistic } from "react"
+import { startTransition, useOptimistic } from "react"
 
-export function Component() {
-  const [optValue, setOptValue] = useOptimistic(
-    currentValue,
-    optUpdateFunction
+function LikeButton({ isLiked, onToggleLike }) {
+  const [optimisticIsLiked, setOptimisticIsLiked] = useOptimistic(isLiked)
+
+  function handleClick() {
+    startTransition(async () => {
+      setOptimisticIsLiked(!optimisticIsLiked)
+      await onToggleLike()
+    })
+  }
+
+  return (
+    <button onClick={handleClick}>
+      {optimisticIsLiked ? "♥ Liked" : "♡ Like"}
+    </button>
   )
-
-  // ...
 }
 ----
 
@@ -48,20 +80,23 @@ item appears only after the API call completes.
 
 [source,jsx]
 ----
-import { useState } from "react"
+import { startTransition, useState } from "react"
 
-const addTodoToAPI = async (todo) => {
+async function addTodoToAPI(text) {
   await new Promise(resolve => setTimeout(resolve, 1000))
-  return { id: Date.now(), text: todo }
+  return { id: crypto.randomUUID(), text }
 }
 
 export function TodoList() {
   const [todos, setTodos] = useState([])
 
-  const addTodo = async (formData) => {
-    const todo = formData.get("todo")
-    const newTodo = await addTodoToAPI(todo)
-    setTodos(currentTodos => [...currentTodos, newTodo])
+  async function addTodo(formData) {
+    const savedTodo = await addTodoToAPI(formData.get("todo"))
+
+    /* State updates after an `await` need their own `startTransition`. */
+    startTransition(() => {
+      setTodos(currentTodos => [...currentTodos, savedTodo])
+    })
   }
 
   return (
@@ -80,17 +115,17 @@ export function TodoList() {
 }
 ----
 
-Now, the same component enhanced with `useOptimistic`. The new todo item appears
-immediately, with reduced opacity to indicate it is pending. Once the API call
-completes, the actual todo item replaces the optimistic one.
+Now the same component with `useOptimistic`. The new todo item appears
+immediately, with reduced opacity to show that it is pending. When the API call
+completes, the saved todo item replaces the optimistic one.
 
 [source,jsx]
 ----
-import { useOptimistic, useState } from "react"
+import { startTransition, useOptimistic, useState } from "react"
 
-const addTodoToAPI = async (todo) => {
+async function addTodoToAPI(text) {
   await new Promise(resolve => setTimeout(resolve, 1000))
-  return { id: Date.now(), text: todo }
+  return { id: crypto.randomUUID(), text }
 }
 
 export function TodoList() {
@@ -99,15 +134,20 @@ export function TodoList() {
     todos,
     (currentTodos, newTodo) => [
       ...currentTodos,
-      { id: "temp", text: newTodo, pending: true }
+      { ...newTodo, pending: true }
     ]
   )
 
-  const addTodo = async (formData) => {
-    const todo = formData.get("todo")
-    addOptimisticTodo(todo)
-    const newTodo = await addTodoToAPI(todo)
-    setTodos(currentTodos => [...currentTodos, newTodo])
+  async function addTodo(formData) {
+    const text = formData.get("todo")
+
+    /* A temporary ID, so each optimistic item has a unique key. */
+    addOptimisticTodo({ id: crypto.randomUUID(), text })
+
+    const savedTodo = await addTodoToAPI(text)
+    startTransition(() => {
+      setTodos(currentTodos => [...currentTodos, savedTodo])
+    })
   }
 
   return (
@@ -131,16 +171,9 @@ export function TodoList() {
 }
 ----
 
-== Benefits
-
-* *Improved perceived performance*: Immediate feedback makes the application
-  feel faster and more responsive.
-
-* *Better user experience*: Users don't have to wait for server responses to see
-  the results of their actions.
-
-* *Graceful fallback*: If the optimistic update fails (eg. due to a network
-  error), React automatically reverts to the actual state.
+The reducer receives the _latest_ list of todos. If the real list changes while
+the Action is pending, the optimistic item is added to the new list, not an
+outdated copy.
 
 .References
 ****

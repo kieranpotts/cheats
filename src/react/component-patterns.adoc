@@ -1,0 +1,170 @@
+= Component patterns
+
+React favors composition over inheritance. The patterns on this page are ways
+to compose components, and to share logic between them. Since Hooks arrived,
+custom Hooks have replaced most uses of the older patterns.
+
+[cols="1,1,3"]
+|===
+|Pattern |Status |Use
+
+|Composition with `children`
+|Current
+|Wrapping arbitrary content. Also a performance tool.
+
+|Custom Hooks
+|Current
+|Sharing stateful logic.
+
+|Compound components
+|Current
+|A set of components that work together, eg. tabs or menus.
+
+|Headless components
+|Current
+|Behavior and accessibility, without styling.
+
+|Render props
+|Niche
+|Letting the parent decide what to render with the child's data.
+
+|Container and presentational
+|Niche
+|Separating data access from display.
+
+|Higher-order components
+|Legacy
+|Wrapping a component to add behavior.
+|===
+
+== Composition with children
+
+A component that accepts `children` can wrap any content, without knowing what
+it is. A component can also take other JSX elements as named props, eg. `header`
+and `footer`, to fill several slots.
+
+[source,jsx]
+----
+function Layout({ header, children }) {
+  return (
+    <div className="layout">
+      <header>{header}</header>
+      <main>{children}</main>
+    </div>
+  )
+}
+
+<Layout header={<Nav />}>
+  <Article />
+</Layout>
+----
+
+Elements passed as `children` don't re-render when the wrapper's state changes,
+because the parent created them.
+
+== Compound components
+
+A compound component is a set of components that share implicit state,
+through context. The caller arranges the parts in whatever markup it needs,
+and the API stays small.
+
+[source,jsx]
+----
+import { createContext, use, useState } from "react"
+
+const TabsContext = createContext(null)
+
+function Tabs({ defaultValue, children }) {
+  const [value, setValue] = useState(defaultValue)
+  return <TabsContext value={{ value, setValue }}>{children}</TabsContext>
+}
+
+function Tab({ value, children }) {
+  const tabs = use(TabsContext)
+  return (
+    <button
+      role="tab"
+      aria-selected={tabs.value === value}
+      onClick={() => tabs.setValue(value)}
+    >
+      {children}
+    </button>
+  )
+}
+
+function Panel({ value, children }) {
+  const tabs = use(TabsContext)
+  return tabs.value === value ? <div role="tabpanel">{children}</div> : null
+}
+
+Tabs.Tab = Tab
+Tabs.Panel = Panel
+
+<Tabs defaultValue="home">
+  <div role="tablist">
+    <Tabs.Tab value="home">Home</Tabs.Tab>
+    <Tabs.Tab value="about">About</Tabs.Tab>
+  </div>
+  <Tabs.Panel value="home"><HomePage /></Tabs.Panel>
+  <Tabs.Panel value="about"><AboutPage /></Tabs.Panel>
+</Tabs>
+----
+
+The native `<select>` and `<option>` elements work the same way.
+
+== Headless components
+
+A headless component, or headless Hook, provides behavior, state, keyboard
+handling, and ARIA attributes, but no styles or markup of its own. The caller
+renders and styles everything. Headless libraries are a common base for
+design systems.
+
+* *Radix Primitives* and *React Aria Components* provide unstyled, accessible
+  components, eg. dialogs, menus, and comboboxes.
+
+* *TanStack Table* provides the logic for data tables, eg. sorting, filtering,
+  and pagination, through Hooks.
+
+== Render props
+
+A render prop is a prop whose value is a function that returns JSX. The child
+calls it with its own data, and the parent decides what to render.
+
+[source,jsx]
+----
+function List({ items, renderItem }) {
+  return <ul>{items.map(item => <li key={item.id}>{renderItem(item)}</li>)}</ul>
+}
+
+<List items={users} renderItem={user => <UserCard user={user} />} />
+----
+
+Custom Hooks replaced render props for sharing logic. Render props remain
+useful where the child controls _when_ and _where_ each item renders, and the
+parent controls _what_, eg. the rows of a virtualized list.
+
+== Container and presentational components
+
+A _container_ component fetches data and handles events. A _presentational_
+component receives data through props, and only renders it.
+
+Hooks made the strict split less necessary, because a custom Hook can hold
+the data logic. But separating data access from display still makes the
+display components easier to test and reuse, eg. in a component library or
+Storybook. Server components bring the pattern back: a server component
+fetches the data, and passes it to client components that render it.
+
+== Portals
+
+A portal renders children into a different DOM node, eg. `document.body`, to
+escape a parent's `overflow` or stacking context. The children keep their React
+context and event bubbling.
+
+.References
+****
+* https://react.dev/learn/passing-props-to-a-component#passing-jsx-as-children[React Docs: Passing JSX as children]
+* https://react.dev/learn/reusing-logic-with-custom-hooks[React Docs: Reusing logic with custom Hooks]
+* https://www.radix-ui.com/primitives[Radix Primitives]
+* https://react-spectrum.adobe.com/react-aria/[React Aria]
+* https://tanstack.com/table[TanStack Table]
+****

@@ -1,0 +1,235 @@
+= React hooks: Refs
+
+A _ref_ holds a value that persists between renders, like state. Unlike state,
+changing a ref doesn't trigger a re-render. Refs have two main uses.
+
+* Holding a value that the UI doesn't display, eg. a timer ID.
+
+* Holding a reference to a DOM node, eg. to focus or measure it.
+
+== useRef
+
+`useRef(initialValue)` returns an object with a single `current` property,
+which starts as `initialValue`. React returns the same object on every render.
+You can read and write `ref.current` freely.
+
+[source,jsx]
+----
+import { useRef, useState } from "react"
+
+export default function Stopwatch() {
+  const [startTime, setStartTime] = useState(null)
+  const [now, setNow] = useState(null)
+  const intervalRef = useRef(null)
+
+  function handleStart() {
+    setStartTime(Date.now())
+    setNow(Date.now())
+
+    clearInterval(intervalRef.current)
+    intervalRef.current = setInterval(() => setNow(Date.now()), 10)
+  }
+
+  function handleStop() {
+    clearInterval(intervalRef.current)
+  }
+
+  const seconds = startTime && now ? (now - startTime) / 1000 : 0
+
+  return (
+    <>
+      <h1>Time passed: {seconds.toFixed(3)}</h1>
+      <button onClick={handleStart}>Start</button>
+      <button onClick={handleStop}>Stop</button>
+    </>
+  )
+}
+----
+
+The interval ID never appears on screen, so it belongs in a ref rather than in
+state.
+
+Don't read or write `ref.current` during render, except to initialize the ref.
+React doesn't know when a ref changes, so the rendered output can go stale.
+Read and write refs in event handlers and Effects.
+
+== Latest value refs
+
+A ref can hold the latest value of a prop or a callback, for code that must keep
+a stable identity but still read current values, eg. a long-lived subscription
+or interval. This avoids a stale closure. Update the ref in an Effect, not
+during render.
+
+[source,jsx]
+----
+import { useEffect, useRef } from "react"
+
+function useInterval(callback, delay) {
+  const callbackRef = useRef(callback)
+
+  useEffect(() => {
+    callbackRef.current = callback
+  })
+
+  useEffect(() => {
+    const id = setInterval(() => callbackRef.current(), delay)
+    return () => clearInterval(id)
+  }, [delay]) // The interval isn't reset when `callback` changes.
+}
+----
+
+Since React 19.2, `useEffectEvent` does the same job for logic called from
+Effects.
+
+== Refs to DOM nodes
+
+Pass a ref object to the `ref` prop of a JSX element. React sets `ref.current`
+to the DOM node after it creates the node, and back to `null` when it removes
+the node.
+
+[source,jsx]
+----
+import { useRef } from "react"
+
+export default function SearchBox() {
+  const inputRef = useRef(null)
+
+  return (
+    <>
+      <input ref={inputRef} />
+      <button onClick={() => inputRef.current.focus()}>Search</button>
+    </>
+  )
+}
+----
+
+== Passing refs to components
+
+_Changed in React 19._
+
+In React 19, `ref` is a regular prop for function components. To expose a DOM
+node to a parent, accept `ref` as a prop and pass it on.
+
+[source,jsx]
+----
+function MyInput({ placeholder, ref }) {
+  return <input placeholder={placeholder} ref={ref} />
+}
+
+function Form() {
+  const inputRef = useRef(null)
+  return <MyInput ref={inputRef} placeholder="Name" />
+}
+----
+
+Earlier versions needed `forwardRef`. It still works, but new code doesn't need
+it, and the React team plans to deprecate it.
+
+[source,jsx]
+----
+/* Before React 19. */
+const MyInput = forwardRef(function MyInput(props, ref) {
+  return <input {...props} ref={ref} />
+})
+----
+
+== Ref callbacks
+
+Instead of a ref object, the `ref` prop accepts a function. React calls it
+with the DOM node when it attaches the node. Since React 19, the callback can
+return a cleanup function, which React calls when it detaches the node.
+
+[source,jsx]
+----
+<div
+  ref={node => {
+    const observer = new ResizeObserver(() => { /* … */ })
+    observer.observe(node)
+
+    return () => {
+      observer.disconnect()
+    }
+  }}
+/>
+----
+
+[NOTE]
+====
+Ref callbacks without a cleanup function are still called with `null` when the
+node detaches. In TypeScript, a ref callback can no longer return a value
+implicitly, eg. `ref={node => (instance = node)}`, because React would treat
+the value as a cleanup function. Use a block body,
+`ref={node => { instance = node }}`.
+====
+
+== Exposing a custom handle
+
+`useImperativeHandle` replaces the value that a ref receives. Use it to expose
+a few methods to the parent, rather than the whole DOM node.
+
+[source,jsx]
+----
+import { useImperativeHandle, useRef } from "react"
+
+function VideoPlayer({ src, ref }) {
+  const videoRef = useRef(null)
+
+  useImperativeHandle(ref, () => ({
+    play: () => videoRef.current.play(),
+    pause: () => videoRef.current.pause(),
+  }))
+
+  return <video ref={videoRef} src={src} />
+}
+----
+
+== Fragment refs
+
+_Added in React 19.3._
+
+A ref on a `<Fragment>` receives a `FragmentInstance`. It acts on the
+fragment's DOM children as a group, without a wrapper element, and works even
+for child components that don't accept a `ref`.
+
+[source,jsx]
+----
+import { Fragment, useEffect, useRef } from "react"
+
+function PostList({ posts }) {
+  const fragmentRef = useRef(null)
+
+  useEffect(() => {
+    /* Focuses the first focusable child. */
+    fragmentRef.current.focus()
+  }, [])
+
+  return (
+    <Fragment ref={fragmentRef}>
+      {posts.map(post => <Heading key={post.id}>{post.title}</Heading>)}
+    </Fragment>
+  )
+}
+----
+
+A `FragmentInstance` has the following methods.
+
+* *Events.* `addEventListener()`, `removeEventListener()`, and
+  `dispatchEvent()`, for the first-level child elements.
+
+* *Focus.* `focus()`, `focusLast()`, and `blur()`, which search nested children
+  depth-first.
+
+* *Observers.* `observeUsing()` and `unobserveUsing()`, to attach an
+  `IntersectionObserver` or `ResizeObserver` to the first-level child
+  elements.
+
+* *Layout.* `getClientRects()`, `getRootNode()`, `compareDocumentPosition()`,
+  and `scrollIntoView()`.
+
+.References
+****
+* https://react.dev/reference/react/useRef[React Docs: useRef]
+* https://react.dev/learn/manipulating-the-dom-with-refs[React Docs: Manipulating the DOM with refs]
+* https://react.dev/reference/react/useImperativeHandle[React Docs: useImperativeHandle]
+* https://react.dev/reference/react/Fragment[React Docs: Fragment]
+****

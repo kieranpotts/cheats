@@ -1,114 +1,164 @@
 = Production builds
 
+Browsers can't run JSX, and a large app is made of many modules. A production
+React app therefore needs a build step that compiles JSX, bundles the modules,
+and minifies the output.
+
+The React docs recommend starting new apps with a framework. Where no framework
+fits, use a build tool such as Vite, Parcel, or Rsbuild.
+
+[WARNING]
+====
+Create React App (`create-react-app`) was deprecated in 2025-02. Don't use it
+for new apps. Migrate existing apps to a framework or a build tool.
+====
+
+== Frameworks
+
+A framework adds routing, data fetching, server rendering, and support for
+server components.
+
+[cols="1,1"]
+|===
+|Framework |Command
+
+|Next.js (App Router)
+|`npx create-next-app@latest`
+
+|React Router (framework mode)
+|`npx create-react-router@latest`
+
+|Expo (native apps)
+|`npx create-expo-app@latest`
+|===
+
+== Vite
+
+Vite compiles JSX and bundles the app. It also has a development server with
+hot module replacement (HMR). To scaffold a new project, run the following.
+
+[source,bash]
+----
+npm create vite@latest my-app -- --template react
+cd my-app
+npm install
+npm run dev
+----
+
+Use `--template react-ts` for TypeScript. Run `npm create vite@latest` with no
+arguments to choose a template from a menu, including templates with the React
+Compiler turned on.
+
+The template defines the following scripts.
+
+* `npm run dev` starts the development server.
+
+* `npm run build` writes an optimized production build to `dist/`.
+
+* `npm run preview` serves `dist/` locally, to test the production build.
+
+The entry point is `index.html`. Its `<script>` tag points at the source code.
+Vite compiles the code on the fly in development, and points the tag at the
+bundled output when it builds.
+
 .index.html
 [source,html]
 ----
-<html>
+<!doctype html>
+<html lang="en">
   <head>
-    <link rel="stylesheet" href="index.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bob's Bistro</title>
   </head>
   <body>
     <div id="root"></div>
-    <!-- The compiled JavaScript file is included here. -->
-    <script src="index.dist.js"></script>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
 ----
 
-Install the "react" and "react-dom" packages as production dependencies. Then
-import `React` from the "react" package and `ReactDOM` from the "react-dom"
-package in your JSX files.
-
-Even though `React` is not explicitly used in the following example, it will be
-once the file is compiled. It is this API that is used to create React
-components from JSX syntax.
-
-.index.jsx
+.src/main.jsx
 [source,jsx]
 ----
-import React from "react"
-import ReactDOM from "react-dom"
+import { StrictMode } from "react"
+import { createRoot } from "react-dom/client"
+import "./index.css"
+import App from "./App"
 
-const navbar = (
-  <nav>
-    <h1>Bob's Bistro</h1>
-    <ul>
-      <li>Menu</li>
-      <li>About</li>
-      <li>Contact</li>
-    </ul>
-  </nav>
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
+    <App />
+  </StrictMode>
 )
-
-ReactDOM.render(navbar, document.getElementById("root"))
 ----
 
-From React v17, the explicit import of `React` is no longer required. And the
-`ReactDOM` API changed in React v18. So the above code will need to be
-refactored as follows:
+=== Static assets
 
-.index.jsx
-[source,jsx]
-----
-import ReactDOM from "react-dom/client"
-
-const navbar = (
-  <nav>
-    <h1>Bob's Bistro</h1>
-    <ul>
-      <li>Menu</li>
-      <li>About</li>
-      <li>Contact</li>
-    </ul>
-  </nav>
-)
-
-const root = ReactDOM.createRoot(document.getElementById("root"))
-root.render(navbar)
-----
-
-== Building with Vite
-
-Vite is recommended for production builds. Internally it uses a transpiler
-(esbuild, rather than Babel) to convert JSX to JavaScript, and it also does
-bundling to create optimized for production builds. Vite also comes with a
-development server that supports hot module reloading.
-
-To scaffold a new Vite project, run:
-
-[source,bash]
-----
-$ npm init vite@latest
-----
-
-Then follow the prompts to create a new project. Select "react" as the framework
-when prompted.
-
-Vite requires some subtle changes to how you compose React components. For
-example, any images referenced in JSX must be imported at the top of the file,
-so the bundler knows where to source the images from.
+Import images and other assets so the bundler can include them in the build,
+with a content hash in the file name. The import resolves to the URL of the
+processed file.
 
 [source,jsx]
 ----
-import logo from "./my-logo.png"
+import logo from "./assets/logo.png"
 
-function App() {
+function Header() {
   return (
-    <div>
-      <header>
-        <nav>
-          <img src={logo} />
-        </nav>
-      </header>
-      …
-    </div>
+    <header>
+      <nav>
+        <img src={logo} alt="Bob's Bistro" />
+      </nav>
+    </header>
   )
 }
 ----
 
-External CSS files need to be explicitly imported, too:
+Vite copies files in the `public/` directory to the build as they are. Refer to
+them by absolute path, eg. `<img src="/favicon.svg" alt="" />`.
+
+=== CSS
+
+Import CSS files from JavaScript, too. A file named `*.module.css` is a CSS
+module. Vite scopes its class names to the importing component, so they can't
+clash with class names elsewhere.
 
 [source,jsx]
 ----
 import "./main.css"
+import styles from "./Button.module.css"
+
+function Button() {
+  return <button className={styles.primary}>Save</button>
+}
 ----
+
+=== Environment variables
+
+Vite exposes environment variables prefixed with `VITE_` on `import.meta.env`.
+It also sets `import.meta.env.DEV` and `import.meta.env.PROD`.
+
+[source,js]
+----
+const apiUrl = import.meta.env.VITE_API_URL
+----
+
+[WARNING]
+====
+Vite embeds these values in the JavaScript sent to the browser. Never put
+secrets in `VITE_` variables.
+====
+
+== Development and production builds of React
+
+React ships a development build, with extra warnings and checks, and a faster,
+smaller production build without them. Build tools pick the right one based on
+the mode, so `npm run build` always uses the production build.
+
+.References
+****
+* https://react.dev/learn/creating-a-react-app[React Docs: Creating a React app]
+* https://react.dev/learn/build-a-react-app-from-scratch[React Docs: Build a React app from scratch]
+* https://react.dev/blog/2025/02/14/sunsetting-create-react-app[React Blog: Sunsetting Create React App]
+* https://vite.dev/guide/[Vite: Getting started]
+****

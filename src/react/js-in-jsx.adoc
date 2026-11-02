@@ -1,8 +1,11 @@
 = JS in JSX
 
-JSX supports embedding any JS expression in curly braces. In fact, a lot of the
-tricks we do in React components is just using vanilla JavaScript in JSX. The
-following example demonstrates use of JS in JSX to do conditional rendering.
+JSX can embed any JavaScript expression in curly braces. A lot of the tricks in
+React components are plain JavaScript inside JSX.
+
+== Conditional rendering
+
+Use the `&&` operator to render an element only when a condition is true.
 
 [source,jsx]
 ----
@@ -17,37 +20,74 @@ export default function Joke(props) {
 }
 ----
 
-This is a common pattern in React — using plain JavaScript and the `&&` operator
-to conditionally render elements. Another example follows.
+React renders nothing for `false`, `true`, `null`, and `undefined`. But it does
+render `0` and `NaN`. Make sure the left side of `&&` is a boolean.
 
 [source,jsx]
 ----
-let badgeText = "AVAILABLE"
-if (props.availableStock === 0) {
-    badgeText = "SOLD OUT"
-}
+/* ✅ Renders nothing when the list is empty. */
+{messages.length > 0 && <MessageList messages={messages} />}
 
-return (
-  <div className="card">
-    {props.availableStock === 0 && <div className="card--badge">{badgeText}</div>}
-    <img src={`../images/${props.img}`} className="card--image" />
-    <!-- More card content -->
-  </div>
-)
+/* ❌ Renders "0" when the list is empty. */
+{messages.length && <MessageList messages={messages} />}
 ----
 
-The following adjusts the `style.display` property dynamically. The double
-`{{ … }}` actually serve different purposes. The outer brackets are JSX
-delimiters for the JavaScript expression, while the inner brackets are for the
-JavaScript object literal from which React will compile the string value of the
-`style` attribute.
+Use the ternary operator to choose between two elements.
+
+[source,jsx]
+----
+function Card(props) {
+  return (
+    <div className="card">
+      {props.availableStock === 0
+        ? <div className="card--badge">SOLD OUT</div>
+        : <div className="card--badge">AVAILABLE</div>}
+      <img src={`../images/${props.img}`} className="card--image" alt="" />
+      {/* More card content */}
+    </div>
+  )
+}
+----
+
+For more complex logic, compute the value in plain JavaScript before the
+`return`, or return early.
+
+[source,jsx]
+----
+function Item({ name, isPacked }) {
+  if (isPacked) {
+    return <li className="item">{name} ✅</li>
+  }
+
+  return <li className="item">{name}</li>
+}
+----
+
+== Comments
+
+HTML comments, `<!-- … -->`, are a syntax error in JSX. Use a JavaScript block
+comment inside curly braces instead.
+
+[source,jsx]
+----
+<div>
+  {/* This is a comment. */}
+</div>
+----
+
+== Inline styles
+
+The `style` prop takes an object, not a string. Property names use camelCase,
+eg. `backgroundColor`. The double braces serve different purposes. The outer
+braces mark a JavaScript expression in JSX. The inner braces are the object
+literal.
 
 [source,jsx]
 ----
 export default function Joke(props) {
   return (
     <div>
-      <h3 style={{display: props.title ? "block" : "none" }}>{props.title}</h3>
+      <h3 style={{ display: props.title ? "block" : "none" }}>{props.title}</h3>
       <p>Punchline: {props.punchline}</p>
       <hr />
     </div>
@@ -55,28 +95,33 @@ export default function Joke(props) {
 }
 ----
 
-JS interpolation can be used to generate dynamic content. The following example
-using JS backticks and `${ … }` interpolation to generate a string value.
+React adds `px` to numeric values for most properties, eg.
+`style={{ width: 100 }}` sets `width: 100px`.
+
+== String interpolation
+
+Use template literals to build string values.
 
 [source,jsx]
 ----
 return (
-  <img src={`../images/${props.img}`} className="card--image" />
+  <img src={`../images/${props.img}`} className="card--image" alt="" />
 )
 ----
 
-There's some magic that happens when inline JS is interpreted in JSX. A nested
-JavaScript expression can resolve to a string, a number, a JSX element, or an
-array of these. If it resolves to an array, React renders each item in the
-array in turn. A plain object can't be rendered, and React throws an error if
-you try.
+== Rendering arrays
 
-The following example will render "12345".
+An embedded expression can be a string, a number, a JSX element, or an array of
+these. React renders each item of an array in turn. A plain object can't be
+rendered, and React throws an error if you try.
+
+The following example renders "12345".
 
 [source,jsx]
 ----
 export default function App() {
   const numbers = ["1", "2", "3", "4", "5"]
+
   return (
     <div>
       {numbers}
@@ -85,8 +130,7 @@ export default function App() {
 }
 ----
 
-To render a component for each item instead, swap the string values in the
-array for JSX elements.
+To render a component for each item, map the data to an array of JSX elements.
 
 [source,jsx]
 ----
@@ -94,6 +138,7 @@ export default function App() {
   const jokeElements = jokesData.map(joke => {
     return <Joke key={joke.id} setup={joke.setup} punchline={joke.punchline} />
   })
+
   return (
     <div>
       {jokeElements}
@@ -102,7 +147,10 @@ export default function App() {
 }
 ----
 
-This provides a convenient way to map over an array of data and generate a
-component for each element. Each element in the array needs a `key` prop that
-is unique among its siblings, so React can track which items change between
-renders. Use a stable ID from the data, not the array index.
+Each element in the array needs a `key` prop that is unique among its siblings.
+
+.References
+****
+* https://react.dev/learn/javascript-in-jsx-with-curly-braces[React Docs: JavaScript in JSX with curly braces]
+* https://react.dev/learn/conditional-rendering[React Docs: Conditional rendering]
+****

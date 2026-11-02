@@ -1,0 +1,84 @@
+= React hooks: Reducers
+
+As a component's state logic grows, the event handlers that update it become
+hard to follow. `useReducer` moves the update logic out of the component, into
+a single _reducer_ function.
+
+A reducer takes the current state and an _action_, which describes what
+happened, and returns the next state. By convention, an action is an object
+with a `type` property.
+
+[source,jsx]
+----
+import { useReducer } from "react"
+
+function tasksReducer(tasks, action) {
+  switch (action.type) {
+    case "added":
+      return [...tasks, { id: action.id, text: action.text, done: false }]
+    case "toggled":
+      return tasks.map(t => t.id === action.id ? { ...t, done: !t.done } : t)
+    case "deleted":
+      return tasks.filter(t => t.id !== action.id)
+    default:
+      throw new Error(`Unknown action: ${action.type}`)
+  }
+}
+
+export default function TaskApp() {
+  const [tasks, dispatch] = useReducer(tasksReducer, [])
+
+  function handleAdd(text) {
+    dispatch({ type: "added", id: crypto.randomUUID(), text })
+  }
+
+  return (
+    <>
+      <AddTask onAdd={handleAdd} />
+      <ul>
+        {tasks.map(task => (
+          <li key={task.id}>
+            <label>
+              <input
+                type="checkbox"
+                checked={task.done}
+                onChange={() => dispatch({ type: "toggled", id: task.id })}
+              />
+              {task.text}
+            </label>
+            <button onClick={() => dispatch({ type: "deleted", id: task.id })}>
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
+    </>
+  )
+}
+----
+
+`useReducer(reducer, initialArg, init?)` returns the current state and a
+`dispatch` function. The optional third argument is an initializer function.
+React calls `init(initialArg)` on the first render to compute the initial
+state.
+
+* The reducer MUST be pure. Return new arrays and objects, never mutate the
+  current state.
+
+* `dispatch` has a stable identity, so it doesn't need to be listed as an
+  Effect dependency.
+
+* Like state setters, `dispatch` updates the state for the _next_ render.
+
+Choose `useState` for simple, independent values. Choose `useReducer` when
+several values change together, or when many event handlers update the same
+state. Reducers are plain functions, so they are easy to test.
+
+Combine a reducer with context to give a whole tree of components access to the
+state and to `dispatch`.
+
+.References
+****
+* https://react.dev/reference/react/useReducer[React Docs: useReducer]
+* https://react.dev/learn/extracting-state-logic-into-a-reducer[React Docs: Extracting state logic into a reducer]
+****

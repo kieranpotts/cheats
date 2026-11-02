@@ -1,0 +1,121 @@
+= Document metadata and resources
+
+_Added in React 19._
+
+React 19 can manage tags in the document `<head>`, and load stylesheets,
+scripts, and other resources, from any component.
+
+== Metadata
+
+Render `<title>`, `<meta>`, and `<link>` tags anywhere in the tree. React moves
+them into the document `<head>`. This works in client-only apps, in server
+rendering, and in server components.
+
+[source,jsx]
+----
+function BlogPost({ post }) {
+  return (
+    <article>
+      <title>{post.title}</title>
+      <meta name="author" content={post.author} />
+      <meta name="keywords" content={post.keywords} />
+      <link rel="author" href={post.authorUrl} />
+
+      <h1>{post.title}</h1>
+      <p>…</p>
+    </article>
+  )
+}
+----
+
+Render only one `<title>` at a time. A library such as `react-helmet`, or the
+metadata API of a framework, remains useful when one route's metadata must
+override another's.
+
+== Stylesheets
+
+Give a stylesheet `<link>` a `precedence` prop to let React manage it.
+
+[source,jsx]
+----
+import { Suspense } from "react"
+
+function Article() {
+  return (
+    <Suspense fallback="Loading…">
+      <link rel="stylesheet" href="/article.css" precedence="default" />
+      <link rel="stylesheet" href="/theme.css" precedence="high" />
+      <article className="article themed">…</article>
+    </Suspense>
+  )
+}
+----
+
+* React orders stylesheets in the `<head>` by `precedence`. Stylesheets with
+  the same precedence keep their order.
+
+* React waits for the stylesheet to load before it shows the content that
+  depends on it. During loading, the nearest `<Suspense>` boundary shows its
+  fallback.
+
+* React inserts each stylesheet only once, however many components render it.
+
+Inline `<style>` tags work the same way, with the `href` and `precedence`
+props.
+
+== Async scripts
+
+Render a `<script async>` tag anywhere in the tree. React loads and runs each
+script only once, however many components render it.
+
+[source,jsx]
+----
+function Map() {
+  return (
+    <div>
+      <script async src="https://maps.example.com/sdk.js" />
+      {/* … */}
+    </div>
+  )
+}
+----
+
+== Resource hints
+
+`react-dom` exports functions that tell the browser to load resources early.
+Call them during render or in event handlers. React adds the matching tags to
+the `<head>`, ordered by loading priority.
+
+[source,jsx]
+----
+import { preconnect, prefetchDNS, preinit, preload } from "react-dom"
+
+function App() {
+  /* Loads and runs the script straight away. */
+  preinit("https://cdn.example.com/widget.js", { as: "script" })
+
+  /* Downloads the font, without applying it yet. Font requests always use
+  CORS, so set `crossOrigin`. */
+  preload("/fonts/inter.woff2", {
+    as: "font",
+    type: "font/woff2",
+    crossOrigin: "anonymous",
+  })
+
+  /* Opens a connection to a host that the app will request from. */
+  preconnect("https://api.example.com")
+
+  /* Resolves the DNS of a host that the app might request from. */
+  prefetchDNS("https://images.example.com")
+
+  // …
+}
+----
+
+.References
+****
+* https://react.dev/reference/react-dom/components/title[React Docs: <title>]
+* https://react.dev/reference/react-dom/components/link[React Docs: <link>]
+* https://react.dev/reference/react-dom/components/script[React Docs: <script>]
+* https://react.dev/reference/react-dom#resource-preloading-apis[React Docs: Resource preloading APIs]
+****

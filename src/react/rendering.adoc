@@ -1,0 +1,141 @@
+= How React renders
+
+React updates the screen in three steps.
+
+1. *Trigger.* Something asks React to render a component.
+
+2. *Render.* React calls the component function, and works out what changed.
+
+3. *Commit.* React applies the changes to the DOM, then runs Effects.
+
+== What triggers a render
+
+A component renders in the following cases.
+
+* *Initial render.* The app calls `root.render()`, or the component mounts.
+
+* *Its own state changes.* A state setter, or `dispatch`, queues an update.
+
+* *Its parent renders.* By default, React renders every child of a component
+  that renders, whether or not the child's props changed.
+
+* *A context it reads changes value.*
+
+The following don't trigger a render.
+
+* Mutating a state object or array directly. React doesn't know it changed.
+
+* Changing `ref.current`.
+
+* Changing a module-level variable, or any other value outside React.
+
+== What happens when you set state
+
+Calling a state setter doesn't change the state variable straight away.
+
+* React _queues_ the update. The variable keeps its old value for the rest of
+  the current render, and the rest of the event handler.
+
+* React _batches_ every update queued by the same event, and renders once.
+
+* React gives the render a priority based on where the update came from. An
+  update from a click or a keystroke is urgent. An update inside a Transition
+  isn't.
+
+* If the next state is the same as the current state, compared with
+  `Object.is`, React skips re-rendering the component and its children. It may
+  still call the component once before it bails out, but it discards the
+  result.
+
+[source,jsx]
+----
+const [user, setUser] = useState({ name: "Ada" })
+
+/* ❌ Same object, so React skips the update. */
+user.name = "Grace"
+setUser(user)
+
+/* ✅ New object, so React re-renders. */
+setUser({ ...user, name: "Grace" })
+----
+
+== The render phase
+
+React elements are plain objects that describe the UI. The tree of elements that
+the components return is often called the _virtual DOM_. It describes what the
+UI should look like for the current state, and is cheap to create.
+
+On each render, React calls the components that need to render, and compares
+the new element tree with the previous one. This comparison is called
+_reconciliation_. React compares the trees one level at a time, and follows
+two rules.
+
+* *Different type, different subtree.* If an element at a given position
+  changes type, eg. from `<div>` to `<section>`, or from `<ProfilePage>` to
+  `<LoginPage>`, React destroys the old subtree, with its DOM nodes and state,
+  and builds a new one.
+
+* *Keys identify list items.* React matches the children of an element by their
+  `key`. Without keys, it matches them by position.
+
+React keeps a component's state as long as the same type of component renders at
+the same position in the tree.
+
+Rendering MUST be pure. React may call a component more than once, pause a
+render part-way, or throw a render away and start again, so a render MUST NOT
+have side effects.
+
+== The commit phase
+
+After rendering, React applies the smallest set of changes to the DOM that
+makes it match the new element tree. It doesn't touch DOM nodes that haven't
+changed. It then runs code in the following order.
+
+1. Ref callbacks, and `ref` objects are set.
+
+2. Layout Effects (`useLayoutEffect`), synchronously, before the browser
+  paints.
+
+3. The browser paints the screen.
+
+4. Effects (`useEffect`), after the paint.
+
+Before each Effect runs again, React runs its cleanup function from the previous
+render.
+
+== Fiber
+
+_Fiber_ is the name of the reconciler that React has used since React 16. It
+replaced the earlier _stack reconciler_, which walked the component tree
+recursively, and couldn't stop until it had rendered the whole tree.
+
+In Fiber, each component instance in the tree has a _fiber_ node. A fiber is a
+unit of work, linked to its parent, its first child, and its next sibling. It
+also holds the component's state and its list of Hooks, in call order, which is
+why the Rules of Hooks exist.
+
+React walks the fiber tree in a loop rather than by recursion. So it can stop
+after any unit of work, yield to the browser, and carry on later. This makes
+the following possible.
+
+* *Time slicing.* A long render is split into small chunks, so the browser can
+  handle input between them.
+
+* *Priority lanes.* Each update is assigned a _lane_, by priority. Urgent
+  updates, eg. typing, can interrupt a render for a lower-priority update,
+  eg. a Transition.
+
+* *Concurrent features.* Suspense, Transitions, `useDeferredValue`, and
+  `<Activity>` all build on interruptible rendering.
+
+The render phase can be paused, restarted, or thrown away. The commit phase
+can't. React always commits the changes in one synchronous step, so the user
+never sees a half-updated UI.
+
+.References
+****
+* https://react.dev/learn/render-and-commit[React Docs: Render and commit]
+* https://react.dev/learn/preserving-and-resetting-state[React Docs: Preserving and resetting state]
+* https://react.dev/reference/react/useState#setstate[React Docs: useState, set functions]
+* https://github.com/acdlite/react-fiber-architecture[React Fiber architecture]
+****

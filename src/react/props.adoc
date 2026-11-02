@@ -1,11 +1,11 @@
 = React: Props
 
-In React, components can receive data from their parent components. This data is
-passed as props.
+In React, components receive data from their parent components. This data is
+passed as _props_.
 
-The following example shows four instances of a `Contact` component, each of
-which receives different data via props – which are the equivalent of attributes
-in native HTML elements.
+The following example shows four instances of a `Contact` component. Each
+receives different data via props, which are the equivalent of attributes on
+native HTML elements.
 
 [source,jsx]
 ----
@@ -41,21 +41,22 @@ function App() {
 }
 ----
 
-Here's the `Contact` component.
+React passes all the props to the component as a single object, the first
+argument of the function.
 
 [source,jsx]
 ----
 export default function Contact(props) {
   return (
     <div className="contact-card">
-      <img src={props.img}/>
+      <img src={props.img} alt="" />
       <h3>{props.name}</h3>
       <div className="info-group">
-        <img src="./images/phone-icon.png" />
+        <img src="./images/phone-icon.png" alt="Phone" />
         <p>{props.phone}</p>
       </div>
       <div className="info-group">
-        <img src="./images/mail-icon.png" />
+        <img src="./images/mail-icon.png" alt="Email" />
         <p>{props.email}</p>
       </div>
     </div>
@@ -63,22 +64,22 @@ export default function Contact(props) {
 }
 ----
 
-Alternatively, the props can be destructured in the function signature, into
+Alternatively, destructure the props in the function signature, into
 individual variables.
 
 [source,jsx]
 ----
-export default function Contact({img, name, phone, email}) {
+export default function Contact({ img, name, phone, email }) {
   return (
     <div className="contact-card">
-      <img src={img}/>
+      <img src={img} alt="" />
       <h3>{name}</h3>
       <div className="info-group">
-        <img src="./images/phone-icon.png" />
+        <img src="./images/phone-icon.png" alt="Phone" />
         <p>{phone}</p>
       </div>
       <div className="info-group">
-        <img src="./images/mail-icon.png" />
+        <img src="./images/mail-icon.png" alt="Email" />
         <p>{email}</p>
       </div>
     </div>
@@ -87,19 +88,15 @@ export default function Contact({img, name, phone, email}) {
 ----
 
 [TIP]
-======
-It is RECOMMENDED to stick with a single `props` object. This will make it
-easier to distinguish between props and other local variables you may define
-within the scope of the component. It also makes it a little easier to extend
-components with additional props in the future.
+====
+Both styles are common. Destructuring is the convention in the React docs. It
+shows at a glance which props a component uses, and it is the only way to give
+props default values in a function component. A single `props` object makes it
+easier to tell props apart from other local variables.
+====
 
-On the other hand, one of the advantages of destructing the props in the
-function signature is that it makes it easier to see what props are being used
-by the component.
-======
-
-Another common pattern, for complex components that require a lot of props, like
-this…
+Another common pattern applies to components that need a lot of props, like
+this.
 
 [source,jsx]
 ----
@@ -119,7 +116,7 @@ const cards = data.map(item => {
 })
 ----
 
-… is to refactor the component's props into a single object, like this:
+Group the props into a single object instead.
 
 [source,jsx]
 ----
@@ -133,11 +130,11 @@ const cards = data.map(item => {
 })
 ----
 
-This pattern can work particularly well with TypeScript, where you can define
-the shape of the `item` object using an interface.
+This pattern works particularly well with TypeScript, where an interface can
+define the shape of the `item` object.
 
-Alternatively, you can use the spread operator to pass all the properties of the
-`item` object as individual props.
+Alternatively, use the spread syntax to pass every property of the `item`
+object as an individual prop.
 
 [source,jsx]
 ----
@@ -151,21 +148,16 @@ const cards = data.map(item => {
 })
 ----
 
-This requires no changes to the `Card` component itself, but only changes to
-the calling code. All the properties of the `item` object will be passed as
-props, but any props that are not used by the component will simply be ignored -
-there is no harm in passing extra props.
+This needs no change to the `Card` component itself, only to the calling code.
+The component ignores any props it doesn't use.
 
 == Props versus attributes
 
-The main difference between props and attributes is that React supports _any_ JS
-data type to be passed as prop values, while HTML attributes are limited to
-strings.
+The main difference between props and attributes is that props can hold _any_
+JavaScript value, while HTML attributes are limited to strings.
 
-Where non-string values are passed as props, the value needs to be
-enclosed in curly braces, so that React can evaluate the expression. Whatever
-value the JS expression resolves to will be the value that is passed to the
-prop.
+To pass a value that isn't a string literal, wrap it in curly braces. React
+evaluates the JavaScript expression inside, and passes the result as the prop.
 
 [source,jsx]
 ----
@@ -174,7 +166,81 @@ prop.
   isPun={true}
   upvotes={10}
   downvotes={2}
-  comments={[{author: "", body: "", title: }]}
+  comments={[{ author: "", body: "", title: "" }]}
 />
 ----
 
+A prop with no value defaults to `true`, so `<Joke isPun />` is the same as
+`<Joke isPun={true} />`.
+
+== Default values
+
+Give a prop a default value with a default parameter in the destructuring
+pattern. The default applies when the prop is missing or `undefined`, but not
+when it is `null`.
+
+[source,jsx]
+----
+function Avatar({ person, size = 100 }) {
+  return <img src={person.imageUrl} alt={person.name} width={size} />
+}
+----
+
+[NOTE]
+====
+React 19 removed `defaultProps` for function components. Class components still
+support it.
+====
+
+== The children prop
+
+Content nested between a component's opening and closing tags arrives in the
+special `children` prop. This lets a component wrap arbitrary content.
+
+[source,jsx]
+----
+function Card({ children }) {
+  return <div className="card">{children}</div>
+}
+
+function App() {
+  return (
+    <Card>
+      <h2>Title</h2>
+      <p>Body</p>
+    </Card>
+  )
+}
+----
+
+== Forwarding props
+
+Collect the remaining props with rest syntax, and spread them onto an inner
+element. This lets callers set any native attribute on it.
+
+[source,jsx]
+----
+function Button({ variant = "primary", ...rest }) {
+  return <button className={`btn btn--${variant}`} {...rest} />
+}
+
+<Button type="submit" disabled>Save</Button>
+----
+
+Only spread props that the element understands. React warns about props that a
+DOM element doesn't recognize, eg. `isActive`.
+
+== Props are read-only
+
+A component MUST NOT change its own props. When it needs to change something in
+response to user input, it uses state instead. When the parent passes new props,
+React re-renders the component with them.
+
+== Refs as props
+
+Since React 19, `ref` is a regular prop for function components.
+
+.References
+****
+* https://react.dev/learn/passing-props-to-a-component[React Docs: Passing props to a component]
+****

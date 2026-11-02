@@ -1,0 +1,140 @@
+= Suspense and lazy loading
+
+A component _suspends_ when it can't render yet, because it is waiting for code
+or data to load. `<Suspense>` shows a fallback, eg. a loading spinner, in place
+of its children until all the children are ready to render.
+
+[source,jsx]
+----
+import { Suspense } from "react"
+
+function ProfilePage() {
+  return (
+    <Suspense fallback={<Spinner />}>
+      <ProfileDetails />
+      <ProfileTimeline />
+    </Suspense>
+  )
+}
+----
+
+Only the following can make a component suspend.
+
+* A component loaded with `lazy`.
+
+* Reading a promise with `use`.
+
+* Data fetching in a framework or library that supports Suspense, eg. Next.js
+  or TanStack Query.
+
+* Since React 19.3, images, fonts, and stylesheets inside a `<ViewTransition>`.
+
+Suspense does _not_ detect data fetched inside an Effect or an event handler.
+
+== Lazy loading components
+
+`lazy` loads a component's code the first time it renders. Bundlers split the
+dynamically imported module into a separate file, so the code isn't part of the
+initial download.
+
+[source,jsx]
+----
+import { lazy, Suspense, useState } from "react"
+
+/* Declare lazy components at the top level of a module, never inside a
+component. The module MUST have a default export. */
+const MarkdownPreview = lazy(() => import("./MarkdownPreview"))
+
+export default function Editor() {
+  const [showPreview, setShowPreview] = useState(false)
+
+  return (
+    <>
+      <button onClick={() => setShowPreview(true)}>Preview</button>
+      {showPreview && (
+        <Suspense fallback={<p>Loading preview…</p>}>
+          <MarkdownPreview />
+        </Suspense>
+      )}
+    </>
+  )
+}
+----
+
+== Reading promises with use
+
+_Added in React 19._
+
+`use(promise)` reads the result of a promise during render. If the promise
+hasn't settled yet, the component suspends. If the promise rejects, the nearest
+error boundary shows its fallback.
+
+[source,jsx]
+----
+import { Suspense, use } from "react"
+
+function Comments({ commentsPromise }) {
+  const comments = use(commentsPromise)
+  return comments.map(comment => <p key={comment.id}>{comment.text}</p>)
+}
+
+export function Post({ commentsPromise }) {
+  return (
+    <Suspense fallback={<p>Loading comments…</p>}>
+      <Comments commentsPromise={commentsPromise} />
+    </Suspense>
+  )
+}
+----
+
+[IMPORTANT]
+====
+Don't create the promise during render, eg. `use(fetch(url))`. Every render
+would create a new promise, and suspend again. React warns about such "uncached"
+promises. Get promises from a framework or a Suspense-enabled library that
+caches them, or create them in a server component and pass them to the client
+component as props.
+====
+
+Unlike Hooks, `use` can be called inside conditions and loops. It can't be
+called inside a `try`/`catch` block. Since React 19, `use` also reads context.
+
+== Nested boundaries
+
+Each `<Suspense>` boundary shows its fallback independently. Nest boundaries to
+reveal a page in stages, eg. the page shell first, then the main content, then
+the comments.
+
+[source,jsx]
+----
+<Suspense fallback={<PageSkeleton />}>
+  <Article />
+  <Suspense fallback={<CommentsSkeleton />}>
+    <Comments />
+  </Suspense>
+</Suspense>
+----
+
+== Suspense and Transitions
+
+If an update causes content that is already on screen to suspend, React replaces
+it with the fallback. When the update is a Transition, React keeps the old
+content on screen instead, until the new content is ready. Use Transitions for
+navigation, so the page doesn't flash back to a fallback.
+
+== Changes in React 19
+
+* *Faster fallbacks.* When a component suspends, React shows the nearest
+  fallback straight away. It then renders the suspended component's siblings
+  in the background, to start their lazy requests early.
+
+* *Batched reveals in server rendering.* Since React 19.2, React waits briefly
+  and reveals several streamed boundaries together, as it already did in the
+  browser.
+
+.References
+****
+* https://react.dev/reference/react/Suspense[React Docs: <Suspense>]
+* https://react.dev/reference/react/lazy[React Docs: lazy]
+* https://react.dev/reference/react/use[React Docs: use]
+****

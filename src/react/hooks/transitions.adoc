@@ -1,78 +1,193 @@
 = React hooks: Transitions
 
-Imagine you have a React-driven web page that has two main views: Products, and
-About. When you click the navigation to the Products view, the view typically
-takes a second or two to load because of the sheer volume of data being fetched
-and rendered for that page.
+By default, React treats every state update as _urgent_. Once it starts
+rendering an update, it finishes before it handles anything else. If an
+update triggers a slow render, the UI freezes until the render is done.
 
-If you click Products but then immediately click About, the About page will
-_also_ take a second or two to load, even though it is composed only of static
-content! That's because the state change happened after the one that triggered
-the Products view, and you have to wait for that render to finish before the
-next state transition can be processed.
+Imagine a page with three tabs: Home, Products, and About. The Products tab
+renders thousands of items, and takes a second or two. If the user selects
+Products and then immediately selects About, nothing happens until the
+Products render finishes. Only then does React process the click on About.
 
 [source,jsx]
 ----
-import { useState } from 'react'
+import { useState } from "react"
 
-function Component() {
+function TabContainer() {
+  const [tab, setTab] = useState("home")
 
-  const [tab, setTab] = useState('home')
-
-  function switchTab(tab) {
-    setTab(tab)
+  function selectTab(nextTab) {
+    setTab(nextTab)
   }
 
   // …
 }
 ----
 
-Introduced in React 18, `useTransition()` is a new hook that allows you to
-define a transition as being "interruptible". This means that if a new
-transition is triggered before the previous one has completed, the new
-transition will interrupt the old one and start immediately.
+A _Transition_ marks a state update as non-urgent. React renders it in the
+background, and keeps the current UI on screen and responsive meanwhile. If a
+more urgent update arrives, eg. a click or a keystroke, React interrupts the
+Transition's render, handles the urgent update, and then starts the
+Transition's render again with the latest state.
+
+`useTransition`, introduced in React 18, returns two values.
+
+* `isPending` is `true` while a Transition is in progress.
+
+* `startTransition` takes a function, and marks every state update inside it as
+  a Transition.
 
 [source,jsx]
 ----
-import { useState, useTransition } from 'react'
+import { useState, useTransition } from "react"
 
-function Component() {
-
-  const [tab, setTab] = useState('home')
+function TabContainer() {
+  const [tab, setTab] = useState("home")
   const [isPending, startTransition] = useTransition()
 
-  function switchTab(tab) {
-
-    /* Whatever state changes we implement in startTransition's callback,
-    they will be treated by React as low-priority state changes – ie.
-    they can be interrupted by new transitions. */
-
+  function selectTab(nextTab) {
     startTransition(() => {
-      setTab(tab)
+      setTab(nextTab)
     })
   }
 
-  // …
+  return (
+    <>
+      <TabButton onClick={() => selectTab("home")}>Home</TabButton>
+      <TabButton onClick={() => selectTab("products")}>Products</TabButton>
+      <TabButton onClick={() => selectTab("about")}>About</TabButton>
+      <div style={{ opacity: isPending ? 0.6 : 1 }}>
+        {tab === "home" && <HomeTab />}
+        {tab === "products" && <ProductsTab />}
+        {tab === "about" && <AboutTab />}
+      </div>
+    </>
+  )
 }
 ----
 
-With this change, if a user navigates from Home to Product, and then immediately
-from Product to About, the About page will render immediately. There will no
-longer be a delay caused by the long rendering time of the Product page.
+With this change, if the user selects Products and then immediately selects
+About, React abandons the Products render, and renders About straight away.
+Meanwhile, `isPending` dims the old tab, to show that new content is on its
+way.
 
-The `isPending` variable returned by `useTransition()` is a boolean that
-indicates whether a transition is currently pending or in progress. This could
-be used, for example, to show a spinner while the Products page is loading.
-Before transitions were available in React, you would have to implement your own
-loading spinner logic using custom state variables:
+To start a Transition outside a component, or when you don't need
+`isPending`, import `startTransition` directly from `react`.
 
 [source,jsx]
 ----
-const [loading, setLoading] = useState(false)
+import { startTransition } from "react"
 
-function switchTab(tab) {
-  setLoading(true)
-  setTab(tab)
-  setLoading(false)
+startTransition(() => {
+  setTab("products")
+})
+----
+
+Since React 19.3, each Transition renders independently, so a slow Transition
+no longer holds up unrelated ones.
+
+== Async Transitions
+
+_Changed in React 19._
+
+Since React 19, the function passed to `startTransition` can be async. React
+calls a function that runs in a Transition an _Action_. `isPending` stays
+`true` until the whole async function has finished, and React applies its state
+updates together at the end.
+
+[source,jsx]
+----
+function UpdateName() {
+  const [name, setName] = useState("")
+  const [error, setError] = useState(null)
+  const [isPending, startTransition] = useTransition()
+
+  function handleSubmit() {
+    startTransition(async () => {
+      const error = await updateName(name)
+
+      /* State updates after an `await` currently need their own
+      `startTransition`, to stay part of the Transition. */
+      startTransition(() => {
+        if (error) {
+          setError(error)
+        } else {
+          redirect("/path")
+        }
+      })
+    })
+  }
+
+  return (
+    <div>
+      <input value={name} onChange={e => setName(e.target.value)} />
+      <button onClick={handleSubmit} disabled={isPending}>Update</button>
+      {error && <p>{error}</p>}
+    </div>
+  )
 }
 ----
+
+== Caveats
+
+* Transitions don't make rendering faster. They lower its priority, so React can
+  interrupt it to handle input. This improves Interaction to Next Paint (INP),
+  but the slow render still costs the same.
+
+* The function passed to `startTransition` runs straight away. React doesn't
+  delay it. Only the state updates inside it are non-urgent.
+
+* Don't use a Transition for the state of a controlled text input. The input
+  must update urgently on each keystroke. Use `useDeferredValue` for the slow
+  part of the UI instead.
+
+* If a Transition throws an error, the nearest error boundary catches it.
+
+* Updates in a Transition can animate with `<ViewTransition>`.
+
+== Deferred values
+
+`useDeferredValue(value)` is the other way to mark work as non-urgent. It
+returns a copy of a value that can lag behind the original. On each update,
+React first re-renders with the old deferred value, which is fast. It then
+re-renders in the background with the new value, and abandons that render if
+the value changes again first.
+
+[source,jsx]
+----
+import { useDeferredValue, useState } from "react"
+
+function SearchPage() {
+  const [query, setQuery] = useState("")
+  const deferredQuery = useDeferredValue(query)
+  const isStale = query !== deferredQuery
+
+  return (
+    <>
+      <input value={query} onChange={e => setQuery(e.target.value)} />
+      <div style={{ opacity: isStale ? 0.5 : 1 }}>
+        {/* Wrap SlowList in `memo` (or use the React Compiler) so that it
+        skips re-rendering while `deferredQuery` is unchanged. */}
+        <SlowList query={deferredQuery} />
+      </div>
+    </>
+  )
+}
+----
+
+The input stays responsive, because `query` updates urgently, while `SlowList`
+catches up in the background.
+
+Since React 19, `useDeferredValue(value, initialValue)` takes an optional
+initial value. React uses it for the first render, then re-renders in the
+background with `value`.
+
+Use `useTransition` when you control the state update. Use `useDeferredValue`
+when you only receive the value, eg. as a prop.
+
+.References
+****
+* https://react.dev/reference/react/useTransition[React Docs: useTransition]
+* https://react.dev/reference/react/startTransition[React Docs: startTransition]
+* https://react.dev/reference/react/useDeferredValue[React Docs: useDeferredValue]
+****

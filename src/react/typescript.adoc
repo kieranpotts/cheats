@@ -1,0 +1,264 @@
+= TypeScript with React
+
+TypeScript catches mistakes in React code at build time, eg. a missing prop, a
+misspelled field, or an unhandled state. This page covers the places where
+types help most.
+
+To set up a project, start from a TypeScript template, eg.
+`npm create vite@latest my-app -- --template react-ts`. Name files that contain
+JSX `*.tsx`. React's types come from the `@types/react` and `@types/react-dom`
+packages, which the templates install.
+
+== Data structures and props
+
+Define an interface for each data structure the app works with, eg. the shape of
+an API response. Reuse it in the props of the components that display it.
+
+[source,tsx]
+----
+interface Contact {
+  id: string
+  name: string
+  email: string
+  phone?: string // Optional.
+}
+
+interface ContactCardProps {
+  contact: Contact
+  isFavorite?: boolean
+  onSelect: (id: string) => void
+}
+
+function ContactCard({
+  contact,
+  isFavorite = false,
+  onSelect,
+}: ContactCardProps) {
+  return (
+    <div className="contact-card" onClick={() => onSelect(contact.id)}>
+      <h3>{contact.name} {isFavorite && "★"}</h3>
+      <p>{contact.email}</p>
+      {contact.phone && <p>{contact.phone}</p>}
+    </div>
+  )
+}
+----
+
+TypeScript now reports an error when a caller omits `contact`, passes a
+misspelled prop, or passes a callback with the wrong signature. Editors also
+autocomplete the props.
+
+Type content passed between tags as `React.ReactNode`, which accepts anything
+React can render.
+
+[source,tsx]
+----
+import type { ReactNode } from "react"
+
+function Card({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <section>
+      <h2>{title}</h2>
+      {children}
+    </section>
+  )
+}
+----
+
+== Props for wrapper components
+
+`ComponentProps<"button">` is the type of every prop that a `<button>`
+accepts. Extend it so a wrapper component accepts the native attributes too.
+Since React 19, it includes `ref`.
+
+[source,tsx]
+----
+import type { ComponentProps } from "react"
+
+interface ButtonProps extends ComponentProps<"button"> {
+  variant?: "primary" | "secondary"
+}
+
+function Button({ variant = "primary", ...rest }: ButtonProps) {
+  return <button className={`btn btn--${variant}`} {...rest} />
+}
+----
+
+`ComponentProps<typeof Card>` does the same for a component.
+
+== Props that depend on each other
+
+Use a _discriminated union_ when some props make sense only together. The
+compiler then rejects invalid combinations.
+
+[source,tsx]
+----
+type AlertProps =
+  | { kind: "info"; message: string }
+  | { kind: "error"; message: string; onRetry: () => void }
+
+function Alert(props: AlertProps) {
+  if (props.kind === "error") {
+    /* TypeScript knows that `onRetry` exists here. */
+    return (
+      <p role="alert">
+        {props.message} <button onClick={props.onRetry}>Retry</button>
+      </p>
+    )
+  }
+
+  return <p>{props.message}</p>
+}
+----
+
+== State
+
+`useState` infers the type from the initial value. Pass a type argument when
+the initial value doesn't show the full type, eg. `null` or an empty array.
+
+[source,tsx]
+----
+const [count, setCount] = useState(0) // number
+const [user, setUser] = useState<User | null>(null)
+const [todos, setTodos] = useState<Todo[]>([])
+----
+
+Model status with a union of string literals, rather than several booleans that
+can contradict each other.
+
+[source,tsx]
+----
+type Status = "idle" | "loading" | "success" | "error"
+
+const [status, setStatus] = useState<Status>("idle")
+----
+
+== Reducer actions
+
+Type a reducer's actions as a discriminated union. TypeScript then checks each
+action's payload, and narrows the type inside each `case`.
+
+[source,tsx]
+----
+type Action =
+  | { type: "added"; id: string; text: string }
+  | { type: "toggled"; id: string }
+  | { type: "deleted"; id: string }
+
+function tasksReducer(tasks: Task[], action: Action): Task[] {
+  switch (action.type) {
+    case "added":
+      return [...tasks, { id: action.id, text: action.text, done: false }]
+    case "toggled":
+      return tasks.map(t => t.id === action.id ? { ...t, done: !t.done } : t)
+    case "deleted":
+      return tasks.filter(t => t.id !== action.id)
+  }
+}
+
+/* ✅ Matches the "added" action. */
+dispatch({ type: "added", id: crypto.randomUUID(), text: "Buy milk" })
+
+/* ❌ Type error: "add" is not a valid action type. */
+dispatch({ type: "add", text: "Buy milk" })
+----
+
+Let TypeScript infer the type arguments of `useReducer` from the reducer.
+Don't pass them explicitly.
+
+== Event handlers
+
+An inline handler infers its event type. A handler defined separately needs
+an explicit event type.
+
+[source,tsx]
+----
+import type { ChangeEvent } from "react"
+
+function NameInput() {
+  function handleChange(event: ChangeEvent<HTMLInputElement>) {
+    console.log(event.target.value)
+  }
+
+  return <input onChange={handleChange} />
+}
+----
+
+== Refs
+
+Pass the element type to `useRef`, with `null` as the initial value. Since
+React 19, `useRef` requires an argument.
+
+[source,tsx]
+----
+const inputRef = useRef<HTMLInputElement>(null)
+
+inputRef.current?.focus()
+----
+
+== Context
+
+Give a context a type argument. When there is no sensible default value, use
+`null`, and read the context through a custom Hook that checks for a provider.
+Components that use the Hook then get a non-null value.
+
+[source,tsx]
+----
+import { createContext, use } from "react"
+
+interface Auth {
+  user: User
+  logout: () => void
+}
+
+const AuthContext = createContext<Auth | null>(null)
+
+export function useAuth(): Auth {
+  const auth = use(AuthContext)
+  if (!auth) {
+    throw new Error("useAuth must be used inside an <AuthContext> provider")
+  }
+  return auth
+}
+----
+
+== Generic components
+
+A generic component works with any item type, but keeps the type consistent
+between its props.
+
+[source,tsx]
+----
+import type { ReactNode } from "react"
+
+interface ListProps<T> {
+  items: T[]
+  getKey: (item: T) => string
+  renderItem: (item: T) => ReactNode
+}
+
+function List<T>({ items, getKey, renderItem }: ListProps<T>) {
+  return (
+    <ul>
+      {items.map(item => <li key={getKey(item)}>{renderItem(item)}</li>)}
+    </ul>
+  )
+}
+
+/* `item` is typed as `Contact` in both callbacks. */
+<List items={contacts} getKey={c => c.id} renderItem={c => c.name} />
+----
+
+== Data at the boundaries
+
+Types disappear at runtime, so TypeScript can't check data that arrives from
+outside the app, eg. an API response or form input. Validate such data with a
+schema library such as Zod, and derive the TypeScript type from the schema.
+Frameworks also generate types for routes, eg. React Router's
+`Route.ComponentProps`.
+
+.References
+****
+* https://react.dev/learn/typescript[React Docs: Using TypeScript]
+* https://www.typescriptlang.org/docs/handbook/2/narrowing.html#discriminated-unions[TypeScript Handbook: Discriminated unions]
+****

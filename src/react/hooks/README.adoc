@@ -1,16 +1,169 @@
 = React hooks
 
-Hooks are a way of plugging-in React features to your functional React components.
-As well as using React's built-in hooks, you can also create your own custom hooks.
+Hooks let function components use React features such as state, context, refs,
+and Effects. Hook names start with `use`. As well as using React's built-in
+Hooks, you can write your own custom Hooks.
 
 * link:./state.adoc[State]
+* link:./reducers.adoc[Reducers]
 * link:./effects.adoc[Effects]
+* link:./refs.adoc[Refs]
+* link:./context.adoc[Context]
+* link:./memoization.adoc[Memoization]
 * link:./transitions.adoc[Transitions]
 * link:./actions.adoc[Actions]
 * link:./form-status.adoc[Form status]
 * link:./optimistic.adoc[Optimistic updates]
 
+== Rules of Hooks
+
+React identifies each Hook by the order of the calls, so every render MUST call
+the same Hooks in the same order.
+
+* Call Hooks only at the top level of a function component or a custom Hook.
+  Never call them inside loops, conditions, nested functions, or `try` blocks,
+  or after an early `return`.
+
+* Call Hooks only from function components and custom Hooks. Never call them
+  from plain JavaScript functions or class components.
+
+The `use` API is the exception. It can be called inside conditions and loops
+(see link:../suspense.adoc[Suspense]).
+
+The `eslint-plugin-react-hooks` package enforces these rules, and checks the
+dependency arrays of Hooks such as `useEffect`. Recent versions of its
+`recommended` preset also include rules powered by the
+link:../compiler.adoc[React Compiler], eg. `set-state-in-effect` and `refs`.
+
+.eslint.config.js
+[source,js]
+----
+import reactHooks from "eslint-plugin-react-hooks"
+import { defineConfig } from "eslint/config"
+
+export default defineConfig([
+  reactHooks.configs.flat.recommended,
+])
+----
+
+== Custom Hooks
+
+A custom Hook is a function whose name starts with `use` and which calls other
+Hooks. It shares stateful _logic_ between components. Each component that
+calls it gets its own, independent state.
+
+[source,jsx]
+----
+import { useEffect, useState } from "react"
+
+export function useWindowWidth() {
+  const [width, setWidth] = useState(window.innerWidth)
+
+  useEffect(() => {
+    function handleResize() {
+      setWidth(window.innerWidth)
+    }
+
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
+  return width
+}
+
+function Header() {
+  const width = useWindowWidth()
+  return <header>{width < 600 ? <MobileNav /> : <DesktopNav />}</header>
+}
+----
+
+== Built-in Hooks
+
+[cols="2,3,1"]
+|===
+|Hook |Purpose |Since
+
+|`useState`
+|Adds a state variable.
+|16.8
+
+|`useReducer`
+|Manages state with a reducer function.
+|16.8
+
+|`useContext`
+|Reads a context value.
+|16.8
+
+|`useRef`
+|Holds a mutable value that doesn't trigger re-renders, eg. a DOM node.
+|16.8
+
+|`useImperativeHandle`
+|Customizes the value that a ref exposes to the parent.
+|16.8
+
+|`useEffect`
+|Synchronizes a component with an external system.
+|16.8
+
+|`useLayoutEffect`
+|Like `useEffect`, but runs before the browser paints.
+|16.8
+
+|`useInsertionEffect`
+|Inserts styles before layout Effects run. For CSS-in-JS libraries.
+|18
+
+|`useEffectEvent`
+|Reads the latest props and state inside an Effect, without making them dependencies.
+|19.2
+
+|`useMemo`
+|Caches the result of a calculation between renders.
+|16.8
+
+|`useCallback`
+|Caches a function definition between renders.
+|16.8
+
+|`useTransition`
+|Marks a state update as non-urgent, and reports its pending state.
+|18
+
+|`useDeferredValue`
+|Defers updating part of the UI.
+|18
+
+|`useActionState`
+|Manages state that an Action updates.
+|19
+
+|`useOptimistic`
+|Shows a temporary value while an Action is pending.
+|19
+
+|`useFormStatus`
+|Reads the submission status of the parent form. Imported from `react-dom`.
+|19
+
+|`useId`
+|Generates a unique ID, eg. for accessibility attributes.
+|18
+
+|`useSyncExternalStore`
+|Subscribes to an external store.
+|18
+
+|`useDebugValue`
+|Adds a label to a custom Hook in React DevTools.
+|16.8
+|===
+
 .References
 ****
-* https://react.dev/reference/react/hooks[React Hooks]
+* https://react.dev/reference/react/hooks[React Docs: Built-in React Hooks]
+* https://react.dev/reference/rules/rules-of-hooks[React Docs: Rules of Hooks]
+* https://react.dev/learn/reusing-logic-with-custom-hooks[React Docs: Reusing logic with custom Hooks]
+* https://react.dev/reference/eslint-plugin-react-hooks[React Docs: eslint-plugin-react-hooks]
 ****

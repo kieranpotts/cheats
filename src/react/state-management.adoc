@@ -1,0 +1,258 @@
+= State management
+
+Before choosing where state lives, or which tool manages it, classify it. Each
+kind of state has a different best home.
+
+[cols="1,2,2"]
+|===
+|Kind |Examples |Best home
+
+|Local UI state
+|Whether a dropdown is open, the text in an input.
+|`useState` or `useReducer` in the component that uses it.
+
+|Shared client state
+|The items in a basket, a multi-step wizard.
+|The nearest common parent, then context, then a store.
+
+|Server state
+|Data loaded from an API.
+|A data-fetching library, or the data features of a framework.
+
+|URL state
+|Filters, the selected tab, the page number.
+|The router, as path or search parameters.
+
+|Form state
+|Field values, validation errors, submission status.
+|Native forms with Actions, or a form library.
+|===
+
+Once server state, URL state, and form state have their own homes, little global
+client state remains. Keep the rest as local as possible, and calculate values
+from existing state rather than storing copies.
+
+== Shared client state
+
+When several components need the same state, try the following in order.
+
+1. *Lift state up* to their nearest common parent, and pass it down as props.
+
+2. *Use context*, when the state must reach many components deep in the tree.
+  Context is a way to pass values down the tree, a form of dependency
+  injection, not a state manager. It suits values that change rarely, eg. the
+  theme or the signed-in user. Every reader re-renders when the value changes.
+
+3. *Use a store*, when the state changes often, is read in many places, or
+  needs selectors, middleware, or devtools.
+
+== Server state
+
+Server state is a cache of data that the server owns. It needs things that
+client state doesn't: caching, deduplication of identical requests, refetching
+when it goes stale, and invalidation after a mutation. Use a library that
+provides them, such as TanStack Query or SWR, rather than `useEffect` and
+`useState`. Frameworks such as Next.js and React Router provide their own data
+loading.
+
+[source,jsx]
+----
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
+
+function Profile({ userId }) {
+  const { data, isPending, error } = useQuery({
+    queryKey: ["user", userId],
+    queryFn: () => fetchUser(userId),
+  })
+
+  if (isPending) return <Spinner />
+  if (error) return <p>{error.message}</p>
+  return <h1>{data.name}</h1>
+}
+
+function RenameButton({ userId }) {
+  const queryClient = useQueryClient()
+  const mutation = useMutation({
+    mutationFn: name => renameUser(userId, name),
+    /* Refetch every query whose key starts with ["user", userId]. */
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["user", userId] }),
+  })
+
+  return <button onClick={() => mutation.mutate("Ada")}>Rename</button>
+}
+----
+
+Components with the same `queryKey` share one cached result, and one request.
+The app MUST wrap its tree in a `<QueryClientProvider>`.
+
+== URL state
+
+Keep state that the user should be able to bookmark, share, or restore with
+the browser's back button in the URL. It also survives a page refresh.
+
+[source,jsx]
+----
+import { useSearchParams } from "react-router"
+
+function ProductList() {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const sort = searchParams.get("sort") ?? "name"
+
+  return (
+    <select
+      value={sort}
+      onChange={e => setSearchParams({ sort: e.target.value })}
+    >
+      <option value="name">Name</option>
+      <option value="price">Price</option>
+    </select>
+  )
+}
+----
+
+== Stores
+
+[cols="1,3"]
+|===
+|Library |Model
+
+|Zustand
+|A single store, defined as a Hook. Small API, little boilerplate, and
+selectors to limit re-renders.
+
+|Redux Toolkit
+|A single store, updated only by dispatching actions to reducers. Strict
+one-way data flow, middleware, and detailed devtools, with more ceremony.
+
+|Jotai
+|Many small _atoms_ of state, which can derive from one another. Suits lots of
+independent pieces of state.
+|===
+
+=== Zustand
+
+[source,jsx]
+----
+import { create } from "zustand"
+
+const useBasket = create(set => ({
+  items: [],
+  add: item => set(state => ({ items: [...state.items, item] })),
+  clear: () => set({ items: [] }),
+}))
+
+function BasketCount() {
+  /* Re-renders only when `items.length` changes. */
+  const count = useBasket(state => state.items.length)
+  return <span>{count}</span>
+}
+----
+
+A selector that returns a new object or array on every call causes endless
+re-renders. Select single values, or wrap the selector in `useShallow`.
+
+=== Redux Toolkit
+
+[source,jsx]
+----
+import { configureStore, createSlice } from "@reduxjs/toolkit"
+import { Provider, useDispatch, useSelector } from "react-redux"
+
+const basketSlice = createSlice({
+  name: "basket",
+  initialState: { items: [] },
+  reducers: {
+    /* Immer lets reducers "mutate" a draft, and produces a new state. */
+    added: (state, action) => { state.items.push(action.payload) },
+  },
+})
+
+const store = configureStore({ reducer: { basket: basketSlice.reducer } })
+
+function AddButton({ item }) {
+  const dispatch = useDispatch()
+  return (
+    <button onClick={() => dispatch(basketSlice.actions.added(item))}>
+      Add
+    </button>
+  )
+}
+
+function BasketCount() {
+  const count = useSelector(state => state.basket.items.length)
+  return <span>{count}</span>
+}
+
+/* <Provider store={store}><App /></Provider> */
+----
+
+=== Jotai
+
+[source,jsx]
+----
+import { atom, useAtom, useAtomValue } from "jotai"
+
+const priceAtom = atom(10)
+const quantityAtom = atom(1)
+const totalAtom = atom(get => get(priceAtom) * get(quantityAtom))
+
+function Quantity() {
+  const [quantity, setQuantity] = useAtom(quantityAtom)
+  return <button onClick={() => setQuantity(q => q + 1)}>{quantity}</button>
+}
+
+function Total() {
+  /* Re-renders only when the total changes. */
+  return <span>{useAtomValue(totalAtom)}</span>
+}
+----
+
+== External stores and tearing
+
+With concurrent rendering, React can pause a render part-way. If a store outside
+React changes during the pause, components rendered before the change show the
+old value, and components rendered after it show the new one. This inconsistency
+is called _tearing_.
+
+`useSyncExternalStore` reads an external store without tearing. Store
+libraries such as Zustand and Redux use it internally. Use it directly to
+subscribe to a store of your own, or to a browser API.
+
+[source,jsx]
+----
+import { useSyncExternalStore } from "react"
+
+function subscribe(callback) {
+  window.addEventListener("online", callback)
+  window.addEventListener("offline", callback)
+  return () => {
+    window.removeEventListener("online", callback)
+    window.removeEventListener("offline", callback)
+  }
+}
+
+function useOnlineStatus() {
+  return useSyncExternalStore(
+    subscribe,
+    () => navigator.onLine, // Snapshot in the browser.
+    () => true              // Snapshot during server rendering.
+  )
+}
+----
+
+* Define `subscribe` outside the component, or React resubscribes on every
+  render.
+
+* `getSnapshot` MUST return the same value while the store hasn't changed. If
+  it returns a new object each time, React re-renders forever.
+
+.References
+****
+* https://react.dev/learn/managing-state[React Docs: Managing state]
+* https://react.dev/reference/react/useSyncExternalStore[React Docs: useSyncExternalStore]
+* https://tanstack.com/query[TanStack Query]
+* https://zustand.docs.pmnd.rs/[Zustand]
+* https://redux-toolkit.js.org/[Redux Toolkit]
+* https://jotai.org/[Jotai]
+****

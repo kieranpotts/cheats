@@ -1,40 +1,145 @@
 = React basics
 
-JSX is a syntax extension for JavaScript that looks similar to HTML, with a few
-key differences. It gets compiled to a plain JavaScript object, which you can
-see by simply console-logging it.
+A React app is a tree of components. A component is a JavaScript function that
+returns markup, which is usually written in JSX.
+
+== JSX
+
+JSX is a syntax extension for JavaScript that looks similar to HTML. Browsers
+can't run it, so a compiler (eg. Babel, esbuild, Oxc, or SWC) converts it to
+plain JavaScript first.
 
 [source,jsx]
 ----
-/* Where JSX is assigned to a variable, it MUST be wrapped in parentheses. */
+/* Wrap multi-line JSX in parentheses. A `return` followed by a line break
+returns `undefined`, because JavaScript inserts a semicolon after `return`. */
 const page = (
   <div>
     <h1 className="header">This is JSX</h1>
     <p>This is a paragraph</p>
   </div>
 )
+----
 
-/* This will log the compiled JSX object to the console. */
+Each call returns a _React element_: a plain, immutable object that describes
+what to render. You can see it by logging it to the console.
+
+[source,jsx]
+----
 console.log(page)
+// { type: "div", key: null, props: { className: …, children: [ … ] }, … }
+----
 
-/* To render JSX to the DOM, the JSX structure MUST have exactly one root node. */
-ReactDOM.render(
-  page,
-  document.getElementById("root")
+Since React 17, compilers use the _automatic JSX runtime_. It imports helper
+functions from `react/jsx-runtime` and turns each element into a function call.
+This is why files that contain JSX no longer need `import React from "react"`.
+
+[source,js]
+----
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime"
+
+const page = _jsxs("div", {
+  children: [
+    _jsx("h1", { className: "header", children: "This is JSX" }),
+    _jsx("p", { children: "This is a paragraph" }),
+  ],
+})
+----
+
+React 19 requires the automatic runtime. It logs an error if the app, or one of
+its dependencies, uses the old transform, which compiled JSX to
+`React.createElement()` calls.
+
+== Rules of JSX
+
+* *One root element.* A component returns a single root element. To return
+  siblings without adding a wrapper `<div>` to the DOM, wrap them in a
+  fragment, `<>…</>`.
+
+* *Close every tag.* Void elements need a closing slash, eg. `<img />` and
+  `<br />`.
+
+* *camelCase attribute names.* JSX attributes become keys of a JavaScript
+  object, so most use camelCase, eg. `className` (not `class`), `htmlFor` (not
+  `for`), `onClick`, and `tabIndex`. The `aria-*` and `data-*` attributes keep
+  their dashes.
+
+* *Curly braces for JavaScript.* Use `{…}` to embed any JavaScript expression.
+
+[source,jsx]
+----
+function Post() {
+  return (
+    <>
+      <h1>Title</h1>
+      <p>Body</p>
+    </>
+  )
+}
+----
+
+`<>…</>` is shorthand for `<Fragment>…</Fragment>`. Use the long form, imported
+from `react`, when the fragment needs a `key` or a `ref`.
+
+== Rendering to the DOM
+
+An app has one entry point, which creates a _root_ inside an existing DOM node
+and renders the top-level component into it.
+
+.main.jsx
+[source,jsx]
+----
+import { StrictMode } from "react"
+import { createRoot } from "react-dom/client"
+import App from "./App"
+
+const root = createRoot(document.getElementById("root"))
+
+root.render(
+  <StrictMode>
+    <App />
+  </StrictMode>
 )
 ----
 
-The `ReactDOM` API changed in React v18, and the `render` method is now
-deprecated. We MUST use the new `createRoot` method instead. The path to the
-`ReactDOM` import is also different.
+If the server already rendered the app's HTML, use `hydrateRoot()` instead. It
+attaches React to the existing HTML rather than replacing it.
 
-.index.js
-[source,js]
+[source,jsx]
 ----
-import ReactDOM from "react-dom/client"
+import { hydrateRoot } from "react-dom/client"
+import App from "./App"
 
-// …
-
-ReactDOM.createRoot(document.getElementById("root"))
-    .render(navbar)
+hydrateRoot(document.getElementById("root"), <App />)
 ----
+
+[IMPORTANT]
+====
+`ReactDOM.render()` was deprecated in React 18 and removed in React 19, along
+with `ReactDOM.hydrate()` and `ReactDOM.unmountComponentAtNode()`. Use
+`createRoot()`, `hydrateRoot()`, and `root.unmount()` instead.
+====
+
+== Strict Mode
+
+`<StrictMode>` turns on extra checks for the tree inside it. In development,
+React does the following.
+
+* Calls each component function twice, to find impure rendering.
+
+* Runs each Effect's setup and cleanup one extra time when the component
+  mounts, to find missing cleanup.
+
+* Calls each ref callback one extra time when the element mounts, to find
+  missing ref cleanup.
+
+* Warns about deprecated APIs.
+
+Strict Mode has no effect on production builds.
+
+.References
+****
+* https://react.dev/learn/writing-markup-with-jsx[React Docs: Writing markup with JSX]
+* https://react.dev/reference/react-dom/client/createRoot[React Docs: createRoot]
+* https://react.dev/reference/react/StrictMode[React Docs: StrictMode]
+****

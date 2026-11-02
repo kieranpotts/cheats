@@ -1,0 +1,156 @@
+= Performance
+
+Measure before you optimize. Most React performance problems come from one of
+three causes: too much JavaScript to download, too many or too slow renders,
+or slow data fetching. Each has different fixes.
+
+== Measuring
+
+* *React DevTools Profiler.* Records each commit, and how long each component
+  took to render. In the Profiler's settings, turn on "Record why each
+  component rendered while profiling". The Profiler then shows the reason for
+  each render, eg. a changed prop, a changed Hook, or a parent render.
+
+* *Lighthouse.* Audits page load in a lab environment, in Chrome DevTools or
+  in CI.
+
+* *Core Web Vitals from real users.* Largest Contentful Paint (LCP) measures
+  loading, Interaction to Next Paint (INP) measures responsiveness to input,
+  and Cumulative Layout Shift (CLS) measures visual stability. Collect them
+  with the `web-vitals` package, or a real-user monitoring service.
+
+* *Bundle analysis.* Tools such as `rollup-plugin-visualizer` (for Vite) and
+  `@next/bundle-analyzer` show which modules make up each bundle.
+
+Always profile a production build. The development build of React runs extra
+checks, and is much slower. React DevTools can profile a production build that
+was built with the `react-dom/profiling` entry point.
+
+== Shipping less JavaScript
+
+* *Code splitting.* Load each route's code only when the user navigates to it,
+  with `lazy` and `<Suspense>`, or with the lazy routes of a router.
+
+* *Server components.* Code for components that aren't interactive never reaches
+  the browser.
+
+* *Heavy dependencies.* Check the bundle for large libraries, eg. a date
+  library or a charting library, and replace them, or load them lazily.
+
+== Rendering less
+
+Work through the following fixes in order. The structural fixes are free, and
+they make memoization unnecessary in many cases.
+
+=== Move state down
+
+When state lives higher in the tree than it needs to, every change re-renders
+everything below it. Move the state into the component that uses it.
+
+[source,jsx]
+----
+/* ❌ Every keystroke re-renders `ExpensiveTree`. */
+function App() {
+  const [query, setQuery] = useState("")
+
+  return (
+    <>
+      <input value={query} onChange={e => setQuery(e.target.value)} />
+      <ExpensiveTree />
+    </>
+  )
+}
+
+/* ✅ Only `SearchInput` re-renders. */
+function SearchInput() {
+  const [query, setQuery] = useState("")
+  return <input value={query} onChange={e => setQuery(e.target.value)} />
+}
+
+function App() {
+  return (
+    <>
+      <SearchInput />
+      <ExpensiveTree />
+    </>
+  )
+}
+----
+
+=== Pass components as children
+
+When a wrapper component owns state, but also renders expensive content, pass
+the content in as `children`. The parent creates the `children` elements, so
+they are the same objects each time the wrapper re-renders, and React skips
+them.
+
+[source,jsx]
+----
+function ScrollTracker({ children }) {
+  const [scrollY, setScrollY] = useState(0)
+  // … updates `scrollY` on scroll.
+
+  return (
+    <div>
+      <ProgressBar value={scrollY} />
+      {children}
+    </div>
+  )
+}
+
+/* `ExpensiveTree` doesn't re-render when `scrollY` changes. */
+<ScrollTracker>
+  <ExpensiveTree />
+</ScrollTracker>
+----
+
+=== Narrow subscriptions
+
+* *Split contexts.* Every reader of a context re-renders when its value changes.
+  Split values that change at different rates into separate contexts.
+
+* *Use store selectors.* With a store such as Zustand or Redux, select only the
+  values a component needs, so it re-renders only when they change.
+
+=== Virtualize long lists
+
+A list of thousands of rows creates thousands of DOM nodes. A virtualized
+list renders only the rows in, or near, the viewport. Use a library such as
+TanStack Virtual or `react-window`.
+
+=== Memoize
+
+Memoize what profiling shows is still slow, with `memo`, `useMemo`, and
+`useCallback`, or turn on the React Compiler to do it for you.
+
+== Keeping input responsive
+
+* *Transitions and deferred values.* Mark expensive updates as non-urgent, so
+  typing and clicks stay responsive. This improves INP.
+
+* *Debouncing.* Wait until the user pauses before doing work that doesn't need
+  to happen on every keystroke, eg. a network request for search suggestions.
+
+Transitions and deferred values don't make rendering faster. They change its
+priority, so React can interrupt slow work to handle input.
+
+== Fetching data
+
+* *Cache and deduplicate server data* with a library such as TanStack Query, or
+  the data features of a framework.
+
+* *Avoid waterfalls.* When a parent fetches data, renders a child, and the
+  child then starts its own fetch, the requests run one after another. Start
+  independent requests in parallel, eg. in a route loader, or in a server
+  component.
+
+* *Don't fetch in Effects* when a better option exists.
+
+.References
+****
+* https://react.dev/reference/react/Profiler[React Docs: <Profiler>]
+* https://react.dev/learn/react-developer-tools[React Docs: React Developer Tools]
+* https://web.dev/articles/vitals[web.dev: Web Vitals]
+* https://overreacted.io/before-you-memo/[Overreacted: Before you memo()]
+* https://tanstack.com/virtual[TanStack Virtual]
+****

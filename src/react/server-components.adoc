@@ -1,0 +1,311 @@
+= Server components and server functions
+
+React Server Components (RSC) render ahead of time, on the server or at build
+time, in an environment separate from the browser. They have been stable since
+React 19. To use them, you need a framework or bundler that supports them, eg.
+Next.js (App Router).
+
+== Server components
+
+In an app that uses RSC, components are server components by default. A server
+component has the following properties.
+
+* It runs only on the server, or at build time. Its code is never sent to the
+  browser.
+
+* It can be an `async` function, and `await` data directly, eg. from a
+  database or the file system.
+
+* It can't use state, Effects, event handlers, or browser APIs.
+
+* It can render client components, and pass them props.
+
+[source,jsx]
+----
+import db from "./db"
+
+export default async function Posts() {
+  const posts = await db.query("SELECT * FROM posts")
+
+  return (
+    <ul>
+      {posts.map((post) => (
+        <li key={post.id}>{post.title}</li>
+      ))}
+    </ul>
+  )
+}
+----
+
+Server components never hydrate. React sends their rendered output to the
+browser in a serialized form, the _RSC payload_, and only client components
+hydrate.
+
+== Client components
+
+The `"use client"` directive, at the top of a module, marks the module as client
+code. It also marks every module that it imports. A client component is
+rendered to HTML on the server, and then hydrates and runs in the browser, like
+a traditional React component.
+
+.LikeButton.jsx
+[source,jsx]
+----
+"use client"
+
+import { useState } from "react"
+
+export default function LikeButton() {
+  const [liked, setLiked] = useState(false)
+
+  return (
+    <button onClick={() => setLiked(!liked)}>
+      {liked ? "♥" : "♡"}
+    </button>
+  )
+}
+----
+
+A server component can import and render a client component. A client
+component can't import a server component, but it can receive one as a prop,
+eg. as `children`.
+
+Props passed from a server component to a client component MUST be
+serializable. This includes primitives, plain objects and arrays, `Date`,
+`Map`, `Set`, promises, JSX elements, and server functions. It excludes other
+functions and class instances.
+
+=== Placing the client boundary
+
+Put `"use client"` as far down the tree as possible. Everything a client
+module imports goes into the browser bundle, so a `"use client"` at the top of
+a page sends the whole page. Keep pages and layouts as server components, and
+make small, interactive leaves, eg. a like button or a search box, into
+client components.
+
+To wrap server-rendered content in a client component, eg. a collapsible
+panel, pass the content as `children`.
+
+[source,jsx]
+----
+/* Page.jsx, a server component. */
+<Collapsible>
+  <ArticleBody /> {/* Stays a server component. */}
+</Collapsible>
+----
+
+== Streaming data with promises
+
+A server component can start a query without awaiting it, and pass the promise
+to a client component. The client component reads it with `use`, and suspends
+until it settles. Meanwhile, the server streams the rest of the page to the
+browser.
+
+[source,jsx]
+----
+import { Suspense } from "react"
+import Posts from "./Posts"
+
+export default function Page() {
+  const postsPromise = db.query("SELECT * FROM posts")
+
+  return (
+    <Suspense fallback={<p>Loading posts…</p>}>
+      <Posts postsPromise={postsPromise} />
+    </Suspense>
+  )
+}
+----
+
+.Posts.jsx
+[source,jsx]
+----
+"use client"
+
+import { use } from "react"
+
+export default function Posts({ postsPromise }) {
+  const posts = use(postsPromise)
+
+  return (
+    <ul>
+      {posts.map((post) => (
+        <li key={post.id}>{post.title}</li>
+      ))}
+    </ul>
+  )
+}
+----
+
+Async components work only as server components. A client component reads async
+data with `use` instead.
+
+== Server functions
+
+A _server function_ is an async function that runs on the server, but that
+client components can call. The `"use server"` directive marks one, either at
+the top of a module, which marks every export, or at the top of a function
+body.
+
+.actions.js
+[source,js]
+----
+"use server"
+
+export async function updateName(prevState, formData) {
+  const name = formData.get("name")
+
+  if (!name) {
+    return { error: "Name is required" }
+  }
+
+  await db.users.updateName(name)
+  return { error: null }
+}
+----
+
+When a client component calls a server function, React sends a request to the
+server, runs the function, and returns the result. A server function can be an
+Action, eg. a form's `action`, or the Action of `useActionState`.
+
+[source,jsx]
+----
+"use client"
+
+import { useActionState } from "react"
+import { updateName } from "./actions"
+
+export default function UpdateName() {
+  const [state, formAction, isPending] = useActionState(updateName, {
+    error: null,
+  })
+
+  return (
+    <form action={formAction}>
+      <input type="text" name="name" disabled={isPending} />
+      {state.error && <span>Failed: {state.error}</span>}
+    </form>
+  )
+}
+----
+
+Forms whose `action` is a server function work before the JavaScript has
+loaded. The browser submits them as normal HTML forms.
+
+[NOTE]
+====
+Until 2024-09, the React docs called all server functions "Server Actions".
+Now, a server function is a Server Action only when it is used as an Action.
+====
+
+[WARNING]
+====
+Every server function is a public HTTP endpoint. Any client can call it, with
+any arguments. Validate the arguments, and check that the user is authorized,
+inside every server function.
+
+In 2025-12, critical vulnerabilities were found in the React Server Components
+packages, including unauthenticated remote code execution. Keep React and your
+framework on the latest patch release.
+====
+
+== Client-only components
+
+_Added in React 19.3._
+
+To render a component only in the browser, call `use(browser())`. On the
+server, it suspends, so the HTML contains the nearest `<Suspense>` fallback. In
+the browser, after hydration, it doesn't suspend.
+
+[source,jsx]
+----
+import { use } from "react"
+import { browser } from "react-dom"
+
+function TimeZone({ defaultValue }) {
+  if (defaultValue) {
+    return <p>{defaultValue}</p>
+  }
+
+  use(browser())
+  const localTimeZone = new Intl.DateTimeFormat().resolvedOptions().timeZone
+
+  return <p>{localTimeZone}</p>
+}
+----
+
+This replaces older workarounds, such as checking
+`typeof window !== "undefined"`, or setting a `mounted` state in an Effect.
+
+== Context from server components
+
+_Added in React 19.3._
+
+A server component can't create a context, but it can provide one. Import the
+context from a `"use client"` module, and render it as a provider.
+
+[source,jsx]
+----
+/* user-context.js */
+"use client"
+
+import { createContext } from "react"
+
+export const UserContext = createContext(null)
+
+/* layout.js (a server component) */
+import { UserContext } from "./user-context"
+
+export default async function Layout({ children }) {
+  const currentUser = await getCurrentUser()
+
+  return <UserContext value={currentUser}>{children}</UserContext>
+}
+----
+
+== Server components and SSR
+
+Server components aren't the same as server-side rendering (SSR). SSR decides
+_when_ the HTML is produced. Server components decide _where_ a component's code
+runs.
+
+== Trade-offs
+
+Server components have the following benefits.
+
+* Smaller bundles, because the code of server components never reaches the
+  browser.
+
+* Data fetching close to the data, without client-side request waterfalls.
+
+* Direct access to databases, file systems, and secrets.
+
+They also have the following costs.
+
+* More work on the server, for every request that isn't cached.
+
+* A dependency on a framework or bundler that supports them.
+
+* Harder debugging, across two environments and a serialization boundary.
+
+* Caching that is easy to get wrong, eg. serving one user's data to another.
+
+They suit content-heavy apps, eg. stores, publications, and dashboards. They
+help less in highly interactive or offline-first apps, where most components
+are client components anyway.
+
+== Directives
+
+* `"use client"` marks a module, and its imports, as client code.
+
+* `"use server"` marks server functions. It does _not_ mark server components,
+  which need no directive.
+
+.References
+****
+* https://react.dev/reference/rsc/server-components[React Docs: Server Components]
+* https://react.dev/reference/rsc/server-functions[React Docs: Server Functions]
+* https://react.dev/reference/rsc/directives[React Docs: Directives]
+* https://react.dev/reference/react-dom/browser[React Docs: browser]
+* https://react.dev/blog/2025/12/03/critical-security-vulnerability-in-react-server-components[React Blog: Critical security vulnerability in React Server Components]
+****
